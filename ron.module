@@ -1,0 +1,27 @@
+<?php
+// $Id: activity.module,v 1.1.2.2.2.30.2.31.2.84 2010/02/17 07:36:45 scottreynolds Exp $
+/**
+ * @file
+ * Primarily Drupal hooks and global API functions to manipulate activity.
+ *
+ * This is the main module file for Activity.
+ */
+
+/**
+ * Implementation of hook_ctools_plugin_api().
+ */
+function ron_ctools_plugin_api($module, $api) {
+  if ($module == 'ron' && $api == 'plugins') {
+    return array('version' => 3);
+  }
+}
+
+/**
+ * Implementation of hook_context_plugins().
+ *
+ * This is a ctools plugins hook.
+ */
+function context_context_plugins() {
+  module_load_include('inc', 'ron', 'ron.plugins');
+  return _context_context_plugins();
+}
