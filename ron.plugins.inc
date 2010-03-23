@@ -13,6 +13,10 @@ function _ron_ron_plugins() {
       'file' => 'ron_plugin.inc',
       'class' => 'ron_plugin',
     ),
+    // Add ron information about the realm, or FALSE if it is the base plugin.
+    'ron_realm' => FALSE,
+    'title' => t('Base plugin'),
+    'description' => '',
   );
 
   $plugins['ron_plugin_role'] = array(
@@ -22,6 +26,9 @@ function _ron_ron_plugins() {
       'class' => 'ron_plugin_role',
       'parent' => 'ron_plugin',
     ),
+    'ron_realm' => 'role',
+    'title' => t('Basic role realm'),
+    'description' => t("Determine access by a user's role."),
   );
 
   return $plugins;

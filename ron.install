@@ -2,9 +2,18 @@
 // $Id:$
 
 /**
+ * Implementation of hook_install().
+ */
+function ron_install() {
+  drupal_install_schema('ron');
+}
+
+/**
  * Implementation of hook_schema()
  */
 function ron_schema() {
+  $schema = array();
+
   $schema['ron_messages'] = array(
     'fields' => array(
       'mid' => array(

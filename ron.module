@@ -1,5 +1,5 @@
 <?php
-// $Id: activity.module,v 1.1.2.2.2.30.2.31.2.84 2010/02/17 07:36:45 scottreynolds Exp $
+// $Id$
 /**
  * @file
  * Primarily Drupal hooks and global API functions to manipulate activity.
@@ -21,7 +21,68 @@ function ron_ctools_plugin_api($module, $api) {
  *
  * This is a ctools plugins hook.
  */
-function context_context_plugins() {
+function ron_ron_plugins() {
   module_load_include('inc', 'ron', 'ron.plugins');
-  return _context_context_plugins();
+  return _ron_ron_plugins();
+}
+
+/**
+ * Get messages by their ID.
+ *
+ * @param $message_id
+ *   The message ID.
+ * @return
+ *   Array  keyed by the message realm and the realm Id as the value.
+ */
+function ron_get_message_realm($message_id) {
+  static $messages = array();
+
+  if (!isset($messages[$message_id])) {
+    $result = db_query("SELECT * FROM {ron_messages_realm} WHERE iid = %d", $message_id);
+
+    while ($row = db_fetch_object($result)) {
+      $messages[$message_id][$row->realm][$row->realm_id] = $row->realm_id;
+    }
+  }
+  return $messages[$message_id] ;
+}
+
+function ron_get_message($message_id) {
+  return db_fetch_object(db_query("SELECT * FROM {ron_messages} WHERE mid = %d", $message_id));
+}
+
+function ron_show_message($message_id, $account = NULL) {
+  $output = '';
+  $access = FALSE;
+  if (empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
+  if ($messages = ron_get_message_realm($message_id)) {
+    $plugins = ctools_get_plugins('ron', 'plugins');
+    foreach ($plugins as $plugin) {
+      if (!empty($plugin['ron_realm']) && $class = ctools_plugin_get_class($plugin, 'handler')) {
+        $info = array(
+          'plugin' => $plugin,
+          'message_id' => $message_id,
+          'realm' => $plugin['ron_realm'],
+          'account' => $account,
+        );
+        $handler = new $class($plugin, $info);
+        if ($handler->access()) {
+          $access = TRUE;
+          break;
+        }
+      }
+    }
+
+    if ($access) {
+      // Get the message template
+      $message = ron_get_message($message_id);
+      $output = $message->message;
+    }
+  }
+
+  return $output;
 }
