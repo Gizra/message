@@ -18,6 +18,12 @@ function ron_schema() {
         'size' => 'big',
         'not null' => TRUE,
       ),
+      'language' => array(
+        'description' => "The  IS0-3166 name of the langauge for the associated message.",
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => '12',
+      ),
     ),
     'primary key' => array('mid'),
   );
