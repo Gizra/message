@@ -51,7 +51,16 @@ function ron_get_message($message_id) {
   return db_fetch_object(db_query("SELECT * FROM {ron_messages} WHERE mid = %d", $message_id));
 }
 
-function ron_show_message($message_id, $account = NULL) {
+function ron_get_message_instance($instance_id) {
+  $return = db_fetch_object(db_query("SELECT * FROM {ron_messages_instance} WHERE iid = %d", $instance_id));
+  // Unserialize the arguments.
+  if (!empty($return->arguments)) {
+    $return->arguments = unserialize($return->arguments);
+  }
+  return $return;
+}
+
+function ron_show_message($instance_id, $account = NULL) {
   $output = '';
   $access = FALSE;
   if (empty($account)) {
@@ -59,13 +68,15 @@ function ron_show_message($message_id, $account = NULL) {
     $account = $user;
   }
 
-  if ($messages = ron_get_message_realm($message_id)) {
+  $message_instance = ron_get_message_instance($instance_id);
+
+  if ($messages = ron_get_message_realm($message_instance->mid)) {
     $plugins = ctools_get_plugins('ron', 'plugins');
     foreach ($plugins as $plugin) {
       if (!empty($plugin['ron_realm']) && $class = ctools_plugin_get_class($plugin, 'handler')) {
         $info = array(
           'plugin' => $plugin,
-          'message_id' => $message_id,
+          'message_id' => $message_instance->mid,
           'realm' => $plugin['ron_realm'],
           'account' => $account,
         );
@@ -79,10 +90,53 @@ function ron_show_message($message_id, $account = NULL) {
 
     if ($access) {
       // Get the message template
-      $message = ron_get_message($message_id);
-      $output = $message->message;
+      $output = ron_t($message_instance);
     }
   }
 
   return $output;
+}
+
+/**
+ * Replace he arguments with their placeholders.
+ *
+ * @param $message
+ *   The message instance object.
+ *
+ * @see t().
+ */
+function ron_t($message_instance) {
+  $message = ron_get_message($message_instance->mid);
+
+  if (module_exists(i18nstrings)) {
+    $string = i18nstrings("ron:ron_message:$message->mid:message", $message->message);
+  }
+  else {
+    $string = $message->message;
+  }
+
+  if (empty($message_instance->arguments)) {
+    return $string;
+  }
+  else {
+    // Transform arguments before inserting them.
+    foreach ($message_instance->arguments as $key => $value) {
+      switch ($key[0]) {
+        case '@':
+          // Escaped only.
+          $args[$key] = check_plain($value);
+          break;
+
+        case '%':
+        default:
+          // Escaped and placeholder.
+          $args[$key] = theme('placeholder', $value);
+          break;
+
+        case '!':
+          // Pass-through.
+      }
+    }
+    return strtr($string, $args);
+  }
 }
