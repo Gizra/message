@@ -17,13 +17,23 @@ function ron_ctools_plugin_api($module, $api) {
 }
 
 /**
- * Implementation of hook_context_plugins().
+ * Implementation of hook_ron_plugins().
  *
  * This is a ctools plugins hook.
  */
 function ron_ron_plugins() {
-  module_load_include('inc', 'ron', 'ron.plugins');
+  module_load_include('inc', 'ron', '/includes/ron.plugins');
   return _ron_ron_plugins();
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function ron_views_api() {
+  return array(
+    'api' => 2.0,
+    'path' => drupal_get_path('module', 'ron') . '/includes',
+  );
 }
 
 /**

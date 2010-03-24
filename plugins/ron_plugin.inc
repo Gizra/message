@@ -27,4 +27,22 @@ class ron_plugin {
     // Default to no access control.
     return TRUE;
   }
+
+  /**
+   * @addtogroup views
+   * @{
+   * Methods that can be overridden to support the Views module.
+   */
+
+  /**
+   * Returns information needed for hook_views_handlers().
+   */
+  public function get_views_handler() {
+    return array();
+  }
+
+  /**
+   * @} End of "addtogroup views".
+   */
+
 }

@@ -6,7 +6,7 @@
  */
 class ron_plugin_role extends ron_plugin {
 
-  function access() {
+  public function access() {
     $access = FALSE;
     if (!empty($this->messages[$this->realm])) {
       // Check if the user has access to the realm by their ID.
@@ -14,4 +14,14 @@ class ron_plugin_role extends ron_plugin {
     }
     return $access;
   }
+
+  public function get_views_handler() {
+    return array(
+      'ron_handler_filter_ron_plugin' => array(
+        'parent' => 'views_handler_filter_boolean_operator',
+        'path' => drupal_get_path('module', 'ron') .'/plugins/views',
+      ),
+    );
+  }
+
 }
