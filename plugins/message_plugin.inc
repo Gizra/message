@@ -41,6 +41,13 @@ class message_plugin {
   }
 
   /**
+   * Returns information needed for hook_views_data().
+   */
+  public function get_views_data() {
+    return array();
+  }
+
+  /**
    * @} End of "addtogroup views".
    */
 

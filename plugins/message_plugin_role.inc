@@ -17,11 +17,29 @@ class message_plugin_role extends message_plugin {
 
   public function get_views_handlers() {
     return array(
-      'message_handler_filter_message_plugin' => array(
+      'message_handler_filter_plugin_role_realm' => array(
         'parent' => 'views_handler_filter',
         'path' => drupal_get_path('module', 'message') .'/plugins/views',
       ),
     );
+  }
+
+  public function get_views_data() {
+    $data = array();
+
+    $data['message_realm']['plugin_role_realm'] = array(
+      'title' => t('Role realm'),
+      'help' => t('Filter messages by role realm.'),
+      // This is a dummy field, so point it to a real field.
+      'real field' => 'iid',
+
+      'filter' => array(
+        'handler' => 'message_handler_filter_plugin_role_realm',
+        'label' => t('Role'),
+      ),
+    );
+
+    return $data;
   }
 
 }
