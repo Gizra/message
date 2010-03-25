@@ -114,9 +114,9 @@ function message_show_message($instance_id, $account = NULL) {
     $account = $user;
   }
 
-  $message_instance = message_get_message_instance($instance_id);
+  $message = message_get_message($instance_id);
 
-  if ($messages = message_get_message_realm($message_instance->mid)) {
+  if ($message_realm = message_get_message_realm($message->iid)) {
     $plugins = ctools_get_plugins('message', 'plugins');
     foreach ($plugins as $name => $value) {
       if ($plugin = message_get_plugin($name, array($name, array('message_id' => $message_instance->mid)))) {
@@ -128,8 +128,7 @@ function message_show_message($instance_id, $account = NULL) {
     }
 
     if ($access) {
-      // Get the message template
-      $output = message_t($message_instance);
+      $output = message_t($message);
     }
   }
 
@@ -144,22 +143,22 @@ function message_show_message($instance_id, $account = NULL) {
  *
  * @see t().
  */
-function message_t($message_instance) {
-  $message = message_get_message($message_instance->mid);
+function message_t($message) {
+  $message_template = message_get_message_template($message->mid);
 
   if (module_exists(i18nstrings)) {
-    $string = i18nstrings("message:message_message:$message->mid:message", $message->message);
+    $string = i18nstrings("messages_template:message_template:$message_template->mtid:message", $message_template->message);
   }
   else {
-    $string = $message->message;
+    $string = $message_template->message;
   }
 
-  if (empty($message_instance->arguments)) {
+  if (empty($message->arguments)) {
     return $string;
   }
   else {
     // Transform arguments before inserting them.
-    foreach ($message_instance->arguments as $key => $value) {
+    foreach ($message->arguments as $key => $value) {
       switch ($key[0]) {
         case '@':
           // Escaped only.

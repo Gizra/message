@@ -6,16 +6,16 @@
  */
 class message_plugin {
   var $plugin;
-  var $title;
-  var $description;
-  var $message;
+  var $message_realm;
+  var $realm;
 
   /**
    * Constructor. Do not override.
    */
   function __construct($plugin, $info) {
     $this->plugin = $plugin;
-    $this->messages = message_get_message_realm($info['message_id']);
+    $this->message_realm = message_get_message_realm($info['message_id']);
+    $this->realm = $plugin['realm'];
     $this->account = $info['account'];
   }
 

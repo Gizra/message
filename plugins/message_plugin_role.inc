@@ -8,9 +8,9 @@ class message_plugin_role extends message_plugin {
 
   public function access() {
     $access = FALSE;
-    if (!empty($this->messages[$this->realm])) {
+    if (!empty($this->message_realm[$this->realm])) {
       // Check if the user has access to the realm by their ID.
-      $access = array_intersect(array_keys($this->account->roles), $this->messages[$this->plugin->realm]);
+      $access = array_intersect(array_keys($this->account->roles), $this->messages[$this->realm]);
     }
     return $access;
   }
