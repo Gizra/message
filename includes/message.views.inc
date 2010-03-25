@@ -20,11 +20,12 @@ function message_views_handlers() {
 
   // Allow plugins to declare their handlers. Handlers should define the path
   // as-well.
+  ctools_include('plugins');
   $plugins = ctools_get_plugins('message', 'plugins');
   foreach ($plugins as $name => $value) {
     $plugin = message_get_plugin($name);
     if ($handler = $plugin->get_views_handlers()) {
-      $data['handlers'] = $handler;
+      $data['handlers'] = array_merge($data['handlers'], $handler);
     }
   }
 
@@ -41,8 +42,8 @@ function message_views_data() {
 
   $data['message']['table']['base'] = array(
     'field' => 'iid',
-    'title' => t('River of news'),
-    'help' => t('Activity are items that are recorded for a users activity within the site'),
+    'title' => t('Message'),
+    'help' => t('Messages that are related to enteties. Can be used as activity stream.'),
   );
 
   // Database columns
@@ -57,10 +58,19 @@ function message_views_data() {
     ),
   );
 
+  $data['message']['uid'] = array(
+    'title' => t('User'),
+    'help' => t('The user that is associated with the message.'),
+    'relationship' => array(
+      'base' => 'users',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Message user'),
+    ),
+  );
 
   $data['message']['timestamp'] = array(
-    'title' => t('Activity Creation Date'),
-    'help' => t('The time that the activity was created'),
+    'title' => t('Creation date'),
+    'help' => t('The time that the message was created.'),
     'field' => array(
       'handler' => 'views_handler_field_date',
       'click sortable' => TRUE,
@@ -70,10 +80,12 @@ function message_views_data() {
     ),
   );
 
-  // Database columns
   $data['message']['render'] = array(
     'title' => t('Dummy'),
     'help' => t('The unique id for each activity'),
+    // This is a dummy field, so point it to a real field.
+    'real field' => 'iid',
+
     'field' => array(
       'handler' => 'message_handler_field_message_render',
     ),

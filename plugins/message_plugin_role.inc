@@ -18,7 +18,7 @@ class message_plugin_role extends message_plugin {
   public function get_views_handlers() {
     return array(
       'message_handler_filter_message_plugin' => array(
-        'parent' => 'views_handler_filter_boolean_operator',
+        'parent' => 'views_handler_filter',
         'path' => drupal_get_path('module', 'message') .'/plugins/views',
       ),
     );

@@ -11,7 +11,7 @@
  *
  * @ingroup views
  */
-class message_handler_filter_message_plugin extends views_handler_filter_boolean_operator {
+class message_handler_filter_message_plugin extends views_handler_filter {
   function construct() {
     parent::construct();
     $this->additional_fields['uid'] = array('table' => 'users', 'field' => 'uid');
