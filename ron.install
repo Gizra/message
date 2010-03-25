@@ -9,6 +9,13 @@ function ron_install() {
 }
 
 /**
+ * Implementation of hook_uninstall().
+ */
+function ron_uninstall() {
+  drupal_uninstall_schema('ron');
+}
+
+/**
  * Implementation of hook_schema()
  */
 function ron_schema() {
@@ -17,8 +24,9 @@ function ron_schema() {
   $schema['ron_messages'] = array(
     'fields' => array(
       'mid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
+        'type' => 'varchar',
+        'length' => '50',
+        'not null' => TRUE,
         'description' => 'The Unique id of the message',
       ),
       'message' => array(
@@ -37,7 +45,7 @@ function ron_schema() {
     'primary key' => array('mid'),
   );
 
-  $schema['ron_messages_instance'] = array(
+  $schema['ron'] = array(
     'description' => 'Provides a place to record activity messages for display.',
     'fields' => array(
       'iid' => array(
@@ -47,9 +55,9 @@ function ron_schema() {
       ),
       'mid' => array(
         'description' => 'Reference to a message in {ron_messages}.',
-        'type' => 'int',
+        'type' => 'varchar',
+        'length' => '50',
         'not null' => TRUE,
-        'unsigned' => TRUE,
       ),
       'op' => array(
         'description' => 'The operation being performed (e.g. update, insert)',
@@ -75,7 +83,7 @@ function ron_schema() {
         'type' => 'text',
         'serialize' => TRUE,
       ),
-      'created' => array(
+      'timestamp' => array(
         'description' => 'When the message instance was recorded.',
         'type' => 'int',
         'not null' => TRUE,

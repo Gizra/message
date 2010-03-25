@@ -15,7 +15,6 @@ class ron_plugin {
    */
   function __construct($plugin, $info) {
     $this->plugin = $plugin;
-    $this->realm = $info['realm'];
     $this->messages = ron_get_message_realm($info['message_id']);
     $this->account = $info['account'];
   }
@@ -37,7 +36,7 @@ class ron_plugin {
   /**
    * Returns information needed for hook_views_handlers().
    */
-  public function get_views_handler() {
+  public function get_views_handlers() {
     return array();
   }
 

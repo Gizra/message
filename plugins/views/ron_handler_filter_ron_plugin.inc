@@ -12,26 +12,15 @@
  * @ingroup views
  */
 class ron_handler_filter_ron_plugin extends views_handler_filter_boolean_operator {
-
-  function option_definition() {
-    $options = parent::option_definition();
-    $options['value'] = array('default' => TRUE);
-    return $options;
-  }
-
-  function options_form(&$form, &$form_state) {
-    parent::options_form($form, $form_state);
-    $form['value']['#type'] = 'radios';
-    $form['value']['#title'] = t('Role realm');
-    $form['value']['#options'] = array(TRUE => t('In role realm'), FALSE => t('Not in role realm'));
-    if ($this->options['expose']['optional']) {
-      $form['value']['#options']['All'] = t('All');
-    }
-    $form['value']['#default_value'] = empty($this->options['value']);
+  function construct() {
+    parent::construct();
+    $this->additional_fields['uid'] = array('table' => 'users', 'field' => 'uid');
   }
 
   function query() {
-    $operator = $this->value ? 'IS NOT' : 'IS';
-    $this->query->add_where($this->options['group'], $this->relationship .'.uid '. $operator .' NULL');
+    global $user;
+    $roles = array_keys($user->roles);
+    $placeholders = db_placeholders($roles);
+    $this->query->add_where($this->options['group'], 'users.uid IN ('. $roles .')');
   }
 }

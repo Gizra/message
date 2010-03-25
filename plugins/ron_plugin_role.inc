@@ -10,12 +10,12 @@ class ron_plugin_role extends ron_plugin {
     $access = FALSE;
     if (!empty($this->messages[$this->realm])) {
       // Check if the user has access to the realm by their ID.
-      $access = array_intersect(array_keys($this->account->roles), $this->messages[$this->realm]);
+      $access = array_intersect(array_keys($this->account->roles), $this->messages[$this->plugin->realm]);
     }
     return $access;
   }
 
-  public function get_views_handler() {
+  public function get_views_handlers() {
     return array(
       'ron_handler_filter_ron_plugin' => array(
         'parent' => 'views_handler_filter_boolean_operator',

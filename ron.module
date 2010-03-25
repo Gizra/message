@@ -37,6 +37,28 @@ function ron_views_api() {
 }
 
 /**
+ * Get a plugin handler.
+ */
+function ron_get_plugin($key, $info = array(), $reset = FALSE) {
+  global $user;
+  static $cache = array();
+  if (empty($cache[$key]) || $reset) {
+    ctools_include('plugins');
+    $plugins = ctools_get_plugins('ron', 'plugins');
+    if (isset($plugins[$key]) && $class = ctools_plugin_get_class($plugins[$key], 'handler')) {
+      // Add defaults.
+      $info += array(
+        'plugin' => $plugins[$key],
+        'message_id' => '',
+        'account' => $user,
+      );
+      $cache[$key] = new $class($plugins[$key], $info);
+    }
+  }
+  return !empty($cache[$key]) ? $cache[$key] : FALSE;
+}
+
+/**
  * Get messages by their ID.
  *
  * @param $message_id
@@ -57,10 +79,16 @@ function ron_get_message_realm($message_id) {
   return $messages[$message_id] ;
 }
 
+/**
+ * Get a message template record.
+ */
 function ron_get_message($message_id) {
   return db_fetch_object(db_query("SELECT * FROM {ron_messages} WHERE mid = %d", $message_id));
 }
 
+/**
+ * Get a message instance record.
+ */
 function ron_get_message_instance($instance_id) {
   $return = db_fetch_object(db_query("SELECT * FROM {ron_messages_instance} WHERE iid = %d", $instance_id));
   // Unserialize the arguments.
@@ -70,6 +98,14 @@ function ron_get_message_instance($instance_id) {
   return $return;
 }
 
+
+/**
+ * Show a message by the message instance ID.
+ *
+ * @param $instance_id
+ * @param $account
+ * @return unknown_type
+ */
 function ron_show_message($instance_id, $account = NULL) {
   $output = '';
   $access = FALSE;
@@ -82,16 +118,9 @@ function ron_show_message($instance_id, $account = NULL) {
 
   if ($messages = ron_get_message_realm($message_instance->mid)) {
     $plugins = ctools_get_plugins('ron', 'plugins');
-    foreach ($plugins as $plugin) {
-      if (!empty($plugin['ron_realm']) && $class = ctools_plugin_get_class($plugin, 'handler')) {
-        $info = array(
-          'plugin' => $plugin,
-          'message_id' => $message_instance->mid,
-          'realm' => $plugin['ron_realm'],
-          'account' => $account,
-        );
-        $handler = new $class($plugin, $info);
-        if ($handler->access()) {
+    foreach ($plugins as $name => $value) {
+      if ($plugin = ron_get_plugin($name, array($name, array('message_id' => $message_instance->mid)))) {
+        if ($plugin->access()) {
           $access = TRUE;
           break;
         }

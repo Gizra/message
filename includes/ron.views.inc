@@ -12,11 +12,18 @@
 function ron_views_handlers() {
   $data = array();
 
+  // Add ron's core handlers.
+  $data['handlers']['ron_handler_field_message_render'] = array(
+    'parent' => 'views_handler_field',
+    'path' => drupal_get_path('module', 'ron') .'/includes',
+  );
+
   // Allow plugins to declare their handlers. Handlers should define the path
   // as-well.
   $plugins = ctools_get_plugins('ron', 'plugins');
-  foreach ($plugins as $plugin) {
-    if ($handler = $plugin->get_views_info()) {
+  foreach ($plugins as $name => $value) {
+    $plugin = ron_get_plugin($name);
+    if ($handler = $plugin->get_views_handlers()) {
       $data['handlers'] = $handler;
     }
   }
@@ -27,25 +34,33 @@ function ron_views_handlers() {
 /**
  * Implementation of hook_views_data().
  */
-function flag_views_data() {
+function ron_views_data() {
   $data = array();
 
-  $data['flag_content']['table']['group'] = t('Flags');
-  $data['flag_counts']['table']['group'] = t('Flags');
+ $data['ron']['table']['group'] = t('River of news');
 
-  $data['flag_content']['uid'] = array(
-    'title' => t('User'),
-    'help' => t('The user that flagged an item.'),
-    'relationship' => array(
-      'base' => 'users',
-      'handler' => 'views_handler_relationship',
-      'label' => t('Flag user'),
+  $data['ron']['table']['base'] = array(
+    'field' => 'iid',
+    'title' => t('River of news'),
+    'help' => t('Activity are items that are recorded for a users activity within the site'),
+  );
+
+  // Database columns
+  $data['ron']['iid'] = array(
+    'title' => t('Activity Unique ID'),
+    'help' => t('The unique id for each activity'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
     ),
   );
 
-  $data['flag_content']['timestamp'] = array(
-    'title' => t('Flagged time'),
-    'help' => t('Display the time the content was flagged by a user.'),
+
+  $data['ron']['timestamp'] = array(
+    'title' => t('Activity Creation Date'),
+    'help' => t('The time that the activity was created'),
     'field' => array(
       'handler' => 'views_handler_field_date',
       'click sortable' => TRUE,
@@ -53,154 +68,18 @@ function flag_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort_date',
     ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_date',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_date',
-    ),
   );
 
-  // Argument for content ID, used for "Who's flagged this" views.
-  $data['flag_content']['content_id'] = array(
-    'title' => t('Content ID'),
-    'help' => t('The unique ID of the object that has been flagged.'),
-    'argument' => array(
-      'handler' => 'flag_handler_argument_content_id',
-    ),
-  );
-
-  // Specialized is null/is not null filter.
-  $data['flag_content']['flagged'] = array(
-    'title' => t('Flagged'),
-    'help' => t('Filter to ensure content has or has not been flagged.'),
-    'real field' => 'uid',
-    'filter' => array(
-      'handler' => 'flag_handler_filter_flagged',
-      'label' => t('Flagged'),
-    ),
-  );
-
-  // Flag content links.
-  $data['flag_content']['ops'] = array(
-    'title' => t('Flag link'),
-    'help' => t('Display flag/unflag link.'),
+  // Database columns
+  $data['ron']['render'] = array(
+    'title' => t('Dummy'),
+    'help' => t('The unique id for each activity'),
     'field' => array(
-      'handler' => 'flag_handler_field_ops',
-    ),
-  );
-
-  $data['flag_counts']['count'] = array(
-    'title' => t('Flag counter'),
-    'help' => t('The number of times a piece of content is flagged by any user.'),
-    'field' => array(
-      'handler' => 'views_handler_field_numeric',
-      'click sortable' => TRUE,
+      'handler' => 'ron_handler_field_message_render',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
-    'filter' => array(
-      'handler' => 'views_handler_filter_numeric',
-    ),
-    'argument' => array(
-      'handler' => 'views_handler_argument_numeric',
-    ),
   );
-
   return $data;
-}
-
-/**
- * Implementation of hook_views_data_alter().
- */
-function flag_views_data_alter(&$data) {
-
-  foreach (array_keys(flag_fetch_definition()) as $flag_type) {
-    $flag = flag_flag::factory_by_content_type($flag_type);
-    $info = $flag->get_views_info();
-
-    // Add the flag relationship.
-    $data[$info['views table']]['flag_content_rel'] = array(
-      'group' => t('Flags'),
-      'title' => $info['title'],
-      'help' => $info['help'],
-      'relationship' => array(
-        'flag type' => $flag_type,
-        'handler' => 'flag_handler_relationship_content',
-        'label' => t('flag'),
-        'base' => 'flag_content',
-        'base field' => 'content_id',
-        'relationship field' => $info['join field'],
-      ),
-    );
-
-    // Add the flag counter relationship.
-    $data[$info['views table']]['flag_count_rel'] = array(
-      'group' => t('Flags'),
-      'title' => $info['counter title'],
-      'help' => $info['counter help'],
-      'relationship' => array(
-        'flag type' => $flag_type,
-        'handler' => 'flag_handler_relationship_counts',
-        'label' => t('counter'),
-        'base' => 'flag_counts',
-        'base field' => 'content_id',
-        'relationship field' => $info['join field'],
-      ),
-    );
-  }
-
-  // Add a relationship for the user that flagged any type of content.
-  $data['users']['flag_user_content_rel'] = array(
-    'group' => t('Flags'),
-    'title' => t("User's flagged content"),
-    'help' => t('Limit results to users that have flagged certain content.'),
-    'relationship' => array(
-      'base' => 'flag_content',
-      'base field' => 'uid',
-      'relationship field' => 'uid',
-      'handler' => 'flag_handler_relationship_user_content',
-      'label' => t('user flagged content'),
-    ),
-  );
-}
-
-/**
- * A helper function that creates a radio list of available flags.
- *
- * This function is used to select the desired flag when setting up flag
- * relationships and fields.
- */
-function flag_views_flag_config_form($form_type, $content_type, $current_flag) {
-  $flags = flag_get_flags($content_type);
-
-  $options = array();
-  foreach ($flags as $flag) {
-    $options[$flag->name] = $flag->get_title();
-  }
-
-  $form = array(
-    '#type' => $form_type,
-    '#title' => t('Flag'),
-    '#options' => $options,
-    '#default_value' => $current_flag,
-    '#required' => TRUE,
-  );
-
-  return $form;
-}
-
-/**
- * Helper function that gets the first defined flag and returns its name.
- */
-function flag_views_flag_default($content_type) {
-  static $default_flag = array();
-
-  if (!array_key_exists($content_type, $default_flag)) {
-    $flag = array_shift(flag_get_flags($content_type));
-    $default_flag[$content_type] = $flag ? $flag->name : NULL;
-  }
-
-  return $default_flag[$content_type];
 }
