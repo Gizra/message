@@ -10,41 +10,41 @@
 /**
  * Implementation of hook_ctools_plugin_api().
  */
-function ron_ctools_plugin_api($module, $api) {
-  if ($module == 'ron' && $api == 'plugins') {
+function message_ctools_plugin_api($module, $api) {
+  if ($module == 'message' && $api == 'plugins') {
     return array('version' => 3);
   }
 }
 
 /**
- * Implementation of hook_ron_plugins().
+ * Implementation of hook_message_plugins().
  *
  * This is a ctools plugins hook.
  */
-function ron_ron_plugins() {
-  module_load_include('inc', 'ron', '/includes/ron.plugins');
-  return _ron_ron_plugins();
+function message_message_plugins() {
+  module_load_include('inc', 'message', '/includes/message.plugins');
+  return _message_message_plugins();
 }
 
 /**
  * Implementation of hook_views_api().
  */
-function ron_views_api() {
+function message_views_api() {
   return array(
     'api' => 2.0,
-    'path' => drupal_get_path('module', 'ron') . '/includes',
+    'path' => drupal_get_path('module', 'message') . '/includes',
   );
 }
 
 /**
  * Get a plugin handler.
  */
-function ron_get_plugin($key, $info = array(), $reset = FALSE) {
+function message_get_plugin($key, $info = array(), $reset = FALSE) {
   global $user;
   static $cache = array();
   if (empty($cache[$key]) || $reset) {
     ctools_include('plugins');
-    $plugins = ctools_get_plugins('ron', 'plugins');
+    $plugins = ctools_get_plugins('message', 'plugins');
     if (isset($plugins[$key]) && $class = ctools_plugin_get_class($plugins[$key], 'handler')) {
       // Add defaults.
       $info += array(
@@ -66,11 +66,11 @@ function ron_get_plugin($key, $info = array(), $reset = FALSE) {
  * @return
  *   Array  keyed by the message realm and the realm Id as the value.
  */
-function ron_get_message_realm($message_id) {
+function message_get_message_realm($message_id) {
   static $messages = array();
 
   if (!isset($messages[$message_id])) {
-    $result = db_query("SELECT * FROM {ron_messages_realm} WHERE iid = %d", $message_id);
+    $result = db_query("SELECT * FROM {message_realm} WHERE iid = %d", $message_id);
 
     while ($row = db_fetch_object($result)) {
       $messages[$message_id][$row->realm][$row->realm_id] = $row->realm_id;
@@ -82,15 +82,15 @@ function ron_get_message_realm($message_id) {
 /**
  * Get a message template record.
  */
-function ron_get_message($message_id) {
-  return db_fetch_object(db_query("SELECT * FROM {ron_messages} WHERE mid = %d", $message_id));
+function message_get_message_template($message_id) {
+  return db_fetch_object(db_query("SELECT * FROM {message_template} WHERE mid = %d", $message_id));
 }
 
 /**
  * Get a message instance record.
  */
-function ron_get_message_instance($instance_id) {
-  $return = db_fetch_object(db_query("SELECT * FROM {ron_messages_instance} WHERE iid = %d", $instance_id));
+function message_get_message($instance_id) {
+  $return = db_fetch_object(db_query("SELECT * FROM {message} WHERE iid = %d", $instance_id));
   // Unserialize the arguments.
   if (!empty($return->arguments)) {
     $return->arguments = unserialize($return->arguments);
@@ -106,7 +106,7 @@ function ron_get_message_instance($instance_id) {
  * @param $account
  * @return unknown_type
  */
-function ron_show_message($instance_id, $account = NULL) {
+function message_show_message($instance_id, $account = NULL) {
   $output = '';
   $access = FALSE;
   if (empty($account)) {
@@ -114,12 +114,12 @@ function ron_show_message($instance_id, $account = NULL) {
     $account = $user;
   }
 
-  $message_instance = ron_get_message_instance($instance_id);
+  $message_instance = message_get_message_instance($instance_id);
 
-  if ($messages = ron_get_message_realm($message_instance->mid)) {
-    $plugins = ctools_get_plugins('ron', 'plugins');
+  if ($messages = message_get_message_realm($message_instance->mid)) {
+    $plugins = ctools_get_plugins('message', 'plugins');
     foreach ($plugins as $name => $value) {
-      if ($plugin = ron_get_plugin($name, array($name, array('message_id' => $message_instance->mid)))) {
+      if ($plugin = message_get_plugin($name, array($name, array('message_id' => $message_instance->mid)))) {
         if ($plugin->access()) {
           $access = TRUE;
           break;
@@ -129,7 +129,7 @@ function ron_show_message($instance_id, $account = NULL) {
 
     if ($access) {
       // Get the message template
-      $output = ron_t($message_instance);
+      $output = message_t($message_instance);
     }
   }
 
@@ -144,11 +144,11 @@ function ron_show_message($instance_id, $account = NULL) {
  *
  * @see t().
  */
-function ron_t($message_instance) {
-  $message = ron_get_message($message_instance->mid);
+function message_t($message_instance) {
+  $message = message_get_message($message_instance->mid);
 
   if (module_exists(i18nstrings)) {
-    $string = i18nstrings("ron:ron_message:$message->mid:message", $message->message);
+    $string = i18nstrings("message:message_message:$message->mid:message", $message->message);
   }
   else {
     $string = $message->message;

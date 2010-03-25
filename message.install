@@ -4,24 +4,24 @@
 /**
  * Implementation of hook_install().
  */
-function ron_install() {
-  drupal_install_schema('ron');
+function message_install() {
+  drupal_install_schema('message');
 }
 
 /**
  * Implementation of hook_uninstall().
  */
-function ron_uninstall() {
-  drupal_uninstall_schema('ron');
+function message_uninstall() {
+  drupal_uninstall_schema('message');
 }
 
 /**
  * Implementation of hook_schema()
  */
-function ron_schema() {
+function message_schema() {
   $schema = array();
 
-  $schema['ron_messages'] = array(
+  $schema['message_template'] = array(
     'fields' => array(
       'mid' => array(
         'type' => 'varchar',
@@ -45,8 +45,8 @@ function ron_schema() {
     'primary key' => array('mid'),
   );
 
-  $schema['ron'] = array(
-    'description' => 'Provides a place to record activity messages for display.',
+  $schema['message'] = array(
+    'description' => 'A message instance.',
     'fields' => array(
       'iid' => array(
         'type' => 'serial',
@@ -54,13 +54,7 @@ function ron_schema() {
         'description' => 'The Unique id of the message instance.',
       ),
       'mid' => array(
-        'description' => 'Reference to a message in {ron_messages}.',
-        'type' => 'varchar',
-        'length' => '50',
-        'not null' => TRUE,
-      ),
-      'op' => array(
-        'description' => 'The operation being performed (e.g. update, insert)',
+        'description' => 'Reference to a message in {message_template}.',
         'type' => 'varchar',
         'length' => '50',
         'not null' => TRUE,
@@ -71,9 +65,14 @@ function ron_schema() {
         'length' => '50',
         'not null' => TRUE,
        ),
-
       'eid' => array(
         'description' => 'Entity ID used to maintain the relationship between activity and the entity that created the activity.',
+        'type' => 'int',
+        'default value' => NULL,
+        'unsigned' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The user ID of the acting user.',
         'type' => 'int',
         'default value' => NULL,
         'unsigned' => TRUE,
@@ -93,23 +92,23 @@ function ron_schema() {
     'primary key' => array('iid'),
   );
 
-  $schema['ron_messages_realm'] = array(
+  $schema['message_realm'] = array(
     'description' => 'The messages realm.',
     'fields' => array(
       'iid' => array(
-        'description' => 'Reference to a message ID in {ron_messages_instance}.',
+        'description' => 'Reference to a message ID in {message}.',
         'type' => 'int',
         'not null' => TRUE,
         'unsigned' => TRUE,
       ),
       'realm' => array(
-        'description' => 'Reference to a message in {ron_messages}.',
+        'description' => 'The realm this message belongs to.',
         'type' => 'varchar',
         'length' => '50',
         'not null' => TRUE,
       ),
       'realm_id' => array(
-        'description' => 'The operation being performed (e.g. update, insert)',
+        'description' => 'The unique ID in the realm.',
         'type' => 'varchar',
         'length' => '50',
         'not null' => TRUE,

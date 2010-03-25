@@ -4,7 +4,7 @@
 /**
  * Expose node views/node forms of specific node types as a context condition.
  */
-class ron_plugin_role extends ron_plugin {
+class message_plugin_role extends message_plugin {
 
   public function access() {
     $access = FALSE;
@@ -17,9 +17,9 @@ class ron_plugin_role extends ron_plugin {
 
   public function get_views_handlers() {
     return array(
-      'ron_handler_filter_ron_plugin' => array(
+      'message_handler_filter_message_plugin' => array(
         'parent' => 'views_handler_filter_boolean_operator',
-        'path' => drupal_get_path('module', 'ron') .'/plugins/views',
+        'path' => drupal_get_path('module', 'message') .'/plugins/views',
       ),
     );
   }

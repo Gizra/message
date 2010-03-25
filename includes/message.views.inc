@@ -9,20 +9,20 @@
 /**
  * Implementation of hook_views_handlers().
  */
-function ron_views_handlers() {
+function message_views_handlers() {
   $data = array();
 
-  // Add ron's core handlers.
-  $data['handlers']['ron_handler_field_message_render'] = array(
+  // Add message's core handlers.
+  $data['handlers']['message_handler_field_message_render'] = array(
     'parent' => 'views_handler_field',
-    'path' => drupal_get_path('module', 'ron') .'/includes',
+    'path' => drupal_get_path('module', 'message') .'/includes',
   );
 
   // Allow plugins to declare their handlers. Handlers should define the path
   // as-well.
-  $plugins = ctools_get_plugins('ron', 'plugins');
+  $plugins = ctools_get_plugins('message', 'plugins');
   foreach ($plugins as $name => $value) {
-    $plugin = ron_get_plugin($name);
+    $plugin = message_get_plugin($name);
     if ($handler = $plugin->get_views_handlers()) {
       $data['handlers'] = $handler;
     }
@@ -34,19 +34,19 @@ function ron_views_handlers() {
 /**
  * Implementation of hook_views_data().
  */
-function ron_views_data() {
+function message_views_data() {
   $data = array();
 
- $data['ron']['table']['group'] = t('River of news');
+ $data['message']['table']['group'] = t('River of news');
 
-  $data['ron']['table']['base'] = array(
+  $data['message']['table']['base'] = array(
     'field' => 'iid',
     'title' => t('River of news'),
     'help' => t('Activity are items that are recorded for a users activity within the site'),
   );
 
   // Database columns
-  $data['ron']['iid'] = array(
+  $data['message']['iid'] = array(
     'title' => t('Activity Unique ID'),
     'help' => t('The unique id for each activity'),
     'field' => array(
@@ -58,7 +58,7 @@ function ron_views_data() {
   );
 
 
-  $data['ron']['timestamp'] = array(
+  $data['message']['timestamp'] = array(
     'title' => t('Activity Creation Date'),
     'help' => t('The time that the activity was created'),
     'field' => array(
@@ -71,11 +71,11 @@ function ron_views_data() {
   );
 
   // Database columns
-  $data['ron']['render'] = array(
+  $data['message']['render'] = array(
     'title' => t('Dummy'),
     'help' => t('The unique id for each activity'),
     'field' => array(
-      'handler' => 'ron_handler_field_message_render',
+      'handler' => 'message_handler_field_message_render',
     ),
     'sort' => array(
       'handler' => 'views_handler_sort',

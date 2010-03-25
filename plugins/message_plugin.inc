@@ -2,9 +2,9 @@
 // $Id: context_condition.inc,v 1.1.2.2 2010/02/09 04:38:01 yhahn Exp $
 
 /**
- * Base class for a ron plugin.
+ * Base class for a message plugin.
  */
-class ron_plugin {
+class message_plugin {
   var $plugin;
   var $title;
   var $description;
@@ -15,7 +15,7 @@ class ron_plugin {
    */
   function __construct($plugin, $info) {
     $this->plugin = $plugin;
-    $this->messages = ron_get_message_realm($info['message_id']);
+    $this->messages = message_get_message_realm($info['message_id']);
     $this->account = $info['account'];
   }
 

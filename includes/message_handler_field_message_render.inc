@@ -11,7 +11,7 @@
  *
  * @ingroup views
  */
-class ron_handler_field_message_render extends views_handler_field {
+class message_handler_field_message_render extends views_handler_field {
 
   /**
    * Override base ::query(). The purpose here is to make it possible for the
