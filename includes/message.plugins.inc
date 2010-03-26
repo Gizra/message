@@ -31,5 +31,20 @@ function _message_message_plugins() {
     'description' => t("Determine access by a user's role."),
   );
 
+  // TODO: Move to contrib folder?
+  if (module_exists('og')) {
+    $plugins['message_plugin_og'] = array(
+      'handler' => array(
+        'path' => drupal_get_path('module', 'message') .'/plugins',
+        'file' => 'message_plugin_og.inc',
+        'class' => 'message_plugin_og',
+        'parent' => 'message_plugin',
+      ),
+      'realm' => 'og',
+      'title' => t('Organic groups realm'),
+      'description' => t("Determine access by a user's membership in a group."),
+    );
+  }
+
   return $plugins;
 }
