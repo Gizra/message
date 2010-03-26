@@ -106,7 +106,7 @@ function message_get_message($instance_id) {
  * @param $account
  * @return unknown_type
  */
-function message_show_message($instance_id, $account = NULL) {
+function message_show_message($instance_id, $skip_access = FALSE, $account = NULL) {
   $output = '';
   $access = FALSE;
   if (empty($account)) {
@@ -116,7 +116,10 @@ function message_show_message($instance_id, $account = NULL) {
 
   $message = message_get_message($instance_id);
 
-  if ($message_realm = message_get_message_realm($message->iid)) {
+  if ($skip_access) {
+    $access = TRUE;
+  }
+  elseif ($message_realm = message_get_message_realm($message->iid)) {
     $plugins = ctools_get_plugins('message', 'plugins');
     foreach ($plugins as $name => $value) {
       if ($plugin = message_get_plugin($name, array($name, array('message_id' => $message_instance->mid)))) {
@@ -126,10 +129,10 @@ function message_show_message($instance_id, $account = NULL) {
         }
       }
     }
+  }
 
-    if ($access) {
-      $output = message_t($message);
-    }
+  if ($access) {
+    $output = message_t($message);
   }
 
   return $output;
