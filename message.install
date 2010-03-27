@@ -21,7 +21,7 @@ function message_uninstall() {
 function message_schema() {
   $schema = array();
 
-  $schema['message_template'] = array(
+  $schema['message'] = array(
     'description' => 'Storage for user-defined message templates.',
     'export' => array(
       'key' => 'name',
@@ -78,7 +78,7 @@ function message_schema() {
     'primary key' => array('mtid', 'name'),
   );
 
-  $schema['message'] = array(
+  $schema['message_instance'] = array(
     'description' => 'A message instance.',
     'fields' => array(
       'iid' => array(

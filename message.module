@@ -34,6 +34,22 @@ function message_views_api() {
     'api' => 2.0,
     'path' => drupal_get_path('module', 'message') . '/includes',
   );
+
+/**
+ * Implementation of hook_features_api().
+ */
+function message_features_api() {
+  return array(
+    'message' => array(
+      'name' => 'Messages',
+      'api' => 'message',
+      'default_hook' => 'message_default_messages',
+      'current_version' => 3,
+      'module' => 'message',
+      'feature_source' => TRUE,
+    ),
+  );
+}
 }
 
 /**
@@ -58,7 +74,7 @@ function message_load($name = NULL, $reset = FALSE) {
     }
     else {
       if ($reset) {
-        ctools_export_load_object_reset('context');
+        ctools_export_load_object_reset('message');
       }
       $messages = ctools_export_load_object('message', 'all');
       cache_set('message', $messages);
@@ -85,10 +101,10 @@ function message_load($name = NULL, $reset = FALSE) {
 function message_save($message) {
   $existing = message_load($message->name, TRUE);
   if ($existing && ($existing->export_type & EXPORT_IN_DATABASE)) {
-    drupal_write_record('message_template', $message, 'name');
+    drupal_write_record('message', $message, 'name');
   }
   else {
-    drupal_write_record('message_template', $message);
+    drupal_write_record('message', $message);
   }
   message_load(NULL, TRUE);
   message_invalidate_cache();
@@ -161,17 +177,10 @@ function message_get_message_realm($message_id) {
 }
 
 /**
- * Get a message template record.
- */
-function message_get_message_template($name) {
-  return db_fetch_object(db_query("SELECT * FROM {message_template} WHERE name = '%s'", $name));
-}
-
-/**
  * Get a message instance record.
  */
-function message_get_message($instance_id) {
-  $return = db_fetch_object(db_query("SELECT * FROM {message} WHERE iid = %d", $instance_id));
+function message_get_message_instance($instance_id) {
+  $return = db_fetch_object(db_query("SELECT * FROM {message_instance} WHERE iid = %d", $instance_id));
   // Unserialize the arguments.
   if (!empty($return->arguments)) {
     $return->arguments = unserialize($return->arguments);
@@ -195,7 +204,7 @@ function message_show_message($instance_id, $skip_access = FALSE, $account = NUL
     $account = $user;
   }
 
-  $message = message_get_message($instance_id);
+  $message = message_get_message_instance($instance_id);
 
   if ($skip_access) {
     $access = TRUE;
@@ -228,10 +237,10 @@ function message_show_message($instance_id, $skip_access = FALSE, $account = NUL
  * @see t().
  */
 function message_t($message) {
-  $message_template = message_get_message_template($message->name);
+  $message_template = message_load_template($message->name);
 
   if (module_exists(i18nstrings)) {
-    $string = i18nstrings("messages_template:message_template:$message_template->mtid:message", $message_template->message);
+    $string = i18nstrings("messages:message:$message_template->mtid:message", $message_template->message);
   }
   else {
     $string = $message_template->message;
@@ -261,6 +270,19 @@ function message_t($message) {
     }
     return strtr($string, $args);
   }
+}
+
+/**
+ * Wrapper around message_load() that only returns enabled messages.
+ */
+function message_enabled_messages($reset = FALSE) {
+  $enabled = array();
+  foreach (message_load(NULL, $reset) as $context) {
+    if (empty($context->disabled)) {
+      $enabled[$context->name] = $context;
+    }
+  }
+  return $enabled;
 }
 
 /**
