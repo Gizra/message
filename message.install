@@ -22,20 +22,48 @@ function message_schema() {
   $schema = array();
 
   $schema['message_template'] = array(
+    'description' => 'Storage for user-defined message templates.',
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'message',
+      'default hook' => 'message_default_messages',  // Function hook name.
+      'status' => 'message_status',
+      'api' => array(
+        'owner' => 'message',
+        'api' => 'message',  // Base name for api include files.
+        'minimum_version' => 3,
+        'current_version' => 3,
+      ),
+    ),
     'fields' => array(
       'mtid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
-        'description' => 'The Unique id of the message template.',
+        'description' => 'The Unique id of the message template. Needed for i18strings().',
       ),
-      'mid' => array(
+      'name' => array(
+        'description' => 'The primary identifier for a context.',
         'type' => 'varchar',
-        'length' => '50',
+        'length' => 255,
         'not null' => TRUE,
-        'description' => 'The Unique id of the message',
+        'default' => '',
+      ),
+      'description' => array(
+        'description' => 'Description for this context.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'tag' => array(
+        'description' => 'Tag for this context.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
       ),
       'message' => array(
-        'descripiton' => 'The full plaintext message',
+        'descripiton' => 'The full plaintext message.',
         'type' => 'text',
         'size' => 'big',
         'not null' => TRUE,
@@ -47,7 +75,7 @@ function message_schema() {
         'length' => '12',
       ),
     ),
-    'primary key' => array('mtid', 'mid'),
+    'primary key' => array('mtid', 'name'),
   );
 
   $schema['message'] = array(
@@ -58,17 +86,19 @@ function message_schema() {
         'unsigned' => TRUE,
         'description' => 'The Unique id of the message instance.',
       ),
-      'mtid' => array(
+      'name' => array(
         'description' => 'Reference to a message in {message_template}.',
         'type' => 'varchar',
-        'length' => '50',
+        'length' => 255,
         'not null' => TRUE,
+        'default' => '',
       ),
       'entity_type' => array(
         'description' => 'The type of entity being acted upon (e.g. node, user)',
         'type' => 'varchar',
-        'length' => '50',
+        'length' => 255,
         'not null' => TRUE,
+        'default' => '',
        ),
       'eid' => array(
         'description' => 'Entity ID used to maintain the relationship between activity and the entity that created the activity.',

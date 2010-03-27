@@ -37,6 +37,87 @@ function message_views_api() {
 }
 
 /**
+ * Load & crud functions ==============================================
+ */
+
+/**
+ * Message loader.
+ *
+ * @param $name
+ *   The name for this message object.
+ *
+ * @return
+ *   Returns a fully-loaded message definition.
+ */
+function message_load($name = NULL, $reset = FALSE) {
+  ctools_include('export');
+  static $messages;
+  if (!isset($messages) || $reset) {
+    if (!$reset && $messages = cache_get('message', 'cache')) {
+      // Nothing here.
+    }
+    else {
+      if ($reset) {
+        ctools_export_load_object_reset('context');
+      }
+      $messages = ctools_export_load_object('message', 'all');
+      cache_set('message', $messages);
+    }
+  }
+  if (isset($name)) {
+    return isset($messages[$name]) ? $messages[$name] : FALSE;
+  }
+  return $messages;
+}
+
+
+/**
+ * Inserts or updates a context object into the database.
+ * @TODO: should probably return the new cid on success -- make sure
+ * this doesn't break any checks elsewhere.
+ *
+ * @param $context
+ *   The context object to be inserted.
+ *
+ * @return
+ *   Returns true on success, false on failure.
+ */
+function message_save($message) {
+  $existing = message_load($message->name, TRUE);
+  if ($existing && ($existing->export_type & EXPORT_IN_DATABASE)) {
+    drupal_write_record('message_template', $message, 'name');
+  }
+  else {
+    drupal_write_record('message_template', $message);
+  }
+  message_load(NULL, TRUE);
+  message_invalidate_cache();
+  return TRUE;
+}
+
+/**
+ * Deletes an existing message.
+ *
+ * @param $message
+ *   The message object to be deleted.
+ *
+ * @return
+ *   Returns true on success, false on failure.
+ */
+function message_delete($message) {
+  if (isset($message->name) && ($message->export_type & EXPORT_IN_DATABASE)) {
+    db_query("DELETE FROM {message} WHERE name = '%s'", $message->name);
+    message_invalidate_cache();
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * API FUNCTIONS ======================================================
+ */
+
+/**
  * Get a plugin handler.
  */
 function message_get_plugin($key, $info = array(), $reset = FALSE) {
@@ -82,8 +163,8 @@ function message_get_message_realm($message_id) {
 /**
  * Get a message template record.
  */
-function message_get_message_template($message_id) {
-  return db_fetch_object(db_query("SELECT * FROM {message_template} WHERE mid = %d", $message_id));
+function message_get_message_template($name) {
+  return db_fetch_object(db_query("SELECT * FROM {message_template} WHERE name = '%s'", $name));
 }
 
 /**
@@ -147,7 +228,7 @@ function message_show_message($instance_id, $skip_access = FALSE, $account = NUL
  * @see t().
  */
 function message_t($message) {
-  $message_template = message_get_message_template($message->mid);
+  $message_template = message_get_message_template($message->name);
 
   if (module_exists(i18nstrings)) {
     $string = i18nstrings("messages_template:message_template:$message_template->mtid:message", $message_template->message);
@@ -180,4 +261,11 @@ function message_t($message) {
     }
     return strtr($string, $args);
   }
+}
+
+/**
+ * Invalidates all message caches().
+ */
+function message_invalidate_cache() {
+  cache_clear_all('message', 'cache', TRUE);
 }
