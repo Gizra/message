@@ -6,12 +6,12 @@
  */
 class message_plugin_og extends message_plugin {
 
-  public function access() {
+  function access() {
     // Check if the user has access to the realm by their ID.
     return array_intersect(array_keys($this->account->og_groups), $this->messages[$this->realm]);
   }
 
-  public function __get_views_handlers() {
+  function get_views_handlers() {
     return array(
       'message_handler_filter_plugin_og_realm' => array(
         'parent' => 'views_handler_filter',
@@ -20,27 +20,17 @@ class message_plugin_og extends message_plugin {
     );
   }
 
-  public function get_views_data() {
+  function get_views_data() {
     $data = array();
 
     $data['message_realm']['plugin_og_realm'] = array(
       'title' => t('Organic groups realm'),
-      'help' => t('Filter messages by membership in groups realm.'),
-
-      'real field' => 'realm_id',
-
-      'relationship' => array(
-        'group' => t('Message realm'),
-        'title' => t('Organic groups'),
-        'help' => t('Join the Organic groups table to the Message table'),
-        'handler' => 'views_handler_relationship',
-        'base' => 'og_uid',
-        'base field' => 'uid',
-        'label' => t('Message realm organic groups'),
-      ),
+      'help' => t('Filter messages by organic groups realm.'),
+      // This is a dummy field, so point it to a real field.
+      'real field' => 'iid',
 
       'filter' => array(
-        'handler' => 'views_handler_filter_user_current',
+        'handler' => 'message_handler_filter_plugin_og_realm',
         'label' => t('Organic groups'),
       ),
     );
