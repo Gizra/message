@@ -16,7 +16,7 @@ class message_handler_filter_plugin_realm_og extends views_handler_filter {
     global $user;
 
     if ($gids = implode(', ', array_keys($user->og_groups))) {
-      $this->query->add_where($this->options['group'], "message_realm_message.realm_id IN ($gids) AND message_realm_message.realm = 'og'");
+      $this->query->add_where($this->options['group'], "message_realm_message_instance.realm_id IN ($gids) AND message_realm_message.realm = 'og'");
     }
   }
 }

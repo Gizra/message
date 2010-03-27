@@ -39,15 +39,15 @@ function message_views_data() {
 
   $data['message_realm']['table']['group'] = t('Message realm');
 
-  $data['message']['table']['group'] = t('Message');
-  $data['message']['table']['base'] = array(
+  $data['message_instance']['table']['group'] = t('Message');
+  $data['message_instance']['table']['base'] = array(
     'field' => 'iid',
     'title' => t('Message'),
     'help' => t('Messages that are related to enteties. Can be used as activity stream.'),
   );
 
   // Database columns
-  $data['message']['iid'] = array(
+  $data['message_instance']['iid'] = array(
     'title' => t('Activity Unique ID'),
     'help' => t('The unique id for each activity'),
     'field' => array(
@@ -58,7 +58,7 @@ function message_views_data() {
     ),
   );
 
-  $data['message']['uid'] = array(
+  $data['message_instance']['uid'] = array(
     'title' => t('User'),
     'help' => t('The user that is associated with the message.'),
     'relationship' => array(
@@ -68,7 +68,7 @@ function message_views_data() {
     ),
   );
 
-  $data['message']['iid'] = array(
+  $data['message_instance']['iid'] = array(
     'title' => t('Message realm'),
     'help' => t('Relate a message to the message realm.'),
     'relationship' => array(
@@ -79,7 +79,7 @@ function message_views_data() {
     ),
   );
 
-  $data['message']['timestamp'] = array(
+  $data['message_instance']['timestamp'] = array(
     'title' => t('Creation date'),
     'help' => t('The time that the message was created.'),
     'field' => array(
@@ -91,7 +91,7 @@ function message_views_data() {
     ),
   );
 
-  $data['message']['render'] = array(
+  $data['message_instance']['render'] = array(
     'title' => t('Show message'),
     'help' => t('Show a message.'),
     // This is a dummy field, so point it to a real field.
@@ -99,20 +99,6 @@ function message_views_data() {
 
     'field' => array(
       'handler' => 'message_handler_field_message_render',
-    ),
-  );
-
-  // Add relationship of {messsage_realm} to {message}.
-  $data['message']['message_realm_rel'] = array(
-    'group' => t('Message'),
-    'title' => $info['title'],
-    'help' => $info['help'],
-    'relationship' => array(
-      'handler' => 'views_handler_relationship',
-      'label' => t('Message realm'),
-      'base' => 'message',
-      'base field' => 'iid',
-      'relationship field' => 'iid',
     ),
   );
 

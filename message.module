@@ -237,7 +237,7 @@ function message_show_message($instance_id, $skip_access = FALSE, $account = NUL
  * @see t().
  */
 function message_t($message) {
-  $message_template = message_load_template($message->name);
+  $message_template = message_load($message->name);
 
   if (module_exists(i18nstrings)) {
     $string = i18nstrings("messages:message:$message_template->mtid:message", $message_template->message);

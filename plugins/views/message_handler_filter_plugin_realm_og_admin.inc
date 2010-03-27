@@ -23,7 +23,7 @@ class message_handler_filter_plugin_realm_og_admin extends views_handler_filter 
     }
     if ($gids) {
       $gids = implode(', ', $gids);
-      $this->query->add_where($this->options['group'], "message_realm_message.realm_id IN ($gids) AND message_realm_message.realm = 'og_admin'");
+      $this->query->add_where($this->options['group'], "message_realm_message_instance.realm_id IN ($gids) AND message_realm_message.realm = 'og_admin'");
     }
   }
 }
