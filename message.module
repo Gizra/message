@@ -69,7 +69,7 @@ function message_load($name = NULL, $reset = FALSE) {
   ctools_include('export');
   static $messages;
   if (!isset($messages) || $reset) {
-    if (!$reset && $messages = cache_get('message', 'cache')) {
+    if (!$reset && $messages = message_cache_get('cache')) {
       // Nothing here.
     }
     else {
@@ -77,7 +77,7 @@ function message_load($name = NULL, $reset = FALSE) {
         ctools_export_load_object_reset('message');
       }
       $messages = ctools_export_load_object('message', 'all');
-      cache_set('message', $messages);
+      message_cache_set($messages);
     }
   }
   if (isset($name)) {
@@ -240,7 +240,7 @@ function message_t($message) {
   $message_template = message_load($message->name);
 
   if (module_exists(i18nstrings)) {
-    $string = i18nstrings("messages:message:$message_template->mtid:message", $message_template->message);
+    $string = i18nstrings("messages:message:$message_template->name:message", $message_template->message);
   }
   else {
     $string = $message_template->message;
@@ -283,6 +283,26 @@ function message_enabled_messages($reset = FALSE) {
     }
   }
   return $enabled;
+}
+
+/**
+ * Wrapper around cache_get() to make it easier for context to pull different
+ * datastores from a single cache row.
+ */
+function message_cache_get($reset = FALSE) {
+  static $cache;
+  if (!isset($cache) || $reset) {
+    $cache = cache_get('message', 'cache');
+  }
+  return !empty($cache) ? $cache->data : FALSE;
+}
+
+/**
+ * Wrapper around cache_set() to make it easier for message to write different
+ * datastores to a single cache row.
+ */
+function message_cache_set($value) {
+  cache_set('message', $value);
 }
 
 /**

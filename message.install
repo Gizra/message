@@ -36,11 +36,6 @@ function message_schema() {
       ),
     ),
     'fields' => array(
-      'mtid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'description' => 'The Unique id of the message template. Needed for i18strings().',
-      ),
       'name' => array(
         'description' => 'The primary identifier for a context.',
         'type' => 'varchar',
