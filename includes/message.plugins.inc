@@ -44,6 +44,18 @@ function _message_message_plugins() {
       'title' => t('Organic groups realm'),
       'description' => t("Determine access by a user's membership in a group."),
     );
+
+    $plugins['message_plugin_og_admin'] = array(
+      'handler' => array(
+        'path' => drupal_get_path('module', 'message') .'/plugins',
+        'file' => 'message_plugin_og_admin.inc',
+        'class' => 'message_plugin_og_admin',
+        'parent' => 'message_plugin',
+      ),
+      'realm' => 'og_admin',
+      'title' => t('Organic groups admin realm'),
+      'description' => t("Determine access by a user's membership and administrator role in a group."),
+    );
   }
 
   return $plugins;
