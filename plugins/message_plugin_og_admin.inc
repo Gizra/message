@@ -13,7 +13,7 @@ class message_plugin_og_admin extends message_plugin {
 
   function get_views_handlers() {
     return array(
-      'message_handler_filter_plugin_og_admin_realm' => array(
+      'message_handler_filter_plugin_realm_og_admin' => array(
         'parent' => 'views_handler_filter',
         'path' => drupal_get_path('module', 'message') .'/plugins/views',
       ),
@@ -30,7 +30,7 @@ class message_plugin_og_admin extends message_plugin {
       'real field' => 'iid',
 
       'filter' => array(
-        'handler' => 'message_handler_filter_plugin_og_admin_realm',
+        'handler' => 'message_handler_filter_plugin_realm_og_admin',
         'label' => t('Organic groups admin'),
       ),
     );

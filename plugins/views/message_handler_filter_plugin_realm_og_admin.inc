@@ -11,7 +11,7 @@
  *
  * @ingroup views
  */
-class message_handler_filter_plugin_og_admin_realm extends views_handler_filter {
+class message_handler_filter_plugin_realm_og_admin extends views_handler_filter {
   function query() {
     global $user;
 
