@@ -11,10 +11,14 @@ class message_plugin_og extends message_plugin {
     return array_intersect(array_keys($this->account->og_groups), $this->messages[$this->realm]);
   }
 
+  function get_accessibale_id_array() {
+    return array_keys($this->account->og_groups);
+  }
+
   function get_views_handlers() {
     return array(
       'message_handler_filter_plugin_realm_og' => array(
-        'parent' => 'views_handler_filter',
+        'parent' => 'message_handler_filter_plugin_realm',
         'path' => drupal_get_path('module', 'message') .'/plugins/views',
       ),
     );

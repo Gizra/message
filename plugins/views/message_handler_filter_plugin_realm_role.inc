@@ -11,15 +11,10 @@
  *
  * @ingroup views
  */
-class message_handler_filter_plugin_realm_role extends views_handler_filter {
-  function query() {
-    global $user;
-
-    $this->ensure_my_table();
-    // TODO: How how to get table alias?
-    $table = $this->query->ensure_table('message_realm');
-
-    $roles = implode(', ', array_keys($user->roles));
-    $this->query->add_where($this->options['group'], "message_realm_message_instance.realm_id IN ($roles) AND message_realm_message.realm = 'role'");
+class message_handler_filter_plugin_realm_role extends message_handler_filter_plugin_realm {
+  function init(&$view, $options) {
+    parent::init(&$view, $options);
+    // Get the plugin realm into the Views object.
+    $this->message_plugin = message_get_plugin('message_plugin_role');
   }
 }

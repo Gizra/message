@@ -22,11 +22,18 @@ class message_plugin {
   /**
    * Determine if the current user has access or not.
    */
-  public function access() {
-    // Default to no access control.
-    return TRUE;
+  function access() {
+    return array_intersect($this->get_accessibale_id_array(), $this->messages[$this->realm]);
   }
 
+  /**
+   * Get array of IDs a user may access.
+   *
+   * This is used in Views handlers.
+   */
+  function get_accessibale_id_array() {
+    return array();
+  }
   /**
    * @addtogroup views
    * @{
@@ -37,7 +44,12 @@ class message_plugin {
    * Returns information needed for hook_views_handlers().
    */
   public function get_views_handlers() {
-    return array();
+    return array(
+      'message_handler_filter_plugin_realm' => array(
+        'parent' => 'views_handler_filter',
+        'path' => drupal_get_path('module', 'message') .'/plugins/views',
+      ),
+    );
   }
 
   /**
