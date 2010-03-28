@@ -70,7 +70,7 @@ function message_schema() {
         'length' => '12',
       ),
     ),
-    'primary key' => array('mtid', 'name'),
+    'primary key' => array('name'),
   );
 
   $schema['message_instance'] = array(
