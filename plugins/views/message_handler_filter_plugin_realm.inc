@@ -23,11 +23,13 @@ class message_handler_filter_plugin_realm extends views_handler_filter {
 
     $this->ensure_my_table();
     // TODO: How how to get table alias?
-    $table = $this->query->ensure_table('message_realm');
+    // $table = $this->query->ensure_table('message_realm');
+
+    $table = 'message_realm_message_instance';
 
     $ids = implode(', ', $this->message_plugin->get_accessibale_id_array());
     $realm = $this->message_plugin->realm;
 
-    $this->query->add_where($this->options['group'], "message_realm_message_instance.realm_id IN ($ids) AND message_realm_message.realm = '$realm'");
+    $this->query->add_where($this->options['group'], "$table.realm_id IN ($ids) AND $table.realm = '$realm'");
   }
 }
