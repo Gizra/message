@@ -50,6 +50,16 @@ function message_features_api() {
     ),
   );
 }
+
+/**
+ * Implementation of hook_theme().
+ */
+function message_theme() {
+  $items = array();
+  $items['message'] = array(
+    'arguments' => array('message' => array()),
+  );
+  return $items;
 }
 
 /**
@@ -99,7 +109,6 @@ function message_save($message) {
     drupal_write_record('message', $message);
   }
   message_load(NULL, TRUE);
-  message_invalidate_cache();
   return TRUE;
 }
 
@@ -214,7 +223,7 @@ function message_show_message($instance_id, $skip_access = FALSE, $account = NUL
   }
 
   if ($access) {
-    $output = message_t($message);
+    $output = theme('message', array('message' => $message, 'output' => message_t($message)));
   }
 
   return $output;
@@ -262,6 +271,13 @@ function message_t($message) {
     }
     return strtr($string, $args);
   }
+}
+
+/**
+ * Theme the message.
+ */
+function theme_message($message = array()) {
+  return '<div class="message message-instance-'. $message['message']->iid .'>'. $message['output'] .'</div>';
 }
 
 /**
