@@ -96,6 +96,18 @@ function message_rules_action_info() {
     'module' => 'Message',
   );
 
+  $info['message_action_assign_message_instance_to_realm'] = array(
+    'label' => t('Assign a message instance to realm'),
+    'arguments' => array(
+      'message_instance' => array(
+        'type' => 'message_instance',
+        'label' => t('Message instance'),
+      ),
+    ),
+    'eval input' => array('realm', 'realm_id'),
+    'module' => 'Message',
+  );
+
   return $info;
 }
 
@@ -137,4 +149,15 @@ function message_action_create_message_instance($message, $account, $settings) {
     }
   }
   return array('message_instance' => $message_instance);
+}
+
+/**
+ * Action: Assign a message instance to realm.
+ */
+function message_action_assign_message_instance_to_realm($message_instance, $settings) {
+  $realm = new stdClass();
+  $realm->iid = $message_instance->iid;
+  $realm->realm = $settings['realm'];
+  $realm->realm_id = $settings['realm_id'];
+  message_realm_save($realm);
 }

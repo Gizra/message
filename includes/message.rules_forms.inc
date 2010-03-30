@@ -86,3 +86,24 @@ function message_action_create_message_instance_form($settings, &$form, $form_st
     '#description' => t('Optional; An identifier that can group message instances together.'),
   );
 }
+
+/**
+ * Action: Assign a message instance to realm configuration form.
+ */
+function message_action_assign_message_instance_to_realm_form($settings, &$form, $form_state) {
+
+  $form['settings']['realm'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Realm'),
+    '#default_value' => !empty($settings['realm']) ? $settings['realm'] : '',
+    '#required' => TRUE,
+  );
+
+  $form['settings']['realm_id'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Realm ID'),
+    '#default_value' => !empty($settings['realm_id']) ? $settings['realm_id'] : '',
+    '#required' => TRUE,
+  );
+
+}
