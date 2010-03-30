@@ -125,11 +125,86 @@ function message_save($message) {
 function message_delete($message) {
   if (isset($message->name) && ($message->export_type & EXPORT_IN_DATABASE)) {
     db_query("DELETE FROM {message} WHERE name = '%s'", $message->name);
-    message_invalidate_cache();
     return TRUE;
   }
   return FALSE;
 }
+
+
+/**
+ * Message instance load.
+ *
+ * @param $iid
+ * @return unknown_type
+ */
+function message_instance_load($iid) {
+  return db_fetch_object(db_query("SELECT * FROM {message_instance} where iid = %d", $iid));
+}
+
+/**
+ * Message instance save.
+ *
+ * @param $message_instance
+ * @return unknown_type
+ */
+function message_instance_save($message_instance) {
+  if ($existing = message_instance_load($message_instance->iid)) {
+    drupal_write_record('message_instance', $message_instance, 'iid');
+  }
+  else {
+    drupal_write_record('message_instance', $message_instance);
+  }
+  return TRUE;
+}
+
+/**
+ * Message instance delete.
+ *
+ * @param $message_instance
+ * @return unknown_type
+ */
+function message_instance_delete($message_instance) {
+  db_query("DELETE FROM {message_instance} WHERE iid = %d", $message->iid);
+  return TRUE;
+}
+
+/**
+ * Message realm load.
+ *
+ * @param $iid
+ * @return unknown_type
+ */
+function message_realm_load($rid) {
+  return db_fetch_object(db_query("SELECT * FROM {message_realm} where rid = %d", $rid));
+}
+
+/**
+ * Message realm save.
+ *
+ * @param $message_instance
+ * @return unknown_type
+ */
+function message_instance_save($message_realm) {
+  if ($existing = message_realm_load($message_realm->rid)) {
+    drupal_write_record('message_realm', $message_realm, 'rid');
+  }
+  else {
+    drupal_write_record('message_realm', $message_realm);
+  }
+  return TRUE;
+}
+
+/**
+ * Message realm delete.
+ *
+ * @param $message_instance
+ * @return unknown_type
+ */
+function message_instance_delete($message_realm) {
+  db_query("DELETE FROM {message_realm} WHERE rid = %d", $message_realm->rid);
+  return TRUE;
+}
+
 
 /**
  * API FUNCTIONS ======================================================

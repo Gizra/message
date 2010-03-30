@@ -16,7 +16,7 @@ function message_rules_data_type_info() {
     'message' => array(
       'label' => t('message'),
       'class' => 'message_data_type_message',
-      'savable' => FALSE,
+      'savable' => TRUE,
       'identifiable' => TRUE,
       'module' => 'Message',
       'token type' => FALSE,
@@ -24,7 +24,7 @@ function message_rules_data_type_info() {
     'message_instance' => array(
       'label' => t('message instance'),
       'class' => 'message_data_type_message_instance',
-      'savable' => FALSE,
+      'savable' => TRUE,
       'identifiable' => TRUE,
       'module' => 'Message',
       'token type' => FALSE,
@@ -40,6 +40,12 @@ class message_data_type_message extends rules_data_type {
     return message_load($name);
   }
 
+  function save() {
+    $message = &$this->get();
+    message_save($message);
+    return TRUE;
+  }
+
   function get_identifier() {
     $message = &$this->get();
     return $message->name;
@@ -52,6 +58,12 @@ class message_data_type_message extends rules_data_type {
 class message_data_type_message_instance extends rules_data_type {
   function load($iid) {
     return message_instance_load($iid);
+  }
+
+  function save() {
+    $message = &$this->get();
+    message_instance_save($message);
+    return TRUE;
   }
 
   function get_identifier() {

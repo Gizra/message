@@ -132,6 +132,11 @@ function message_schema() {
   $schema['message_realm'] = array(
     'description' => 'The messages realm.',
     'fields' => array(
+      'rid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'description' => 'The Unique id of the message realm.',
+      ),
       'iid' => array(
         'description' => 'Reference to a message ID in {message}.',
         'type' => 'int',
@@ -151,7 +156,7 @@ function message_schema() {
         'not null' => TRUE,
       ),
     ),
-    'primary key' => array('iid', 'realm'),
+    'primary key' => array('rid'),
   );
 
   return $schema;
