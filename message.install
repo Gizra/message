@@ -88,6 +88,11 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'arguments' => array(
+        'description' => 'Serialized array with the arguments',
+        'type' => 'text',
+        'serialize' => TRUE,
+      ),
       'entity_type' => array(
         'description' => 'The type of entity being acted upon (e.g. node, user)',
         'type' => 'varchar',
@@ -107,11 +112,13 @@ function message_schema() {
         'default value' => NULL,
         'unsigned' => TRUE,
       ),
-      'arguments' => array(
-        'description' => 'Serialized array with the arguments',
-        'type' => 'text',
-        'serialize' => TRUE,
-      ),
+      'extra_identifier' => array(
+        'description' => 'An optional identifier that can group message instances together.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+       ),
       'timestamp' => array(
         'description' => 'When the message instance was recorded.',
         'type' => 'int',
