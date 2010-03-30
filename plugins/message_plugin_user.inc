@@ -1,0 +1,40 @@
+<?php
+// $Id: context_condition_node.inc,v 1.1.2.2 2010/02/09 04:38:01 yhahn Exp $
+
+/**
+ * Expose node views/node forms of specific node types as a context condition.
+ */
+class message_plugin_user extends message_plugin {
+
+  function get_accessibale_id_array() {
+    return array($this->account->uid);
+  }
+
+  function get_views_handlers() {
+    return array(
+      'message_handler_filter_plugin_realm_user' => array(
+        'parent' => 'message_handler_filter_plugin_realm',
+        'path' => drupal_get_path('module', 'message') .'/plugins/views',
+      ),
+    );
+  }
+
+  function get_views_data() {
+    $data = array();
+
+    $data['message_realm']['plugin_user_realm'] = array(
+      'title' => t('User realm'),
+      'help' => t('Filter messages by user realm.'),
+      // This is a dummy field, so point it to a real field.
+      'real field' => 'iid',
+
+      'filter' => array(
+        'handler' => 'message_handler_filter_plugin_realm_user',
+        'label' => t('User'),
+      ),
+    );
+
+    return $data;
+  }
+
+}
