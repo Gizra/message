@@ -67,19 +67,11 @@ function message_features_api() {
  */
 function message_load($name = NULL, $reset = FALSE) {
   ctools_include('export');
-  static $messages;
-  if (!isset($messages) || $reset) {
-    if (!$reset && $messages = message_cache_get('cache')) {
-      // Nothing here.
-    }
-    else {
-      if ($reset) {
-        ctools_export_load_object_reset('message');
-      }
-      $messages = ctools_export_load_object('message', 'all');
-      message_cache_set($messages);
-    }
+  if ($reset) {
+    ctools_export_load_object_reset('message');
   }
+  $messages = ctools_export_load_object('message', 'all');
+
   if (isset($name)) {
     return isset($messages[$name]) ? $messages[$name] : FALSE;
   }
@@ -285,29 +277,28 @@ function message_enabled_messages($reset = FALSE) {
   return $enabled;
 }
 
+
 /**
- * Wrapper around cache_get() to make it easier for context to pull different
- * datastores from a single cache row.
+ * CTools list callback for bulk export.
  */
-function message_cache_get($reset = FALSE) {
-  static $cache;
-  if (!isset($cache) || $reset) {
-    $cache = cache_get('message', 'cache');
+function message_message_list() {
+  $messages = message_load(NULL, TRUE);
+  $list = array();
+  foreach ($messages as $message) {
+    $list[$message->name] = $message->name;
   }
-  return !empty($cache) ? $cache->data : FALSE;
+  return $list;
 }
 
 /**
- * Wrapper around cache_set() to make it easier for message to write different
- * datastores to a single cache row.
+ * CTools export function.
  */
-function message_cache_set($value) {
-  cache_set('message', $value);
-}
-
-/**
- * Invalidates all message caches().
- */
-function message_invalidate_cache() {
-  cache_clear_all('message', 'cache', TRUE);
+function message_export_message($message, $indent = '') {
+  foreach (array('description', 'tag') as $id) {
+    if (!empty($message->$id)) {
+      $o .= $indent . "  t('" . str_replace("'", "\'", $message->$id) . "'),\n";
+    }
+  }
+  $o = "\n". $indent ."\$translatables['" . $message->name . "'] = array(\n". $o . $indent . ");\n";
+  return ctools_export_object('message', $message, $indent) . $o;
 }
