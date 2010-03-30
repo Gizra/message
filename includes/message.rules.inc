@@ -140,6 +140,9 @@ function message_action_create_message_instance($message, $account, $settings) {
   $message_instance = new stdClass();
   $args = array();
 
+  $message_instance->name = $message->name;
+  $message_instance->uid = $account->uid;
+
   // TODO: Add form validation on arguments.
   if (!empty($settings['message']['arguments'])) {
     $list = explode("\n", $settings['message']['arguments']);
