@@ -6,11 +6,6 @@
  */
 class message_plugin_og_admin extends message_plugin {
 
-  function access() {
-    // Check if the user has access to the realm by their ID.
-    return array_intersect(array_keys($this->account->og_groups), $this->messages[$this->realm]);
-  }
-
   function get_accessibale_id_array() {
     return array_keys($this->account->og_groups);
     $gids = array();
