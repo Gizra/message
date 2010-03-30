@@ -11,12 +11,10 @@
  *
  * @ingroup views
  */
-class message_handler_filter_plugin_realm_og extends views_handler_filter {
-  function query() {
-    global $user;
-
-    if ($gids = implode(', ', array_keys($user->og_groups))) {
-      $this->query->add_where($this->options['group'], "message_realm_message_instance.realm_id IN ($gids) AND message_realm_message.realm = 'og'");
-    }
+class message_handler_filter_plugin_realm_og extends message_handler_filter_plugin_realm {
+  function init() {
+    // Get the plugin realm into the Views object.
+    $plugin = 'message_plugin_og';
+    parent::init();
   }
 }

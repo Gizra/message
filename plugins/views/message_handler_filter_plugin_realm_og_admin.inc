@@ -11,19 +11,10 @@
  *
  * @ingroup views
  */
-class message_handler_filter_plugin_realm_og_admin extends views_handler_filter {
-  function query() {
-    global $user;
-
-    $gids = array();
-    foreach ($user->og_groups as $key => $value) {
-      if (!empty($value['is_admin'])) {
-        $gids[] = $key;
-      }
-    }
-    if ($gids) {
-      $gids = implode(', ', $gids);
-      $this->query->add_where($this->options['group'], "message_realm_message_instance.realm_id IN ($gids) AND message_realm_message.realm = 'og_admin'");
-    }
+class message_handler_filter_plugin_realm_og_admin extends message_handler_filter_plugin_realm {
+  function init() {
+    // Get the plugin realm into the Views object.
+    $plugin = 'message_plugin_og_admin';
+    parent::init();
   }
 }

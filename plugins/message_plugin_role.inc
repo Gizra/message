@@ -6,7 +6,7 @@
  */
 class message_plugin_role extends message_plugin {
 
-  public function access() {
+  function access() {
     $access = FALSE;
     if (!empty($this->message_realm[$this->realm])) {
       // Check if the user has access to the realm by their ID.
@@ -15,16 +15,20 @@ class message_plugin_role extends message_plugin {
     return $access;
   }
 
-  public function get_views_handlers() {
+  function get_accessibale_id_array() {
+    return array_keys($this->account->roles);
+  }
+
+  function get_views_handlers() {
     return array(
       'message_handler_filter_plugin_realm_role' => array(
-        'parent' => 'views_handler_filter',
+        'parent' => 'message_handler_filter_plugin_realm',
         'path' => drupal_get_path('module', 'message') .'/plugins/views',
       ),
     );
   }
 
-  public function get_views_data() {
+  function get_views_data() {
     $data = array();
 
     $data['message_realm']['plugin_role_realm'] = array(
