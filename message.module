@@ -184,7 +184,7 @@ function message_realm_load($rid) {
  * @param $message_instance
  * @return unknown_type
  */
-function message_instance_save($message_realm) {
+function message_realm_save($message_realm) {
   if ($existing = message_realm_load($message_realm->rid)) {
     drupal_write_record('message_realm', $message_realm, 'rid');
   }
@@ -200,7 +200,7 @@ function message_instance_save($message_realm) {
  * @param $message_instance
  * @return unknown_type
  */
-function message_instance_delete($message_realm) {
+function message_realm_delete($message_realm) {
   db_query("DELETE FROM {message_realm} WHERE rid = %d", $message_realm->rid);
   return TRUE;
 }
