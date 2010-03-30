@@ -14,7 +14,7 @@ class message_plugin {
    */
   function __construct($plugin, $info) {
     $this->plugin = $plugin;
-    $this->message_realm = message_get_message_realm($info['message_id']);
+    $this->message_realm = message_realm_load_multiple_by_message($info['message_id']);
     $this->realm = $plugin['realm'];
     $this->account = $info['account'];
   }

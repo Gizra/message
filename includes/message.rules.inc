@@ -110,7 +110,7 @@ function message_rules_action_info() {
         'label' => t('Message instance'),
       ),
     ),
-    'eval input' => array('arguments', 'entity_type', 'eid', 'extra_identifier'),
+    'eval input' => array('message|arguments', 'message|entity_type', 'message|eid', 'message|extra_identifier'),
     'module' => 'Message',
   );
 
