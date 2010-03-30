@@ -104,6 +104,12 @@ function message_rules_action_info() {
         'label' => t('User'),
       ),
     ),
+    'new variables' => array(
+      'message_instance' => array(
+        'type' => 'message_instance',
+        'label' => t('Message instance'),
+      ),
+    ),
     'eval input' => array('arguments', 'entity_type', 'eid', 'extra_identifier'),
     'module' => 'Message',
   );
