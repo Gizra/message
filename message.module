@@ -34,6 +34,7 @@ function message_views_api() {
     'api' => 2.0,
     'path' => drupal_get_path('module', 'message') . '/includes',
   );
+}
 
 /**
  * Implementation of hook_features_api().

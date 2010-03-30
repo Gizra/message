@@ -21,6 +21,14 @@ function message_rules_data_type_info() {
       'module' => 'Message',
       'token type' => FALSE,
     ),
+    'message_instance' => array(
+      'label' => t('message instance'),
+      'class' => 'message_data_type_message_instance',
+      'savable' => FALSE,
+      'identifiable' => TRUE,
+      'module' => 'Message',
+      'token type' => FALSE,
+    ),
   );
 }
 
@@ -35,6 +43,20 @@ class message_data_type_message extends rules_data_type {
   function get_identifier() {
     $message = &$this->get();
     return $message->name;
+  }
+}
+
+/**
+ * Defines the message instance data type.
+ */
+class message_data_type_message_instance extends rules_data_type {
+  function load($iid) {
+    return message_instance_load($iid);
+  }
+
+  function get_identifier() {
+    $message_instance = &$this->get();
+    return $message->iid;
   }
 }
 
