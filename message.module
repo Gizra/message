@@ -154,7 +154,7 @@ function message_instance_save($message_instance) {
   else {
     drupal_write_record('message_instance', $message_instance);
   }
-  return TRUE;
+  return $message_instance;
 }
 
 /**
@@ -191,7 +191,7 @@ function message_realm_save($message_realm) {
   else {
     drupal_write_record('message_realm', $message_realm);
   }
-  return TRUE;
+  return $message_realm;
 }
 
 /**
