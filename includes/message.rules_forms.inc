@@ -105,5 +105,4 @@ function message_action_assign_message_instance_to_realm_form($settings, &$form,
     '#default_value' => !empty($settings['realm_id']) ? $settings['realm_id'] : '',
     '#required' => TRUE,
   );
-
 }

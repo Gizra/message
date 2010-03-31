@@ -15,6 +15,7 @@ class message_handler_filter_plugin_realm extends views_handler_filter {
   function init(&$view, $options) {
     parent::init(&$view, $options);
     // Get the plugin realm into the Views object.
+    // @see message_handler_filter_plugin_realm::query().
     $this->message_plugin = message_get_plugin('message_plugin');
   }
 
