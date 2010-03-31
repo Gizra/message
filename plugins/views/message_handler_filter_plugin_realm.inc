@@ -18,6 +18,10 @@ class message_handler_filter_plugin_realm extends views_handler_filter {
     $this->message_plugin = message_get_plugin('message_plugin');
   }
 
+  function can_expose() {
+    return FALSE;
+  }
+
   function query() {
     global $user;
 

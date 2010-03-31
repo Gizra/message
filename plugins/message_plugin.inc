@@ -6,16 +6,14 @@
  */
 class message_plugin {
   var $plugin;
-  var $message_realm;
-  var $realm;
+  var $message_realms;
 
   /**
    * Constructor. Do not override.
    */
   function __construct($plugin, $info) {
     $this->plugin = $plugin;
-    $this->message_realm = message_realm_load_multiple_by_message($info['message_id']);
-    $this->realm = $plugin['realm'];
+    $this->message_realms = !empty($info['message_instance']) ? message_realm_load_multiple_by_message($info['message_instance']->iid) : array();
     $this->account = $info['account'];
   }
 
@@ -23,7 +21,12 @@ class message_plugin {
    * Determine if the current user has access or not.
    */
   function access() {
-    return array_intersect($this->get_accessibale_id_array(), $this->messages[$this->realm]);
+    $access = FALSE;
+    // Base plugin might not have a realm.
+    if ($realm = $this->plugin->realm && !empty($this->message_realms[$this->plugin->realm])) {
+      $access = array_intersect($this->get_accessibale_id_array(), $this->message_realms[$this->plugin->realm]);
+    }
+    return $access;
   }
 
   /**

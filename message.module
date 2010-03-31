@@ -175,7 +175,7 @@ function message_instance_delete($message_instance) {
 }
 
 /**
- * Get messages by their ID.
+ * Get realm messages by their ID.
  *
  * @param $message_id
  *   The message ID.
@@ -262,11 +262,11 @@ function message_get_plugin($key, $info = array(), $reset = FALSE) {
 /**
  * Show a message by the message instance ID.
  *
- * @param $instance_id
+ * @param $iid
  * @param $account
  * @return unknown_type
  */
-function message_show_message($instance_id, $skip_access = FALSE, $account = NULL) {
+function message_show_message($iid, $skip_access = FALSE, $account = NULL) {
   $output = '';
   $access = FALSE;
   if (empty($account)) {
@@ -274,7 +274,7 @@ function message_show_message($instance_id, $skip_access = FALSE, $account = NUL
     $account = $user;
   }
 
-  $message_instance = message_instance_load($instance_id);
+  $message_instance = message_instance_load($iid);
 
   if ($skip_access) {
     $access = TRUE;
