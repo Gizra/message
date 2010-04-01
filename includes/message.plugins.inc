@@ -19,6 +19,18 @@ function _message_message_plugins() {
     'description' => '',
   );
 
+  $plugins['message_plugin_user'] = array(
+    'handler' => array(
+      'path' => drupal_get_path('module', 'message') .'/plugins',
+      'file' => 'message_plugin_user.inc',
+      'class' => 'message_plugin_user',
+      'parent' => 'message_plugin',
+    ),
+    'realm' => 'user',
+    'title' => t('USer realm'),
+    'description' => t("Determine access by a user's ID."),
+  );
+
   $plugins['message_plugin_role'] = array(
     'handler' => array(
       'path' => drupal_get_path('module', 'message') .'/plugins',
