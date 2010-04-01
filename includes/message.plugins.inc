@@ -27,7 +27,7 @@ function _message_message_plugins() {
       'parent' => 'message_plugin',
     ),
     'realm' => 'role',
-    'title' => t('Basic role realm'),
+    'title' => t('Role realm'),
     'description' => t("Determine access by a user's role."),
   );
 

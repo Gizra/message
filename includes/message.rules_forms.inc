@@ -50,39 +50,32 @@ function message_action_load_message_form($settings, &$form, $form_state) {
  * Action: Create a message instance configuration form.
  */
 function message_action_create_message_instance_form($settings, &$form, $form_state) {
-  // Fields definition taken from taxonomy_form_term().
-  $form['settings']['message_instance'] = array(
-    '#type' => 'fieldset',
-    '#title' => t('message Identification'),
-    '#collapsible' => TRUE,
-  );
-
-  $form['settings']['message_instance']['arguments'] = array(
+  $form['settings']['arguments'] = array(
     '#type' => 'textarea',
     '#title' => t('Arguments'),
-    '#default_value' => !empty($settings['message_instance']['arguments']) ? $settings['message_instance']['arguments'] : '',
+    '#default_value' => !empty($settings['arguments']) ? $settings['arguments'] : '',
     // TODO: Better description.
     '#description' => t('The replacement arguments. Each argument should be in a separate line. <code>@node|node/1</code>.'),
   );
 
-  $form['settings']['message_instance']['entity_type'] = array(
+  $form['settings']['entity_type'] = array(
     '#type' => 'textfield',
     '#title' => t('Entity type'),
-    '#default_value' => !empty($settings['message_instance']['entity_type']) ? $settings['message_instance']['entity_type'] : '',
+    '#default_value' => !empty($settings['entity_type']) ? $settings['entity_type'] : '',
     '#description' => t('Optional; The type of entity being acted upon (e.g. node, user).'),
   );
 
-  $form['settings']['message_instance']['eid'] = array(
+  $form['settings']['eid'] = array(
     '#type' => 'textfield',
     '#title' => t('Entity ID'),
-    '#default_value' => !empty($settings['message_instance']['eid']) ? $settings['message_instance']['eid'] : '',
+    '#default_value' => !empty($settings['eid']) ? $settings['eid'] : '',
     '#description' => t('Optional; Entity ID used to maintain the relationship between the message and the entity that is related to it.'),
   );
 
-  $form['settings']['message_instance']['extra_identifier'] = array(
+  $form['settings']['extra_identifier'] = array(
     '#type' => 'textfield',
     '#title' => t('Extra identifier'),
-    '#default_value' => !empty($settings['message_instance']['extra_identifier']) ? $settings['message_instance']['extra_identifier'] : '',
+    '#default_value' => !empty($settings['extra_identifier']) ? $settings['extra_identifier'] : '',
     '#description' => t('Optional; An identifier that can group message instances together.'),
   );
 }
@@ -91,11 +84,21 @@ function message_action_create_message_instance_form($settings, &$form, $form_st
  * Action: Assign a message instance to realm configuration form.
  */
 function message_action_assign_message_instance_to_realm_form($settings, &$form, $form_state) {
-
+  // Get existing realms.
+  $options = array();
+  ctools_include('plugins');
+  $plugins = ctools_get_plugins('message', 'plugins');
+  foreach ($plugins as $name => $value) {
+    if (!empty($value['realm'])) {
+      $options[$name] = check_plain($value['title']);
+    }
+  }
   $form['settings']['realm'] = array(
-    '#type' => 'textfield',
+    '#type' => 'select',
     '#title' => t('Realm'),
     '#default_value' => !empty($settings['realm']) ? $settings['realm'] : '',
+    '#options' => $options,
+    '#disabled' => !$options,
     '#required' => TRUE,
   );
 

@@ -110,7 +110,7 @@ function message_rules_action_info() {
         'label' => t('Message instance'),
       ),
     ),
-    'eval input' => array('message|arguments', 'message|entity_type', 'message|eid', 'message|extra_identifier'),
+    'eval input' => array('arguments', 'entity_type', 'eid', 'extra_identifier'),
     'module' => 'Message',
   );
 
@@ -122,7 +122,7 @@ function message_rules_action_info() {
         'label' => t('Message instance'),
       ),
     ),
-    'eval input' => array('realm', 'realm_id'),
+    'eval input' => array('realm_id'),
     'module' => 'Message',
   );
 
@@ -150,8 +150,8 @@ function message_action_create_message_instance($message, $account, $settings) {
   $message_instance->uid = $account->uid;
 
   // TODO: Add form validation on arguments.
-  if (!empty($settings['message_instance']['arguments'])) {
-    $list = explode("\n", $settings['message_instance']['arguments']);
+  if (!empty($settings['arguments'])) {
+    $list = explode("\n", $settings['arguments']);
     $list = array_map('trim', $list);
 
       foreach ($list as $opt) {
@@ -163,8 +163,8 @@ function message_action_create_message_instance($message, $account, $settings) {
   }
 
   // Populate other variables.
-  unset($settings['message_instance']['arguments']);
-  foreach ($settings['message_instance'] as $key => $value) {
+  unset($settings['arguments']);
+  foreach ($settings as $key => $value) {
     if (!empty($value)) {
       $message_instance->{$key} = $value;
     }
