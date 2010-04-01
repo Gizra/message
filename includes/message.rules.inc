@@ -157,7 +157,7 @@ function message_action_create_message_instance($message, $account, $settings) {
       foreach ($list as $opt) {
       if (strpos($opt, '|') !== FALSE) {
         list($key, $value) = explode('|', $opt);
-        $message_instance->arguments[$key] = check_plain($value);
+        $message_instance->arguments[$key] = $value;
       }
     }
   }

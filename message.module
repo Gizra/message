@@ -322,6 +322,12 @@ function message_t($message_instance) {
   else {
     // Transform arguments before inserting them.
     foreach ($message_instance->arguments as $key => $value) {
+
+      if (is_array($value)) {
+        // A replacement via callback function.
+        $value = call_user_func_array($value['callback'], $value['callback arguments']);
+      }
+
       switch ($key[0]) {
         case '@':
           // Escaped only.

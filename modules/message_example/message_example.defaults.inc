@@ -37,7 +37,7 @@ function _message_example_message_default_messages() {
   $message->name = 'update_existing_content';
   $message->description = 'Update existing content.';
   $message->tag = '';
-  $message->message = '@node updated.';
+  $message->message = '<a href="@link">@title</a> updated.';
   $message->language = 'en';
 
   $translatables['update_existing_content'] = array(
