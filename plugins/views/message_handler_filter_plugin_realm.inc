@@ -33,7 +33,7 @@ class message_handler_filter_plugin_realm extends views_handler_filter {
     $table = 'message_realm_message_instance';
 
     $ids = implode(', ', $this->message_plugin->get_accessibale_id_array());
-    $realm = $this->message_plugin->realm;
+    $realm = $this->message_plugin->plugin['realm'];
 
     $this->query->add_where($this->options['group'], "$table.realm_id IN ($ids) AND $table.realm = '$realm'");
   }
