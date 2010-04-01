@@ -51,38 +51,38 @@ function message_action_load_message_form($settings, &$form, $form_state) {
  */
 function message_action_create_message_instance_form($settings, &$form, $form_state) {
   // Fields definition taken from taxonomy_form_term().
-  $form['settings']['message'] = array(
+  $form['settings']['message_instance'] = array(
     '#type' => 'fieldset',
     '#title' => t('message Identification'),
     '#collapsible' => TRUE,
   );
 
-  $form['settings']['message']['arguments'] = array(
+  $form['settings']['message_instance']['arguments'] = array(
     '#type' => 'textarea',
     '#title' => t('Arguments'),
-    '#default_value' => !empty($settings['message']['arguments']) ? $settings['message']['arguments'] : '',
+    '#default_value' => !empty($settings['message_instance']['arguments']) ? $settings['message_instance']['arguments'] : '',
     // TODO: Better description.
     '#description' => t('The replacement arguments. Each argument should be in a separate line. <code>@node|node/1</code>.'),
   );
 
-  $form['settings']['message']['entity_type'] = array(
+  $form['settings']['message_instance']['entity_type'] = array(
     '#type' => 'textfield',
     '#title' => t('Entity type'),
-    '#default_value' => !empty($settings['message']['entity_type']) ? $settings['message']['entity_type'] : '',
+    '#default_value' => !empty($settings['message_instance']['entity_type']) ? $settings['message_instance']['entity_type'] : '',
     '#description' => t('Optional; The type of entity being acted upon (e.g. node, user).'),
   );
 
-  $form['settings']['message']['eid'] = array(
+  $form['settings']['message_instance']['eid'] = array(
     '#type' => 'textfield',
     '#title' => t('Entity ID'),
-    '#default_value' => !empty($settings['message']['eid']) ? $settings['message']['eid'] : '',
+    '#default_value' => !empty($settings['message_instance']['eid']) ? $settings['message_instance']['eid'] : '',
     '#description' => t('Optional; Entity ID used to maintain the relationship between the message and the entity that is related to it.'),
   );
 
-  $form['settings']['message']['extra_identifier'] = array(
+  $form['settings']['message_instance']['extra_identifier'] = array(
     '#type' => 'textfield',
     '#title' => t('Extra identifier'),
-    '#default_value' => !empty($settings['message']['extra_identifier']) ? $settings['message']['extra_identifier'] : '',
+    '#default_value' => !empty($settings['message_instance']['extra_identifier']) ? $settings['message_instance']['extra_identifier'] : '',
     '#description' => t('Optional; An identifier that can group message instances together.'),
   );
 }

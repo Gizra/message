@@ -150,8 +150,8 @@ function message_action_create_message_instance($message, $account, $settings) {
   $message_instance->uid = $account->uid;
 
   // TODO: Add form validation on arguments.
-  if (!empty($settings['message']['arguments'])) {
-    $list = explode("\n", $settings['message']['arguments']);
+  if (!empty($settings['message_instance']['arguments'])) {
+    $list = explode("\n", $settings['message_instance']['arguments']);
     $list = array_map('trim', $list);
 
       foreach ($list as $opt) {
@@ -163,8 +163,8 @@ function message_action_create_message_instance($message, $account, $settings) {
   }
 
   // Populate other variables.
-  unset($settings['message']['arguments']);
-  foreach ($settings['message'] as $key => $value) {
+  unset($settings['message_instance']['arguments']);
+  foreach ($settings['message_instance'] as $key => $value) {
     if (!empty($value)) {
       $message_instance->{$key} = $value;
     }
