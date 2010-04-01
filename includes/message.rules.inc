@@ -61,14 +61,14 @@ class message_data_type_message_instance extends rules_data_type {
   }
 
   function save() {
-    $message = &$this->get();
-    message_instance_save($message);
+    $message_instance = &$this->get();
+    message_instance_save($message_instance);
     return TRUE;
   }
 
   function get_identifier() {
     $message_instance = &$this->get();
-    return $message->iid;
+    return $message_instance->iid;
   }
 }
 
