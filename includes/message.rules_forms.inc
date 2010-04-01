@@ -58,6 +58,15 @@ function message_action_create_message_instance_form($settings, &$form, $form_st
     '#description' => t('The replacement arguments. Each argument should be in a separate line. <code>@node|node/1</code>.'),
   );
 
+  $sample = t("return array(\n '@link' => array('callback' => 'url', 'callback arguments' => \"node/\$node->nid\"),\n '@title' => \$node->title,\n);");
+  $form['settings']['code'] = array(
+    '#type' => 'textarea',
+    '#title' => t('Code'),
+    '#default_value' => $settings['code'],
+    '#rows' => 6,
+    '#description' => t('Advanced usage only: PHP code that returns the value to set. Should not include &lt;?php ?&gt; delimiters. If this field is filled out, the value returned by this code will override any value specified above. Expected format: <pre>@sample</pre>.', array('@sample' => $sample)),
+  );
+
   $form['settings']['entity_type'] = array(
     '#type' => 'textfield',
     '#title' => t('Entity type'),
@@ -78,6 +87,26 @@ function message_action_create_message_instance_form($settings, &$form, $form_st
     '#default_value' => !empty($settings['extra_identifier']) ? $settings['extra_identifier'] : '',
     '#description' => t('Optional; An identifier that can group message instances together.'),
   );
+}
+
+/**
+ * Validate the chosen value or php code.
+ */
+function message_action_create_message_instance_form_validate($form, &$form_state) {
+  if (isset($form_state['values']['code']) && ($php = $form_state['values']['code'])) {
+    if (strpos($php, 'return') === FALSE) {
+      form_set_error('code', t('You have to return the default value in the expected format.'));
+    }
+  }
+}
+
+function message_action_create_message_instance_form_submit($form, &$form_state) {
+  $settings['code'] = $form_state['values']['code'];
+
+  if (function_exists('rules_action_custom_php_submit')) {
+    // Support adding variables to the php code, if php module is present.
+    rules_action_custom_php_submit($settings, $form, $form_state);
+  }
 }
 
 /**

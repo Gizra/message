@@ -141,7 +141,7 @@ function message_action_load_message($settings) {
 /**
  * Action: Create a message instance.
  */
-function message_action_create_message_instance($message, $account, $settings) {
+function message_action_create_message_instance($message, $account, $settings, $element, &$state) {
   // Prepare the values to pass to message_instance_save();
   $message_instance = new stdClass();
   $args = array();
@@ -149,8 +149,12 @@ function message_action_create_message_instance($message, $account, $settings) {
   $message_instance->name = $message->name;
   $message_instance->uid = $account->uid;
 
+  if (!empty($settings['code'])) {
+    $message_instance->arguments = _message_rules_get_field_value($settings, $state);
+  }
+
   // TODO: Add form validation on arguments.
-  if (!empty($settings['arguments'])) {
+  elseif (!empty($settings['arguments'])) {
     $list = explode("\n", $settings['arguments']);
     $list = array_map('trim', $list);
 
@@ -163,7 +167,7 @@ function message_action_create_message_instance($message, $account, $settings) {
   }
 
   // Populate other variables.
-  unset($settings['arguments']);
+  unset($settings['arguments'], $settings['code']);
   foreach ($settings as $key => $value) {
     if (!empty($value)) {
       $message_instance->{$key} = $value;
@@ -182,4 +186,20 @@ function message_action_assign_message_instance_to_realm($message_instance, $set
   $realm->realm = $settings['realm'];
   $realm->realm_id = $settings['realm_id'];
   message_realm_save($realm);
+}
+
+function _message_rules_get_field_value($settings, &$state) {
+  $value = '';
+  if ($settings['code']) {
+    if (function_exists('rules_input_evaluator_php_apply')) {
+      // Support adding variables to the php code, if php module is present.
+      $value = rules_input_evaluator_php_apply($settings['code'], $settings['vars'], $state, FALSE);
+    }
+    else {
+      ob_start();
+      $value = eval($settings['code']);
+      ob_end_clean();
+    }
+  }
+  return $value;
 }
