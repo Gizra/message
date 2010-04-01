@@ -90,7 +90,7 @@ function message_action_assign_message_instance_to_realm_form($settings, &$form,
   $plugins = ctools_get_plugins('message', 'plugins');
   foreach ($plugins as $name => $value) {
     if (!empty($value['realm'])) {
-      $options[$name] = check_plain($value['title']);
+      $options[$value['realm']] = check_plain($value['title']);
     }
   }
   $form['settings']['realm'] = array(

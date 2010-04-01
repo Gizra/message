@@ -163,7 +163,7 @@ function _message_example_rules_defaults() {
             ),
             '#name' => 'message_action_assign_message_instance_to_realm',
             '#settings' => array(
-              'realm' => 'message_plugin_role',
+              'realm' => 'role',
               'realm_id' => '2',
               '#argument map' => array(
                 'message_instance' => 'message_instance',
@@ -283,7 +283,7 @@ function _message_example_rules_defaults() {
             ),
             '#name' => 'message_action_assign_message_instance_to_realm',
             '#settings' => array(
-              'realm' => 'message_plugin_role',
+              'realm' => 'role',
               'realm_id' => '2',
               '#argument map' => array(
                 'message_instance' => 'message_instance',
