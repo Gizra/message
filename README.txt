@@ -1,1 +1,3 @@
-Yet another activity module.
+// $Id:$
+
+TODO: Write README.txt
