@@ -23,7 +23,7 @@ function _message_example_message_default_messages() {
   $message->name = 'create_new_content';
   $message->description = 'Create a new content.';
   $message->tag = '';
-  $message->message = '<a href="@link">@title</a> created.';
+  $message->message = 'created <a href="@link">@title</a>.';
   $message->language = 'en';
 
   $translatables['create_new_content'] = array(
@@ -37,7 +37,7 @@ function _message_example_message_default_messages() {
   $message->name = 'update_existing_content';
   $message->description = 'Update existing content.';
   $message->tag = '';
-  $message->message = '<a href="@link">@title</a> updated.';
+  $message->message = 'updated <a href="@link">@title</a>.';
   $message->language = 'en';
 
   $translatables['update_existing_content'] = array(
@@ -68,7 +68,17 @@ function _message_example_rules_defaults() {
         '#conditions' => array(),
         '#actions' => array(
           '0' => array(
-            '#weight' => 0,
+            '#type' => 'action',
+            '#settings' => array(
+              'message' => array(
+                'message_select' => 'create_new_content',
+                'message_text' => '',
+              ),
+              '#argument map' => array(
+                'message' => 'message',
+              ),
+            ),
+            '#name' => 'message_action_load_message',
             '#info' => array(
               'label' => 'Load a message',
               'new variables' => array(
@@ -82,42 +92,10 @@ function _message_example_rules_defaults() {
               ),
               'module' => 'Message',
             ),
-            '#name' => 'message_action_load_message',
-            '#settings' => array(
-              'message' => array(
-                'message_select' => 'create_new_content',
-                'message_text' => '',
-              ),
-              '#argument map' => array(
-                'message' => 'message',
-              ),
-            ),
-            '#type' => 'action',
+            '#weight' => 0,
           ),
           '1' => array(
-            '#type' => 'action',
-            '#settings' => array(
-              'arguments' => '@node|[node:title]',
-              'entity_type' => 'node',
-              'eid' => '[node:nid]',
-              'extra_identifier' => '',
-              '#argument map' => array(
-                'message' => 'message',
-                'user' => 'author',
-                'message_instance' => 'message_instance',
-              ),
-              '#eval input' => array(
-                'token_rules_input_evaluator' => array(
-                  'arguments' => array(
-                    '0' => 'node',
-                  ),
-                  'eid' => array(
-                    '0' => 'node',
-                  ),
-                ),
-              ),
-            ),
-            '#name' => 'message_action_create_message_instance',
+            '#weight' => 0,
             '#info' => array(
               'label' => 'Create a message instance',
               'arguments' => array(
@@ -144,10 +122,52 @@ function _message_example_rules_defaults() {
               ),
               'module' => 'Message',
             ),
-            '#weight' => 0,
+            '#name' => 'message_action_create_message_instance',
+            '#settings' => array(
+              'arguments' => '',
+              'code' => 'return array(
+ \'@link\' => array(\'callback\' => \'url\', \'callback arguments\' => "node/$node->nid"),
+ \'@title\' => $node->title,
+);',
+              'entity_type' => 'node',
+              'eid' => '[node:nid]',
+              'extra_identifier' => '',
+              '#argument map' => array(
+                'message' => 'message',
+                'user' => 'author',
+                'message_instance' => 'message_instance',
+              ),
+              '#eval input' => array(
+                'token_rules_input_evaluator' => array(
+                  'arguments' => array(
+                    '0' => 'node',
+                  ),
+                  'eid' => array(
+                    '0' => 'node',
+                  ),
+                ),
+                'rules_input_evaluator_php' => array(
+                  'arguments' => array(
+                    '0' => 'node',
+                  ),
+                ),
+              ),
+              'vars' => array(
+                '0' => 'node',
+              ),
+            ),
+            '#type' => 'action',
           ),
           '2' => array(
-            '#weight' => 0,
+            '#type' => 'action',
+            '#settings' => array(
+              'realm' => 'role',
+              'realm_id' => '2',
+              '#argument map' => array(
+                'message_instance' => 'message_instance',
+              ),
+            ),
+            '#name' => 'message_action_assign_message_instance_to_realm',
             '#info' => array(
               'label' => 'Assign a message instance to realm',
               'arguments' => array(
@@ -161,15 +181,7 @@ function _message_example_rules_defaults() {
               ),
               'module' => 'Message',
             ),
-            '#name' => 'message_action_assign_message_instance_to_realm',
-            '#settings' => array(
-              'realm' => 'role',
-              'realm_id' => '2',
-              '#argument map' => array(
-                'message_instance' => 'message_instance',
-              ),
-            ),
-            '#type' => 'action',
+            '#weight' => 0,
           ),
         ),
         '#version' => 6003,
@@ -188,6 +200,18 @@ function _message_example_rules_defaults() {
         '#conditions' => array(),
         '#actions' => array(
           '0' => array(
+            '#weight' => 0,
+            '#type' => 'action',
+            '#settings' => array(
+              'message' => array(
+                'message_select' => 'update_existing_content',
+                'message_text' => '',
+              ),
+              '#argument map' => array(
+                'message' => 'message',
+              ),
+            ),
+            '#name' => 'message_action_load_message',
             '#info' => array(
               'label' => 'Load a message',
               'new variables' => array(
@@ -201,43 +225,9 @@ function _message_example_rules_defaults() {
               ),
               'module' => 'Message',
             ),
-            '#name' => 'message_action_load_message',
-            '#settings' => array(
-              'message' => array(
-                'message_select' => 'update_existing_content',
-                'message_text' => '',
-              ),
-              '#argument map' => array(
-                'message' => 'message',
-              ),
-            ),
-            '#type' => 'action',
-            '#weight' => 0,
           ),
           '1' => array(
-            '#type' => 'action',
-            '#settings' => array(
-              'arguments' => '@node|[node:title]',
-              'entity_type' => 'node',
-              'eid' => '[node:nid]',
-              'extra_identifier' => '',
-              '#argument map' => array(
-                'message' => 'message',
-                'user' => 'author',
-                'message_instance' => 'message_instance',
-              ),
-              '#eval input' => array(
-                'token_rules_input_evaluator' => array(
-                  'arguments' => array(
-                    '0' => 'node',
-                  ),
-                  'eid' => array(
-                    '0' => 'node',
-                  ),
-                ),
-              ),
-            ),
-            '#name' => 'message_action_create_message_instance',
+            '#weight' => 0,
             '#info' => array(
               'label' => 'Create a message instance',
               'arguments' => array(
@@ -264,10 +254,47 @@ function _message_example_rules_defaults() {
               ),
               'module' => 'Message',
             ),
-            '#weight' => 0,
+            '#name' => 'message_action_create_message_instance',
+            '#settings' => array(
+              'arguments' => '',
+              'code' => 'return array(
+ \'@link\' => array(\'callback\' => \'url\', \'callback arguments\' => "node/$node->nid"),
+ \'@title\' => $node->title,
+);',
+              'entity_type' => 'node',
+              'eid' => '[node:nid]',
+              'extra_identifier' => '',
+              '#argument map' => array(
+                'message' => 'message',
+                'user' => 'author',
+                'message_instance' => 'message_instance',
+              ),
+              '#eval input' => array(
+                'token_rules_input_evaluator' => array(
+                  'arguments' => array(
+                    '0' => 'node',
+                  ),
+                  'eid' => array(
+                    '0' => 'node',
+                  ),
+                ),
+              ),
+              'vars' => array(
+                '0' => 'node',
+              ),
+            ),
+            '#type' => 'action',
           ),
           '2' => array(
-            '#weight' => 0,
+            '#type' => 'action',
+            '#settings' => array(
+              'realm' => 'role',
+              'realm_id' => '2',
+              '#argument map' => array(
+                'message_instance' => 'message_instance',
+              ),
+            ),
+            '#name' => 'message_action_assign_message_instance_to_realm',
             '#info' => array(
               'label' => 'Assign a message instance to realm',
               'arguments' => array(
@@ -281,15 +308,7 @@ function _message_example_rules_defaults() {
               ),
               'module' => 'Message',
             ),
-            '#name' => 'message_action_assign_message_instance_to_realm',
-            '#settings' => array(
-              'realm' => 'role',
-              'realm_id' => '2',
-              '#argument map' => array(
-                'message_instance' => 'message_instance',
-              ),
-            ),
-            '#type' => 'action',
+            '#weight' => 0,
           ),
         ),
         '#version' => 6003,
