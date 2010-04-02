@@ -316,8 +316,6 @@ function message_t($message_instance) {
     $string = $message->message;
   }
 
-  dpm($message_instance->arguments);
-
   if (empty($message_instance->arguments)) {
     return $string;
   }
