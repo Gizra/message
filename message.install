@@ -1,0 +1,163 @@
+<?php
+// $Id$
+
+/**
+ * Implementation of hook_install().
+ */
+function message_install() {
+  drupal_install_schema('message');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function message_uninstall() {
+  drupal_uninstall_schema('message');
+}
+
+/**
+ * Implementation of hook_schema()
+ */
+function message_schema() {
+  $schema = array();
+
+  $schema['message'] = array(
+    'description' => 'Storage for user-defined message templates.',
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'message',
+      'default hook' => 'message_default_messages',  // Function hook name.
+      'status' => 'message_status',
+      'api' => array(
+        'owner' => 'message',
+        'api' => 'message',  // Base name for api include files.
+        'minimum_version' => 3,
+        'current_version' => 3,
+      ),
+    ),
+    'fields' => array(
+      'name' => array(
+        'description' => 'The primary identifier for a context.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'description' => array(
+        'description' => 'Description for this context.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'tag' => array(
+        'description' => 'Tag for this context.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'message' => array(
+        'descripiton' => 'The full plaintext message.',
+        'type' => 'text',
+        'size' => 'big',
+        'not null' => TRUE,
+      ),
+      'language' => array(
+        'description' => "The  IS0-3166 name of the langauge for the associated message.",
+        'type' => 'varchar',
+        'not null' => TRUE,
+        'length' => '12',
+      ),
+    ),
+    'primary key' => array('name'),
+  );
+
+  $schema['message_instance'] = array(
+    'description' => 'A message instance.',
+    'fields' => array(
+      'iid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'description' => 'The Unique id of the message instance.',
+      ),
+      'name' => array(
+        'description' => 'Reference to a message in {message_template}.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'arguments' => array(
+        'description' => 'Serialized array with the arguments',
+        'type' => 'text',
+        'serialize' => TRUE,
+      ),
+      'entity_type' => array(
+        'description' => 'The type of entity being acted upon (e.g. node, user).',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+       ),
+      'eid' => array(
+        'description' => 'Entity ID used to maintain the relationship between the message and the entity that is related to it.',
+        'type' => 'int',
+        'default value' => NULL,
+        'unsigned' => TRUE,
+      ),
+      'uid' => array(
+        'description' => 'The user ID of the acting user.',
+        'type' => 'int',
+        'default value' => NULL,
+        'unsigned' => TRUE,
+      ),
+      'extra_identifier' => array(
+        'description' => 'An optional identifier that can group message instances together.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+       ),
+      'timestamp' => array(
+        'description' => 'When the message instance was recorded.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
+    ),
+    'primary key' => array('iid'),
+  );
+
+  $schema['message_realm'] = array(
+    'description' => 'The messages realm.',
+    'fields' => array(
+      'rid' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'description' => 'The Unique id of the message realm.',
+      ),
+      'iid' => array(
+        'description' => 'Reference to a message ID in {message}.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
+      'realm' => array(
+        'description' => 'The realm this message belongs to.',
+        'type' => 'varchar',
+        'length' => '50',
+        'not null' => TRUE,
+      ),
+      'realm_id' => array(
+        'description' => 'The unique ID in the realm.',
+        'type' => 'varchar',
+        'length' => '50',
+        'not null' => TRUE,
+      ),
+    ),
+    'primary key' => array('rid'),
+  );
+
+  return $schema;
+}

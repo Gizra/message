@@ -1,0 +1,394 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * API functions to manipulate messages.
+ */
+
+/**
+ * Implementation of hook_ctools_plugin_api().
+ */
+function message_ctools_plugin_api($module, $api) {
+  if ($module == 'message' && $api == 'plugins') {
+    return array('version' => 3);
+  }
+}
+
+/**
+ * Implementation of hook_message_plugins().
+ *
+ * This is a ctools plugins hook.
+ */
+function message_message_plugins() {
+  module_load_include('inc', 'message', '/includes/message.plugins');
+  return _message_message_plugins();
+}
+
+/**
+ * Implementation of hook_views_api().
+ */
+function message_views_api() {
+  return array(
+    'api' => 2.0,
+    'path' => drupal_get_path('module', 'message') . '/includes',
+  );
+}
+
+/**
+ * Implementation of hook_features_api().
+ */
+function message_features_api() {
+  return array(
+    'message' => array(
+      'name' => 'Messages',
+      'api' => 'message',
+      'default_hook' => 'message_default_messages',
+      'current_version' => 3,
+      'module' => 'message',
+      'feature_source' => TRUE,
+    ),
+  );
+}
+
+/**
+ * Implementation of hook_theme().
+ */
+function message_theme() {
+  $items = array();
+  $items['message'] = array(
+    'arguments' => array('message' => array()),
+  );
+  return $items;
+}
+
+/**
+ * Load & crud functions ==============================================
+ */
+
+/**
+ * Message loader.
+ *
+ * @param $name
+ *   The name for this message object.
+ *
+ * @return
+ *   Returns a fully-loaded message definition.
+ */
+function message_load($name = NULL, $reset = FALSE) {
+  ctools_include('export');
+  if ($reset) {
+    ctools_export_load_object_reset('message');
+  }
+  $messages = ctools_export_load_object('message', 'all');
+
+  if (isset($name)) {
+    return isset($messages[$name]) ? $messages[$name] : FALSE;
+  }
+  return $messages;
+}
+
+
+/**
+ * Inserts or updates a context object into the database.
+ * @TODO: should probably return the new cid on success -- make sure
+ * this doesn't break any checks elsewhere.
+ *
+ * @param $context
+ *   The context object to be inserted.
+ *
+ * @return
+ *   Returns true on success, false on failure.
+ */
+function message_save($message) {
+  $existing = message_load($message->name, TRUE);
+  if ($existing && ($existing->export_type & EXPORT_IN_DATABASE)) {
+    drupal_write_record('message', $message, 'name');
+  }
+  else {
+    drupal_write_record('message', $message);
+  }
+  message_load(NULL, TRUE);
+  return TRUE;
+}
+
+/**
+ * Deletes an existing message.
+ *
+ * @param $message
+ *   The message object to be deleted.
+ *
+ * @return
+ *   Returns true on success, false on failure.
+ */
+function message_delete($message) {
+  if (isset($message->name) && ($message->export_type & EXPORT_IN_DATABASE)) {
+    db_query("DELETE FROM {message} WHERE name = '%s'", $message->name);
+    return TRUE;
+  }
+  return FALSE;
+}
+
+
+/**
+ * Message instance load.
+ *
+ * @param $iid
+ * @return unknown_type
+ */
+function message_instance_load($iid) {
+  $return = db_fetch_object(db_query("SELECT * FROM {message_instance} WHERE iid = %d", $iid));
+  // Unserialize the arguments.
+  if (!empty($return->arguments)) {
+    $return->arguments = unserialize($return->arguments);
+  }
+  return $return;
+}
+
+/**
+ * Message instance save.
+ *
+ * @param $message_instance
+ * @return unknown_type
+ */
+function message_instance_save($message_instance) {
+  if ($existing = message_instance_load($message_instance->iid)) {
+    drupal_write_record('message_instance', $message_instance, 'iid');
+  }
+  else {
+    $message_instance->timestamp = !empty($message_instance->timestamp) ? $message_instance->timestamp : time();
+    drupal_write_record('message_instance', $message_instance);
+  }
+  return $message_instance;
+}
+
+/**
+ * Message instance delete.
+ *
+ * @param $message_instance
+ * @return unknown_type
+ */
+function message_instance_delete($message_instance) {
+  db_query("DELETE FROM {message_instance} WHERE iid = %d", $message->iid);
+  return TRUE;
+}
+
+/**
+ * Get realm messages by their ID.
+ *
+ * @param $message_id
+ *   The message ID.
+ * @return
+ *   Array  keyed by the message realm and the realm Id as the value.
+ */
+function message_realm_load_multiple_by_message($message_id) {
+  static $messages = array();
+
+  if (!isset($messages[$message_id])) {
+    $result = db_query("SELECT * FROM {message_realm} WHERE iid = %d", $message_id);
+
+    while ($row = db_fetch_object($result)) {
+      $messages[$message_id][$row->realm][$row->realm_id] = $row->realm_id;
+    }
+  }
+  return $messages[$message_id] ;
+}
+
+/**
+ * Message realm load.
+ *
+ * @param $iid
+ * @return unknown_type
+ */
+function message_realm_load($rid) {
+  return db_fetch_object(db_query("SELECT * FROM {message_realm} where rid = %d", $rid));
+}
+
+/**
+ * Message realm save.
+ *
+ * @param $message_instance
+ * @return unknown_type
+ */
+function message_realm_save($message_realm) {
+  if ($existing = message_realm_load($message_realm->rid)) {
+    drupal_write_record('message_realm', $message_realm, 'rid');
+  }
+  else {
+    drupal_write_record('message_realm', $message_realm);
+  }
+  return $message_realm;
+}
+
+/**
+ * Message realm delete.
+ *
+ * @param $message_instance
+ * @return unknown_type
+ */
+function message_realm_delete($message_realm) {
+  db_query("DELETE FROM {message_realm} WHERE rid = %d", $message_realm->rid);
+  return TRUE;
+}
+
+
+/**
+ * API FUNCTIONS ======================================================
+ */
+
+/**
+ * Get a plugin handler.
+ */
+function message_get_plugin($key, $info = array(), $reset = FALSE) {
+  global $user;
+  static $cache = array();
+  if (empty($cache[$key]) || $reset) {
+    ctools_include('plugins');
+    $plugins = ctools_get_plugins('message', 'plugins');
+    if (isset($plugins[$key]) && $class = ctools_plugin_get_class($plugins[$key], 'handler')) {
+      // Add defaults.
+      $info += array(
+        'plugin' => $plugins[$key],
+        'message_id' => '',
+        'account' => $user,
+      );
+      $cache[$key] = new $class($plugins[$key], $info);
+    }
+  }
+  return !empty($cache[$key]) ? $cache[$key] : FALSE;
+}
+
+/**
+ * Show a message by the message instance ID.
+ *
+ * @param $iid
+ * @param $account
+ * @return unknown_type
+ */
+function message_show_message($iid, $skip_access = FALSE, $account = NULL) {
+  $output = '';
+  $access = FALSE;
+  if (empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
+  $message_instance = message_instance_load($iid);
+
+  if ($skip_access) {
+    $access = TRUE;
+  }
+  elseif ($message_realm = message_realm_load_multiple_by_message($message_instance->iid)) {
+    $plugins = ctools_get_plugins('message', 'plugins');
+    foreach ($plugins as $name => $value) {
+      if ($plugin = message_get_plugin($name, array($name, array('message_instance' => $message_instance)))) {
+        if ($plugin->access()) {
+          $access = TRUE;
+          break;
+        }
+      }
+    }
+  }
+
+  if ($access) {
+    $output = theme('message', array('message' => $message_instance, 'output' => message_t($message_instance)));
+  }
+
+  return $output;
+}
+
+/**
+ * Replace he arguments with their placeholders.
+ *
+ * @param $message
+ *   The message instance object.
+ *
+ * @see t().
+ */
+function message_t($message_instance) {
+  $message = message_load($message_instance->name);
+
+  if (module_exists(i18nstrings)) {
+    $string = i18nstrings("messages:message:$message->name:message", $message->message);
+  }
+  else {
+    $string = $message->message;
+  }
+
+  if (empty($message_instance->arguments)) {
+    return $string;
+  }
+  else {
+    // Transform arguments before inserting them.
+    foreach ($message_instance->arguments as $key => $value) {
+
+      if (is_array($value)) {
+        // A replacement via callback function.
+        $value = call_user_func_array($value['callback'], $value['callback arguments']);
+      }
+
+      switch ($key[0]) {
+        case '@':
+          // Escaped only.
+          $args[$key] = check_plain($value);
+          break;
+
+        case '%':
+        default:
+          // Escaped and placeholder.
+          $args[$key] = theme('placeholder', $value);
+          break;
+
+        case '!':
+          // Pass-through.
+      }
+    }
+    return strtr($string, $args);
+  }
+}
+
+/**
+ * Theme the message.
+ */
+function theme_message($message = array()) {
+  return '<div class="message message-instance-'. $message['message']->iid .'">'. $message['output'] .'</div>';
+}
+
+/**
+ * Wrapper around message_load() that only returns enabled messages.
+ */
+function message_enabled_messages($reset = FALSE) {
+  $enabled = array();
+  foreach (message_load(NULL, $reset) as $context) {
+    if (empty($context->disabled)) {
+      $enabled[$context->name] = $context;
+    }
+  }
+  return $enabled;
+}
+
+
+/**
+ * CTools list callback for bulk export.
+ */
+function message_message_list() {
+  $messages = message_load(NULL, TRUE);
+  $list = array();
+  foreach ($messages as $message) {
+    $list[$message->name] = $message->name;
+  }
+  return $list;
+}
+
+/**
+ * CTools export function.
+ */
+function message_export_message($message, $indent = '') {
+  foreach (array('description', 'tag') as $id) {
+    if (!empty($message->$id)) {
+      $o .= $indent . "  t('" . str_replace("'", "\'", $message->$id) . "'),\n";
+    }
+  }
+  $o = "\n". $indent ."\$translatables['" . $message->name . "'] = array(\n". $o . $indent . ");\n";
+  return ctools_export_object('message', $message, $indent) . $o;
+}
