@@ -1,6 +1,6 @@
-; $Id: activity.info,v 1.1.2.1.2.2.2.1.2.1 2009/04/18 02:12:01 sirkitree Exp $
+; $Id:$
 name = Message
-description = "Assign messages to users by realm."
+description = "Assign messages to realms."
 core = 6.x
 
 dependencies[] = ctools
