@@ -1,5 +1,5 @@
 <?php
-// $Id: context.plugins.inc,v 1.1.2.4 2010/02/09 17:05:22 yhahn Exp $
+// $Id:$
 
 /**
  * Context plugins.

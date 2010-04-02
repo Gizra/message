@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.rules.inc,v 1.1.2.12 2009/08/05 17:20:41 fago Exp $
+// $Id:$
 
 
 /**

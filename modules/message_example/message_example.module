@@ -1,3 +1,4 @@
 <?php
+// $Id:$
 
 include_once('message_example.features.inc');

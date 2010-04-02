@@ -1,3 +1,4 @@
+; $Id:$
 core = "6.x"
 dependencies[] = "message"
 dependencies[] = "php"

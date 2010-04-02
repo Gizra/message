@@ -1,5 +1,5 @@
 <?php
-// $Id: context_condition.inc,v 1.1.2.2 2010/02/09 04:38:01 yhahn Exp $
+// $Id:$
 
 /**
  * Base class for a message plugin.

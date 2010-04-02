@@ -1,13 +1,13 @@
 <?php
-// $Id: flag_handler_filter_flagged.inc,v 1.1.2.5.2.3 2010/01/08 05:03:16 quicksketch Exp $
+// $Id:$
 
 /**
  * @file
- * Contains the flagged content filter handler.
+ * Contains the organic groups admin message filter handler.
  */
 
 /**
- * Handler to filter by role realm.
+ * Handler to filter by organic groups admin realm.
  *
  * @ingroup views
  */

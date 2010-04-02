@@ -1,8 +1,8 @@
 <?php
-// $Id: context_condition_node.inc,v 1.1.2.2 2010/02/09 04:38:01 yhahn Exp $
+// $Id:$
 
 /**
- * Expose node views/node forms of specific node types as a context condition.
+ * * Message plugin for organic groups realm.
  */
 class message_plugin_og extends message_plugin {
 

@@ -1,10 +1,9 @@
 <?php
 // $Id$
+
 /**
  * @file
- * Primarily Drupal hooks and global API functions to manipulate activity.
- *
- * This is the main module file for Activity.
+ * API functions to manipulate messages.
  */
 
 /**

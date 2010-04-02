@@ -1,9 +1,9 @@
 <?php
-// $Id: $
+// $Id:$
 
 /**
  * @file
- * Contains the flag Ops field handler.
+ * Contains the message field handler.
  */
 
 /**
