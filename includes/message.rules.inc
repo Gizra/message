@@ -110,7 +110,7 @@ function message_rules_action_info() {
         'label' => t('Message instance'),
       ),
     ),
-    'eval input' => array('arguments', 'entity_type', 'eid', 'extra_identifier'),
+    'eval input' => array('arguments', 'code', 'entity_type', 'eid', 'extra_identifier'),
     'module' => 'Message',
   );
 
@@ -150,7 +150,7 @@ function message_action_create_message_instance($message, $account, $settings, $
   $message_instance->uid = $account->uid;
 
   if (!empty($settings['code'])) {
-    $message_instance->arguments = _message_rules_get_field_value($settings, $state);
+    $message_instance->arguments = _message_rules_get_php_value($settings, $state);
   }
 
   // TODO: Add form validation on arguments.
@@ -188,7 +188,7 @@ function message_action_assign_message_instance_to_realm($message_instance, $set
   message_realm_save($realm);
 }
 
-function _message_rules_get_field_value($settings, &$state) {
+function _message_rules_get_php_value($settings, &$state) {
   $value = '';
   if ($settings['code']) {
     if (function_exists('rules_input_evaluator_php_apply')) {

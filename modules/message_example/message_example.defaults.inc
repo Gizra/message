@@ -23,7 +23,7 @@ function _message_example_message_default_messages() {
   $message->name = 'create_new_content';
   $message->description = 'Create a new content.';
   $message->tag = '';
-  $message->message = '@node created.';
+  $message->message = '<a href="@link">@title</a> created.';
   $message->language = 'en';
 
   $translatables['create_new_content'] = array(

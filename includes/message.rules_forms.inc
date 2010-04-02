@@ -61,10 +61,10 @@ function message_action_create_message_instance_form($settings, &$form, $form_st
   $sample = t("return array(\n '@link' => array('callback' => 'url', 'callback arguments' => \"node/\$node->nid\"),\n '@title' => \$node->title,\n);");
   $form['settings']['code'] = array(
     '#type' => 'textarea',
-    '#title' => t('Code'),
+    '#title' => t('Arguments by code'),
     '#default_value' => $settings['code'],
-    '#rows' => 6,
-    '#description' => t('Advanced usage only: PHP code that returns the value to set. Should not include &lt;?php ?&gt; delimiters. If this field is filled out, the value returned by this code will override any value specified above. Expected format: <pre>@sample</pre>.', array('@sample' => $sample)),
+    '#rows' => 5,
+    '#description' => t('Advanced usage only: PHP code that returns the value to set. Should not include &lt;?php ?&gt; delimiters. If this field is filled out, the value returned by this code will override any value specified above in "Arguments". Expected format: <pre>@sample</pre>.', array('@sample' => $sample)),
   );
 
   $form['settings']['entity_type'] = array(
@@ -92,16 +92,16 @@ function message_action_create_message_instance_form($settings, &$form, $form_st
 /**
  * Validate the chosen value or php code.
  */
-function message_action_create_message_instance_form_validate($form, &$form_state) {
-  if (isset($form_state['values']['code']) && ($php = $form_state['values']['code'])) {
+function message_action_create_message_instance_validate($form, &$form_state) {
+  if (isset($form_state['values']['settings']['code']) && ($php = $form_state['values']['settings']['code'])) {
     if (strpos($php, 'return') === FALSE) {
       form_set_error('code', t('You have to return the default value in the expected format.'));
     }
   }
 }
 
-function message_action_create_message_instance_form_submit($form, &$form_state) {
-  $settings['code'] = $form_state['values']['code'];
+function message_action_create_message_instance_submit(&$settings, $form, &$form_state) {
+  $settings['code'] = $form_state['values']['settings']['code'];
 
   if (function_exists('rules_action_custom_php_submit')) {
     // Support adding variables to the php code, if php module is present.
