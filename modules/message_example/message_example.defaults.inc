@@ -1,5 +1,5 @@
 <?php
-// $Id:$
+// $Id: message_example.defaults.inc,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
 
 /**
  * Helper to implementation of hook_ctools_plugin_api().

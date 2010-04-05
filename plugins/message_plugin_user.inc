@@ -1,5 +1,5 @@
 <?php
-// $Id:$
+// $Id: message_plugin_user.inc,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
 
 /**
  * Message plugin for user realm.
