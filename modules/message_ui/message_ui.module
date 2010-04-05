@@ -20,7 +20,7 @@ function message_ui_theme() {
  */
 function message_ui_menu() {
   $items['admin/build/message'] = array(
-    'title' => 'message',
+    'title' => 'Messages',
     'description' => 'Add message templates.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('message_ui_admin'),
@@ -137,7 +137,7 @@ function message_ui_help($path, $arg) {
   switch ($path) {
     case 'admin/build/message':
       return '<p>'.
-        t('messages provide you with a way to organize your site using terms familiar to real human beings. You can create a set of sections like <b>"News"</b>, <b>"Projects"</b>, <b>"Staff"</b>, and associate different technical aspects of Drupal to each section. For example, the <b>"News"</b> section may be a collection of <b>Nodes</b>, <b>Views</b>, <b>Menus</b> and <b>Blocks</b>.')
+        t('Messages provide you with a way to add "template" messages that can later be used to create message instances.')
         .'</p>';
       break;
   }
