@@ -2,5 +2,5 @@
 name = Message
 description = "Assign messages to realms."
 core = 6.x
-
+package = Message
 dependencies[] = ctools

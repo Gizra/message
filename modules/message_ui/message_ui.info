@@ -1,0 +1,7 @@
+; $Id$
+name = Message UI
+description = "Provides a simple UI for settings up Messages."
+dependencies[] = message
+package = Message
+core = "6.x"
+

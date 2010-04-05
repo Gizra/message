@@ -10,5 +10,5 @@ features[message][] = "create_new_content"
 features[message][] = "update_existing_content"
 features[rules_categories][] = "message"
 name = "Message example"
-package = "Features"
 project = "message_example"
+package = Message
