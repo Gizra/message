@@ -13,8 +13,8 @@
  */
 class message_handler_filter_plugin_realm_og extends message_handler_filter_plugin_realm {
   function init() {
+    parent::init(&$view, $options);
     // Get the plugin realm into the Views object.
-    $plugin = 'message_plugin_og';
-    parent::init();
+    $this->message_plugin = message_get_plugin('message_plugin_og');
   }
 }
