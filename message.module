@@ -1,5 +1,5 @@
 <?php
-// $Id: message.module,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
+// $Id: message.module,v 1.2 2010/04/05 17:56:20 amitaibu Exp $
 
 /**
  * @file
@@ -351,7 +351,7 @@ function message_t($message_instance) {
  * Theme the message.
  */
 function theme_message($message = array()) {
-  return '<div class="message message-instance-'. $message['message']->iid .'">'. $message['output'] .'</div>';
+  return '<span class="message message-instance-'. $message['message']->iid .'">'. $message['output'] .'</span>';
 }
 
 /**
@@ -391,4 +391,22 @@ function message_export_message($message, $indent = '') {
   }
   $o = "\n". $indent ."\$translatables['" . $message->name . "'] = array(\n". $o . $indent . ");\n";
   return ctools_export_object('message', $message, $indent) . $o;
+}
+
+/**
+ * Return an array of realms keyed by realm name and human readable value.
+ */
+function message_get_realm_types($reset = TRUE) {
+  static $options = array();
+  if (empty($options) || $reset) {
+    ctools_include('plugins');
+    $plugins = ctools_get_plugins('message', 'plugins');
+    foreach ($plugins as $name => $value) {
+      if (!empty($value['realm'])) {
+        $options[$value['realm']] = check_plain($value['title']);
+      }
+    }
+  }
+
+  return $options;
 }

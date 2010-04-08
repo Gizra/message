@@ -1,5 +1,5 @@
 <?php
-// $Id:$
+// $Id: message_ui.admin.inc,v 1.1 2010/04/05 17:50:06 amitaibu Exp $
 
 /**
  * Message listing form. Allows for quick creation of new messages.

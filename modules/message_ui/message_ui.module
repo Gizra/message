@@ -1,5 +1,5 @@
 <?php
-// $Id:$
+// $Id: message_ui.module,v 1.1 2010/04/05 17:50:06 amitaibu Exp $
 
 /**
  * Implementation of hook_theme().
@@ -8,7 +8,7 @@ function message_ui_theme() {
   $items = array();
   $items['message_ui_admin'] = array(
     'arguments' => array('form' => array()),
-    'path' => drupal_get_path('module', 'message_ui'),
+    'path' => drupal_get_path('module', 'message_ui') .'/theme',
     'file' => 'theme.inc',
   );
 

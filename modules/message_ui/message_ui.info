@@ -1,4 +1,4 @@
-; $Id:$
+; $Id: message_ui.info,v 1.1 2010/04/05 17:50:06 amitaibu Exp $
 name = Message UI
 description = "Provides a simple UI for settings up Messages."
 dependencies[] = message
