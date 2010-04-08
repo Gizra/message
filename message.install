@@ -150,7 +150,7 @@ function message_schema() {
         'not null' => TRUE,
       ),
       'realm_id' => array(
-        'description' => 'The unique ID in the realm.',
+        'description' => 'The unique ID of the realm.',
         'type' => 'varchar',
         'length' => '50',
         'not null' => TRUE,

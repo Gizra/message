@@ -13,10 +13,20 @@ function message_views_handlers() {
   $data = array();
 
   // Add message's core handlers.
-  $data['handlers']['message_handler_field_message_render'] = array(
-    'parent' => 'views_handler_field',
-    'path' => drupal_get_path('module', 'message') .'/includes',
+  $handlers = array(
+    'message_handler_field_message_render' => 'views_handler_field',
+
+    'message_handler_field_realm' => 'views_handler_field',
+    'message_handler_filter_realm' => 'views_handler_filter_in_operator',
+    'message_handler_argument_realm' => 'views_handler_argument',
   );
+
+  foreach ($handlers as $handler => $parent) {
+    $data['handlers'][$handler] = array(
+      'parent' => $parent,
+      'path' => drupal_get_path('module', 'message') .'/includes',
+    );
+  }
 
   // Allow plugins to declare their handlers. Handlers must define their path.
   ctools_include('plugins');
@@ -38,6 +48,40 @@ function message_views_data() {
   $data = array();
 
   $data['message_realm']['table']['group'] = t('Message realm');
+
+  $data['message_realm']['realm_id'] = array(
+    'title' => t('Realm ID'),
+    'help' => t('The realm ID the message belongs to.'),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    // Information for accepting a realm ID as a filter.
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['message_realm']['realm'] = array(
+    'title' => t('Realm'),
+    'help' => t('The type of the realm (for example, "user realm"'),
+    'field' => array(
+      'handler' => 'message_handler_field_realm',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'message_handler_filter_realm',
+    ),
+    'argument' => array(
+      'handler' => 'message_handler_argument_realm',
+    ),
+  );
+
 
   $data['message_instance']['table']['group'] = t('Message');
   $data['message_instance']['table']['base'] = array(

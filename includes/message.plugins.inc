@@ -27,7 +27,7 @@ function _message_message_plugins() {
       'parent' => 'message_plugin',
     ),
     'realm' => 'user',
-    'title' => t('USer realm'),
+    'title' => t('User realm'),
     'description' => t("Determine access by a user's ID."),
   );
 
