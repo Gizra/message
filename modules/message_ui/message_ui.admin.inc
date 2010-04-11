@@ -311,6 +311,7 @@ function message_ui_form_process($form) {
   ctools_include('export');
   $message = ctools_export_new_object('message');
   $message->name = isset($form['name']) ? $form['name'] : NULL;
+  $message->tag = isset($form['tag']) ? $form['tag'] : NULL;
   $message->description = isset($form['description']) ? $form['description'] : NULL;
   $message->message = isset($form['message']) ? $form['message'] : NULL;
   return $message;
