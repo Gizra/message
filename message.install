@@ -37,21 +37,21 @@ function message_schema() {
     ),
     'fields' => array(
       'name' => array(
-        'description' => 'The primary identifier for a context.',
+        'description' => 'The primary identifier for a message.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'description' => array(
-        'description' => 'Description for this context.',
+        'description' => 'Description for this message.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'tag' => array(
-        'description' => 'Tag for this context.',
+        'description' => 'Tag for this message.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -64,7 +64,7 @@ function message_schema() {
         'not null' => TRUE,
       ),
       'language' => array(
-        'description' => "The  IS0-3166 name of the langauge for the associated message.",
+        'description' => "The IS0-3166 name of the langauge for the associated message.",
         'type' => 'varchar',
         'not null' => TRUE,
         'length' => '12',
