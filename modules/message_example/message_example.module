@@ -1,4 +1,19 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Message and Rules defaults to demonstrate the Message module.
+ */
 include_once('message_example.features.inc');
+
+/**
+ * Loads a node by node ID, and returns the node output by calling node_view().
+ *
+ * @see node_view().
+ */
+function message_example_node_view($nid, $teaser = FALSE, $page = FALSE, $links = TRUE) {
+  $node = node_load($nid);
+  return node_view($node, $teaser, $page, $links);
+
+}

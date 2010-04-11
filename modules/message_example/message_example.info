@@ -1,4 +1,3 @@
-; $Id$
 core = "6.x"
 dependencies[] = "message"
 dependencies[] = "php"
@@ -10,5 +9,5 @@ features[message][] = "create_new_content"
 features[message][] = "update_existing_content"
 features[rules_categories][] = "message"
 name = "Message example"
+package = "Message"
 project = "message_example"
-package = Message
