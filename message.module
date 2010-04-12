@@ -16,6 +16,17 @@ function message_ctools_plugin_api($module, $api) {
 }
 
 /**
+ * Implementation of hook_ctools_plugin_plugins().
+ */
+function message_ctools_plugin_plugins() {
+  return array(
+    'cache' => TRUE,
+    'use hooks' => TRUE,
+  );
+}
+
+
+/**
  * Implementation of hook_message_plugins().
  *
  * This is a ctools plugins hook.
