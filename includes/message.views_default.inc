@@ -98,35 +98,6 @@ function message_views_default_views() {
       'field' => 'render',
       'relationship' => 'none',
     ),
-    'realm' => array(
-      'label' => 'Realm',
-      'alter' => array(
-        'alter_text' => 0,
-        'text' => '',
-        'make_link' => 0,
-        'path' => '',
-        'link_class' => '',
-        'alt' => '',
-        'prefix' => '',
-        'suffix' => '',
-        'target' => '',
-        'help' => '',
-        'trim' => 0,
-        'max_length' => '',
-        'word_boundary' => 1,
-        'ellipsis' => 1,
-        'strip_tags' => 0,
-        'html' => 0,
-      ),
-      'empty' => '',
-      'hide_empty' => 0,
-      'empty_zero' => 0,
-      'exclude' => 0,
-      'id' => 'realm',
-      'table' => 'message_realm',
-      'field' => 'realm',
-      'relationship' => 'iid',
-    ),
   ));
   $handler->override_option('sorts', array(
     'timestamp' => array(
@@ -139,18 +110,20 @@ function message_views_default_views() {
     ),
   ));
   $handler->override_option('filters', array(
-    'plugin_role_realm' => array(
-      'operator' => '=',
-      'value' => '',
+    'realm' => array(
+      'operator' => 'in',
+      'value' => array(
+        'role' => 'role',
+      ),
       'group' => '0',
       'exposed' => FALSE,
       'expose' => array(
         'operator' => FALSE,
         'label' => '',
       ),
-      'id' => 'plugin_role_realm',
+      'id' => 'realm',
       'table' => 'message_realm',
-      'field' => 'plugin_role_realm',
+      'field' => 'realm',
       'relationship' => 'iid',
     ),
   ));
@@ -161,8 +134,6 @@ function message_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Recent messages');
-  $handler->override_option('empty', 'No messages created yet.');
-  $handler->override_option('empty_format', '1');
   $handler->override_option('style_plugin', 'list');
   $handler->override_option('style_options', array(
     'grouping' => '',
@@ -179,10 +150,10 @@ function message_views_default_views() {
   $handler = $view->new_display('page', 'Page', 'page_1');
   $handler->override_option('path', 'message');
   $handler->override_option('menu', array(
-    'type' => 'normal',
-    'title' => 'Recent messages',
-    'description' => 'Message example demo page.',
-    'weight' => '0',
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
     'name' => 'navigation',
   ));
   $handler->override_option('tab_options', array(
@@ -190,7 +161,6 @@ function message_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
-    'name' => 'navigation',
   ));
   $views[$view->name] = $view;
 
