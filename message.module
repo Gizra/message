@@ -91,7 +91,7 @@ function message_views_pre_render(&$view) {
   $ids = array();
   // Look for a field that belong to the {message_instance} table.
   foreach ($view->field as $field) {
-    if ($field->table == 'message_instance' && $field->definition['real field'] == 'iid') {
+    if ($field->definition['handler'] == 'message_handler_field_message_render') {
       $field_alias = $field->field_alias;
       $process = TRUE;
       break;
