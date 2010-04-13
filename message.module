@@ -129,6 +129,26 @@ function message_load($name = NULL, $reset = FALSE) {
   }
   $messages = ctools_export_load_object('message', 'all');
 
+  if ($messages && module_exists('i18nstrings')) {
+    // Check if translation was registered.
+    $cache = cache_get('message_i18nstrings');
+
+    $i18nstrings = array();
+
+    foreach ($messages as $message) {
+      if (empty($cache->data[$message->name])) {
+        // Create string.
+        i18nstrings_update("messages:message:$message->name:message", $message->message);
+        $i18nstrings[$message->name] = TRUE;
+      }
+    }
+
+    if ($i18nstrings) {
+      // Cache all the strings that were translated.
+      cache_set('message_i18nstrings', $i18nstrings);
+    }
+  }
+
   if (isset($name)) {
     return isset($messages[$name]) ? $messages[$name] : FALSE;
   }
