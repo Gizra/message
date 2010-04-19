@@ -9,7 +9,7 @@ instance and assign it to a realm.
 function foo_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   global $user;
   if ($op == 'insert') {
-    $message = message_load('ride_sharing_create_content'); // Replace message.
+    $message = message_load('foo'); // Replace message.
 
     $arguments = array(
       '@link' => array(
