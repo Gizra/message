@@ -23,6 +23,11 @@ class message_handler_filter_plugin_realm extends views_handler_filter {
     return FALSE;
   }
 
+  function access() {
+    // Don't execute query if user has no access.
+    return $this->message_plugin->get_accessibale_id_array();
+  }
+
   function query() {
     global $user;
 

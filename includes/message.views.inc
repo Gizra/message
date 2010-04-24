@@ -66,7 +66,7 @@ function message_views_data() {
 
   $data['message_realm']['realm'] = array(
     'title' => t('Realm'),
-    'help' => t('The type of the realm (for example, "user realm"'),
+    'help' => t('The type of the realm (e.g. "user realm").'),
     'field' => array(
       'handler' => 'message_handler_field_realm',
       'click sortable' => TRUE,
