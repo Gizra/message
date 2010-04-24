@@ -11,7 +11,7 @@
  */
 function message_ctools_plugin_api($module, $api) {
   if ($module == 'message' && $api == 'plugins') {
-    return array('version' => 3);
+    return array('version' => 1);
   }
 }
 

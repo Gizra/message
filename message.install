@@ -31,8 +31,8 @@ function message_schema() {
       'api' => array(
         'owner' => 'message',
         'api' => 'message',  // Base name for api include files.
-        'minimum_version' => 3,
-        'current_version' => 3,
+        'minimum_version' => 1,
+        'current_version' => 1,
       ),
     ),
     'fields' => array(
