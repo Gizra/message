@@ -8,7 +8,7 @@ function _message_example_ctools_plugin_api() {
   $module = array_shift($args);
   $api = array_shift($args);
   if ($module == "message" && $api == "message") {
-    return array("version" => 3);
+    return array("version" => 1);
   }
 }
 
@@ -19,7 +19,7 @@ function _message_example_message_default_messages() {
   $export = array();
   $message = new stdClass;
   $message->disabled = FALSE; /* Edit this to true to make a default message disabled initially */
-  $message->api_version = 3;
+  $message->api_version = 1;
   $message->name = 'create_new_content';
   $message->description = 'Create a new content - and show teaser.';
   $message->tag = '';
@@ -33,7 +33,7 @@ function _message_example_message_default_messages() {
   $export['create_new_content'] = $message;
   $message = new stdClass;
   $message->disabled = FALSE; /* Edit this to true to make a default message disabled initially */
-  $message->api_version = 3;
+  $message->api_version = 1;
   $message->name = 'update_existing_content';
   $message->description = 'Update existing content.';
   $message->tag = '';
