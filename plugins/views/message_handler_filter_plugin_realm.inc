@@ -1,5 +1,5 @@
 <?php
-// $Id: message_handler_filter_plugin_realm.inc,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
+// $Id: message_handler_filter_plugin_realm.inc,v 1.2 2010/04/24 14:17:20 amitaibu Exp $
 
 /**
  * @file
@@ -21,6 +21,11 @@ class message_handler_filter_plugin_realm extends views_handler_filter {
 
   function can_expose() {
     return FALSE;
+  }
+
+  function access() {
+    // Don't execute query if user has no access.
+    return $this->message_plugin->get_accessibale_id_array();
   }
 
   function query() {

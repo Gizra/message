@@ -1,5 +1,5 @@
 <?php
-// $Id: message.views.inc,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
+// $Id: message.views.inc,v 1.3 2010/04/24 14:17:20 amitaibu Exp $
 
 /**
  * @file
@@ -66,7 +66,7 @@ function message_views_data() {
 
   $data['message_realm']['realm'] = array(
     'title' => t('Realm'),
-    'help' => t('The type of the realm (for example, "user realm"'),
+    'help' => t('The type of the realm (e.g. "user realm").'),
     'field' => array(
       'handler' => 'message_handler_field_realm',
       'click sortable' => TRUE,

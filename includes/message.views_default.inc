@@ -110,18 +110,20 @@ function message_views_default_views() {
     ),
   ));
   $handler->override_option('filters', array(
-    'plugin_role_realm' => array(
-      'operator' => '=',
-      'value' => '',
+    'realm' => array(
+      'operator' => 'in',
+      'value' => array(
+        'role' => 'role',
+      ),
       'group' => '0',
       'exposed' => FALSE,
       'expose' => array(
         'operator' => FALSE,
         'label' => '',
       ),
-      'id' => 'plugin_role_realm',
+      'id' => 'realm',
       'table' => 'message_realm',
-      'field' => 'plugin_role_realm',
+      'field' => 'realm',
       'relationship' => 'iid',
     ),
   ));
@@ -132,6 +134,8 @@ function message_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'Recent messages');
+  $handler->override_option('empty', 'No messages created yet.');
+  $handler->override_option('empty_format', '1');
   $handler->override_option('style_plugin', 'list');
   $handler->override_option('style_options', array(
     'grouping' => '',
@@ -160,6 +164,7 @@ function message_views_default_views() {
     'description' => '',
     'weight' => 0,
   ));
+
   $views[$view->name] = $view;
 
   return $views;

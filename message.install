@@ -1,5 +1,5 @@
 <?php
-// $Id: message.install,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
+// $Id: message.install,v 1.4 2010/04/24 14:15:49 amitaibu Exp $
 
 /**
  * Implementation of hook_install().
@@ -31,27 +31,27 @@ function message_schema() {
       'api' => array(
         'owner' => 'message',
         'api' => 'message',  // Base name for api include files.
-        'minimum_version' => 3,
-        'current_version' => 3,
+        'minimum_version' => 1,
+        'current_version' => 1,
       ),
     ),
     'fields' => array(
       'name' => array(
-        'description' => 'The primary identifier for a context.',
+        'description' => 'The primary identifier for a message.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'description' => array(
-        'description' => 'Description for this context.',
+        'description' => 'Description for this message.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'tag' => array(
-        'description' => 'Tag for this context.',
+        'description' => 'Tag for this message.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -64,7 +64,7 @@ function message_schema() {
         'not null' => TRUE,
       ),
       'language' => array(
-        'description' => "The  IS0-3166 name of the langauge for the associated message.",
+        'description' => "The IS0-3166 name of the langauge for the associated message.",
         'type' => 'varchar',
         'not null' => TRUE,
         'length' => '12',

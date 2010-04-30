@@ -1,5 +1,5 @@
 <?php
-// $Id: message_ui.admin.inc,v 1.1 2010/04/05 17:50:06 amitaibu Exp $
+// $Id: message_ui.admin.inc,v 1.2 2010/04/11 18:04:15 amitaibu Exp $
 
 /**
  * Message listing form. Allows for quick creation of new messages.
@@ -311,6 +311,7 @@ function message_ui_form_process($form) {
   ctools_include('export');
   $message = ctools_export_new_object('message');
   $message->name = isset($form['name']) ? $form['name'] : NULL;
+  $message->tag = isset($form['tag']) ? $form['tag'] : NULL;
   $message->description = isset($form['description']) ? $form['description'] : NULL;
   $message->message = isset($form['message']) ? $form['message'] : NULL;
   return $message;

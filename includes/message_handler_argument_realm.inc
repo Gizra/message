@@ -1,5 +1,5 @@
 <?php
-// $Id:$
+// $Id: message_handler_argument_realm.inc,v 1.1 2010/04/08 13:00:49 amitaibu Exp $
 /**
  * @file
  * Argument handler to accept a realm.

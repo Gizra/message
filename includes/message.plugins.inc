@@ -1,8 +1,8 @@
 <?php
-// $Id: message.plugins.inc,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
+// $Id: message.plugins.inc,v 1.2 2010/04/08 13:00:49 amitaibu Exp $
 
 /**
- * Context plugins.
+ * Message plugins.
  */
 function _message_message_plugins() {
   $plugins = array();
@@ -27,7 +27,7 @@ function _message_message_plugins() {
       'parent' => 'message_plugin',
     ),
     'realm' => 'user',
-    'title' => t('USer realm'),
+    'title' => t('User realm'),
     'description' => t("Determine access by a user's ID."),
   );
 

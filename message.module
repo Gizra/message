@@ -1,5 +1,5 @@
 <?php
-// $Id: message.module,v 1.2 2010/04/05 17:56:20 amitaibu Exp $
+// $Id: message.module,v 1.10 2010/04/24 14:15:49 amitaibu Exp $
 
 /**
  * @file
@@ -11,9 +11,20 @@
  */
 function message_ctools_plugin_api($module, $api) {
   if ($module == 'message' && $api == 'plugins') {
-    return array('version' => 3);
+    return array('version' => 1);
   }
 }
+
+/**
+ * Implementation of hook_ctools_plugin_plugins().
+ */
+function message_ctools_plugin_plugins() {
+  return array(
+    'cache' => TRUE,
+    'use hooks' => TRUE,
+  );
+}
+
 
 /**
  * Implementation of hook_message_plugins().
@@ -63,6 +74,42 @@ function message_theme() {
 }
 
 /**
+ * Implementation of hook_views_pre_render().
+ *
+ * In order to reduce the database hits, we take advantage of the fact that we
+ * know the message instances IDs before they are rendered. We load them all,
+ * and they are saved in a static cache. So later when they are rendered, the
+ * message instances are already cached.
+ *
+ * @see message_instance_load_multiple().
+ * @see message_show_message().
+ */
+function message_views_pre_render(&$view) {
+  // Define if this is a view that involves message instance, and thus should be
+  // processed.
+  $process = FALSE;
+  $ids = array();
+  // Look for a field that belong to the {message_instance} table.
+  foreach ($view->field as $field) {
+    if ($field->definition['handler'] == 'message_handler_field_message_render') {
+      $field_alias = $field->field_alias;
+      $process = TRUE;
+      break;
+    }
+  }
+  if ($process && !empty($view->result)) {
+    foreach ($view->result as &$row) {
+      $ids[] = $row->{$field_alias};
+    }
+  }
+
+  if ($ids) {
+    // Load the message instances, so they will be statically cached.
+    message_instance_load_multiple($ids);
+  }
+}
+
+/**
  * Load & crud functions ==============================================
  */
 
@@ -81,6 +128,26 @@ function message_load($name = NULL, $reset = FALSE) {
     ctools_export_load_object_reset('message');
   }
   $messages = ctools_export_load_object('message', 'all');
+
+  if ($messages && module_exists('i18nstrings')) {
+    // Check if translation was registered.
+    $cache = cache_get('message_i18nstrings');
+
+    $i18nstrings = array();
+
+    foreach ($messages as $message) {
+      if (empty($cache->data[$message->name])) {
+        // Create string.
+        i18nstrings_update("messages:message:$message->name:message", $message->message);
+        $i18nstrings[$message->name] = TRUE;
+      }
+    }
+
+    if ($i18nstrings) {
+      // Cache all the strings that were translated.
+      cache_set('message_i18nstrings', $i18nstrings);
+    }
+  }
 
   if (isset($name)) {
     return isset($messages[$name]) ? $messages[$name] : FALSE;
@@ -129,27 +196,55 @@ function message_delete($message) {
   return FALSE;
 }
 
+/**
+ * Load multiple message instances.
+ *
+ * @param $iids
+ *   Array with message instances ids.
+ * @return
+ *   Array with the message instances object.
+ */
+function message_instance_load_multiple($ids = array(), $reset = FALSE) {
+  static $messages = array();
+  // The ids we need to query, as some might have been cached already.
+  $query_ids = array_diff($ids, array_keys($messages));
+
+  if (!empty($query_ids) || $reset) {
+    $placeholders = db_placeholders($query_ids);
+    $result = db_query("SELECT * FROM {message_instance} WHERE iid IN ($placeholders)", $query_ids);
+    while ($row = db_fetch_object($result)) {
+      // Unserialize the arguments.
+      if (!empty($row->arguments)) {
+        $row->arguments = unserialize($row->arguments);
+      }
+      $messages[$row->iid] = $row;
+    }
+  }
+  return $messages;
+}
 
 /**
  * Message instance load.
  *
+ * @see message_instance_load_multiple.
+ *
  * @param $iid
- * @return unknown_type
+ *   The message instance ID.
+ * @return
+ *   A message instance object.
  */
 function message_instance_load($iid) {
-  $return = db_fetch_object(db_query("SELECT * FROM {message_instance} WHERE iid = %d", $iid));
-  // Unserialize the arguments.
-  if (!empty($return->arguments)) {
-    $return->arguments = unserialize($return->arguments);
-  }
-  return $return;
+  $messages = message_instance_load_multiple(array($iid));
+  return !empty($messages[$iid]) ? $messages[$iid] : FALSE;
 }
 
 /**
  * Message instance save.
  *
  * @param $message_instance
- * @return unknown_type
+ *   A message instance object.
+ * @return
+ *   The saved message instance object.
  */
 function message_instance_save($message_instance) {
   if ($existing = message_instance_load($message_instance->iid)) {
@@ -341,6 +436,7 @@ function message_t($message_instance) {
 
         case '!':
           // Pass-through.
+          $args[$key] = $value;
       }
     }
     return strtr($string, $args);

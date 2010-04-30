@@ -1,5 +1,5 @@
 <?php
-// $Id: message.rules_forms.inc,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
+// $Id: message.rules_forms.inc,v 1.3 2010/04/11 19:51:21 amitaibu Exp $
 
 
 /**
@@ -58,7 +58,7 @@ function message_action_create_message_instance_form($settings, &$form, $form_st
     '#description' => t('The replacement arguments. Each argument should be in a separate line. <code>@node|node/1</code>.'),
   );
 
-  $sample = t("return array(\n '@link' => array('callback' => 'url', 'callback arguments' => \"node/\$node->nid\"),\n '@title' => \$node->title,\n);");
+  $sample = t("return array(\n '@link' => array('callback' => 'url', 'callback arguments' => array(\"node/\$node->nid\")),\n '@title' => \$node->title,\n);");
   $form['settings']['code'] = array(
     '#type' => 'textarea',
     '#title' => t('Arguments by code'),

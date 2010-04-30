@@ -1,5 +1,5 @@
 <?php
-// $Id: views_handler_filter_node_type.inc,v 1.2 2009/06/02 17:57:48 merlinofchaos Exp $
+// $Id: message_handler_filter_realm.inc,v 1.1 2010/04/08 13:00:49 amitaibu Exp $
 /**
  * @file
  * Filter by realm type.

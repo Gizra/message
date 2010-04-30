@@ -1,5 +1,4 @@
 <?php
-// $Id: message_example.features.inc,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
 
 /**
  * Implementation of hook_ctools_plugin_api().
