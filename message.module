@@ -264,7 +264,7 @@ function message_instance_save($message_instance) {
  * @return unknown_type
  */
 function message_instance_delete($message_instance) {
-  db_query("DELETE FROM {message_instance} WHERE iid = %d", $message->iid);
+  db_query("DELETE FROM {message_instance} WHERE iid = %d", $message_instance->iid);
   return TRUE;
 }
 
