@@ -24,7 +24,7 @@ class message_plugin {
     $access = FALSE;
     // Base plugin might not have a realm.
     if ($realm = $this->plugin->realm && !empty($this->message_realms[$this->plugin->realm])) {
-      $access = array_intersect($this->get_accessibale_id_array(), $this->message_realms[$this->plugin->realm]);
+      $access = array_intersect($this->get_accessible_id_array(), $this->message_realms[$this->plugin->realm]);
     }
     return $access;
   }
@@ -34,7 +34,7 @@ class message_plugin {
    *
    * This is used in Views handlers.
    */
-  function get_accessibale_id_array() {
+  function get_accessible_id_array() {
     return array();
   }
   /**

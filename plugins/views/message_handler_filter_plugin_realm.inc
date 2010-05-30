@@ -25,7 +25,7 @@ class message_handler_filter_plugin_realm extends views_handler_filter {
 
   function access() {
     // Don't execute query if user has no access.
-    return $this->message_plugin->get_accessibale_id_array();
+    return $this->message_plugin->get_accessible_id_array();
   }
 
   function query() {
@@ -37,7 +37,7 @@ class message_handler_filter_plugin_realm extends views_handler_filter {
 
     $table = 'message_realm_message_instance';
 
-    $ids = implode(', ', $this->message_plugin->get_accessibale_id_array());
+    $ids = implode(', ', $this->message_plugin->get_accessible_id_array());
     $realm = $this->message_plugin->plugin['realm'];
 
     $this->query->add_where($this->options['group'], "$table.realm_id IN ($ids) AND $table.realm = '$realm'");
