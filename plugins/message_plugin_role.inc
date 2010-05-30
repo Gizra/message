@@ -6,7 +6,7 @@
  */
 class message_plugin_role extends message_plugin {
 
-  function get_accessibale_id_array() {
+  function get_accessible_id_array() {
     return array_keys($this->account->roles);
   }
 
