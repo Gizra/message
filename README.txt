@@ -4,7 +4,7 @@ Message is an API module. Here is a code example of how to create a message
 instance and assign it to a realm.
 
 /**
- * Implementation of hook_nodeapi()
+ * Implementation of hook_nodeapi().
  */
 function foo_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   global $user;
