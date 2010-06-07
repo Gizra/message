@@ -34,6 +34,9 @@ function message_schema() {
         'minimum_version' => 1,
         'current_version' => 1,
       ),
+      'load callback' => 'message_load',
+      'save callback' => 'message_save',
+      'delete callback' => 'message_delete',
     ),
     'fields' => array(
       'name' => array(

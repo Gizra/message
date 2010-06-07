@@ -16,24 +16,15 @@ function message_ctools_plugin_api($module, $api) {
 }
 
 /**
- * Implementation of hook_ctools_plugin_plugins().
+ * Implementation of hook_ctools_plugin_directory().
  */
-function message_ctools_plugin_plugins() {
-  return array(
-    'cache' => TRUE,
-    'use hooks' => TRUE,
-  );
-}
-
-
-/**
- * Implementation of hook_message_plugins().
- *
- * This is a ctools plugins hook.
- */
-function message_message_plugins() {
-  module_load_include('inc', 'message', '/includes/message.plugins');
-  return _message_message_plugins();
+function message_ctools_plugin_directory($module, $type) {
+  if ($module =='message' && $type == 'plugins') {
+    return 'plugins/message';
+  }
+  elseif ($type =='export_ui') {
+    return 'plugins/export_ui';
+  }
 }
 
 /**
@@ -55,7 +46,7 @@ function message_features_api() {
       'name' => 'Messages',
       'api' => 'message',
       'default_hook' => 'message_default_messages',
-      'current_version' => 3,
+      'current_version' => 1,
       'module' => 'message',
       'feature_source' => TRUE,
     ),
@@ -110,6 +101,85 @@ function message_views_pre_render(&$view) {
 }
 
 /**
+ * Implementation of hook_ctools_plugin_*.
+ *
+ * Give information to CTools about the content types plugin.
+ */
+function message_ctools_plugin_plugins() {
+  return array(
+    'process' => 'message_message_process',
+  );
+}
+
+/**
+ * Provide defaults for a message plugin.
+ */
+function message_message_process(&$plugin, $info) {
+  if (empty($plugin['name'])) {
+    drupal_seT_message(t('A defined Message plugin is missing the "name" key.', 'error'));
+    return;
+  }
+
+  $plugin += array(
+    'realm' => FALSE,
+    'title' => $plugin['name'],
+    'description' => '',
+  );
+
+  // The name of the Views filter handler
+  $filter_name = !empty($plugin['realm']) ? 'message_handler_filter_plugin_realm_' . $plugin['realm'] : 'message_handler_filter_plugin_realm';
+
+  $plugin += array(
+    'views' => array(
+      // Optional callback for views handlers. that will override the default
+      // handler definitions.
+      'handlers callback' => function_exists("$plugin[name]_views_handlers") ? "$plugin[name]_views_handlers" : FALSE,
+
+      // Add default filter handler.
+      'handlers' => array(
+        $filter_name => array(
+          // We use a generic handler for all the filters.
+          'file' => 'message_handler_filter_plugin_realm.inc',
+          'parent' => 'views_handler_filter',
+          'path' => drupal_get_path('module', 'message') .'/includes',
+        ),
+      ),
+      // Optional callback for views data.
+      'data callback' => function_exists("$plugin[name]_views_data") ? "$plugin[name]_views_data" : FALSE,
+    ),
+    'access' => array(
+      'access callback' => function_exists("$plugin[name]_access") ? "$plugin[name]_access" : 'message_plugin_access',
+      'accessible ids callback' => function_exists("$plugin[name]_accessible_ids") ? "$plugin[name]_accessible_ids" : 'message_plugin_accessible_ids',
+    ),
+  );
+
+  if ($plugin['realm']) {
+    $plugin['views'] += array(
+      'data' => array(
+        'message_realm' => array(
+          'message_plugin_realm_' . $plugin['realm'] => array(
+            'title' => $plugin['title'],
+            // TODO: Change.
+            'help' => t('Filter messages by organic groups realm.'),
+            // This is a dummy field, so point it to a real field.
+            'real field' => 'iid',
+
+            'filter' => array(
+              'handler' => 'message_handler_filter_plugin_realm',
+              'label' => $plugin['title'],
+              // Add the message plugin name. so we can use it in the Views
+              // handler.
+              'message plugin' => $plugin['name'],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+}
+
+/**
  * Load & crud functions ==============================================
  */
 
@@ -129,6 +199,9 @@ function message_load($name = NULL, $reset = FALSE) {
   }
   $messages = ctools_export_load_object('message', 'all');
 
+  // We cache the i18n strings, so we don't re-create them every time. We don't
+  // save the strings with variable_set() as it won't scale well with many
+  // messages.
   if ($messages && module_exists('i18nstrings')) {
     // Check if translation was registered.
     $cache = cache_get('message_i18nstrings');
@@ -274,7 +347,7 @@ function message_instance_delete($message_instance) {
  * @param $message_id
  *   The message ID.
  * @return
- *   Array  keyed by the message realm and the realm Id as the value.
+ *   Array keyed by the message realm and the realm Id as the value.
  */
 function message_realm_load_multiple_by_message($message_id) {
   static $messages = array();
@@ -286,7 +359,7 @@ function message_realm_load_multiple_by_message($message_id) {
       $messages[$message_id][$row->realm][$row->realm_id] = $row->realm_id;
     }
   }
-  return $messages[$message_id] ;
+  return !empty($messages[$message_id]) ? $messages[$message_id] : array() ;
 }
 
 /**
@@ -331,36 +404,28 @@ function message_realm_delete($message_realm) {
  * API FUNCTIONS ======================================================
  */
 
-/**
- * Get a plugin handler.
- */
-function message_get_plugin($key, $info = array(), $reset = FALSE) {
-  global $user;
-  static $cache = array();
-  if (empty($cache[$key]) || $reset) {
-    ctools_include('plugins');
-    $plugins = ctools_get_plugins('message', 'plugins');
-    if (isset($plugins[$key]) && $class = ctools_plugin_get_class($plugins[$key], 'handler')) {
-      // Add defaults.
-      $info += array(
-        'plugin' => $plugins[$key],
-        'message_id' => '',
-        'account' => $user,
-      );
-      $cache[$key] = new $class($plugins[$key], $info);
-    }
-  }
-  return !empty($cache[$key]) ? $cache[$key] : FALSE;
+function message_get_plugin_message($plugin_name) {
+  ctools_include('plugins');
+  return ctools_get_plugins('message', 'plugins', $plugin_name);
+}
+
+function message_get_plugin_messages() {
+  ctools_include('plugins');
+  return ctools_get_plugins('message', 'plugins');
 }
 
 /**
  * Show a message by the message instance ID.
  *
- * @param $iid
+ * @param $message_instance
+ *   The message instance object.
  * @param $account
- * @return unknown_type
+ *   Optional; The account that access should be checked for.
+ *
+ * @return
+ *   HTML with the message.
  */
-function message_show_message($iid, $skip_access = FALSE, $account = NULL) {
+function message_show_message($message_instance, $skip_access = FALSE, $account = NULL) {
   $output = '';
   $access = FALSE;
   if (empty($account)) {
@@ -368,19 +433,14 @@ function message_show_message($iid, $skip_access = FALSE, $account = NULL) {
     $account = $user;
   }
 
-  $message_instance = message_instance_load($iid);
-
   if ($skip_access) {
     $access = TRUE;
   }
-  elseif ($message_realm = message_realm_load_multiple_by_message($message_instance->iid)) {
-    $plugins = ctools_get_plugins('message', 'plugins');
-    foreach ($plugins as $name => $value) {
-      if ($plugin = message_get_plugin($name, array($name, array('message_instance' => $message_instance)))) {
-        if ($plugin->access()) {
-          $access = TRUE;
-          break;
-        }
+  elseif ($realms = message_realm_load_multiple_by_message($message_instance->iid)) {
+    foreach (message_get_plugin_messages() as $plugin) {
+      if (in_array($plugin['realm'], array_keys($realms)) && message_show_message_access($plugin, $message_instance, $realms[$plugin['realm']])) {
+        $access = TRUE;
+        break;
       }
     }
   }
@@ -390,6 +450,34 @@ function message_show_message($iid, $skip_access = FALSE, $account = NULL) {
   }
 
   return $output;
+}
+
+function message_show_message_access($plugin, $message_instance, $realm_ids = array(), $account = NULL) {
+  $return = FALSE;
+
+  if (!empty($plugin['realm'])) {
+    if (empty($realm_ids)) {
+      $realms = message_realm_load_multiple_by_message($message_instance->iid);
+      $realm_ids = !empty($realms[$plugin['realm']]) ? $realms[$plugin['realm']] : array();
+    }
+
+    if ($realm_ids) {
+      if (empty($account)) {
+        global $user;
+        $account = $user;
+      }
+      $return = call_user_func($plugin['access']['access callback'], $plugin, $message_instance, $realm_ids, $account);
+    }
+  }
+  return $return;
+}
+
+function message_get_accessiable_ids_by($plugin, $account = NULL) {
+  if (empty($account)) {
+    global $user;
+    $account = $user;
+  }
+  return call_user_func($plugin['access']['accessible ids callback'], $account);
 }
 
 /**
