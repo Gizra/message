@@ -1,5 +1,5 @@
 <?php
-// $Id: message_handler_filter_plugin_realm.inc,v 1.3 2010/05/30 07:56:21 amitaibu Exp $
+// $Id: message_handler_filter_plugin_realm.inc,v 1.1 2010/06/07 10:54:11 amitaibu Exp $
 
 /**
  * @file
@@ -16,7 +16,7 @@ class message_handler_filter_plugin_realm extends views_handler_filter {
     parent::init(&$view, $options);
     // Get the plugin realm into the Views object.
     // @see message_handler_filter_plugin_realm::query().
-    $this->message_plugin = message_get_plugin('message_plugin');
+    $this->message_plugin = message_get_plugin_message($this->definition['message plugin']);
   }
 
   function can_expose() {
@@ -25,20 +25,18 @@ class message_handler_filter_plugin_realm extends views_handler_filter {
 
   function access() {
     // Don't execute query if user has no access.
-    return $this->message_plugin->get_accessible_id_array();
+    $this->message_accessiable_ids = message_get_accessiable_ids_by($this->message_plugin);
+    return $this->message_accessiable_ids;
   }
 
   function query() {
     global $user;
 
     $this->ensure_my_table();
-    // TODO: How how to get table alias?
-    // $table = $this->query->ensure_table('message_realm');
+    $table = $this->table_alias;
 
-    $table = 'message_realm_message_instance';
-
-    $ids = implode(', ', $this->message_plugin->get_accessible_id_array());
-    $realm = $this->message_plugin->plugin['realm'];
+    $ids = implode(', ', $this->message_accessiable_ids);
+    $realm = $this->message_plugin['realm'];
 
     $this->query->add_where($this->options['group'], "$table.realm_id IN ($ids) AND $table.realm = '$realm'");
   }

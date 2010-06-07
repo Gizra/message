@@ -1,5 +1,5 @@
 <?php
-// $Id: message.install,v 1.4 2010/04/24 14:15:49 amitaibu Exp $
+// $Id: message.install,v 1.5 2010/06/07 10:54:11 amitaibu Exp $
 
 /**
  * Implementation of hook_install().
@@ -34,6 +34,9 @@ function message_schema() {
         'minimum_version' => 1,
         'current_version' => 1,
       ),
+      'load callback' => 'message_load',
+      'save callback' => 'message_save',
+      'delete callback' => 'message_delete',
     ),
     'fields' => array(
       'name' => array(

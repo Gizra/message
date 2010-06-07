@@ -1,5 +1,5 @@
 <?php
-// $Id: message.rules.inc,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
+// $Id: message.rules.inc,v 1.2 2010/06/07 10:54:11 amitaibu Exp $
 
 
 /**

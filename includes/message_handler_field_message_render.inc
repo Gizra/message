@@ -1,5 +1,5 @@
 <?php
-// $Id: message_handler_field_message_render.inc,v 1.1 2010/04/02 20:01:17 amitaibu Exp $
+// $Id: message_handler_field_message_render.inc,v 1.2 2010/06/07 10:54:11 amitaibu Exp $
 
 /**
  * @file
@@ -32,7 +32,8 @@ class message_handler_field_message_render extends views_handler_field {
 
   function render($values) {
     if (!empty($values->iid)) {
-      return message_show_message($values->iid, $this->options['skip_access']);
+        $message_instance = message_instance_load($values->iid);
+      return message_show_message($message_instance, $this->options['skip_access']);
     }
   }
 }

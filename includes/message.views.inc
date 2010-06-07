@@ -1,5 +1,5 @@
 <?php
-// $Id: message.views.inc,v 1.3 2010/04/24 14:17:20 amitaibu Exp $
+// $Id: message.views.inc,v 1.4 2010/06/07 10:54:11 amitaibu Exp $
 
 /**
  * @file
@@ -19,6 +19,7 @@ function message_views_handlers() {
     'message_handler_field_realm' => 'views_handler_field',
     'message_handler_filter_realm' => 'views_handler_filter_in_operator',
     'message_handler_argument_realm' => 'views_handler_argument',
+
   );
 
   foreach ($handlers as $handler => $parent) {
@@ -29,13 +30,16 @@ function message_views_handlers() {
   }
 
   // Allow plugins to declare their handlers. Handlers must define their path.
-  ctools_include('plugins');
-  $plugins = ctools_get_plugins('message', 'plugins');
-  foreach ($plugins as $name => $value) {
-    $plugin = message_get_plugin($name);
-    if ($plugin_handler = $plugin->get_views_handlers()) {
-      $data['handlers'] = array_merge($data['handlers'], $plugin_handler);
+  foreach (message_get_plugin_messages() as $plugin_name => $plugin) {
+    $plugin_handlers = array();
+    if (!empty($plugin['views']['handlers callback'])) {
+      $plugin_handlers = call_user_func($plugin['views']['handlers callback']);
     }
+    elseif (!empty($plugin['views']['handlers'])) {
+      $plugin_handlers = $plugin['views']['handlers'];
+    }
+
+    $data['handlers'] = array_merge($data['handlers'], $plugin_handlers);
   }
 
   return $data;
@@ -147,13 +151,15 @@ function message_views_data() {
   );
 
   // Allow plugins to declare their handlers. Handlers must define their path.
-  ctools_include('plugins');
-  $plugins = ctools_get_plugins('message', 'plugins');
-  foreach ($plugins as $name => $value) {
-    $plugin = message_get_plugin($name);
-    if ($plugin_data = $plugin->get_views_data()) {
-      $data = array_merge_recursive($plugin_data, $data);
+  foreach (message_get_plugin_messages() as $plugin_name => $plugin) {
+    $plugin_data = array();
+    if (!empty($plugin['views']['data callback'])) {
+      $plugin_data = call_user_func($plugin['views']['data callback']);
     }
+    elseif (!empty($plugin['views']['data'])) {
+      $plugin_data = $plugin['views']['data'];
+    }
+    $data = array_merge_recursive($plugin_data, $data);
   }
 
   return $data;
