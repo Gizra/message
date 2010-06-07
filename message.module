@@ -103,7 +103,7 @@ function message_views_pre_render(&$view) {
 /**
  * Implementation of hook_ctools_plugin_*.
  *
- * Give information to CTools about the content types plugin.
+ * Give information to CTools about the message plugin.
  */
 function message_ctools_plugin_plugins() {
   return array(
@@ -116,7 +116,7 @@ function message_ctools_plugin_plugins() {
  */
 function message_message_process(&$plugin, $info) {
   if (empty($plugin['name'])) {
-    drupal_seT_message(t('A defined Message plugin is missing the "name" key.', 'error'));
+    drupal_set_message(t('A defined Message plugin is missing the "name" key.', 'error'));
     return;
   }
 
@@ -176,7 +176,6 @@ function message_message_process(&$plugin, $info) {
       ),
     );
   }
-
 }
 
 /**

@@ -1,6 +1,7 @@
 <?php
 // $Id$
 
+// Message plugin deceleration.
 $plugin = array(
   'name' => 'message_plugin_og',
   'realm' => 'og',
@@ -8,6 +9,9 @@ $plugin = array(
   'description' => t("Determine access by a user's membership in a group."),
 );
 
+/**
+* Get all groups a user belongs to.
+*/
 function message_plugin_og_accessible_ids($account) {
-  return array_keys($account->og_groups);
+  return !empty($account->og_groups) ? array_keys($account->og_groups) : array();
 }
