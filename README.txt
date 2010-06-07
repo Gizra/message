@@ -1,4 +1,4 @@
-// $Id: README.txt,v 1.3 2010/04/19 10:36:13 amitaibu Exp $
+// $Id: README.txt,v 1.5 2010/05/30 08:53:34 amitaibu Exp $
 
 Message is an API module. Here is a code example of how to create a message 
 instance and assign it to a realm.

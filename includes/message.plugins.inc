@@ -2,7 +2,7 @@
 // $Id: message.plugins.inc,v 1.2 2010/04/08 13:00:49 amitaibu Exp $
 
 /**
- * Message plugins.
+ * Context plugins.
  */
 function _message_message_plugins() {
   $plugins = array();
