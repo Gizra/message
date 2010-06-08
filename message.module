@@ -544,16 +544,14 @@ function message_export_message($message, $indent = '') {
 }
 
 /**
- * Return an array of realms keyed by realm name and human readable value.
+ * Return an array of realms keyed by the plugin name and the realm value.
  */
 function message_get_realm_types($reset = TRUE) {
   static $options = array();
   if (empty($options) || $reset) {
-    ctools_include('plugins');
-    $plugins = ctools_get_plugins('message', 'plugins');
-    foreach ($plugins as $name => $value) {
-      if (!empty($value['realm'])) {
-        $options[$value['realm']] = check_plain($value['title']);
+    foreach (message_get_plugin_messages() as $plugin) {
+      if (!empty($plugin['realm'])) {
+        $options[$plugin['name']] = check_plain($plugin['title']);
       }
     }
   }

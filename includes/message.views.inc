@@ -66,20 +66,15 @@ function message_views_data() {
     ),
   );
 
-  $data['message_realm']['message_plugin_realm_'] = array(
-    'title' => t('Realms'),
-    'help' => t('The realm ID the message belongs to.'),
+  $data['message_realm']['message_plugin_realm'] = array(
+    'title' => t('Accessible realms'),
+    'help' => t('The realms a user may access.'),
 
     // This is a dummy field, so point it to a real field.
     'real field' => 'iid',
 
     'filter' => array(
       'handler' => 'message_handler_filter_plugin_realm',
-      'label' => t('Realms filter'),
-    ),
-
-    'filter' => array(
-      'handler' => 'views_handler_filter_string',
     ),
   );
 
