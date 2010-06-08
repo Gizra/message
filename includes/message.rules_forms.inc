@@ -116,10 +116,14 @@ function message_action_assign_message_instance_to_realm_form($settings, &$form,
   // Get existing realms.
   $options = message_get_realm_types();
 
-  $form['settings']['realm'] = array(
+  // Initalize values.
+  $settings += array('realm' => '', 'realm_id' => '');
+
+  // We ask the user to choose the realm, but we actually save the plugin name.
+  $form['settings']['plugin_name'] = array(
     '#type' => 'select',
     '#title' => t('Realm'),
-    '#default_value' => !empty($settings['realm']) ? $settings['realm'] : '',
+    '#default_value' => $settings['realm'],
     '#options' => $options,
     '#disabled' => !$options,
     '#required' => TRUE,
@@ -128,7 +132,7 @@ function message_action_assign_message_instance_to_realm_form($settings, &$form,
   $form['settings']['realm_id'] = array(
     '#type' => 'textfield',
     '#title' => t('Realm ID'),
-    '#default_value' => !empty($settings['realm_id']) ? $settings['realm_id'] : '',
+    '#default_value' => $settings['realm_id'],
     '#required' => TRUE,
   );
 }

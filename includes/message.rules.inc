@@ -181,9 +181,10 @@ function message_action_create_message_instance($message, $account, $settings, $
  * Action: Assign a message instance to realm.
  */
 function message_action_assign_message_instance_to_realm($message_instance, $settings) {
+  $plugin = message_get_plugin_message($settings['plugin_name']);
   $realm = new stdClass();
   $realm->iid = $message_instance->iid;
-  $realm->realm = $settings['realm'];
+  $realm->realm = $plugin['realm'];
   $realm->realm_id = $settings['realm_id'];
   message_realm_save($realm);
 }
