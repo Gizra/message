@@ -68,7 +68,17 @@ function _message_example_rules_defaults() {
         '#conditions' => array(),
         '#actions' => array(
           '0' => array(
-            '#weight' => 0,
+            '#type' => 'action',
+            '#settings' => array(
+              'message' => array(
+                'message_select' => 'create_new_content',
+                'message_text' => '',
+              ),
+              '#argument map' => array(
+                'message' => 'message',
+              ),
+            ),
+            '#name' => 'message_action_load_message',
             '#info' => array(
               'label' => 'Load a message',
               'new variables' => array(
@@ -82,21 +92,36 @@ function _message_example_rules_defaults() {
               ),
               'module' => 'Message',
             ),
-            '#name' => 'message_action_load_message',
-            '#settings' => array(
-              'message' => array(
-                'message_select' => 'create_new_content',
-                'message_text' => '',
-              ),
-              '#argument map' => array(
-                'message' => 'message',
-              ),
-            ),
-            '#type' => 'action',
+            '#weight' => 0,
           ),
           '1' => array(
-            '#weight' => 0,
-            '#type' => 'action',
+            '#info' => array(
+              'label' => 'Create a message instance',
+              'arguments' => array(
+                'message' => array(
+                  'type' => 'message',
+                  'label' => 'Message',
+                ),
+                'user' => array(
+                  'type' => 'user',
+                  'label' => 'User',
+                ),
+              ),
+              'new variables' => array(
+                'message_instance' => array(
+                  'type' => 'message_instance',
+                  'label' => 'Message instance',
+                ),
+              ),
+              'eval input' => array(
+                '0' => 'arguments',
+                '1' => 'entity_type',
+                '2' => 'eid',
+                '3' => 'extra_identifier',
+              ),
+              'module' => 'Message',
+            ),
+            '#name' => 'message_action_create_message_instance',
             '#settings' => array(
               'arguments' => '',
               'code' => 'return array(
@@ -132,36 +157,20 @@ function _message_example_rules_defaults() {
                 '0' => 'node',
               ),
             ),
-            '#name' => 'message_action_create_message_instance',
-            '#info' => array(
-              'label' => 'Create a message instance',
-              'arguments' => array(
-                'message' => array(
-                  'type' => 'message',
-                  'label' => 'Message',
-                ),
-                'user' => array(
-                  'type' => 'user',
-                  'label' => 'User',
-                ),
-              ),
-              'new variables' => array(
-                'message_instance' => array(
-                  'type' => 'message_instance',
-                  'label' => 'Message instance',
-                ),
-              ),
-              'eval input' => array(
-                '0' => 'arguments',
-                '1' => 'entity_type',
-                '2' => 'eid',
-                '3' => 'extra_identifier',
-              ),
-              'module' => 'Message',
-            ),
+            '#type' => 'action',
+            '#weight' => 0,
           ),
           '2' => array(
             '#weight' => 0,
+            '#type' => 'action',
+            '#settings' => array(
+              'plugin_name' => 'message_plugin_role',
+              'realm_id' => '2',
+              '#argument map' => array(
+                'message_instance' => 'message_instance',
+              ),
+            ),
+            '#name' => 'message_action_assign_message_instance_to_realm',
             '#info' => array(
               'label' => 'Assign a message instance to realm',
               'arguments' => array(
@@ -175,15 +184,6 @@ function _message_example_rules_defaults() {
               ),
               'module' => 'Message',
             ),
-            '#name' => 'message_action_assign_message_instance_to_realm',
-            '#settings' => array(
-              'realm' => 'role',
-              'realm_id' => '2',
-              '#argument map' => array(
-                'message_instance' => 'message_instance',
-              ),
-            ),
-            '#type' => 'action',
           ),
         ),
         '#version' => 6003,
@@ -288,15 +288,7 @@ function _message_example_rules_defaults() {
             '#type' => 'action',
           ),
           '2' => array(
-            '#type' => 'action',
-            '#settings' => array(
-              'realm' => 'role',
-              'realm_id' => '2',
-              '#argument map' => array(
-                'message_instance' => 'message_instance',
-              ),
-            ),
-            '#name' => 'message_action_assign_message_instance_to_realm',
+            '#weight' => 0,
             '#info' => array(
               'label' => 'Assign a message instance to realm',
               'arguments' => array(
@@ -310,7 +302,15 @@ function _message_example_rules_defaults() {
               ),
               'module' => 'Message',
             ),
-            '#weight' => 0,
+            '#name' => 'message_action_assign_message_instance_to_realm',
+            '#settings' => array(
+              'plugin_name' => 'message_plugin_role',
+              'realm_id' => '2',
+              '#argument map' => array(
+                'message_instance' => 'message_instance',
+              ),
+            ),
+            '#type' => 'action',
           ),
         ),
         '#version' => 6003,
