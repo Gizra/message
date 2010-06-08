@@ -19,6 +19,7 @@ function message_views_handlers() {
     'message_handler_field_realm' => 'views_handler_field',
     'message_handler_filter_realm' => 'views_handler_filter_in_operator',
     'message_handler_argument_realm' => 'views_handler_argument',
+    'message_handler_filter_plugin_realm' => 'views_handler_filter_in_operator',
 
   );
 
@@ -34,9 +35,6 @@ function message_views_handlers() {
     $plugin_handlers = array();
     if (!empty($plugin['views']['handlers callback'])) {
       $plugin_handlers = call_user_func($plugin['views']['handlers callback']);
-    }
-    elseif (!empty($plugin['views']['handlers'])) {
-      $plugin_handlers = $plugin['views']['handlers'];
     }
 
     $data['handlers'] = array_merge($data['handlers'], $plugin_handlers);
@@ -65,6 +63,23 @@ function message_views_data() {
     ),
     'argument' => array(
       'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['message_realm']['message_plugin_realm_'] = array(
+    'title' => t('Realms'),
+    'help' => t('The realm ID the message belongs to.'),
+
+    // This is a dummy field, so point it to a real field.
+    'real field' => 'iid',
+
+    'filter' => array(
+      'handler' => 'message_handler_filter_plugin_realm',
+      'label' => t('Realms filter'),
+    ),
+
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
     ),
   );
 
@@ -155,9 +170,6 @@ function message_views_data() {
     $plugin_data = array();
     if (!empty($plugin['views']['data callback'])) {
       $plugin_data = call_user_func($plugin['views']['data callback']);
-    }
-    elseif (!empty($plugin['views']['data'])) {
-      $plugin_data = $plugin['views']['data'];
     }
     $data = array_merge_recursive($plugin_data, $data);
   }

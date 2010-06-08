@@ -11,7 +11,7 @@
  *
  * @ingroup views
  */
-class message_handler_filter_plugin_realm extends views_handler_filter {
+class message_handler_filter_plugin_realm extends views_handler_filter_in_operator {
   function init(&$view, $options) {
     parent::init(&$view, $options);
     // Get the plugin realm into the Views object.
