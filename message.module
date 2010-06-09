@@ -238,12 +238,13 @@ function message_delete($message) {
  * @return
  *   Array with the message instances object.
  */
-function message_instance_load_multiple($ids = array(), $reset = FALSE) {
-  static $messages = array();
+function message_instance_load_multiple($ids = array()) {
+  $messages = &ctools_static(__FUNCTION__, array());
+
   // The ids we need to query, as some might have been cached already.
   $query_ids = array_diff($ids, array_keys($messages));
 
-  if (!empty($query_ids) || $reset) {
+  if (!empty($query_ids)) {
     $placeholders = db_placeholders($query_ids);
     $result = db_query("SELECT * FROM {message_instance} WHERE iid IN ($placeholders)", $query_ids);
     while ($row = db_fetch_object($result)) {
@@ -541,9 +542,9 @@ function message_export_message($message, $indent = '') {
 /**
  * Return an array of realms keyed by the plugin name and the realm value.
  */
-function message_get_realm_types($reset = TRUE) {
-  static $options = array();
-  if (empty($options) || $reset) {
+function message_get_realm_types() {
+  $options = &ctools_static(__FUNCTION__, array());
+  if (empty($options)) {
     foreach (message_get_plugin_messages() as $plugin) {
       if (!empty($plugin['realm'])) {
         $options[$plugin['name']] = check_plain($plugin['title']);
