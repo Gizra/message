@@ -54,7 +54,6 @@ function message_action_create_message_instance_form($settings, &$form, $form_st
     '#type' => 'textarea',
     '#title' => t('Arguments'),
     '#default_value' => !empty($settings['arguments']) ? $settings['arguments'] : '',
-    // TODO: Better description.
     '#description' => t('The replacement arguments. Each argument should be in a separate line. <code>@node|node/1</code>.'),
   );
 
