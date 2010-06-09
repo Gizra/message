@@ -124,12 +124,7 @@ function message_message_process(&$plugin, $info) {
     'realm' => FALSE,
     'title' => $plugin['name'],
     'description' => '',
-  );
 
-  // The name of the Views filter handler
-  $filter_name = !empty($plugin['realm']) ? 'message_handler_filter_plugin_realm_' . $plugin['realm'] : 'message_handler_filter_plugin_realm';
-
-  $plugin += array(
     'views' => array(
       // Optional callback for views handlers.
       'handlers callback' => function_exists("$plugin[name]_views_handlers") ? "$plugin[name]_views_handlers" : FALSE,
