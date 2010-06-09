@@ -2,7 +2,6 @@
 // $Id$
 
 $plugin = array(
-  'name' => 'message_plugin_role',
   'realm' => 'role',
   'title' => t('Role realm'),
   'description' => t("Determine access by a user's role."),

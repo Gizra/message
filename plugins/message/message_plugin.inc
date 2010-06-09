@@ -2,7 +2,6 @@
 // $Id$
 
 $plugin = array(
-  'name' => 'message_plugin',
   'title' => t('Base plugin'),
   'description' => '',
 );

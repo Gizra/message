@@ -19,7 +19,7 @@ function message_views_handlers() {
     'message_handler_field_realm' => 'views_handler_field',
     'message_handler_filter_realm' => 'views_handler_filter_in_operator',
     'message_handler_argument_realm' => 'views_handler_argument',
-    'message_handler_filter_plugin_realm' => 'views_handler_filter_in_operator',
+    'message_handler_filter_realm_user_access' => 'views_handler_filter_in_operator',
 
   );
 
@@ -74,7 +74,7 @@ function message_views_data() {
     'real field' => 'iid',
 
     'filter' => array(
-      'handler' => 'message_handler_filter_plugin_realm',
+      'handler' => 'message_handler_filter_realm_user_access',
     ),
   );
 
