@@ -501,45 +501,6 @@ function theme_message($message = array()) {
 }
 
 /**
- * Wrapper around message_load() that only returns enabled messages.
- */
-function message_enabled_messages($reset = FALSE) {
-  $enabled = array();
-  foreach (message_load(NULL, $reset) as $context) {
-    if (empty($context->disabled)) {
-      $enabled[$context->name] = $context;
-    }
-  }
-  return $enabled;
-}
-
-
-/**
- * CTools list callback for bulk export.
- */
-function message_message_list() {
-  $messages = message_load(NULL, TRUE);
-  $list = array();
-  foreach ($messages as $message) {
-    $list[$message->name] = $message->name;
-  }
-  return $list;
-}
-
-/**
- * CTools export function.
- */
-function message_export_message($message, $indent = '') {
-  foreach (array('description', 'tag') as $id) {
-    if (!empty($message->$id)) {
-      $o .= $indent . "  t('" . str_replace("'", "\'", $message->$id) . "'),\n";
-    }
-  }
-  $o = "\n". $indent ."\$translatables['" . $message->name . "'] = array(\n". $o . $indent . ");\n";
-  return ctools_export_object('message', $message, $indent) . $o;
-}
-
-/**
  * Return an array of realms keyed by the plugin name and the realm value.
  */
 function message_get_realm_types() {
