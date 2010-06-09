@@ -11,7 +11,7 @@
  *
  * @ingroup views
  */
-class message_handler_filter_plugin_realm extends views_handler_filter_in_operator {
+class message_handler_filter_realm_user_access extends views_handler_filter_in_operator {
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Realm type');

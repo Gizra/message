@@ -3,7 +3,6 @@
 
 // Message plugin deceleration.
 $plugin = array(
-  'name' => 'message_plugin_og',
   'realm' => 'og',
   'title' => t('Organic groups realm'),
   'description' => t("Determine access by a user's membership in a group."),

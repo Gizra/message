@@ -2,7 +2,6 @@
 // $Id: message_plugin.inc,v 1.1 2010/06/07 10:54:11 amitaibu Exp $
 
 $plugin = array(
-  'name' => 'message_plugin',
   'title' => t('Base plugin'),
   'description' => '',
 );
