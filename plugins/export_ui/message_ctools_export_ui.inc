@@ -2,7 +2,6 @@
 // $Id: message_ctools_export_ui.inc,v 1.1 2010/06/07 10:54:11 amitaibu Exp $
 
 $plugin = array(
-  'name' => 'message_ctools_export_ui',
   'schema' => 'message',
   'menu' => array(
     'menu item' => 'message',
@@ -18,7 +17,7 @@ $plugin = array(
   ),
 );
 
-function message_ctools_export_ui_form(&$form, $plugin_name, $op, $export) {
+function message_ctools_export_ui_form(&$form, $plugin, $op, $export) {
   $form += array('info' => array('description' => ''), 'message' => '');
   $form['info']['description'] = array(
     '#title' => t('Description'),
