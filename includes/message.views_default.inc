@@ -110,10 +110,11 @@ function message_views_default_views() {
     ),
   ));
   $handler->override_option('filters', array(
-    'realm' => array(
+    'message_plugin_realm' => array(
       'operator' => 'in',
       'value' => array(
-        'role' => 'role',
+        'message_plugin_user' => 'message_plugin_user',
+        'message_plugin_role' => 'message_plugin_role',
       ),
       'group' => '0',
       'exposed' => FALSE,
@@ -121,9 +122,9 @@ function message_views_default_views() {
         'operator' => FALSE,
         'label' => '',
       ),
-      'id' => 'realm',
+      'id' => 'message_plugin_realm',
       'table' => 'message_realm',
-      'field' => 'realm',
+      'field' => 'message_plugin_realm',
       'relationship' => 'iid',
     ),
   ));
@@ -163,6 +164,7 @@ function message_views_default_views() {
     'title' => '',
     'description' => '',
     'weight' => 0,
+    'name' => 'navigation',
   ));
 
   $views[$view->name] = $view;
