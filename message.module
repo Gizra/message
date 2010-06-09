@@ -115,11 +115,6 @@ function message_ctools_plugin_plugins() {
  * Provide defaults for a message plugin.
  */
 function message_message_process(&$plugin, $info) {
-  if (empty($plugin['name'])) {
-    drupal_set_message(t('A defined Message plugin is missing the "name" key.', 'error'));
-    return;
-  }
-
   $plugin += array(
     'realm' => FALSE,
     'title' => $plugin['name'],
@@ -137,7 +132,6 @@ function message_message_process(&$plugin, $info) {
       'accessible ids callback' => function_exists("$plugin[name]_accessible_ids") ? "$plugin[name]_accessible_ids" : 'message_plugin_accessible_ids',
     ),
   );
-
 }
 
 /**
