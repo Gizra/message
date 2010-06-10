@@ -7,14 +7,6 @@ $plugin = array(
     'menu item' => 'message',
   ),
   'title' => t('Message'),
-  'form' => array(
-    'settings' => 'message_ctools_export_ui_form',
-  ),
-  'handler' => array(
-    'class' => 'message_ctools_export_ui',
-    // The parent is the plugin name, not the class name.
-    'parent' => 'ctools_export_ui',
-  ),
 );
 
 function message_ctools_export_ui_form(&$form, $plugin, $op, $export) {
