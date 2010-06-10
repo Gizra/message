@@ -185,26 +185,18 @@ function message_load($name = NULL, $reset = FALSE) {
 
 
 /**
- * Inserts or updates a context object into the database.
- * @TODO: should probably return the new cid on success -- make sure
- * this doesn't break any checks elsewhere.
+ * Inserts or updates a message object into the database.
  *
- * @param $context
- *   The context object to be inserted.
+ * @param $message
+ *   The message object to be inserted.
  *
  * @return
- *   Returns true on success, false on failure.
+ *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
+ *   SAVED_UPDATED is returned depending on the operation performed.
  */
 function message_save($message) {
-  $existing = message_load($message->name, TRUE);
-  if ($existing && ($existing->export_type & EXPORT_IN_DATABASE)) {
-    drupal_write_record('message', $message, 'name');
-  }
-  else {
-    drupal_write_record('message', $message);
-  }
-  message_load(NULL, TRUE);
-  return TRUE;
+  ctools_include('export');
+  return ctools_export_crud_save('message', $message);
 }
 
 /**
@@ -212,16 +204,10 @@ function message_save($message) {
  *
  * @param $message
  *   The message object to be deleted.
- *
- * @return
- *   Returns true on success, false on failure.
  */
 function message_delete($message) {
-  if (isset($message->name) && ($message->export_type & EXPORT_IN_DATABASE)) {
-    db_query("DELETE FROM {message} WHERE name = '%s'", $message->name);
-    return TRUE;
-  }
-  return FALSE;
+  ctools_include('export');
+  ctools_export_crud_delete('message', $message);
 }
 
 /**
