@@ -7,9 +7,16 @@ $plugin = array(
     'menu item' => 'message',
   ),
   'title' => t('Message'),
+
+  'title singular' => t('message'),
+  'title plural' => t('messages'),
+  'title singular proper' => t('Message'),
+  'title plural proper' => t('Messages'),
+
 );
 
-function message_ctools_export_ui_form(&$form, $plugin, $op, $export) {
+function message_ctools_export_ui_form(&$form, &$form_state) {
+  $export = $form_state['item'];
   $form += array('info' => array('description' => ''), 'message' => '');
   $form['info']['description'] = array(
     '#title' => t('Description'),
