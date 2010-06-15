@@ -27,7 +27,7 @@ function message_schema() {
       'key' => 'name',
       'identifier' => 'message',
       'default hook' => 'message_default_messages',  // Function hook name.
-      'status' => 'message_status',
+      'primary key' => 'name',
       'api' => array(
         'owner' => 'message',
         'api' => 'message',  // Base name for api include files.
