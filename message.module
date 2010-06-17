@@ -7,11 +7,16 @@
  */
 
 /**
+ * Minimum CTools version needed.
+ */
+define('MESSAGE_REQUIRED_CTOOLS_API', '1.7');
+
+/**
  * Implementation of hook_ctools_plugin_api().
  */
 function message_ctools_plugin_api($module, $api) {
   if ($module == 'message' && $api == 'plugins') {
-    return array('version' => 1.7);
+    return array('version' => 1);
   }
 }
 
@@ -19,6 +24,11 @@ function message_ctools_plugin_api($module, $api) {
  * Implementation of hook_ctools_plugin_directory().
  */
 function message_ctools_plugin_directory($module, $type) {
+  // Safety: go away if CTools is not at an appropriate version.
+  if (!module_invoke('ctools', 'api_version', MESSAGE_REQUIRED_CTOOLS_API)) {
+    return;
+  }
+
   if ($module =='message' && $type == 'plugins') {
     return 'plugins/message';
   }
@@ -57,6 +67,11 @@ function message_features_api() {
  * Implementation of hook_theme().
  */
 function message_theme() {
+  // Safety: go away if CTools is not at an appropriate version.
+  if (!module_invoke('ctools', 'api_version', MESSAGE_REQUIRED_CTOOLS_API)) {
+    return;
+  }
+
   $items = array();
   $items['message'] = array(
     'arguments' => array('message' => array()),
