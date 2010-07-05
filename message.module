@@ -290,12 +290,11 @@ function message_instance_save($message_instance) {
 /**
  * Message instance delete.
  *
- * @param $message_instance
- * @return unknown_type
+ * @param $iid
+ *   Message instance ID.
  */
-function message_instance_delete($message_instance) {
-  db_query("DELETE FROM {message_instance} WHERE iid = %d", $message_instance->iid);
-  return TRUE;
+function message_instance_delete($iid) {
+  db_query("DELETE FROM {message_instance} WHERE iid = %d", $iid);
 }
 
 /**
@@ -348,12 +347,11 @@ function message_realm_save($message_realm) {
 /**
  * Message realm delete.
  *
- * @param $message_instance
- * @return unknown_type
+ * @param $rid
+ *   Message realm ID.
  */
-function message_realm_delete($message_realm) {
-  db_query("DELETE FROM {message_realm} WHERE rid = %d", $message_realm->rid);
-  return TRUE;
+function message_realm_delete($rid) {
+  db_query("DELETE FROM {message_realm} WHERE rid = %d", $rid);
 }
 
 
