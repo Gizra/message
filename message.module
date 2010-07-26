@@ -438,7 +438,7 @@ function message_get_accessiable_ids_by($plugin, $account = NULL) {
 }
 
 /**
- * Replace he arguments with their placeholders.
+ * Replace arguments with their placeholders.
  *
  * @param $message
  *   The message instance object.
