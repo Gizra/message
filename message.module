@@ -249,6 +249,9 @@ function message_instance_load_multiple($ids = array()) {
       }
       $messages[$row->iid] = $row;
     }
+
+    // Allow other modules to alter the message instances.
+    drupal_alter('message_instances', $messages);
   }
   return $messages;
 }
