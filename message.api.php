@@ -13,7 +13,7 @@
  */
 
 /**
- * Alter the message instances
+ * Alter the message instances.
  *
  * @param $message_instances
  *   The loaded message instances passed by reference.
