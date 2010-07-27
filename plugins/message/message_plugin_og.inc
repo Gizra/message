@@ -1,12 +1,14 @@
 <?php
 // $Id: message_plugin_og.inc,v 1.1 2010/06/07 10:54:11 amitaibu Exp $
 
-// Message plugin deceleration.
-$plugin = array(
-  'realm' => 'og',
-  'title' => t('Organic groups realm'),
-  'description' => t("Determine access by a user's membership in a group."),
-);
+if (module_exists('og')) {
+  // Message plugin deceleration.
+  $plugin = array(
+    'realm' => 'og',
+    'title' => t('Organic groups realm'),
+    'description' => t("Determine access by a user's membership in a group."),
+  );
+}
 
 /**
 * Get all groups a user belongs to.
