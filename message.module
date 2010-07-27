@@ -109,9 +109,30 @@ function message_views_pre_render(&$view) {
     }
   }
 
-  if ($ids) {
-    // Load the message instances, so they will be statically cached.
-    message_instance_load_multiple($ids);
+  // Load the message instances, so they will be statically cached.
+  if ($ids && $message_instances = message_instance_load_multiple($ids)) {
+    $remove = array();
+    foreach ($message_instances as $key => $value) {
+      // Check if messages should be hidden.
+      if (!empty($value->hide)) {
+
+        $remove[$key] = $key;
+      }
+    }
+
+    // Remove hidden results from the view.
+    foreach ($view->result as $key => $value) {
+      // TODO: Get the properly the alias of iid.
+      if (in_array($value->iid, $remove)) {
+        unset($view->result[$key]);
+
+        // Unset the key from the remove list, to make next checks a bit faster.
+        unset($remove[$key]);
+      }
+      if (empty($remove)) {
+        break;
+      }
+    }
   }
 }
 
