@@ -260,7 +260,7 @@ function _message_example_rules_defaults() {
             '#settings' => array(
               'arguments' => '',
               'code' => 'return array(
- \'@link\' => array(\'callback\' => \'url\', \'callback arguments\' => "node/$node->nid"),
+ \'@link\' => array(\'callback\' => \'url\', \'callback arguments\' => array("node/$node->nid")),
  \'@title\' => $node->title,
 );',
               'entity_type' => 'node',

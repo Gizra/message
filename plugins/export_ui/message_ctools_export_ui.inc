@@ -12,7 +12,6 @@ $plugin = array(
   'title plural' => t('messages'),
   'title singular proper' => t('Message'),
   'title plural proper' => t('Messages'),
-
 );
 
 function message_ctools_export_ui_form(&$form, &$form_state) {
