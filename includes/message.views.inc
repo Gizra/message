@@ -116,6 +116,42 @@ function message_views_data() {
     ),
   );
 
+  $data['message_instance']['iid'] = array(
+    'title' => t('Message realm'),
+    'help' => t('Relate a message to the message realm.'),
+    'relationship' => array(
+      'handler' => 'views_handler_relationship',
+      'base' => 'message_realm',
+      'base field' => 'iid',
+      'label' => t('Message realm'),
+    ),
+  );
+
+  $data['message_instance']['entity_type'] = array(
+    'title' => t('Entity type'),
+    'help' => t('The type of entity being acted upon (e.g. node, user).'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
+  $data['message_instance']['eid'] = array(
+    'title' => t('Entity ID'),
+    'help' => t('Entity ID used to maintain the relationship between the message and the entity that is related to it.'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
   $data['message_instance']['uid'] = array(
     'title' => t('User'),
     'help' => t('The user that is associated with the message.'),
@@ -126,14 +162,14 @@ function message_views_data() {
     ),
   );
 
-  $data['message_instance']['iid'] = array(
-    'title' => t('Message realm'),
-    'help' => t('Relate a message to the message realm.'),
-    'relationship' => array(
-      'handler' => 'views_handler_relationship',
-      'base' => 'message_realm',
-      'base field' => 'iid',
-      'label' => t('Message realm'),
+  $data['message_instance']['extra_identifier'] = array(
+    'title' => t('Extra identifier'),
+    'help' => t('An optional identifier that can group message instances together.'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
     ),
   );
 
