@@ -66,6 +66,27 @@ function message_views_data() {
     ),
   );
 
+  $data['message_realm']['realm_id_numeric'] = array(
+    'title' => t('Realm ID (numeric)'),
+    'help' => t('The realm ID the message belongs to in case it is numeric (thus allowing more Views features).'),
+    // This is a dummy field, so point it to a real field.
+    'real field' => 'iid',
+
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
   $data['message_realm']['message_plugin_realm'] = array(
     'title' => t('Accessible realms'),
     'help' => t('The realms a user may access.'),
@@ -104,7 +125,7 @@ function message_views_data() {
     'help' => t('Messages that are related to enteties. Can be used as activity stream.'),
   );
 
-  // Database columns
+  // Database columns.
   $data['message_instance']['iid'] = array(
     'title' => t('Activity Unique ID'),
     'help' => t('The unique id for each activity'),
@@ -114,16 +135,27 @@ function message_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
-  );
-
-  $data['message_instance']['iid'] = array(
-    'title' => t('Message realm'),
-    'help' => t('Relate a message to the message realm.'),
     'relationship' => array(
+      'title' => t('Message realm'),
+      'help' => t('Relate a message to the message realm.'),
       'handler' => 'views_handler_relationship',
       'base' => 'message_realm',
       'base field' => 'iid',
       'label' => t('Message realm'),
+    ),
+  );
+
+  $data['message_instance']['name'] = array(
+    'title' => t('Message name'),
+    'help' => t('Reference to a message in the message table.'),
+    'field' => array(
+      'handler' => 'views_handler_field',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
     ),
   );
 
