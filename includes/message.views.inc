@@ -70,7 +70,7 @@ function message_views_data() {
     'title' => t('Realm ID (numeric)'),
     'help' => t('The realm ID the message belongs to in case it is numeric (thus allowing more Views features).'),
     // This is a dummy field, so point it to a real field.
-    'real field' => 'iid',
+    'real field' => 'realm_id',
 
     'field' => array(
       'handler' => 'views_handler_field',
