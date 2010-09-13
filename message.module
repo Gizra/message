@@ -645,11 +645,12 @@ function message_save_message_to_realms($message_name, $entity_type, $eid, $argu
   $return['message instance'] = $message_instance;
 
   if (empty($realms)) {
+    // Set default realm.
     $realms = array('user' => $account->uid);
   }
 
+  // Save to the realms.
   foreach ($realms as $realm => $realm_id) {
-    // Save to realm realms.
     $realm = new stdClass();
     $realm->iid = $message_instance->iid;
     $realm->realm = $realm;
