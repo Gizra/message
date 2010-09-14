@@ -20,7 +20,6 @@ function message_views_handlers() {
     'message_handler_filter_realm' => 'views_handler_filter_in_operator',
     'message_handler_argument_realm' => 'views_handler_argument',
     'message_handler_filter_realm_user_access' => 'views_handler_filter_in_operator',
-
   );
 
   foreach ($handlers as $handler => $parent) {
