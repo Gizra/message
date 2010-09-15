@@ -358,7 +358,9 @@ function message_realm_load($rid) {
  * Message realm save.
  *
  * @param $message_instance
- * @return unknown_type
+ *
+ * @return
+ *   The message realm object.
  */
 function message_realm_save($message_realm) {
   if ($existing = message_realm_load($message_realm->rid)) {
@@ -606,4 +608,54 @@ function message_get_realm_types() {
   }
 
   return $options;
+}
+
+/**
+ * Save a message instance and save it to realms.
+ *
+ * @param $message_name
+ *   The message name.
+ * @param $entity_type
+ *   The entity type.
+ * @param $etid
+ *   The entity ID.
+ * @param $arguments
+ *   Optional; Array of arguments to pass to the callback function.
+ * @param $account
+ *   Optional; The user object, if empty the logged in user will be used.
+ */
+function message_save_message_to_realms($message_name, $entity_type, $eid, $arguments = array(), $realms = array(), $account = NULL) {
+  if (empty($account)) {
+    global $user;
+    $account = $user;
+  }
+
+  $return = array();
+
+  // Create message instance.
+  $message_instance = new stdClass();
+  $message_instance->name = $message_name;
+  $message_instance->uid = $account->uid;
+  $message_instance->entity_type = $entity_type;
+  $message_instance->eid = $eid;
+  $message_instance->arguments = $arguments;
+
+  $message_instance = message_instance_save($message_instance);
+
+  $return['message instance'] = $message_instance;
+
+  if (empty($realms)) {
+    $realms = array('user' => $account->uid);
+  }
+
+  foreach ($realms as $realm => $realm_id) {
+    // Save to realm realms.
+    $realm = new stdClass();
+    $realm->iid = $message_instance->iid;
+    $realm->realm = $realm;
+    $realm->realm_id = $realm_id;
+    $return['message realm'][] = message_realm_save($realm);
+  }
+
+  return $return;
 }
