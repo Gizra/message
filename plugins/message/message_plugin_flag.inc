@@ -7,14 +7,6 @@ if (module_exists('flag')) {
   $plugin = array(
     'title' => t('Flag realm'),
     'description' => t("Determine access by a flaggings of a user."),
-    'views' => array(
-      'handlers' => array(
-        'message_handler_filter_realm_user_access_flag' => array(
-          'parent' => 'views_handler_filter_in_operator',
-          'path' => drupal_get_path('module', 'message') .'/includes',
-        ),
-      ),
-    ),
   );
 }
 
@@ -30,4 +22,36 @@ function message_plugin_flag_accessible_ids($account, $flag_name) {
     }
   }
   return $access;
+}
+
+/**
+ * Plugin delegated implementation of hook_views_handlers().
+ */
+function message_plugin_flag_views_handlers() {
+  return array(
+    'message_handler_filter_realm_user_access_flag' => array(
+      'parent' => 'views_handler_filter_in_operator',
+      'path' => drupal_get_path('module', 'message') .'/includes',
+    ),
+  );
+}
+
+/**
+ * Plugin delegated implementation of hook_views_data().
+ */
+function message_plugin_flag_views_data() {
+  $data = array();
+
+  $data['message_realm']['message_realm_flag'] = array(
+    'title' => t('Accessible realms by flag'),
+    'help' => t('The realms a user may access based on their flaggings.'),
+
+    // This is a dummy field, so point it to a real field.
+    'real field' => 'iid',
+
+    'filter' => array(
+      'handler' => 'message_handler_filter_realm_user_access_flag',
+    ),
+  );
+  return $data;
 }
