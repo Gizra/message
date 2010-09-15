@@ -1,0 +1,61 @@
+<?php
+// $Id:$
+
+include_once('message_flag_example.features.inc');
+
+/**
+ * @file
+ * Allow users to follow other users' activity.
+ */
+
+/**
+ * The name of the flag being used to follow users.
+ */
+define ('MESSAGE_FOLLOW_FLAG_USER', 'message_flag_example_user');
+
+/**
+ * Implementation of hook_views_api().
+ */
+function message_flag_example_views_api() {
+  return array(
+    'api' => 2.0,
+    'path' => drupal_get_path('module', 'message_flag_example') . '/includes',
+  );
+}
+
+/**
+ * Implementation of hook_flag().
+ *
+ * Add a message about users being followed.
+ */
+function message_flag_example_flag($op, $flag, $content_id, $account, $fcid) {
+  if ($op == 'flag' && $flag->name == MESSAGE_FOLLOW_FLAG_USER) {
+    $friend_account = user_load($content_id);
+
+    // We don't need to save the whole user object, as we only need the partial
+    // object to be used on display with theme_username().
+    $dummy_account = new stdClass();
+    $dummy_account->uid = $friend_account->uid;
+    $dummy_account->name = $friend_account->name;
+
+    $arguments = array(
+      '!friend' => array(
+        'callback' => 'message_flag_example_theme_username',
+        'callback arguments' => array('account' => $dummy_account),
+      ),
+    );
+    // Save the message to the user realm.
+    message_save_message_to_realms($flag->name, 'user', $content_id, $arguments);
+  }
+}
+
+/**
+ * Helper function to theme a username.
+ *
+ * @param $account
+ *   A user object (or partial object that contains the user ID and user name)
+ *   that will be used along with theme_username().
+ */
+function message_flag_example_theme_username($account) {
+  return theme('username', $account);
+}
