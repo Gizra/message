@@ -17,13 +17,13 @@ function _message_flag_example_ctools_plugin_api() {
  */
 function _message_flag_example_flag_default_flags() {
 $flags = array();
-// Exported flag: "Message follow_user".
+// Exported flag: "Message flag user".
 $flags[] = array (
   'content_type' => 'user',
   'name' => 'message_flag_example_user',
-  'title' => 'Message follow_user',
+  'title' => 'Message flag user',
   'global' => '0',
-  'types' => 
+  'types' =>
   array (
   ),
   'flag_short' => 'Follow user',
@@ -34,13 +34,13 @@ $flags[] = array (
   'unflag_message' => '',
   'unflag_denied_text' => '',
   'link_type' => 'toggle',
-  'roles' => 
+  'roles' =>
   array (
-    'flag' => 
+    'flag' =>
     array (
       0 => 2,
     ),
-    'unflag' => 
+    'unflag' =>
     array (
       0 => 2,
     ),
@@ -48,7 +48,7 @@ $flags[] = array (
   'show_on_profile' => 1,
   'access_uid' => 'others',
   'module' => 'message_flag_example',
-  'locked' => 
+  'locked' =>
   array (
     0 => 'name',
   ),
