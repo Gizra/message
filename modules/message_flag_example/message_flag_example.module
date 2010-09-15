@@ -11,7 +11,7 @@ include_once('message_flag_example.features.inc');
 /**
  * The name of the flag being used to follow users.
  */
-define ('MESSAGE_FOLLOW_FLAG_USER', 'message_flag_example_user');
+define ('MESSAGE_FLAG_EXAMPLE_FLAG_USER', 'message_flag_example_user');
 
 /**
  * Implementation of hook_views_api().
@@ -29,7 +29,7 @@ function message_flag_example_views_api() {
  * Add a message about users being followed.
  */
 function message_flag_example_flag($op, $flag, $content_id, $account, $fcid) {
-  if ($op == 'flag' && $flag->name == MESSAGE_FOLLOW_FLAG_USER) {
+  if ($op == 'flag' && $flag->name == MESSAGE_FLAG_EXAMPLE_FLAG_USER) {
     $friend_account = user_load($content_id);
 
     // We don't need to save the whole user object, as we only need the partial
