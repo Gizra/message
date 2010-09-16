@@ -8,11 +8,46 @@
 include_once('message_example.features.inc');
 
 /**
- * Loads a node by node ID, and returns the node output by calling node_view().
- *
- * @see node_view().
+ * Implementation of hook_nodeapi().
  */
-function message_example_node_view($nid, $teaser = FALSE, $page = FALSE, $links = TRUE) {
+function message_example_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  global $user;
+  if (in_array($op, array('insert', 'update'))) {
+    // Set the arguments that would be replaced on run-time.
+    $arguments = array(
+      // The link will be replaced with the url of the node using url() upon
+      // display. Even if the node alias changes, then the link will always be
+      // displayed correctly.
+      '@link' => array(
+        'callback' => 'url',
+        'callback arguments' => array('node/' . $node->nid),
+      ),
+      // The title of the node will be sanitized using check_plain() upon
+      // display.
+      '@title' => $node->title,
+    );
+
+    if ($op == 'insert') {
+      // Add also the teaser argument.
+    }
+    $arguments += array(
+      // The teaser may contain HTML, so we make sure it's not escaped by
+      // prefixing the argument with the "!" sign.
+      '!teaser' => array(
+        'callback' => 'url',
+        'callback arguments' => array($node->nid),
+      ),
+    );
+
+    // Save the message and assign it to the user realm.
+    message_save_message_to_realms('node_' . $op, 'node', $node->nid, $arguments);
+  }
+}
+
+/**
+ * Loads a node by node ID, and returns the node output by calling node_view().
+ */
+function message_example_node_view_teaser($nid) {
   $node = node_load($nid);
-  return node_view($node, $teaser, $page, $links);
+  return node_view($node, TRUE);
 }
