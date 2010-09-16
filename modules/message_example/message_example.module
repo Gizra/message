@@ -36,7 +36,7 @@ function message_example_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         // The teaser may contain HTML, so we make sure it's not escaped by
         // prefixing the argument with the "!" sign.
         '!teaser' => array(
-          'callback' => 'url',
+          'callback' => 'message_example_node_view_teaser',
           'callback arguments' => array($node->nid),
         ),
       );
