@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Message and Rules defaults to demonstrate the Message module.
+ * Message module example.
  */
 include_once('message_example.features.inc');
 
@@ -83,7 +83,6 @@ function message_example_comment(&$a1, $op) {
     message_save_message_to_realms('comment_insert', 'comment', $cid, $arguments, $realms);
   }
 }
-
 
 /**
  * Return the teaser of a node.
