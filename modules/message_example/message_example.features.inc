@@ -4,16 +4,36 @@
  * Implementation of hook_ctools_plugin_api().
  */
 function message_example_ctools_plugin_api() {
-  module_load_include('inc', 'message_example', 'message_example.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_message_example_ctools_plugin_api', $args);
+  list($module, $api) = func_get_args();
+  if ($module == "message" && $api == "message") {
+    return array("version" => 1);
+  }
 }
 
 /**
  * Implementation of hook_message_default_messages().
  */
 function message_example_message_default_messages() {
-  module_load_include('inc', 'message_example', 'message_example.defaults');
-  $args = func_get_args();
-  return call_user_func_array('_message_example_message_default_messages', $args);
+  $export = array();
+  $message = new stdClass;
+  $message->disabled = FALSE; /* Edit this to true to make a default message disabled initially */
+  $message->api_version = 1;
+  $message->name = 'create_new_content';
+  $message->description = 'Create a new content - and show teaser.';
+  $message->tag = '';
+  $message->message = 'created <a href="@link">@title</a>. <br />!teaser';
+  $message->language = 'en';
+
+  $export['create_new_content'] = $message;
+  $message = new stdClass;
+  $message->disabled = FALSE; /* Edit this to true to make a default message disabled initially */
+  $message->api_version = 1;
+  $message->name = 'update_existing_content';
+  $message->description = 'Update existing content.';
+  $message->tag = '';
+  $message->message = 'updated <a href="@link">@title</a>.';
+  $message->language = 'en';
+
+  $export['update_existing_content'] = $message;
+  return $export;
 }
