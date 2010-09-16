@@ -23,21 +23,24 @@ function message_example_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
         'callback arguments' => array('node/' . $node->nid),
       ),
       // The title of the node will be sanitized using check_plain() upon
-      // display.
+      // display. We hard code the title to prevent a node load, but if the
+      // node's title will change it will not be reflected in the message.
+      // see message_example_comment() for an example of using a callback to get
+      // the most up-to-date title.
       '@title' => $node->title,
     );
 
     if ($op == 'insert') {
       // Add also the teaser argument.
+      $arguments += array(
+        // The teaser may contain HTML, so we make sure it's not escaped by
+        // prefixing the argument with the "!" sign.
+        '!teaser' => array(
+          'callback' => 'url',
+          'callback arguments' => array($node->nid),
+        ),
+      );
     }
-    $arguments += array(
-      // The teaser may contain HTML, so we make sure it's not escaped by
-      // prefixing the argument with the "!" sign.
-      '!teaser' => array(
-        'callback' => 'url',
-        'callback arguments' => array($node->nid),
-      ),
-    );
 
     // Save the message and assign it to the user realm.
     message_save_message_to_realms('node_' . $op, 'node', $node->nid, $arguments);
@@ -45,9 +48,59 @@ function message_example_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
 }
 
 /**
- * Loads a node by node ID, and returns the node output by calling node_view().
+ * Implementation of hook_comment().
+ */
+function message_example_comment(&$a1, $op) {
+  if ($op == 'insert') {
+    $arguments = array(
+      // The link will be replaced with the url of the node using url() upon
+      // display. Even if the node alias changes, then the link will always be
+      // displayed correctly.
+      '@link' => array(
+        'callback' => 'url',
+        'callback arguments' => array('node/' . $node->nid, array('fragment' => 'comment-' . $a1['cid'])),
+      ),
+      '@title' => $a1['subject'],
+
+      // Custom callback to return the most up-to-date node title.
+      '@node-title' => array(
+        'callback' => 'message_example_node_title',
+        'callback arguments' => array($node->nid),
+      ),
+    );
+  }
+}
+
+
+/**
+ * Return the teaser of a node.
+ *
+ * @param $nid
+ *   The node ID.
  */
 function message_example_node_view_teaser($nid) {
-  $node = node_load($nid);
-  return node_view($node, TRUE);
+  $output = '';
+  if ($node = node_load($nid)) {
+    $output = node_view($node, TRUE);
+  }
+
+  return $output;
+}
+
+/**
+ * Return a node title.
+ *
+ * The node title is not sanitized by check_plain() as this be taken care of by
+ * the message module.
+ *
+ * @param $nid
+ *   The node ID.
+ */
+function message_example_node_title($nid) {
+  $output = '';
+  if ($node = node_load($nid)) {
+    $output = $node->title;
+  }
+
+  return $output;
 }

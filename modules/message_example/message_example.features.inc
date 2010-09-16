@@ -24,7 +24,7 @@ function message_example_message_default_messages() {
   $message->message = 'created <a href="@link">@title</a>. <br />!teaser';
   $message->language = 'en';
 
-  $export['create_new_content'] = $message;
+  $export['node_insert'] = $message;
 
   $message = new stdClass;
   $message->disabled = FALSE; /* Edit this to true to make a default message disabled initially */
@@ -35,6 +35,17 @@ function message_example_message_default_messages() {
   $message->message = 'updated <a href="@link">@title</a>.';
   $message->language = 'en';
 
-  $export['update_existing_content'] = $message;
+  $export['node_update'] = $message;
+
+  $message = new stdClass;
+  $message->disabled = FALSE; /* Edit this to true to make a default message disabled initially */
+  $message->api_version = 1;
+  $message->name = 'comment_insert';
+  $message->description = 'Create a new comment';
+  $message->tag = '';
+  $message->message = 'commented "<a href="@link">@title</a>" about @node-title.';
+  $message->language = 'en';
+
+  $export['comment_insert'] = $message;
   return $export;
 }
