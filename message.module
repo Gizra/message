@@ -646,7 +646,7 @@ function message_save_message_to_realms($message_name, $entity_type, $eid, $argu
 
   if (empty($realms)) {
     // Set default realm.
-    $realms[] = array('realm' => 'user', 'realm_id' => $account->uid);
+    $realms[] = array('realm' => 'user', 'realm id' => $account->uid);
   }
 
   // Save to the realms.
@@ -654,7 +654,7 @@ function message_save_message_to_realms($message_name, $entity_type, $eid, $argu
     $realm = new stdClass();
     $realm->iid = $message_instance->iid;
     $realm->realm = $value['realm'];
-    $realm->realm_id = $value['realm_id'];
+    $realm->realm_id = $value['realm id'];
     $return['message realm'][] = message_realm_save($realm);
   }
 
