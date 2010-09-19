@@ -14,16 +14,6 @@ include_once('message_flag_example.features.inc');
 define ('MESSAGE_FLAG_EXAMPLE_FLAG_USER', 'message_flag_example_user');
 
 /**
- * Implementation of hook_views_api().
- */
-function message_flag_example_views_api() {
-  return array(
-    'api' => 2.0,
-    'path' => drupal_get_path('module', 'message_flag_example') . '/includes',
-  );
-}
-
-/**
  * Implementation of hook_flag().
  *
  * Add a message about users being followed.
