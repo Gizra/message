@@ -93,7 +93,14 @@ function message_example_comment(&$a1, $op) {
 function message_example_node_view_teaser($nid) {
   $output = '';
   if ($node = node_load($nid)) {
-    $output = node_view($node, TRUE);
+    $output = '<div class="message-node-teaser">' . node_view($node, TRUE) . '</div>';
+
+    $css = &ctools_static(__FUNCTION__, FALSE);
+    if (!$css) {
+      // Add our css.
+      drupal_add_css(drupal_get_path('module', 'message_example') . '/message_example.css');
+      $css = TRUE;
+    }
   }
 
   return $output;
