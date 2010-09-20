@@ -96,85 +96,6 @@ function message_example_comment(&$a1, $op) {
 }
 
 /**
- * Return the teaser of a node.
- *
- * @param $nid
- *   The node ID.
- */
-function message_example_node_view_teaser($nid) {
-  $output = '';
-  if ($node = node_load($nid)) {
-    $output = '<div class="message-node-teaser">' . node_view($node, TRUE) . '</div>';
-
-    $css = &ctools_static(__FUNCTION__, FALSE);
-    if (!$css) {
-      // Add our css.
-      drupal_add_css(drupal_get_path('module', 'message_example') . '/message_example.css');
-      $css = TRUE;
-    }
-  }
-
-  return $output;
-}
-
-/**
- * Return a node title.
- *
- * The node title is not sanitized by check_plain() as this be taken care of by
- * the message module.
- *
- * @param $nid
- *   The node ID.
- */
-function message_example_node_title($nid) {
-  $output = '';
-  if ($node = node_load($nid)) {
-    $output = $node->title;
-  }
-
-  return $output;
-}
-
-/**
- * Implementation of hook_theme().
- */
-function message_example_theme() {
-  return array(
-    'views_view_field__message_flag_example__name' => array(
-        'arguments' => array('view' => FALSE, 'field' => FALSE, 'row' => FALSE),
-        'original hook' => 'views_view_field',
-    ),
-  );
-}
-
-/**
- * Theme the user name, and add an icon before it, based on the message name.
- */
-function theme_views_view_field__message_flag_example__name($view, $field, $row) {
-  // TODO: Isn't there a shorter way?
-  $output = $view->field[$field->options['id']]->advanced_render($row);
-
-  if (!empty($view->field['name_1']->field_alias) && $message_name = $row->{$view->field['name_1']->field_alias}) {
-    $image = '';
-    // Check if the message name has a matching icon.
-    switch ($message_name) {
-      case 'node_insert':
-      case 'comment_insert':
-        $image = str_replace('_', '-', $message_name);
-        break;
-    }
-
-    if ($image) {
-      // Add the image.
-      $image = theme('image', drupal_get_path('module', 'message_example') . '/images/' . $image . '.png');
-      $output = $image . ' ' . $output;
-    }
-  }
-
-  return $output;
-}
-
-/**
  * Implementation of hook_flag().
  *
  * Add a message about users/ content being followed.
@@ -221,6 +142,47 @@ function message_example_flag($op, $flag, $content_id, $account, $fcid) {
 }
 
 /**
+ * Return the teaser of a node.
+ *
+ * @param $nid
+ *   The node ID.
+ */
+function message_example_node_view_teaser($nid) {
+  $output = '';
+  if ($node = node_load($nid)) {
+    $output = '<div class="message-node-teaser">' . node_view($node, TRUE) . '</div>';
+
+    $css = &ctools_static(__FUNCTION__, FALSE);
+    if (!$css) {
+      // Add our css.
+      drupal_add_css(drupal_get_path('module', 'message_example') . '/message_example.css');
+      $css = TRUE;
+    }
+  }
+
+  return $output;
+}
+
+/**
+ * Return a node title.
+ *
+ * The node title is not sanitized by check_plain() as this be taken care of by
+ * the message module.
+ *
+ * @param $nid
+ *   The node ID.
+ */
+function message_example_node_title($nid) {
+  $output = '';
+  if ($node = node_load($nid)) {
+    $output = $node->title;
+  }
+
+  return $output;
+}
+
+
+/**
  * Helper function to theme a username.
  *
  * @param $account
@@ -229,4 +191,48 @@ function message_example_flag($op, $flag, $content_id, $account, $fcid) {
  */
 function message_example_theme_username($account) {
   return theme('username', $account);
+}
+
+
+/**
+ * Implementation of hook_theme().
+ *
+ * Theme override a the user's name field in the "message_example" view. It is
+ * not related specifically to the message module, but rather a demonstration of
+ * how a view may be themed via a module to provide a nicer looking news feed.
+ */
+function message_example_theme() {
+  return array(
+    'views_view_field__message_flag_example__name' => array(
+        'arguments' => array('view' => FALSE, 'field' => FALSE, 'row' => FALSE),
+        'original hook' => 'views_view_field',
+    ),
+  );
+}
+
+/**
+ * Theme the user name, and add an icon before it, based on the message name.
+ */
+function theme_views_view_field__message_flag_example__name($view, $field, $row) {
+  // TODO: Isn't there a shorter way?
+  $output = $view->field[$field->options['id']]->advanced_render($row);
+
+  if (!empty($view->field['name_1']->field_alias) && $message_name = $row->{$view->field['name_1']->field_alias}) {
+    $image = '';
+    // Check if the message name has a matching icon in the images folder.
+    switch ($message_name) {
+      case 'node_insert':
+      case 'comment_insert':
+        $image = str_replace('_', '-', $message_name);
+        break;
+    }
+
+    if ($image) {
+      // Add the image.
+      $image = theme('image', drupal_get_path('module', 'message_example') . '/images/' . $image . '.png');
+      $output = $image . ' ' . $output;
+    }
+  }
+
+  return $output;
 }
