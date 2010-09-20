@@ -172,19 +172,19 @@ function message_example_views_default_views() {
     'hide_empty' => 0,
   ));
   $handler = $view->new_display('page', 'News feed', 'page_1');
-  $handler->override_option('path', 'news-feed');
+  $handler->override_option('path', 'messages/news-feed');
   $handler->override_option('menu', array(
     'type' => 'default tab',
     'title' => 'News feed',
-    'description' => '',
-    'weight' => '0',
+    'description' => 'The activity of people or content you follow.',
+    'weight' => '-5',
     'name' => 'navigation',
   ));
   $handler->override_option('tab_options', array(
-    'type' => 'none',
-    'title' => '',
+    'type' => 'normal',
+    'title' => 'News feed',
     'description' => '',
-    'weight' => 0,
+    'weight' => '0',
     'name' => 'navigation',
   ));
   $handler = $view->new_display('page', 'Your actions', 'page_2');
@@ -210,12 +210,30 @@ function message_example_views_default_views() {
     ),
   ));
   $handler->override_option('title', 'Your actions');
-  $handler->override_option('path', 'your-actions');
+  $handler->override_option('path', 'messages/your-actions');
   $handler->override_option('menu', array(
     'type' => 'tab',
     'title' => 'Your actions',
-    'description' => '',
+    'description' => 'Your own activity.',
     'weight' => '0',
+    'name' => 'navigation',
+  ));
+  $handler->override_option('tab_options', array(
+    'type' => 'none',
+    'title' => '',
+    'description' => '',
+    'weight' => 0,
+    'name' => 'navigation',
+  ));
+  $handler = $view->new_display('page', 'All feeds', 'page_3');
+  $handler->override_option('filters', array());
+  $handler->override_option('title', 'All feeds');
+  $handler->override_option('path', 'messages/all-feeds');
+  $handler->override_option('menu', array(
+    'type' => 'tab',
+    'title' => 'All feeds',
+    'description' => 'All activity in the site.',
+    'weight' => '5',
     'name' => 'navigation',
   ));
   $handler->override_option('tab_options', array(
