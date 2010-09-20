@@ -215,7 +215,7 @@ function message_example_flag($op, $flag, $content_id, $account, $fcid) {
 
     if ($arguments) {
       // Save the message to the user realm.
-        message_save_message_to_realms($flag->name, $flag->content_type, $content_id, $arguments);
+      message_save_message_to_realms($flag->name, $flag->content_type, $content_id, $arguments);
     }
   }
 }
