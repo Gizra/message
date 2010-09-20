@@ -203,7 +203,7 @@ function message_example_theme_username($account) {
  */
 function message_example_theme() {
   return array(
-    'views_view_field__message_flag_example__name' => array(
+    'views_view_field__message_example__name' => array(
         'arguments' => array('view' => FALSE, 'field' => FALSE, 'row' => FALSE),
         'original hook' => 'views_view_field',
     ),
@@ -213,7 +213,7 @@ function message_example_theme() {
 /**
  * Theme the user name, and add an icon before it, based on the message name.
  */
-function theme_views_view_field__message_flag_example__name($view, $field, $row) {
+function theme_views_view_field__message_example__name($view, $field, $row) {
   // TODO: Isn't there a shorter way?
   $output = $view->field[$field->options['id']]->advanced_render($row);
 

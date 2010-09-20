@@ -8,8 +8,8 @@ function message_example_views_default_views() {
 
   // Exported view: message_flag_example
   $view = new view;
-  $view->name = 'message_flag_example';
-  $view->description = 'Activity feed.';
+  $view->name = 'message_example';
+  $view->description = 'News feed.';
   $view->tag = '';
   $view->view_php = '';
   $view->base_table = 'message_instance';
