@@ -151,13 +151,6 @@ function message_example_node_view_teaser($nid) {
   $output = '';
   if ($node = node_load($nid)) {
     $output = '<div class="message-node-teaser">' . node_view($node, TRUE) . '</div>';
-
-    $css = &ctools_static(__FUNCTION__, FALSE);
-    if (!$css) {
-      // Add our css.
-      drupal_add_css(drupal_get_path('module', 'message_example') . '/message_example.css');
-      $css = TRUE;
-    }
   }
 
   return $output;
@@ -214,6 +207,15 @@ function message_example_theme() {
  * Theme the user name, and add an icon before it, based on the message name.
  */
 function theme_views_view_field__message_example__name($view, $field, $row) {
+  // Add out custom CSS to the view.
+  $css = &ctools_static(__FUNCTION__, FALSE);
+  if (!$css) {
+    // Add our css.
+    drupal_add_css(drupal_get_path('module', 'message_example') . '/message_example.css');
+    $css = TRUE;
+  }
+
+
   // TODO: Isn't there a shorter way?
   $output = $view->field[$field->options['id']]->advanced_render($row);
 
