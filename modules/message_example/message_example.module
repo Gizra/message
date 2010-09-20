@@ -91,7 +91,7 @@ function message_example_comment(&$a1, $op) {
     $realms[] = array('realm' => 'user', 'realm id' => $user->uid);
     $realms[] = array('realm' => 'node', 'realm id' => $nid);
 
-    message_save_message_to_realms('comment_insert', 'comment', $cid, $arguments, $realms);
+    message_save_message_to_realms('message_example_comment_insert', 'comment', $cid, $arguments, $realms);
   }
 }
 
