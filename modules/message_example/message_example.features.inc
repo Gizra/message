@@ -21,7 +21,7 @@ $flags[] = array (
   'name' => 'message_example_flag_user',
   'title' => 'Message follow user',
   'global' => '0',
-  'types' =>
+  'types' => 
   array (
   ),
   'flag_short' => 'Follow user',
@@ -32,13 +32,13 @@ $flags[] = array (
   'unflag_message' => '',
   'unflag_denied_text' => '',
   'link_type' => 'toggle',
-  'roles' =>
+  'roles' => 
   array (
-    'flag' =>
+    'flag' => 
     array (
       0 => 2,
     ),
-    'unflag' =>
+    'unflag' => 
     array (
       0 => 2,
     ),
@@ -46,13 +46,11 @@ $flags[] = array (
   'show_on_profile' => 1,
   'access_uid' => 'others',
   'module' => 'message_example',
-  'locked' =>
+  'locked' => 
   array (
     0 => 'name',
   ),
   'api_version' => 2,
-  'status' => true,
-  'is_new' => true,
 );
 return $flags;
 }
