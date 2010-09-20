@@ -8,6 +8,11 @@
 include_once('message_example.features.inc');
 
 /**
+ * The name of the flag being used to follow users.
+ */
+define ('MESSAGE_EXAMPLE_FLAG_USER', 'message_example_flag_user');
+
+/**
  * Implementation of hook_nodeapi().
  */
 function message_example_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
@@ -129,7 +134,7 @@ function message_example_node_title($nid) {
  */
 function message_example_theme() {
   return array(
-    'views_view_field__message_follow__name' => array(
+    'views_view_field__message_flag_example__name' => array(
         'arguments' => array('view' => FALSE, 'field' => FALSE, 'row' => FALSE),
         'original hook' => 'views_view_field',
     ),
@@ -139,7 +144,7 @@ function message_example_theme() {
 /**
  * Theme the user name, and add an icon before it, based on the message name.
  */
-function theme_views_view_field__message_follow__name($view, $field, $row) {
+function theme_views_view_field__message_flag_example__name($view, $field, $row) {
   // TODO: Isn't there a shorter way?
   $output = $view->field[$field->options['id']]->advanced_render($row);
 
@@ -161,4 +166,44 @@ function theme_views_view_field__message_follow__name($view, $field, $row) {
   }
 
   return $output;
+}
+
+
+
+
+/**
+ * Implementation of hook_flag().
+ *
+ * Add a message about users/ content being followed.
+ */
+function message_example_flag($op, $flag, $content_id, $account, $fcid) {
+  if ($op == 'flag' && $flag->name == MESSAGE_EXAMPLE_FLAG_USER) {
+    $friend_account = user_load($content_id);
+
+    // We don't need to save the whole user object, as we only need the partial
+    // object to be used on display with theme_username().
+    $dummy_account = new stdClass();
+    $dummy_account->uid = $friend_account->uid;
+    $dummy_account->name = $friend_account->name;
+
+    $arguments = array(
+      '!friend' => array(
+        'callback' => 'message_example_theme_username',
+        'callback arguments' => array('account' => $dummy_account),
+      ),
+    );
+    // Save the message to the user realm.
+    message_save_message_to_realms($flag->name, 'user', $content_id, $arguments);
+  }
+}
+
+/**
+ * Helper function to theme a username.
+ *
+ * @param $account
+ *   A user object (or partial object that contains the user ID and user name)
+ *   that will be used along with theme_username().
+ */
+function message_example_theme_username($account) {
+  return theme('username', $account);
 }
