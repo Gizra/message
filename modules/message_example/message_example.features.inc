@@ -21,7 +21,7 @@ $flags[] = array (
   'name' => 'message_example_flag_user',
   'title' => 'Message follow user',
   'global' => '0',
-  'types' => 
+  'types' =>
   array (
   ),
   'flag_short' => 'Follow user',
@@ -32,13 +32,13 @@ $flags[] = array (
   'unflag_message' => '',
   'unflag_denied_text' => '',
   'link_type' => 'toggle',
-  'roles' => 
+  'roles' =>
   array (
-    'flag' => 
+    'flag' =>
     array (
       0 => 2,
     ),
-    'unflag' => 
+    'unflag' =>
     array (
       0 => 2,
     ),
@@ -46,12 +46,50 @@ $flags[] = array (
   'show_on_profile' => 1,
   'access_uid' => 'others',
   'module' => 'message_example',
-  'locked' => 
+  'locked' =>
   array (
     0 => 'name',
   ),
   'api_version' => 2,
 );
+
+// Exported flag: "Message follow content".
+$flags[] = array (
+  'content_type' => 'node',
+  'name' => 'message_example_flag_node',
+  'title' => 'Message follow content',
+  'global' => '0',
+  'types' =>
+  array (
+    0 => 'story',
+  ),
+  'flag_short' => 'Follow content',
+  'flag_long' => '',
+  'flag_message' => '',
+  'unflag_short' => 'Unfollow content',
+  'unflag_long' => '',
+  'unflag_message' => '',
+  'unflag_denied_text' => '',
+  'link_type' => 'toggle',
+  'roles' =>
+  array (
+    'flag' =>
+    array (
+      0 => 2,
+    ),
+    'unflag' =>
+    array (
+      0 => 2,
+    ),
+  ),
+  'show_on_page' => 1,
+  'show_on_teaser' => 1,
+  'show_on_form' => 0,
+  'access_author' => '',
+  'i18n' => 0,
+  'api_version' => 2,
+);
+
 return $flags;
 }
 
