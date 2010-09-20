@@ -13,6 +13,12 @@ include_once('message_example.features.inc');
 define ('MESSAGE_EXAMPLE_FLAG_USER', 'message_example_flag_user');
 
 /**
+ * The name of the flag being used to follow conetnet (nodes).
+ */
+define ('MESSAGE_EXAMPLE_FLAG_NODE', 'message_example_flag_node');
+
+
+/**
  * Implementation of hook_nodeapi().
  */
 function message_example_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
@@ -168,32 +174,49 @@ function theme_views_view_field__message_flag_example__name($view, $field, $row)
   return $output;
 }
 
-
-
-
 /**
  * Implementation of hook_flag().
  *
  * Add a message about users/ content being followed.
  */
 function message_example_flag($op, $flag, $content_id, $account, $fcid) {
-  if ($op == 'flag' && $flag->name == MESSAGE_EXAMPLE_FLAG_USER) {
-    $friend_account = user_load($content_id);
+  if ($op == 'flag') {
+    $arguments = array();
+    if ($flag->name == MESSAGE_EXAMPLE_FLAG_USER) {
+      // User if following another user.
+      $friend_account = user_load($content_id);
 
-    // We don't need to save the whole user object, as we only need the partial
-    // object to be used on display with theme_username().
-    $dummy_account = new stdClass();
-    $dummy_account->uid = $friend_account->uid;
-    $dummy_account->name = $friend_account->name;
+      // We don't need to save the whole user object, as we only need the partial
+      // object to be used on display with theme_username().
+      $dummy_account = new stdClass();
+      $dummy_account->uid = $friend_account->uid;
+      $dummy_account->name = $friend_account->name;
 
-    $arguments = array(
-      '!friend' => array(
-        'callback' => 'message_example_theme_username',
-        'callback arguments' => array('account' => $dummy_account),
-      ),
-    );
-    // Save the message to the user realm.
-    message_save_message_to_realms($flag->name, 'user', $content_id, $arguments);
+      $arguments = array(
+        '!friend' => array(
+          'callback' => 'message_example_theme_username',
+          'callback arguments' => array('account' => $dummy_account),
+        ),
+      );
+    }
+    elseif ($flag->name == MESSAGE_EXAMPLE_FLAG_NODE) {
+      // User is following a node.
+      $node = node_load($content_id);
+
+      $arguments = array(
+        '@link' => array(
+          'callback' => 'url',
+          'callback arguments' => array('node/' . $node->nid),
+        ),
+        '@title' => $node->title,
+      );
+
+    }
+
+    if ($arguments) {
+      // Save the message to the user realm.
+        message_save_message_to_realms($flag->name, $flag->content_type, $content_id, $arguments);
+    }
   }
 }
 
