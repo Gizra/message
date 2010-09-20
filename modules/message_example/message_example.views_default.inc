@@ -6,7 +6,7 @@
 function message_example_views_default_views() {
   $views = array();
 
-  // Exported view: message_flag_example
+  // Exported view: message_example
   $view = new view;
   $view->name = 'message_example';
   $view->description = 'News feed.';
@@ -128,6 +128,16 @@ function message_example_views_default_views() {
       'id' => 'render',
       'table' => 'message_instance',
       'field' => 'render',
+      'relationship' => 'none',
+    ),
+  ));
+  $handler->override_option('sorts', array(
+    'timestamp' => array(
+      'order' => 'DESC',
+      'granularity' => 'second',
+      'id' => 'timestamp',
+      'table' => 'message_instance',
+      'field' => 'timestamp',
       'relationship' => 'none',
     ),
   ));
