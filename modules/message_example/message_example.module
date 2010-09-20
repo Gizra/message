@@ -226,7 +226,7 @@ function theme_views_view_field__message_example__name($view, $field, $row) {
       case 'message_example_flag_user':
       case 'message_example_flag_node':
         // Remove the module name prefix.
-        $message_name = str_replace('message_example', '', $message_name);
+        $message_name = str_replace('message_example_', '', $message_name);
         // Replace underscore with hyphens.
         $image = str_replace('_', '-', $message_name);
         break;

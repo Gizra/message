@@ -126,7 +126,7 @@ function message_example_message_default_messages() {
   $message->name = 'message_example_flag_node';
   $message->description = 'User flagged a content (node).';
   $message->tag = '';
-  $message->message = 'is following <a href="@link">@title</a>.';
+  $message->message = 'is following <a href="@link">@title</a> content.';
   $message->language = '';
 
   $export['message_example_flag_node'] = $message;
