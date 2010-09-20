@@ -485,7 +485,7 @@ function message_t($message_instance) {
     // Transform arguments before inserting them.
     foreach ($message_instance->arguments as $key => $value) {
 
-      if (is_array($value)) {
+      if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
         // A replacement via callback function.
         $value = call_user_func_array($value['callback'], $value['callback arguments']);
       }
