@@ -13,7 +13,7 @@ include_once('message_example.features.inc');
 define ('MESSAGE_EXAMPLE_FLAG_USER', 'message_example_flag_user');
 
 /**
- * The name of the flag being used to follow conetnet (nodes).
+ * The name of the flag being used to follow content (nodes).
  */
 define ('MESSAGE_EXAMPLE_FLAG_NODE', 'message_example_flag_node');
 
