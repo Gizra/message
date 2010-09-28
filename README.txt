@@ -1,38 +1,18 @@
 // $Id$
 
-Message is an API module. Here is a code example of how to create a message 
-instance and assign it to a realm.
+A general logging utility that can be used as (yet another) activity module.
 
-/**
- * Implementation of hook_nodeapi().
- */
-function foo_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  global $user;
-  if ($op == 'insert') {
-    $message = message_load('bar'); // Replace 'bar' by your message name.
+The main differences between message module and activity module are:
 
-    $arguments = array(
-      '@link' => array(
-        'callback' => 'url',
-        'callback arguments' => array($node->nid),
-      ),
-    );
-
-    // Create message instance.
-    $message_instance = new stdClass();
-    $message_instance->name = $message->name;
-    $message_instance->uid = $user->uid;
-    $message_instance->entity_type = 'node';
-    $message_instance->eid = $node->nid;
-    $message_instance->arguments = $arguments;
-
-    $message_instance = message_instance_save($message_instance);
-
-    // Save to user realm.
-    $realm = new stdClass();
-    $realm->iid = $message_instance->iid;
-    $realm->realm = 'user';
-    $realm->realm_id = $user->uid;
-    message_realm_save($realm);
-  }
-}
+* In message module, the arguments of a sentence aren't hard-coded. This means 
+  that the rendering time is slower than activity, on the other hand you can use 
+  callback functions to render the final output (see message_example module).
+* Thanks to the dependency on CTools, the messages are exportable (Features 
+  integration is already in place).
+* Message integrates with i18n, so you can translate your messages (enable 
+  i18strings module).
+* Message can use (but not as a dependency) the Rules module, to create message 
+  instances.
+* Messages are assigned to realms. So if for example a message is assigned to an 
+  organic group realm, even users that join that group later on, may have access 
+  to those messages.
