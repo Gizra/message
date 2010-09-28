@@ -1,0 +1,7 @@
+/* $Id$ */
+
+.message-node-teaser {
+  border-left: 1px dotted darkGray; /* LTR */
+  padding-left: 20px; /* LTR */
+  margin-left: 20px; /* LTR */
+}
