@@ -116,3 +116,42 @@ function message_example_node_title($nid) {
 
   return $output;
 }
+
+/**
+ * Implementation of hook_theme().
+ */
+function message_example_theme() {
+  return array(
+    'views_view_field__message_follow__name' => array(
+        'arguments' => array('view' => FALSE, 'field' => FALSE, 'row' => FALSE),
+        'original hook' => 'views_view_field',
+    ),
+  );
+}
+
+/**
+ * Theme the user name, and add an icon before it, based on the message name.
+ */
+function theme_views_view_field__message_follow__name($view, $field, $row) {
+  // TODO: Isn't there a shorter way?
+  $output = $view->field[$field->options['id']]->advanced_render($row);
+
+  if (!empty($view->field['name_1']->field_alias) && $message_name = $row->{$view->field['name_1']->field_alias}) {
+    $image = '';
+    // Check if the message name has a matching icon.
+    switch ($message_name) {
+      case 'node_insert':
+      case 'comment_insert':
+        $image = str_replace('_', '-', $message_name);
+        break;
+    }
+
+    if ($image) {
+      // Add the image.
+      $image = theme('image', drupal_get_path('module', 'message_example') . '/images/' . $image . '.png');
+      $output = $image . ' ' . $output;
+    }
+  }
+
+  return $output;
+}
