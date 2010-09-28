@@ -1,9 +1,9 @@
 <?php
 
 /**
- * Helper to implementation of hook_views_default_views().
+ * Implementation of hook_views_default_views().
  */
-function _message_flag_example_views_default_views() {
+function message_flag_example_views_default_views() {
   $views = array();
 
   // Exported view: message_flag_example
