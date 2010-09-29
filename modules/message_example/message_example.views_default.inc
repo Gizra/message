@@ -176,8 +176,8 @@ function message_example_views_default_views() {
     'message_realm_flag' => array(
       'operator' => 'in',
       'value' => array(
-        'message_follow_node' => 'message_follow_node',
-        'message_follow_user' => 'message_follow_user',
+        'message_example_flag_user' => 'message_example_flag_user',
+        'message_example_flag_node' => 'message_example_flag_node',
       ),
       'group' => '0',
       'exposed' => FALSE,
