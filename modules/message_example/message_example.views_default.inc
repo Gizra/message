@@ -201,7 +201,7 @@ function message_example_views_default_views() {
     'type' => 'none',
   ));
   $handler->override_option('title', 'News feed');
-  $handler->override_option('empty', 'You don\'t follow anyone, or they still didn\'t do anything interesting.');
+  $handler->override_option('empty', 'You don\'t follow anyone, or they have no activity recorded yet.');
   $handler->override_option('empty_format', '1');
   $handler->override_option('distinct', 1);
   $handler->override_option('row_options', array(
@@ -251,6 +251,7 @@ function message_example_views_default_views() {
     ),
   ));
   $handler->override_option('title', 'Your actions');
+  $handler->override_option('empty', 'You haven\'t done any activity yet.');
   $handler->override_option('path', 'messages/your-actions');
   $handler->override_option('menu', array(
     'type' => 'tab',
@@ -269,6 +270,7 @@ function message_example_views_default_views() {
   $handler = $view->new_display('page', 'All feeds', 'page_3');
   $handler->override_option('filters', array());
   $handler->override_option('title', 'All feeds');
+  $handler->override_option('empty', 'No activity was recorded yet.');
   $handler->override_option('path', 'messages/all-feeds');
   $handler->override_option('menu', array(
     'type' => 'tab',
