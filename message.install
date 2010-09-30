@@ -13,6 +13,7 @@ function message_install() {
  */
 function message_uninstall() {
   drupal_uninstall_schema('message');
+  variable_del('message_entity_delete_cleanup');
 }
 
 /**

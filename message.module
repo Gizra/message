@@ -317,10 +317,15 @@ function message_instance_save($message_instance) {
  * Message instance delete.
  *
  * @param $iid
- *   Message instance ID.
+ *   Message instance IDs array.
  */
-function message_instance_delete($iid) {
-  db_query("DELETE FROM {message_instance} WHERE iid = %d", $iid);
+function message_instance_delete($iids = array()) {
+  $placeholders = db_placeholders($iids);
+
+  // Delete all message instances.
+  db_query("DELETE FROM {message_instance} WHERE iid IN($placeholders)", explode(',', $iids));
+
+  message_realm_delete_by_message_instance($iids);
 }
 
 /**
@@ -376,10 +381,36 @@ function message_realm_save($message_realm) {
  * Message realm delete.
  *
  * @param $rid
- *   Message realm ID.
+ *   Message realm IDs array.
  */
-function message_realm_delete($rid) {
-  db_query("DELETE FROM {message_realm} WHERE rid = %d", $rid);
+function message_realm_delete($rids = array()) {
+  $placeholders = db_placeholders($rids);
+
+  db_query("DELETE FROM {message_realm} WHERE rid IN ($placeholders)", explode(',', $rids));
+}
+
+/**
+ * Message realm delete by message instance ID.
+ *
+ * @param $iids
+ *   Message instance IDs array.
+ */
+function message_realm_delete_by_message_instance($iids = array()) {
+  $placeholders = db_placeholders($iids);
+
+  db_query("DELETE FROM {message_realm} WHERE iid IN ($placeholders)", explode(',', $iids));
+}
+
+/**
+ * Message realm delete by entity type and ID.
+ *
+ * @param $entity_type
+ *   The entity type.
+ * @param $eid
+ *   The entity ID.
+ */
+function message_realm_delete_by_entity($entity_type, $eid) {
+  db_query("DELETE FROM {message_realm} WHERE entity_type = '%s' AND eid = %d", $entity_type, $eid);
 }
 
 
@@ -659,4 +690,65 @@ function message_save_message_to_realms($message_name, $entity_type, $eid, $argu
   }
 
   return $return;
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function message_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
+    return;
+  }
+  if ($op == 'delete') {
+    message_deleted_entity_cleanup('node', $node->nid);
+  }
+}
+
+/**
+ * Implementation of hook_comment().
+ */
+function message_comment(&$a1, $op) {
+  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
+    return;
+  }
+  if ($op == 'delete') {
+  }
+}
+
+/**
+ * Implementation of  hook_user().
+ */
+function message_user($op, &$edit, &$account, $category = NULL) {
+  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
+    return;
+  }
+  if ($op == 'delete') {
+    message_deleted_entity_cleanup('user', $account->uid);
+  }
+}
+
+/**
+ * Delete message instances that are related to a a deleted entity.
+ *
+ * For example, if a node is deleted then all the message instances that are
+ * related to that node will be deleted.
+ *
+ * @param $entity_type
+ *   The entity type.
+ * @param $eid
+ *   The entity ID.
+ */
+function message_deleted_entity_cleanup($entity_type, $eid) {
+  // Get all the message instanced.
+  $result = db_query("SELECT iid FROM {message_instance} WHERE entity_type = '%s' AND eid = %d", $entity_type, $eid);
+
+  $iids = array();
+  while ($row = db_fetch_object($result)) {
+    $iids[] = $row->iid;
+  }
+
+  if ($iids) {
+    message_instance_delete($iids);
+    message_realm_delete_by_entity($entity_type, $eid);
+  }
 }
