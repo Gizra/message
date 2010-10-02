@@ -696,9 +696,12 @@ function message_save_message_to_realms($message_name, $entity_type, $eid, $argu
  * Implementation of hook_nodeapi().
  */
 function message_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  // Advanced implementation may want to disable the cleanup and do it
+  // themselves.
   if (!variable_get('message_entity_delete_cleanup', TRUE)) {
     return;
   }
+  // Preform basic clean up when a node is deleted.
   if ($op == 'delete') {
     message_deleted_entity_cleanup('node', $node->nid);
   }
@@ -708,21 +711,27 @@ function message_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
  * Implementation of hook_comment().
  */
 function message_comment(&$a1, $op) {
+  // Advanced implementation may want to disable the cleanup and do it
+  // themselves.
   if (!variable_get('message_entity_delete_cleanup', TRUE)) {
     return;
   }
+  // Preform basic clean up when a comment is deleted.
   if ($op == 'delete') {
   }
 }
 
 /**
- * Implementation of  hook_user().
+ * Implementation of hook_user().
  */
 function message_user($op, &$edit, &$account, $category = NULL) {
+  // Advanced implementation may want to disable the cleanup and do it
+  // themselves.
   if (!variable_get('message_entity_delete_cleanup', TRUE)) {
     return;
   }
   if ($op == 'delete') {
+    // Preform basic clean up when a user is deleted.
     message_deleted_entity_cleanup('user', $account->uid);
   }
 }
@@ -747,6 +756,7 @@ function message_deleted_entity_cleanup($entity_type, $eid) {
     $iids[] = $row->iid;
   }
 
+  // Instances were found and need to be deleted.
   if ($iids) {
     message_instance_delete($iids);
     message_realm_delete($entity_type, $eid);
