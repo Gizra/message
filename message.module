@@ -402,15 +402,15 @@ function message_realm_delete_by_message_instance($iids = array()) {
 }
 
 /**
- * Message realm delete by entity type and ID.
+ * Message realm delete by realm type and realm ID.
  *
- * @param $entity_type
- *   The entity type.
- * @param $eid
- *   The entity ID.
+ * @param $realm
+ *   The realm name.
+ * @param $realm_id
+ *   The realm ID.
  */
-function message_realm_delete_by_entity($entity_type, $eid) {
-  db_query("DELETE FROM {message_realm} WHERE entity_type = '%s' AND eid = %d", $entity_type, $eid);
+function message_realm_delete_by_realm($realm, $realm_id) {
+  db_query("DELETE FROM {message_realm} WHERE realm = '%s' AND eid = '%s'", $realm, $realm_id);
 }
 
 
@@ -749,6 +749,6 @@ function message_deleted_entity_cleanup($entity_type, $eid) {
 
   if ($iids) {
     message_instance_delete($iids);
-    message_realm_delete_by_entity($entity_type, $eid);
+    message_realm_delete($entity_type, $eid);
   }
 }
