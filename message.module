@@ -323,7 +323,7 @@ function message_instance_delete($iids = array()) {
   $placeholders = db_placeholders($iids);
 
   // Delete all message instances.
-  db_query("DELETE FROM {message_instance} WHERE iid IN($placeholders)", explode(',', $iids));
+  db_query("DELETE FROM {message_instance} WHERE iid IN($placeholders)", implode(',', $iids));
 
   message_realm_delete_by_message_instance($iids);
 }
@@ -398,7 +398,7 @@ function message_realm_delete($rids = array()) {
 function message_realm_delete_by_message_instance($iids = array()) {
   $placeholders = db_placeholders($iids);
 
-  db_query("DELETE FROM {message_realm} WHERE iid IN ($placeholders)", explode(',', $iids));
+  db_query("DELETE FROM {message_realm} WHERE iid IN ($placeholders)", implode(',', $iids));
 }
 
 /**
