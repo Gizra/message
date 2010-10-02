@@ -323,7 +323,7 @@ function message_instance_delete($iids = array()) {
   $placeholders = db_placeholders($iids);
 
   // Delete all message instances.
-  db_query("DELETE FROM {message_instance} WHERE iid IN($placeholders)", implode(',', $iids));
+  db_query("DELETE FROM {message_instance} WHERE iid IN($placeholders)", explode(',', $iids));
 
   message_realm_delete_by_message_instance($iids);
 }
