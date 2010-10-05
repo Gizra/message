@@ -114,7 +114,7 @@ function message_example_flag($op, $flag, $content_id, $account, $fcid) {
   if ($op == 'flag') {
     $arguments = array();
     if ($flag->name == MESSAGE_EXAMPLE_FLAG_USER) {
-      // User if following another user.
+      // User is following another user.
       $friend_account = user_load($content_id);
 
       // We don't need to save the whole user object, as we only need the partial
