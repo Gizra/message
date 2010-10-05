@@ -20,7 +20,7 @@
  */
 function hook_message_instances_alter(&$message_instances) {
   // Simple example:
-	if ($message_instances->name == 'foo') {
+  if ($message_instances->name == 'foo') {
     // Hide the message instance.
     $message_instances->hide = TRUE;
   }
