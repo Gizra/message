@@ -63,7 +63,7 @@ function message_ctools_export_ui_settings($form_state) {
   );
   $form['message_entity_delete_cleanup'] = array(
     '#title' => t('Cleanup upon entity delete'),
-		'#description' => t('When a node, comment or a user is deleted, remove all the message instance and message realms that are associated with it. This cleanup is a simple one, and for more advanced buiness logic, and implementing module may disable this setting, and take care of cleanup themselves.'),
+    '#description' => t('When a node, comment or a user is deleted, remove all the message instance and message realms that are associated with it. This cleanup is a simple one, and for more advanced buiness logic, and implementing module may disable this setting, and take care of cleanup themselves.'),
     '#type' => 'radios',
     '#options' => $options,
     '#default_value' => variable_get('message_entity_delete_cleanup', TRUE),

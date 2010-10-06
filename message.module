@@ -323,7 +323,7 @@ function message_instance_delete($iids = array()) {
   $placeholders = db_placeholders($iids);
 
   // Delete all message instances.
-  db_query("DELETE FROM {message_instance} WHERE iid IN($placeholders)", implode(',', $iids));
+  db_query("DELETE FROM {message_instance} WHERE iid IN($placeholders)", explode(',', $iids));
 
   message_realm_delete_by_message_instance($iids);
 }
@@ -444,7 +444,7 @@ function message_show_message($message_instance, $skip_access = FALSE, $account 
   $access = FALSE;
   if (empty($account)) {
     global $user;
-    $account = $user;
+    $account = drupal_clone($user);
   }
 
   if ($skip_access) {
@@ -478,7 +478,7 @@ function message_show_message_access($plugin, $message_instance, $realm_ids = ar
     if ($realm_ids) {
       if (empty($account)) {
         global $user;
-        $account = $user;
+        $account = drupal_clone($user);
       }
       $return = call_user_func($plugin['access']['access callback'], $plugin, $message_instance, $realm_ids, $account);
     }
@@ -489,7 +489,7 @@ function message_show_message_access($plugin, $message_instance, $realm_ids = ar
 function message_get_accessiable_ids_by($plugin, $account = NULL) {
   if (empty($account)) {
     global $user;
-    $account = $user;
+    $account = drupal_clone($user);
   }
   return call_user_func($plugin['access']['accessible ids callback'], $account);
 }
@@ -652,13 +652,19 @@ function message_get_realm_types() {
  *   The entity ID.
  * @param $arguments
  *   Optional; Array of arguments to pass to the callback function.
+ * @param $realms
+ *   Optioanl; An array of arrays keyed with the realm ID. If no realms are
+ *   provided then a the message instance will be assigned by default to the
+ *   user realm, with the user ID as the realm ID.
  * @param $account
  *   Optional; The user object, if empty the logged in user will be used.
+ * @param $extra_identifier
+ *   Optioanl; The string value to save as the extra identfier.
  */
-function message_save_message_to_realms($message_name, $entity_type, $eid, $arguments = array(), $realms = array(), $account = NULL) {
+function message_save_message_to_realms($message_name, $entity_type, $eid, $arguments = array(), $realms = array(), $account = NULL, $extra_identifier = '') {
   if (empty($account)) {
     global $user;
-    $account = $user;
+    $account = drupal_clone($user);
   }
 
   $return = array();
@@ -670,6 +676,7 @@ function message_save_message_to_realms($message_name, $entity_type, $eid, $argu
   $message_instance->entity_type = $entity_type;
   $message_instance->eid = $eid;
   $message_instance->arguments = $arguments;
+  $message_instance->extra_identifier = $extra_identifier;
 
   $message_instance = message_instance_save($message_instance);
 
