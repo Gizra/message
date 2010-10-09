@@ -171,6 +171,108 @@ function message_message_process(&$plugin, $info) {
 }
 
 /**
+ * Implementation of hook_nodeapi().
+ */
+function message_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
+  // Advanced implementation may want to disable the cleanup and do it
+  // themselves.
+  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
+    return;
+  }
+  // Preform basic clean up when a node is deleted.
+  if ($op == 'delete') {
+    message_deleted_entity_cleanup('node', $node->nid);
+  }
+}
+
+/**
+ * Implementation of hook_comment().
+ */
+function message_comment(&$a1, $op) {
+  // Advanced implementation may want to disable the cleanup and do it
+  // themselves.
+  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
+    return;
+  }
+  // Preform basic clean up when a comment is deleted.
+  if ($op == 'delete') {
+  }
+}
+
+/**
+ * Implementation of hook_user().
+ */
+function message_user($op, &$edit, &$account, $category = NULL) {
+  // Advanced implementation may want to disable the cleanup and do it
+  // themselves.
+  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
+    return;
+  }
+  if ($op == 'delete') {
+    // Preform basic clean up when a user is deleted.
+    message_deleted_entity_cleanup('user', $account->uid);
+  }
+}
+
+/**
+ * API function; Save a message instance and save it to realms.
+ *
+ * @param $message_name
+ *   The message name.
+ * @param $entity_type
+ *   The entity type.
+ * @param $etid
+ *   The entity ID.
+ * @param $arguments
+ *   Optional; Array of arguments to pass to the callback function.
+ * @param $realms
+ *   Optioanl; An array of arrays keyed with the realm ID. If no realms are
+ *   provided then a the message instance will be assigned by default to the
+ *   user realm, with the user ID as the realm ID.
+ * @param $account
+ *   Optional; The user object, if empty the logged in user will be used.
+ * @param $extra_identifier
+ *   Optioanl; The string value to save as the extra identfier.
+ */
+function message_save_message_to_realms($message_name, $entity_type, $eid, $arguments = array(), $realms = array(), $account = NULL, $extra_identifier = '') {
+  if (empty($account)) {
+    global $user;
+    $account = drupal_clone($user);
+  }
+
+  $return = array();
+
+  // Create message instance.
+  $message_instance = new stdClass();
+  $message_instance->name = $message_name;
+  $message_instance->uid = $account->uid;
+  $message_instance->entity_type = $entity_type;
+  $message_instance->eid = $eid;
+  $message_instance->arguments = $arguments;
+  $message_instance->extra_identifier = $extra_identifier;
+
+  $message_instance = message_instance_save($message_instance);
+
+  $return['message instance'] = $message_instance;
+
+  if (empty($realms)) {
+    // Set default realm.
+    $realms[] = array('realm' => 'user', 'realm id' => $account->uid);
+  }
+
+  // Save to the realms.
+  foreach ($realms as $value) {
+    $realm = new stdClass();
+    $realm->iid = $message_instance->iid;
+    $realm->realm = $value['realm'];
+    $realm->realm_id = $value['realm id'];
+    $return['message realm'][] = message_realm_save($realm);
+  }
+
+  return $return;
+}
+
+/**
  * Load & crud functions ==============================================
  */
 
@@ -414,10 +516,6 @@ function message_realm_delete_by_realm($realm, $realm_id) {
 }
 
 
-/**
- * API FUNCTIONS ======================================================
- */
-
 function message_get_plugin_message($plugin_name) {
   ctools_include('plugins');
   return ctools_get_plugins('message', 'plugins', $plugin_name);
@@ -639,108 +737,6 @@ function message_get_realm_types() {
   }
 
   return $options;
-}
-
-/**
- * Save a message instance and save it to realms.
- *
- * @param $message_name
- *   The message name.
- * @param $entity_type
- *   The entity type.
- * @param $etid
- *   The entity ID.
- * @param $arguments
- *   Optional; Array of arguments to pass to the callback function.
- * @param $realms
- *   Optioanl; An array of arrays keyed with the realm ID. If no realms are
- *   provided then a the message instance will be assigned by default to the
- *   user realm, with the user ID as the realm ID.
- * @param $account
- *   Optional; The user object, if empty the logged in user will be used.
- * @param $extra_identifier
- *   Optioanl; The string value to save as the extra identfier.
- */
-function message_save_message_to_realms($message_name, $entity_type, $eid, $arguments = array(), $realms = array(), $account = NULL, $extra_identifier = '') {
-  if (empty($account)) {
-    global $user;
-    $account = drupal_clone($user);
-  }
-
-  $return = array();
-
-  // Create message instance.
-  $message_instance = new stdClass();
-  $message_instance->name = $message_name;
-  $message_instance->uid = $account->uid;
-  $message_instance->entity_type = $entity_type;
-  $message_instance->eid = $eid;
-  $message_instance->arguments = $arguments;
-  $message_instance->extra_identifier = $extra_identifier;
-
-  $message_instance = message_instance_save($message_instance);
-
-  $return['message instance'] = $message_instance;
-
-  if (empty($realms)) {
-    // Set default realm.
-    $realms[] = array('realm' => 'user', 'realm id' => $account->uid);
-  }
-
-  // Save to the realms.
-  foreach ($realms as $value) {
-    $realm = new stdClass();
-    $realm->iid = $message_instance->iid;
-    $realm->realm = $value['realm'];
-    $realm->realm_id = $value['realm id'];
-    $return['message realm'][] = message_realm_save($realm);
-  }
-
-  return $return;
-}
-
-/**
- * Implementation of hook_nodeapi().
- */
-function message_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  // Advanced implementation may want to disable the cleanup and do it
-  // themselves.
-  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
-    return;
-  }
-  // Preform basic clean up when a node is deleted.
-  if ($op == 'delete') {
-    message_deleted_entity_cleanup('node', $node->nid);
-  }
-}
-
-/**
- * Implementation of hook_comment().
- */
-function message_comment(&$a1, $op) {
-  // Advanced implementation may want to disable the cleanup and do it
-  // themselves.
-  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
-    return;
-  }
-  // Preform basic clean up when a comment is deleted.
-  if ($op == 'delete') {
-  }
-}
-
-/**
- * Implementation of hook_user().
- */
-function message_user($op, &$edit, &$account, $category = NULL) {
-  // Advanced implementation may want to disable the cleanup and do it
-  // themselves.
-  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
-    return;
-  }
-  if ($op == 'delete') {
-    // Preform basic clean up when a user is deleted.
-    message_deleted_entity_cleanup('user', $account->uid);
-  }
 }
 
 /**
