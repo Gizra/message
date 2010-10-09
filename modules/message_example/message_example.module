@@ -72,8 +72,8 @@ function message_example_comment(&$a1, $op) {
     // The node ID that has this comment.
     $nid = $a1['nid'];
 
-    $node = node_load($nid);
-    $account = user_load($node->uid);
+    // The user is the comment author.
+    $account = user_load($a1['uid']);
 
     $arguments = array(
       // The link will be replaced with the url of the node using url() upon
@@ -95,8 +95,8 @@ function message_example_comment(&$a1, $op) {
 
     // Save the message and assign it to the user realm and node realm. The node
     // will allow us to see activity related to a single node.
-    // As in the hook_nodeapi() implementation, we assign it to the node author
-    // instead of the acting user.
+    // As in the hook_nodeapi() implementation, we assign it to the comment
+    // author instead of the acting user.
     $realms = array();
     $realms[] = array('realm' => 'user', 'realm id' => $account->uid);
     $realms[] = array('realm' => 'node', 'realm id' => $nid);
