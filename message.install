@@ -72,6 +72,7 @@ function message_schema() {
         'type' => 'varchar',
         'not null' => TRUE,
         'length' => '12',
+        'default' => '',
       ),
     ),
     'primary key' => array('name'),
