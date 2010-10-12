@@ -408,6 +408,11 @@ function message_field_formatter_info() {
  * Load & crud functions ==============================================
  */
 
+
+function message_init() {
+}
+
+
 /**
  * Wrapper to create a message type stub.
  */
@@ -469,36 +474,28 @@ function message_type_delete($message) {
 }
 
 /**
- * Load multiple message instances.
- *
- * TODO: DEPRECTATE.
- *
- * @param $iids
- *   Array with message instances ids.
- * @return
- *   Array with the message instances object.
+ * Wrapper to create a message stub.
  */
-function message_instance_load_multiple($ids = array()) {
-  $message_instances = &ctools_static(__FUNCTION__, array());
-
-  // The ids we need to query, as some might have been cached already.
-  $query_ids = array_diff($ids, array_keys($message_instances));
-
-  if (!empty($query_ids)) {
-    $placeholders = db_placeholders($query_ids);
-    $result = db_query("SELECT * FROM {message_instance} WHERE iid IN ($placeholders)", $query_ids);
-    while ($row = db_fetch_object($result)) {
-      // Unserialize the arguments.
-      if (!empty($row->arguments)) {
-        $row->arguments = unserialize($row->arguments);
-      }
-      $message_instances[$row->iid] = $row;
+function message_create($values = array(), $account = NULL) {
+  // Make sure the message type exists.
+  if (empty($values['name'])) {
+    return FALSE;
+  }
+  // Set default values.
+  if (empty($values['uid'])) {
+    if (empty($account)) {
+      global $user;
+      $account = clone($user);
     }
 
-    // Allow other modules to alter the message instances.
-    drupal_alter('message_instances', $message_instances);
+    $values['uid'] = $account->uid;
   }
-  return $message_instances;
+
+  $values += array(
+    'arguments' => array(),
+    'timestamp' => time(),
+  );
+  return entity_create('message', $values);
 }
 
 /**
