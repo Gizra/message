@@ -410,15 +410,18 @@ function message_field_formatter_info() {
 
 
 function message_init() {
+  $message = message_load(1);
+  dpm($message);
 }
 
 
 /**
  * Wrapper to create a message type stub.
  */
-function message_type_create($values = array()) {
+function message_type_create($name, $values = array()) {
   // Set default values.
   $values += array(
+    'name' => $name,
     'description' => '',
     'tag' => '',
   );
@@ -476,11 +479,7 @@ function message_type_delete($message) {
 /**
  * Wrapper to create a message stub.
  */
-function message_create($values = array(), $account = NULL) {
-  // Make sure the message type exists.
-  if (empty($values['name'])) {
-    return FALSE;
-  }
+function message_create($name, $values = array(), $account = NULL) {
   // Set default values.
   if (empty($values['uid'])) {
     if (empty($account)) {
@@ -492,6 +491,7 @@ function message_create($values = array(), $account = NULL) {
   }
 
   $values += array(
+    'name' => $name,
     'arguments' => array(),
     'timestamp' => time(),
   );
@@ -508,9 +508,9 @@ function message_create($values = array(), $account = NULL) {
  * @return
  *   A message instance object.
  */
-function message_load($iid) {
+function message_load($mid) {
   $return = FALSE;
-  if ($message = entity_load('message', array($iid))) {
+  if ($message = entity_load('message', array($mid))) {
     $return = reset($message);
   }
   return $return;
