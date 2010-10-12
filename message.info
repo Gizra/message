@@ -4,3 +4,7 @@ description = "Assign messages to realms."
 core = 6.x
 package = Message
 dependencies[] = ctools
+dependencies[] = entity
+
+files[] = message.install
+files[] = message.module

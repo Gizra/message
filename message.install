@@ -22,7 +22,7 @@ function message_uninstall() {
 function message_schema() {
   $schema = array();
 
-  $schema['message'] = array(
+  $schema['message_type'] = array(
     'description' => 'Storage for user-defined message templates.',
     'export' => array(
       'key' => 'name',
@@ -35,7 +35,8 @@ function message_schema() {
         'minimum_version' => 1,
         'current_version' => 1,
       ),
-      'load callback' => 'message_load',
+      'load callback' => 'message_type_load',
+      'save callback' => 'message_type_save',
     ),
     'fields' => array(
       'name' => array(
@@ -59,12 +60,13 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'message' => array(
+      // TODO: Add the message-text as a field.
+/*      'message' => array(
         'descripiton' => 'The full plaintext message.',
         'type' => 'text',
         'size' => 'big',
         'not null' => TRUE,
-      ),
+      ),*/
       'language' => array(
         'description' => "The IS0-3166 name of the langauge for the associated message.",
         'type' => 'varchar',
@@ -75,7 +77,7 @@ function message_schema() {
     'primary key' => array('name'),
   );
 
-  $schema['message_instance'] = array(
+  $schema['message'] = array(
     'description' => 'A message instance.',
     'fields' => array(
       'iid' => array(
@@ -131,6 +133,7 @@ function message_schema() {
     'primary key' => array('iid'),
   );
 
+  // TODO: What is tha value of adding realm as a field type?
   $schema['message_realm'] = array(
     'description' => 'The messages realm.',
     'fields' => array(

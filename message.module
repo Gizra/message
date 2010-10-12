@@ -215,6 +215,62 @@ function message_user($op, &$edit, &$account, $category = NULL) {
 }
 
 /**
+ * Implementation of hook_entity_info().
+ */
+function message_entity_info() {
+  $items = array();
+  $items['message_type'] = array(
+    'label' => t('Message type'),
+    'controller class' => 'EntityAPIController',
+    'base table' => 'message_type',
+    'fieldable' => TRUE,
+    'translation' => array(
+      'locale' => TRUE,
+    ),
+    'entity keys' => array(
+      'id' => 'name',
+      'label' => 'name'
+    ),
+    'exportable' => TRUE,
+    'export' => array(
+      'default hook' => 'default_rules_configuration',
+    ),
+  );
+
+  $items['message'] = array(
+    'label' => t('Message'),
+    'controller class' => 'EntityAPIController',
+    'base table' => 'message',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'iid',
+      // The message has no label.
+      'label' => FALSE,
+      'bundle' => 'message_type',
+    ),
+    'bundle keys' => array(
+      'bundle' => 'type',
+    ),
+    'bundles' => array(),
+    'exportable' => TRUE,
+    'export' => array(
+      'default hook' => 'default_rules_configuration',
+    ),
+  );
+
+  // Build the bundles of the message (i.e. the message types).
+  if ($message_types = entity_load('message_type')) {
+    foreach ($message_types as $value) {
+      $items['message']['bundles'][$value['name']] = array(
+        'label' => $value['name'],
+        // TODO: Add admin.
+      );
+    }
+  }
+  return $items;
+}
+
+/**
  * API function; Save a message instance and save it to realms.
  *
  * @param $message_name
@@ -285,42 +341,18 @@ function message_save_message_to_realms($message_name, $entity_type, $eid, $argu
  * @return
  *   Returns a fully-loaded message definition.
  */
-function message_load($name = NULL, $reset = FALSE) {
-  ctools_include('export');
-  if ($reset) {
-    ctools_export_load_object_reset('message');
-  }
-  $messages = ctools_export_load_object('message', 'all');
-
-  // We cache the i18n strings, so we don't re-create them every time. We don't
-  // save the strings with variable_set() as it won't scale well with many
-  // messages.
-  if ($messages && module_exists('i18nstrings')) {
-    // Check if translation was registered.
-    $cache = cache_get('message_i18nstrings');
-
-    $i18nstrings = array();
-
-    $set = FALSE;
-    foreach ($messages as $message) {
-      if (empty($cache->data[$message->name])) {
-        // Create string.
-        i18nstrings_update("messages:message:$message->name:message", $message->message);
-        $i18nstrings[$message->name] = TRUE;
-        $set = TRUE;
-      }
-    }
-
-    if ($set) {
-      // Cache all the strings that were translated.
-      cache_set('message_i18nstrings', $i18nstrings);
+function message_type_load($name = '') {
+  $return = FALSE;
+  if (!empty($name)) {
+    if ($message_type = entity_load('message_type', array($name))) {
+      $return = reset($message_type);
     }
   }
-
-  if (isset($name)) {
-    return isset($messages[$name]) ? $messages[$name] : FALSE;
+  else {
+    // Load all message types.
+    $return = entity_load('message_type');
   }
-  return $messages;
+  return $return;
 }
 
 
@@ -334,9 +366,8 @@ function message_load($name = NULL, $reset = FALSE) {
  *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
  *   SAVED_UPDATED is returned depending on the operation performed.
  */
-function message_save($message) {
-  ctools_include('export');
-  return ctools_export_crud_save('message', $message);
+function message_type_save($message) {
+  return entity_save('message_type', $message);
 }
 
 /**
@@ -345,13 +376,14 @@ function message_save($message) {
  * @param $message
  *   The message object to be deleted.
  */
-function message_delete($message) {
-  ctools_include('export');
-  ctools_export_crud_delete('message', $message);
+function message_type_delete($message) {
+  return entity_delete('message_type', $message);
 }
 
 /**
  * Load multiple message instances.
+ *
+ * TODO: DEPRECTATE.
  *
  * @param $iids
  *   Array with message instances ids.
@@ -391,9 +423,12 @@ function message_instance_load_multiple($ids = array()) {
  * @return
  *   A message instance object.
  */
-function message_instance_load($iid) {
-  $messages = message_instance_load_multiple(array($iid));
-  return !empty($messages[$iid]) ? $messages[$iid] : FALSE;
+function message_load($iid) {
+  $return = FALSE;
+  if ($message = entity_load('message', array($iid))) {
+    $return = reset($message);
+  }
+  return $return;
 }
 
 /**
@@ -404,15 +439,8 @@ function message_instance_load($iid) {
  * @return
  *   The saved message instance object.
  */
-function message_instance_save($message_instance) {
-  if ($existing = message_instance_load($message_instance->iid)) {
-    drupal_write_record('message_instance', $message_instance, 'iid');
-  }
-  else {
-    $message_instance->timestamp = !empty($message_instance->timestamp) ? $message_instance->timestamp : time();
-    drupal_write_record('message_instance', $message_instance);
-  }
-  return $message_instance;
+function message_instance_save($message) {
+  return entity_save('message', $message);
 }
 
 /**
@@ -421,13 +449,11 @@ function message_instance_save($message_instance) {
  * @param $iid
  *   Message instance IDs array.
  */
-function message_instance_delete($iids = array()) {
-  $placeholders = db_placeholders($iids);
+function message_delete_multiple($iids = array()) {
+  entity_delete_multiple('message', $iids);
 
-  // Delete all message instances.
-  db_query("DELETE FROM {message_instance} WHERE iid IN($placeholders)", explode(',', $iids));
-
-  message_realm_delete_by_message_instance($iids);
+  // TODO: Handle when decide what realm will be (field or table).
+  // message_realm_delete_by_message_instance($iids);
 }
 
 /**
