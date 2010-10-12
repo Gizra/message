@@ -35,8 +35,8 @@ function message_schema() {
         'minimum_version' => 1,
         'current_version' => 1,
       ),
-      'load callback' => 'message_type_load',
-      'save callback' => 'message_type_save',
+      // 'load callback' => 'message_type_load',
+      // 'save callback' => 'message_type_save',
     ),
     'fields' => array(
       'name' => array(

@@ -215,7 +215,7 @@ function message_user($op, &$edit, &$account, $category = NULL) {
 }
 
 /**
- * Implementation of hook_entity_info().
+ * Implements hook_entity_info().
  */
 function message_entity_info() {
   $items = array();
@@ -260,17 +260,28 @@ function message_entity_info() {
     ),
   );
 
-  // Build the bundles of the message (i.e. the message types).
+
+  return $items;
+}
+
+/**
+ * Implements hook_entity_info_alter().
+ *
+ * Prevent recursion in message_entity_info(), by adding the bundles here.
+ *
+ */
+function message_entity_info_alter(&$entity_info) {
+    // Build the bundles of the message (i.e. the message types).
   if ($message_types = entity_load('message_type')) {
     foreach ($message_types as $value) {
-      $items['message']['bundles'][$value['name']] = array(
+      $entity_info['message']['bundles'][$value['name']] = array(
         'label' => $value['name'],
         // TODO: Add admin.
       );
     }
   }
-  return $items;
 }
+
 
 /**
  * API function; Save a message instance and save it to realms.
