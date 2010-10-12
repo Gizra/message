@@ -404,12 +404,73 @@ function message_field_formatter_info() {
   );
 }
 
+
+/**
+ * Implements hook_element_info().
+ */
+function message_element_info() {
+  $types = array();
+  $types['message_realm'] = array(
+    '#input' => TRUE,
+    '#multiple' => TRUE,
+    '#process' => array('form_process_select', 'messge_process_message_realm'),
+    '#theme_wrappers' => array('form_element'),
+  );
+
+  return $types;
+}
+
+// @see form_process_password_confirm().
+function messge_process_message_realm($element) {
+  $options = message_get_realm_types();
+  $element['realm'] =  array(
+    '#type' => 'select',
+    '#title' => t('Realm'),
+    '#options' => $options,
+    // FIXME:
+    '#default_value' => array(),
+    '#required' => TRUE,
+    '#attributes' => array('class' => array('message-realm')),
+  );
+  $element['realm_id'] =  array(
+    '#type' => 'textfield',
+    '#title' => t('Realm ID'),
+    // FIXME:
+    '#default_value' => '',
+    '#required' => TRUE,
+    '#attributes' => array('class' => array('message-realm-id')),
+  );
+
+  return $element;
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function message_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
+  $element = $base;
+  $widget = $instance['widget'];
+
+  switch ($widget['type']) {
+    case 'message_realm':
+    break;
+  }
+
+  return $element;
+}
+
 /**
  * Load & crud functions ==============================================
  */
 
 
 function message_init() {
+/*  $message_type = message_type_create('foo');
+  $message_type->save();
+
+  $message = message_create('foo');
+  $message->save();
+*/
 }
 
 
@@ -532,11 +593,8 @@ function message_save($message) {
  * @param $iid
  *   Message instance IDs array.
  */
-function message_delete_multiple($iids = array()) {
-  entity_delete_multiple('message', $iids);
-
-  // TODO: Handle when decide what realm will be (field or table).
-  // message_realm_delete_by_message_instance($iids);
+function message_delete_multiple($mids = array()) {
+  entity_delete_multiple('message', $mids);
 }
 
 /**
@@ -836,7 +894,7 @@ function theme_message($message = array()) {
  * Return an array of realms keyed by the plugin name and the realm value.
  */
 function message_get_realm_types() {
-  $options = &ctools_static(__FUNCTION__, array());
+  $options = &drupal_static(__FUNCTION__, array());
   if (empty($options)) {
     foreach (message_get_plugin_messages() as $plugin) {
       if (!empty($plugin['realm'])) {
