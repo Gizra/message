@@ -79,12 +79,12 @@ function message_schema() {
   );
 
   $schema['message'] = array(
-    'description' => 'A message instance.',
+    'description' => 'An instance of a message type (e.g. like a node is an instance of a node type).',
     'fields' => array(
       'mid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
-        'description' => 'The Unique id of the message.',
+        'description' => 'The Unique ID of the message.',
       ),
       'name' => array(
         'description' => 'Reference to a message in {message_template}.',
@@ -131,7 +131,7 @@ function message_schema() {
         'unsigned' => TRUE,
       ),
     ),
-    'primary key' => array('iid'),
+    'primary key' => array('mid'),
   );
 
   /*$schema['message_realm'] = array(
