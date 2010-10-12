@@ -268,7 +268,6 @@ function message_entity_info() {
  * Implements hook_entity_info_alter().
  *
  * Prevent recursion in message_entity_info(), by adding the bundles here.
- *
  */
 function message_entity_info_alter(&$entity_info) {
     // Build the bundles of the message (i.e. the message types).
@@ -339,6 +338,70 @@ function message_save_message_to_realms($message_name, $entity_type, $eid, $argu
   }
 
   return $return;
+}
+
+/**
+ * Field settings
+ */
+
+/**
+ * Implements hook_field_info().
+ */
+function message_field_info() {
+  return array(
+    'message_realm' => array(
+      'label' => t('Message realm'),
+      'description' => t('This field stores realms associated with the message.'),
+      'default_widget' => 'message_realm_widget',
+      'default_formatter' => 'message_realm_formatter',
+    ),
+  );
+}
+
+/**
+ * Implement hook_field_schema().
+ */
+function message_field_schema($field) {
+  $columns = array(
+    'mid' => array(
+      'description' => 'The message ID.',
+      'type' => 'float',
+      'unsigned' => TRUE,
+      'not null' => TRUE,
+    ),
+    'realm' => array(
+      'description' => 'The realm this message belongs to.',
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+    ),
+    'realm_id' => array(
+      'description' => 'The unique ID of the realm.',
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+    ),
+  );
+  return array(
+    'columns' => $columns,
+    'indexes' => array(
+      'mid' => array('mid'),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function message_field_formatter_info() {
+  return array(
+    'message_realm_formatter' => array(
+      'label' => t('Message realm'),
+      'field types' => array('message_realm'),
+    ),
+  );
 }
 
 /**

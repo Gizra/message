@@ -81,10 +81,10 @@ function message_schema() {
   $schema['message'] = array(
     'description' => 'A message instance.',
     'fields' => array(
-      'iid' => array(
+      'mid' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
-        'description' => 'The Unique id of the message instance.',
+        'description' => 'The Unique id of the message.',
       ),
       'name' => array(
         'description' => 'Reference to a message in {message_template}.',
@@ -134,8 +134,7 @@ function message_schema() {
     'primary key' => array('iid'),
   );
 
-  // TODO: What is tha value of adding realm as a field type?
-  $schema['message_realm'] = array(
+  /*$schema['message_realm'] = array(
     'description' => 'The messages realm.',
     'fields' => array(
       'rid' => array(
@@ -164,6 +163,6 @@ function message_schema() {
     ),
     'primary key' => array('rid'),
   );
-
+*/
   return $schema;
 }
