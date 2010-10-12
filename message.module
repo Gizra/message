@@ -274,8 +274,8 @@ function message_entity_info_alter(&$entity_info) {
     // Build the bundles of the message (i.e. the message types).
   if ($message_types = entity_load('message_type')) {
     foreach ($message_types as $value) {
-      $entity_info['message']['bundles'][$value['name']] = array(
-        'label' => $value['name'],
+      $entity_info['message']['bundles'][$value->name] = array(
+        'label' => $value->name,
         // TODO: Add admin.
       );
     }
@@ -439,7 +439,7 @@ function message_instance_load_multiple($ids = array()) {
 }
 
 /**
- * Message instance load.
+ * Message load.
  *
  * @see message_instance_load_multiple.
  *
@@ -464,7 +464,7 @@ function message_load($iid) {
  * @return
  *   The saved message instance object.
  */
-function message_instance_save($message) {
+function message_save($message) {
   return entity_save('message', $message);
 }
 
