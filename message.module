@@ -245,7 +245,7 @@ function message_entity_info() {
     'base table' => 'message',
     'fieldable' => TRUE,
     'entity keys' => array(
-      'id' => 'iid',
+      'id' => 'mid',
       // The message has no label.
       'label' => FALSE,
       'bundle' => 'message_type',
@@ -410,8 +410,6 @@ function message_field_formatter_info() {
 
 
 function message_init() {
-  $message = message_load(1);
-  dpm($message);
 }
 
 
