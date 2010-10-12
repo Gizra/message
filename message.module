@@ -222,6 +222,7 @@ function message_entity_info() {
   $items['message_type'] = array(
     'label' => t('Message type'),
     'controller class' => 'EntityAPIController',
+    'entity class' => 'EntityDB',
     'base table' => 'message_type',
     'fieldable' => TRUE,
     'translation' => array(
@@ -240,6 +241,7 @@ function message_entity_info() {
   $items['message'] = array(
     'label' => t('Message'),
     'controller class' => 'EntityAPIController',
+    'entity class' => 'EntityDB',
     'base table' => 'message',
     'fieldable' => TRUE,
     'entity keys' => array(
@@ -333,7 +335,19 @@ function message_save_message_to_realms($message_name, $entity_type, $eid, $argu
  */
 
 /**
- * Message loader.
+ * Wrapper to create a message type stub.
+ */
+function message_type_create($values = array()) {
+  // Set default values.
+  $values += array(
+    'description' => '',
+    'tag' => '',
+  );
+  return entity_create('message_type', $values);
+}
+
+/**
+ * Message type loader.
  *
  * @param $name
  *   The name for this message object.
