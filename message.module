@@ -248,10 +248,10 @@ function message_entity_info() {
       'id' => 'mid',
       // The message has no label.
       'label' => FALSE,
-      'bundle' => 'message_type',
+      'bundle' => 'name',
     ),
     'bundle keys' => array(
-      'bundle' => 'type',
+      'bundle' => 'name',
     ),
     'bundles' => array(),
     'exportable' => TRUE,
