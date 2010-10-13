@@ -23,11 +23,6 @@ function message_schema() {
   $schema['message_type'] = array(
     'description' => 'Storage for user-defined message templates.',
     'fields' => array(
-      'id' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Numeric message type ID.',
-      ),
       'name' => array(
         'description' => 'The unified identifier for a message type.',
         'type' => 'varchar',
