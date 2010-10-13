@@ -221,7 +221,7 @@ function message_entity_info() {
   $items['message_type'] = array(
     'label' => t('Message type'),
     'controller class' => 'EntityAPIController',
-    'entity class' => 'EntityDB',
+    'entity class' => 'MessageType',
     'base table' => 'message_type',
     'fieldable' => TRUE,
     'entity keys' => array(
@@ -235,7 +235,7 @@ function message_entity_info() {
   $items['message'] = array(
     'label' => t('Message'),
     'controller class' => 'EntityAPIController',
-    'entity class' => 'EntityDB',
+    'entity class' => 'Message',
     'base table' => 'message',
     'fieldable' => TRUE,
     'entity keys' => array(
