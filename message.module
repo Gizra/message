@@ -262,7 +262,8 @@ function message_entity_info() {
  * Prevent recursion in message_entity_info(), by adding the bundles here.
  */
 function message_entity_info_alter(&$entity_info) {
-  foreach (message_get_types() as $type_name => $type) {
+  $types = entity_load('message_type');
+  foreach ($types as $type_name => $type) {
     $entity_info['message']['bundles'][$type_name] = array(
     //@todo do we need a short label too?
       'label' => $type->name,
