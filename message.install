@@ -22,6 +22,20 @@ function message_uninstall() {
 function message_schema() {
   $schema['message_type'] = array(
     'description' => 'Storage for user-defined message templates.',
+    'export' => array(
+      'key' => 'name',
+      'identifier' => 'message',
+      'default hook' => 'message_default_messages',  // Function hook name.
+      'primary key' => 'name',
+      'api' => array(
+        'owner' => 'message',
+        'api' => 'message',  // Base name for api include files.
+        'minimum_version' => 1,
+        'current_version' => 1,
+      ),
+      'load callback' => 'message_type_load',
+      'save callback' => 'message_type_save',
+    ),
     'fields' => array(
       'name' => array(
         'description' => 'The unified identifier for a message type.',
