@@ -9,7 +9,7 @@
 /**
  * Minimum CTools version needed.
  */
-define('MESSAGE_REQUIRED_CTOOLS_API', '1.7');
+define('MESSAGE_REQUIRED_CTOOLS_API', '2.0-alpha1');
 
 /**
  * Implementation of hook_ctools_plugin_api().
