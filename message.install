@@ -2,14 +2,14 @@
 // $Id: message.install,v 1.5 2010/06/07 10:54:11 amitaibu Exp $
 
 /**
- * Implementation of hook_install().
+ * Implements hook_install().
  */
 function message_install() {
   drupal_install_schema('message');
 }
 
 /**
- * Implementation of hook_uninstall().
+ * Implements hook_uninstall().
  */
 function message_uninstall() {
   drupal_uninstall_schema('message');
@@ -17,30 +17,19 @@ function message_uninstall() {
 }
 
 /**
- * Implementation of hook_schema()
+ * Implements hook_schema()
  */
 function message_schema() {
-  $schema = array();
-
   $schema['message_type'] = array(
     'description' => 'Storage for user-defined message templates.',
-    'export' => array(
-      'key' => 'name',
-      'identifier' => 'message',
-      'default hook' => 'message_default_messages',  // Function hook name.
-      'primary key' => 'name',
-      'api' => array(
-        'owner' => 'message',
-        'api' => 'message',  // Base name for api include files.
-        'minimum_version' => 1,
-        'current_version' => 1,
-      ),
-      // 'load callback' => 'message_type_load',
-      // 'save callback' => 'message_type_save',
-    ),
     'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Numeric message type ID.',
+      ),
       'name' => array(
-        'description' => 'The primary identifier for a message.',
+        'description' => 'The unified identifier for a message type.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -53,6 +42,7 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      // TODO: Remove this in favor of a field or keep it for simplicity?
       'tag' => array(
         'description' => 'Tag for this message.',
         'type' => 'varchar',
@@ -67,6 +57,8 @@ function message_schema() {
         'size' => 'big',
         'not null' => TRUE,
       ),*/
+
+      // TODO: Remove as the fields may be translatable?
       'language' => array(
         'description' => "The IS0-3166 name of the langauge for the associated message.",
         'type' => 'varchar',
@@ -86,8 +78,8 @@ function message_schema() {
         'unsigned' => TRUE,
         'description' => 'The Unique ID of the message.',
       ),
-      'name' => array(
-        'description' => 'Reference to a message in {message_template}.',
+      'type' => array(
+        'description' => 'Reference to a message a type.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -98,6 +90,7 @@ function message_schema() {
         'type' => 'text',
         'serialize' => TRUE,
       ),
+      // TODO: Remove in favor of a field?
       'entity_type' => array(
         'description' => 'The type of entity being acted upon (e.g. node, user).',
         'type' => 'varchar',
@@ -117,6 +110,7 @@ function message_schema() {
         'default value' => NULL,
         'unsigned' => TRUE,
       ),
+      // TODO: Do we still need that?
       'extra_identifier' => array(
         'description' => 'An optional identifier that can group message instances together.',
         'type' => 'varchar',
@@ -131,38 +125,11 @@ function message_schema() {
         'unsigned' => TRUE,
       ),
     ),
+    'foreign keys' => array(
+      'uid' => array('users' => 'uid'),
+      'type' => array('message_type' => 'type'),
+    ),
     'primary key' => array('mid'),
   );
-
-  /*$schema['message_realm'] = array(
-    'description' => 'The messages realm.',
-    'fields' => array(
-      'rid' => array(
-        'type' => 'serial',
-        'unsigned' => TRUE,
-        'description' => 'The Unique id of the message realm.',
-      ),
-      'iid' => array(
-        'description' => 'Reference to a message ID in {message}.',
-        'type' => 'int',
-        'not null' => TRUE,
-        'unsigned' => TRUE,
-      ),
-      'realm' => array(
-        'description' => 'The realm this message belongs to.',
-        'type' => 'varchar',
-        'length' => '50',
-        'not null' => TRUE,
-      ),
-      'realm_id' => array(
-        'description' => 'The unique ID of the realm.',
-        'type' => 'varchar',
-        'length' => '50',
-        'not null' => TRUE,
-      ),
-    ),
-    'primary key' => array('rid'),
-  );
-*/
   return $schema;
 }

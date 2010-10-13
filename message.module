@@ -218,26 +218,20 @@ function message_user($op, &$edit, &$account, $category = NULL) {
  * Implements hook_entity_info().
  */
 function message_entity_info() {
-  $items = array();
   $items['message_type'] = array(
     'label' => t('Message type'),
     'controller class' => 'EntityAPIController',
     'entity class' => 'EntityDB',
     'base table' => 'message_type',
     'fieldable' => TRUE,
-    'translation' => array(
-      'locale' => TRUE,
-    ),
     'entity keys' => array(
-      'id' => 'name',
-      'label' => 'name'
+      'id' => 'id',
+      'name' => 'name',
+      'label' => 'description',
     ),
     'exportable' => TRUE,
-    'export' => array(
-      'default hook' => 'default_rules_configuration',
-    ),
+    'bundle of' => 'message',
   );
-
   $items['message'] = array(
     'label' => t('Message'),
     'controller class' => 'EntityAPIController',
@@ -248,19 +242,17 @@ function message_entity_info() {
       'id' => 'mid',
       // The message has no label.
       'label' => FALSE,
-      'bundle' => 'name',
+      'bundle' => 'type',
     ),
     'bundle keys' => array(
       'bundle' => 'name',
     ),
-    'bundles' => array(),
-    'exportable' => TRUE,
-    'export' => array(
-      'default hook' => 'default_rules_configuration',
+    'view modes' => array(
+      'full' => array(
+        'label' => t('Full'),
+      ),
     ),
   );
-
-
   return $items;
 }
 
@@ -270,15 +262,47 @@ function message_entity_info() {
  * Prevent recursion in message_entity_info(), by adding the bundles here.
  */
 function message_entity_info_alter(&$entity_info) {
-    // Build the bundles of the message (i.e. the message types).
-  if ($message_types = entity_load('message_type')) {
-    foreach ($message_types as $value) {
-      $entity_info['message']['bundles'][$value->name] = array(
-        'label' => $value->name,
-        // TODO: Add admin.
-      );
-    }
+  foreach (message_get_types() as $type_name => $type) {
+    $entity_info['message']['bundles'][$type_name] = array(
+    //@todo do we need a short label too?
+      'label' => $type->name,
+      'admin' => array(
+        'path' => 'admin/structure/messages/manage/%message_type',
+        'real path' => 'admin/structure/messages/manage/' . str_replace('_', '-', $type_name),
+        'bundle argument' => 4,
+        'access arguments' => array('administer messages'),
+      ),
+    );
   }
+}
+
+/**
+ * Gets an array of all message types, keyed by the type name.
+ *
+ * @param $type
+ *   If set, the type with the given name is returned.
+ * @return
+ *   Depending whether $type isset, an array of message types or a single one.
+ */
+function message_get_types($type = NULL) {
+  $types = entity_load('message_type', isset($type) ? array($type) : FALSE);
+  if (isset($type)) {
+    return isset($types[$type]) ? $types[$type] : FALSE;
+  }
+  return $types;
+}
+
+/**
+ * Menu argument loader; Load a message type by string.
+ *
+ * @param $type
+ *   The machine-readable name of a array  type to load;
+ *   having '_' replaced with '-'.
+ * @return
+ *   A message type or FALSE if $type does not exist.
+ */
+function message_type_load($type) {
+  return message_get_types(strtr($type, array('-' => '_')));
 }
 
 
