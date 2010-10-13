@@ -277,36 +277,6 @@ function message_entity_info_alter(&$entity_info) {
 }
 
 /**
- * Gets an array of all message types, keyed by the type name.
- *
- * @param $type
- *   If set, the type with the given name is returned.
- * @return
- *   Depending whether $type isset, an array of message types or a single one.
- */
-function message_get_types($type = NULL) {
-  $types = entity_load('message_type', isset($type) ? array($type) : FALSE);
-  if (isset($type)) {
-    return isset($types[$type]) ? $types[$type] : FALSE;
-  }
-  return $types;
-}
-
-/**
- * Menu argument loader; Load a message type by string.
- *
- * @param $type
- *   The machine-readable name of a array  type to load;
- *   having '_' replaced with '-'.
- * @return
- *   A message type or FALSE if $type does not exist.
- */
-function message_type_load($type) {
-  return message_get_types(strtr($type, array('-' => '_')));
-}
-
-
-/**
  * API function; Save a message instance and save it to realms.
  *
  * @param $message_name
@@ -488,50 +458,45 @@ function message_field_widget_form(&$form, &$form_state, $field, $instance, $lan
  */
 
 
-function message_init() {
-/*  $message_type = message_type_create('foo');
-  $message_type->save();
+/**
+ * Use a separate class for message types so we can specify some defaults
+ * modules may alter.
+ */
+class MessageType extends EntityDB {
 
-  $message = message_create('foo');
-  $message->save();
-*/
+  public $type;
+  public $description = '';
+  public $tag = '';
+
+  public function __construct($values = array()) {
+    parent::__construct($values, 'message_type');
+  }
 }
-
 
 /**
  * Wrapper to create a message type stub.
  */
 function message_type_create($name, $values = array()) {
-  // Set default values.
-  $values += array(
-    'name' => $name,
-    'description' => '',
-    'tag' => '',
-  );
-  return entity_create('message_type', $values);
+  return new MessageType($values);
 }
 
 /**
  * Message type loader.
  *
- * @param $name
- *   The name for this message object.
+ * @param $type_name
+ *   The name for this message type.
  *
- * @return
+ * @return MessageType
  *   Returns a fully-loaded message definition.
  */
-function message_type_load($name = '') {
-  $return = FALSE;
-  if (!empty($name)) {
-    if ($message_type = entity_load('message_type', array($name))) {
-      $return = reset($message_type);
-    }
+function message_type_load($type_name = '') {
+  // Replace dashes with underscores so this can be used as menu argument
+  // loader too.
+  $types = entity_load('message_type', isset($type_name) ? array(strtr($type_name, array('-' => '_'))) : FALSE);
+  if (isset($type_name)) {
+    return isset($types[$type_name]) ? $types[$type_name] : FALSE;
   }
-  else {
-    // Load all message types.
-    $return = entity_load('message_type');
-  }
-  return $return;
+  return $types;
 }
 
 
@@ -559,48 +524,48 @@ function message_type_delete($message) {
   return entity_delete('message_type', $message);
 }
 
+
+/**
+ * Use a separate class for message types so we can specify some defaults
+ * modules may alter.
+ */
+class Message extends EntityDB {
+
+  public $name;
+  public $arguments = array();
+  public $timestamp;
+
+  public function __construct($values = array()) {
+    $values += array('uid' => $GLOBALS['user']->uid, 'timestamp' => time());
+    parent::__construct($values, 'message');
+  }
+}
+
 /**
  * Wrapper to create a message stub.
  */
 function message_create($name, $values = array(), $account = NULL) {
-  // Set default values.
-  if (empty($values['uid'])) {
-    if (empty($account)) {
-      global $user;
-      $account = clone($user);
-    }
-
+  if (empty($values['uid']) && $account) {
     $values['uid'] = $account->uid;
   }
-
-  $values += array(
-    'name' => $name,
-    'arguments' => array(),
-    'timestamp' => time(),
-  );
-  return entity_create('message', $values);
+  return new Message($values);
 }
 
 /**
  * Message load.
  *
- * @see message_instance_load_multiple.
- *
- * @param $iid
- *   The message instance ID.
- * @return
- *   A message instance object.
+ * @param $mid
+ *   The message ID.
+ * @return Message
+ *   A message object.
  */
 function message_load($mid) {
-  $return = FALSE;
-  if ($message = entity_load('message', array($mid))) {
-    $return = reset($message);
-  }
-  return $return;
+  $result = entity_load('message', array($mid));
+  return $result ? reset($result) : FALSE;
 }
 
 /**
- * Message instance save.
+ * Message save.
  *
  * @param $message_instance
  *   A message instance object.
@@ -612,7 +577,7 @@ function message_save($message) {
 }
 
 /**
- * Message instance delete.
+ * Message delete.
  *
  * @param $iid
  *   Message instance IDs array.
