@@ -477,6 +477,7 @@ class MessageType extends EntityDB {
  * Wrapper to create a message type stub.
  */
 function message_type_create($name, $values = array()) {
+  $values['name'] = $name;
   return new MessageType($values);
 }
 
@@ -520,6 +521,7 @@ class Message extends EntityDB {
  * Wrapper to create a message stub.
  */
 function message_create($name, $values = array(), $account = NULL) {
+  $values['name'] = $name;
   if (empty($values['uid']) && $account) {
     $values['uid'] = $account->uid;
   }
