@@ -501,31 +501,6 @@ function message_type_load($type_name = '') {
 
 
 /**
- * Inserts or updates a message object into the database.
- *
- * @param $message
- *   The message object to be inserted.
- *
- * @return
- *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
- *   SAVED_UPDATED is returned depending on the operation performed.
- */
-function message_type_save($message) {
-  return entity_save('message_type', $message);
-}
-
-/**
- * Deletes an existing message.
- *
- * @param $message
- *   The message object to be deleted.
- */
-function message_type_delete($message) {
-  return entity_delete('message_type', $message);
-}
-
-
-/**
  * Use a separate class for message types so we can specify some defaults
  * modules may alter.
  */
@@ -564,27 +539,6 @@ function message_load($mid) {
   return $result ? reset($result) : FALSE;
 }
 
-/**
- * Message save.
- *
- * @param $message_instance
- *   A message instance object.
- * @return
- *   The saved message instance object.
- */
-function message_save($message) {
-  return entity_save('message', $message);
-}
-
-/**
- * Message delete.
- *
- * @param $iid
- *   Message instance IDs array.
- */
-function message_delete_multiple($mids = array()) {
-  entity_delete_multiple('message', $mids);
-}
 
 /**
  * Get realm messages by their ID.
