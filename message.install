@@ -37,6 +37,13 @@ function message_schema() {
       'save callback' => 'message_type_save',
     ),
     'fields' => array(
+      // Although the "name" should be enough as the primary key, the numeric ID 
+      // is required for the internal use of entity API. 
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Numeric message type ID.',
+      ),
       'name' => array(
         'description' => 'The unified identifier for a message type.',
         'type' => 'varchar',
@@ -76,7 +83,7 @@ function message_schema() {
         'default' => '',
       ),
     ),
-    'primary key' => array('name'),
+    'primary key' => array('id', 'name'),
   );
 
   $schema['message'] = array(
