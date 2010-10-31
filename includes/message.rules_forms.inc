@@ -33,6 +33,7 @@ function message_action_load_message_form($settings, &$form, $form_state) {
     '#type' => 'select',
     '#title' => t('Message'),
     '#options' => $options,
+    '#default_value' => !empty($settings['message']['message_select']) ? $settings['message']['message_select'] : '',
     '#disabled' => empty($options),
   );
 
@@ -99,6 +100,9 @@ function message_action_create_message_instance_validate($form, &$form_state) {
   }
 }
 
+/**
+ * Submit handler for the create message instance action.
+ */
 function message_action_create_message_instance_submit(&$settings, $form, &$form_state) {
   $settings['code'] = $form_state['values']['settings']['code'];
 
@@ -118,13 +122,11 @@ function message_action_assign_message_instance_to_realm_form($settings, &$form,
   // Initalize values.
   $settings += array('realm' => '', 'realm_id' => '');
 
-  // We ask the user to choose the realm, but we actually save the plugin name.
-  $form['settings']['plugin_name'] = array(
+  $form['settings']['realm'] = array(
     '#type' => 'select',
     '#title' => t('Realm'),
     '#default_value' => $settings['realm'],
     '#options' => $options,
-    '#disabled' => !$options,
     '#required' => TRUE,
   );
 
