@@ -297,7 +297,7 @@ function message_entity_info_alter(&$entity_info) {
  * @param $extra_identifier
  *   Optioanl; The string value to save as the extra identfier.
  */
-function message_save_message_to_realms($message_name, $entity_type, $eid, $arguments = array(), $realms = array(), $account = NULL, $extra_identifier = '') {
+function message_save_message($message_name, $entity_type, $eid, $arguments = array(), $realms = array(), $account = NULL, $extra_identifier = '') {
   if (empty($account)) {
     global $user;
     $account = clone($user);
