@@ -278,8 +278,8 @@ function message_entity_info_alter(&$entity_info) {
 }
 
 /**
- * API function; Save a message instance and save it to realms.
- *
+ * API function; Save a message.
+ * 
  * @param $message_name
  *   The message name.
  * @param $entity_type
@@ -298,41 +298,9 @@ function message_entity_info_alter(&$entity_info) {
  *   Optioanl; The string value to save as the extra identfier.
  */
 function message_save_message($message_name, $entity_type, $eid, $arguments = array(), $realms = array(), $account = NULL, $extra_identifier = '') {
-  if (empty($account)) {
-    global $user;
-    $account = clone($user);
-  }
-
-  $return = array();
-
-  // Create message instance.
-  $message_instance = new stdClass();
-  $message_instance->name = $message_name;
-  $message_instance->uid = $account->uid;
-  $message_instance->entity_type = $entity_type;
-  $message_instance->eid = $eid;
-  $message_instance->arguments = $arguments;
-  $message_instance->extra_identifier = $extra_identifier;
-
-  $message_instance = message_instance_save($message_instance);
-
-  $return['message instance'] = $message_instance;
-
-  if (empty($realms)) {
-    // Set default realm.
-    $realms[] = array('realm' => 'user', 'realm id' => $account->uid);
-  }
-
-  // Save to the realms.
-  foreach ($realms as $value) {
-    $realm = new stdClass();
-    $realm->iid = $message_instance->iid;
-    $realm->realm = $value['realm'];
-    $realm->realm_id = $value['realm id'];
-    $return['message realm'][] = message_realm_save($realm);
-  }
-
-  return $return;
+  $message = message_create($name, $values, $account);
+  $message->save();
+  return $message;
 }
 
 /**
@@ -551,10 +519,19 @@ class Message extends EntityDB {
  * Wrapper to create a message stub.
  */
 function message_create($name, $values = array(), $account = NULL) {
+  global  $user;
   $values['name'] = $name;
-  if (empty($values['uid']) && $account) {
-    $values['uid'] = $account->uid;
+  if (empty($values['uid'])) {
+    $values['uid'] = !empty($account) ? $account->uid : $user->uid;
   }
+  
+  if (empty($values['realm']) && $values['realms'] !== FALSE) {
+    // Set default realm if realm wasn't specified and not explicetly set to 
+    // FALSE.
+    $values['realm'] = array();
+    $values['realm'] = array('realm' => 'user', 'realm id' => $account->uid);
+  }
+  
   return new Message($values);
 }
 
