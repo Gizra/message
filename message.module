@@ -416,6 +416,12 @@ function message_element_info() {
 }
 
 // @see form_process_password_confirm().
+/**
+ * Process the "message_realm" form element.
+ *
+ * Expands the element into a select list with the realm types, and a text field
+ * text accepts the realm ID.
+ */
 function messge_process_message_realm($element) {
   $options = message_get_realm_types();
   $element['realm'] =  array(
@@ -427,6 +433,7 @@ function messge_process_message_realm($element) {
     '#required' => TRUE,
     '#attributes' => array('class' => array('message-realm')),
   );
+
   $element['realm_id'] =  array(
     '#type' => 'textfield',
     '#title' => t('Realm ID'),
