@@ -470,10 +470,8 @@ function message_field_widget_form(&$form, &$form_state, $field, $instance, $lan
  * modules may alter.
  */
 class MessageType extends EntityDB {
-
   public $type;
   public $description = '';
-  public $tag = '';
 
   public function __construct($values = array()) {
     parent::__construct($values, 'message_type');

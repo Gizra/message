@@ -20,7 +20,8 @@ function message_schema() {
   $schema['message_type'] = array(
     'description' => 'Storage for user-defined message templates.',
     'export' => array(
-      'key' => 'name',
+      'key' => 'type',
+      'key name' => t('Type'),
       'identifier' => 'message',
       'default hook' => 'message_default_messages',  // Function hook name.
       'primary key' => 'name',
@@ -41,7 +42,7 @@ function message_schema() {
         'not null' => TRUE,
         'description' => 'Primary Key: Numeric message type ID.',
       ),
-      'name' => array(
+      'type' => array(
         'description' => 'The unified identifier for a message type.',
         'type' => 'varchar',
         'length' => 255,
@@ -80,7 +81,7 @@ function message_schema() {
         'default' => '',
       ),
     ),
-    'primary key' => array('id', 'name'),
+    'primary key' => array('id', 'type'),
   );
 
   $schema['message'] = array(
