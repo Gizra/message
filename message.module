@@ -415,7 +415,6 @@ function message_element_info() {
   return $types;
 }
 
-// @see form_process_password_confirm().
 /**
  * Process the "message_realm" form element.
  *
