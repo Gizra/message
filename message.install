@@ -2,17 +2,14 @@
 // $Id: message.install,v 1.5 2010/06/07 10:54:11 amitaibu Exp $
 
 /**
- * Implements hook_install().
+ * @file
+ * Install, update, and uninstall functions for the message module.
  */
-function message_install() {
-  drupal_install_schema('message');
-}
 
 /**
  * Implements hook_uninstall().
  */
 function message_uninstall() {
-  drupal_uninstall_schema('message');
   variable_del('message_entity_delete_cleanup');
 }
 
