@@ -407,6 +407,13 @@ function message_field_formatter_info() {
   );
 }
 
+/**
+ * Implement hook_field_is_empty().
+ */
+function message_field_is_empty($item, $field) {
+  return empty($item['mid']);
+}
+
 
 /**
  * Implements hook_element_info().
