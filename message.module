@@ -250,7 +250,7 @@ function message_entity_info() {
       'bundle' => 'type',
     ),
     'bundle keys' => array(
-      'bundle' => 'name',
+      'bundle' => 'type',
     ),
     'view modes' => array(
       'full' => array(
