@@ -22,9 +22,9 @@ function message_schema() {
     'export' => array(
       'key' => 'type',
       'key name' => t('Type'),
-      'identifier' => 'message',
-      'default hook' => 'message_default_messages',  // Function hook name.
-      'primary key' => 'name',
+      'identifier' => 'message_type',
+      'default hook' => 'message_default_message_type',  // Function hook name.
+      'primary key' => 'type',
       'api' => array(
         'owner' => 'message',
         'api' => 'message',  // Base name for api include files.
