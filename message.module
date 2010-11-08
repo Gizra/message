@@ -355,7 +355,7 @@ function message_field_info() {
     MESSAGE_REALM_FIELD => array(
       'label' => t('Message realm'),
       'description' => t('This field stores realms associated with the message.'),
-      'default_widget' => 'message_realm_widget',
+      'default_widget' => MESSAGE_REALM_FIELD,
       'default_formatter' => 'message_realm_formatter',
     ),
   );
@@ -408,6 +408,39 @@ function message_field_formatter_info() {
 }
 
 /**
+ * Implement hook_field_widget_info().
+ */
+function message_field_widget_info() {
+  return array(
+    MESSAGE_REALM_FIELD => array(
+      'label' => t('Message realm'),
+      'field types' => array(MESSAGE_REALM_FIELD),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+      ),
+      'settings' => array(),
+    ),
+  );
+}
+
+/**
+ * Implement hook_field_widget_form().
+ */
+function message_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
+  $element = $base;
+  $widget = $instance['widget'];
+
+  if ($widget['type'] == MESSAGE_REALM_FIELD) {
+    $element += array(
+      // Input should be TRUE only if there are groups that can be selected.
+      '#type' => 'message_realm',
+    );
+  }
+
+  return $element;
+}
+
+/**
  * Implement hook_field_is_empty().
  */
 function message_field_is_empty($item, $field) {
@@ -456,21 +489,6 @@ function messge_process_message_realm($element) {
     '#required' => TRUE,
     '#attributes' => array('class' => array('message-realm-id')),
   );
-
-  return $element;
-}
-
-/**
- * Implements hook_field_widget_form().
- */
-function message_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
-  $element = $base;
-  $widget = $instance['widget'];
-
-  switch ($widget['type']) {
-    case 'message_realm':
-    break;
-  }
 
   return $element;
 }
