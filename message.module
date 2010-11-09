@@ -85,6 +85,29 @@ function message_theme() {
 }
 
 /**
+ * Implements hook_ctools_plugin_type()
+ *
+ * Inform the plugin system that Message modules owns message, export-ui
+ * plugins.
+ */
+function message_ctools_plugin_type() {
+  $items = array();
+
+  $items['message'] = array(
+    'process' => array(
+      'function' => 'message_message_process',
+      'file' => 'message_plugin.inc',
+      'path' => drupal_get_path('module', 'message') . '/plugins/message',
+    ),
+    'classes' => array('handler'),
+  );
+
+  $items['export_ui'] = array();
+
+  return $items;
+}
+
+/**
  * Implementation of hook_views_pre_render().
  *
  * In order to reduce the database hits, we take advantage of the fact that we
@@ -139,40 +162,6 @@ function message_views_pre_render(&$view) {
       }
     }
   }
-}
-
-/**
- * Implementation of hook_ctools_plugin_*.
- *
- * Give information to CTools about the message plugin.
- */
-function message_ctools_plugin_plugins() {
-  return array(
-    'process' => 'message_message_process',
-  );
-}
-
-/**
- * Provide defaults for a message plugin.
- */
-function message_message_process(&$plugin, $info) {
-  $plugin += array(
-    'realm' => FALSE,
-    'title' => $plugin['name'],
-    'description' => '',
-
-    'views' => array(
-      // Optional callback for views handlers.
-      'handlers callback' => function_exists("$plugin[name]_views_handlers") ? "$plugin[name]_views_handlers" : FALSE,
-
-      // Optional callback for views data.
-      'data callback' => function_exists("$plugin[name]_views_data") ? "$plugin[name]_views_data" : FALSE,
-    ),
-    'access' => array(
-      'access callback' => function_exists("$plugin[name]_access") ? "$plugin[name]_access" : 'message_plugin_access',
-      'accessible ids callback' => function_exists("$plugin[name]_accessible_ids") ? "$plugin[name]_accessible_ids" : 'message_plugin_accessible_ids',
-    ),
-  );
 }
 
 /**
@@ -736,12 +725,12 @@ function message_realm_delete_by_realm($realm, $realm_id) {
 
 function message_get_plugin_message($plugin_name) {
   ctools_include('plugins');
-  return ctools_get_plugins('message', 'plugins', $plugin_name);
+  return ctools_get_plugins('message', 'message', $plugin_name);
 }
 
 function message_get_plugin_messages() {
   ctools_include('plugins');
-  return ctools_get_plugins('message', 'plugins');
+  return ctools_get_plugins('message', 'message');
 }
 
 /**

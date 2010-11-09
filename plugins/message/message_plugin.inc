@@ -17,3 +17,27 @@ function message_plugin_access($plugin, $message_instance, $realm_ids, $account)
 function message_plugin_accessible_ids($account) {
   return array();
 }
+
+
+/**
+ * Provide defaults for a message plugin.
+ */
+function message_message_process(&$plugin, $info) {
+  $plugin += array(
+    'realm' => FALSE,
+    'title' => $plugin['name'],
+    'description' => '',
+
+    'views' => array(
+      // Optional callback for views handlers.
+      'handlers callback' => function_exists("$plugin[name]_views_handlers") ? "$plugin[name]_views_handlers" : FALSE,
+
+      // Optional callback for views data.
+      'data callback' => function_exists("$plugin[name]_views_data") ? "$plugin[name]_views_data" : FALSE,
+    ),
+    'access' => array(
+      'access callback' => function_exists("$plugin[name]_access") ? "$plugin[name]_access" : 'message_plugin_access',
+      'accessible ids callback' => function_exists("$plugin[name]_accessible_ids") ? "$plugin[name]_accessible_ids" : 'message_plugin_accessible_ids',
+    ),
+  );
+}
