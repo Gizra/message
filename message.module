@@ -14,7 +14,7 @@ define('MESSAGE_REQUIRED_CTOOLS_API', '2.0-alpha1');
 /**
  * Define the name of the message realm field.
  */
-define('MESSAGE_REALM_FIELD', 'message_realm');
+define('MESSAGE_FIELD_REALM', 'message_realm');
 
 /**
  * Implementation of hook_ctools_plugin_api().
@@ -277,7 +277,7 @@ function message_entity_info_alter(&$entity_info) {
  * as the field isn't known yet.
  */
 function message_enable() {
-  $field_name = MESSAGE_REALM_FIELD;
+  $field_name = MESSAGE_FIELD_REALM;
   $entity_type = 'message';
   $bundle = 'message';
   // Make sure an inactive field doesn't exist.
@@ -286,7 +286,7 @@ function message_enable() {
   if (empty($field) && empty($prior_field)) {
     $field = array(
       'field_name' => $field_name,
-      'type' => MESSAGE_REALM_FIELD,
+      'type' => MESSAGE_FIELD_REALM,
       'entity_types' => array($entity_type),
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     );
@@ -340,10 +340,10 @@ function message_save_message($message_name, $entity_type, $eid, $arguments = ar
  */
 function message_field_info() {
   return array(
-    MESSAGE_REALM_FIELD => array(
+    MESSAGE_FIELD_REALM => array(
       'label' => t('Message realm'),
       'description' => t('This field stores realms associated with the message.'),
-      'default_widget' => MESSAGE_REALM_FIELD,
+      'default_widget' => MESSAGE_FIELD_REALM,
       'default_formatter' => 'message_realm_formatter',
     ),
   );
@@ -400,9 +400,9 @@ function message_field_formatter_info() {
  */
 function message_field_widget_info() {
   return array(
-    MESSAGE_REALM_FIELD => array(
+    MESSAGE_FIELD_REALM => array(
       'label' => t('Message realm'),
-      'field types' => array(MESSAGE_REALM_FIELD),
+      'field types' => array(MESSAGE_FIELD_REALM),
       'behaviors' => array(
         'multiple values' => FIELD_BEHAVIOR_CUSTOM,
       ),
@@ -418,7 +418,7 @@ function message_field_widget_form(&$form, &$form_state, $field, $instance, $lan
   $element = $base;
   $widget = $instance['widget'];
 
-  if ($widget['type'] == MESSAGE_REALM_FIELD) {
+  if ($widget['type'] == MESSAGE_FIELD_REALM) {
     $element += array(
       // Input should be TRUE only if there are groups that can be selected.
       '#type' => 'message_realm',
@@ -569,12 +569,14 @@ class Message extends EntityDB {
 
 /**
  * Wrapper to create a message stub.
+ *
+ * TODO: Document values.
  */
-function message_create($type, $values = array(), $account = NULL) {
+function message_create($type, $values = array(), $save = FALSE) {
   global $user;
   $values['type'] = $type;
   if (empty($values['uid'])) {
-    $values['uid'] = !empty($account) ? $account->uid : $user->uid;
+    $values['uid'] = !empty($values['account']) ? $values['account']->uid : $user->uid;
   }
 
   if (empty($values['realm'])) {
@@ -588,7 +590,7 @@ function message_create($type, $values = array(), $account = NULL) {
   if (!empty($values['realm'])) {
     // Prepare the realms to be passed inside the field.
     foreach ($values['realm'] as $value) {
-      $values[MESSAGE_REALM_FIELD][LANGUAGE_NONE][] = array(
+      $values[MESSAGE_FIELD_REALM][LANGUAGE_NONE][] = array(
         'realm' => $value['realm'],
         'realm_id' => $value['realm_id'],
       );
@@ -596,9 +598,15 @@ function message_create($type, $values = array(), $account = NULL) {
   }
 
   // Remove the helper values.
-  unset ($values['realms']);
+  unset ($values['realm']);
 
-  return new Message($values);
+  $return = new Message($values);
+
+  if ($save) {
+    $return->save();
+  }
+
+  return $return;
 }
 
 /**
