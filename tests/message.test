@@ -1,0 +1,40 @@
+<?php
+// $Id$
+
+/**
+ * Test the Message CRUD handling.
+ */
+class MessageCrud extends DrupalWebTestCase {
+
+  public static function getInfo() {
+    return array(
+      'name' => 'Message CRUD',
+      'description' => 'Test the create, update and remove of Message entitys.',
+      'group' => 'Message',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('ctools', 'entity', 'message');
+  }
+
+  /**
+   * Test CRUD of message entity.
+   */
+  function testMessageCrud() {
+    $web_user = $this->drupalCreateUser();
+    $this->drupalLogin($web_user);
+
+    $message = message_create('foo', array(), TRUE);
+
+    $mid = $message->mid;
+
+    // Reload the message to see it was saved.
+    $message = message_load($mid);
+
+    // Assert the default realm values were saved.
+    $property = MESSAGE_FIELD_REALM;
+    $this->assertEqual($message->{$property}[LANGUAGE_NONE][0]['realm'], 'user', t('Message realm is assigned to the default "user" realm.'));
+    $this->assertEqual($message->{$property}[LANGUAGE_NONE][0]['realm_id'], $web_user->uid, t('Message realm ID is equal to the current user.'));
+  }
+}
