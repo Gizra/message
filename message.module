@@ -33,8 +33,7 @@ function message_ctools_plugin_directory($module, $type) {
   if (!module_invoke('ctools', 'api_version', MESSAGE_REQUIRED_CTOOLS_API)) {
     return;
   }
-
-  if ($module =='message' && $type == 'plugins') {
+  if ($module =='message' && $type == 'message') {
     return 'plugins/message';
   }
   elseif ($type =='export_ui') {
