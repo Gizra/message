@@ -238,6 +238,7 @@ function message_entity_info() {
       'label' => FALSE,
       'bundle' => 'type',
     ),
+    'bundles' => array(),
     'bundle keys' => array(
       'bundle' => 'type',
     ),
