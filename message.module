@@ -219,8 +219,9 @@ function message_entity_info() {
     'fieldable' => TRUE,
     'entity keys' => array(
       'id' => 'id',
-      'name' => 'name',
-      'label' => 'description',
+      'label' => 'type',
+      // TODO: Name is entity API key?
+      'name' => 'type',
     ),
     'exportable' => TRUE,
     'bundle of' => 'message',
@@ -231,6 +232,7 @@ function message_entity_info() {
     'entity class' => 'Message',
     'base table' => 'message',
     'fieldable' => TRUE,
+    'access callback' => 'message_access',
     'entity keys' => array(
       'id' => 'mid',
       // The message has no label.
@@ -502,8 +504,8 @@ class MessageType extends EntityDB {
 /**
  * Wrapper to create a message type stub.
  */
-function message_type_create($name, $values = array()) {
-  $values['name'] = $name;
+function message_type_create($type, $values = array()) {
+  $values['type'] = $type;
   return new MessageType($values);
 }
 
@@ -516,12 +518,12 @@ function message_type_create($name, $values = array()) {
  * @return MessageType
  *   Returns a fully-loaded message definition.
  */
-function message_type_load($type_name = '') {
+function message_type_load($type = '') {
   // Replace dashes with underscores so this can be used as menu argument
   // loader too.
-  $types = entity_load('message_type', isset($type_name) ? array(strtr($type_name, array('-' => '_'))) : FALSE);
-  if (isset($type_name)) {
-    return isset($types[$type_name]) ? $types[$type_name] : FALSE;
+  $types = entity_load('message_type', isset($type) ? array(strtr($type, array('-' => '_'))) : FALSE);
+  if (isset($type)) {
+    return isset($types[$type]) ? $types[$type] : FALSE;
   }
   return $types;
 }
@@ -751,7 +753,7 @@ function message_get_plugin_messages() {
  * @return
  *   HTML with the message.
  */
-function message_show_message($message_instance, $skip_access = FALSE, $account = NULL) {
+function message_show_message($message, $skip_access = FALSE, $account = NULL) {
   $output = '';
   $access = FALSE;
   if (empty($account)) {
@@ -762,9 +764,9 @@ function message_show_message($message_instance, $skip_access = FALSE, $account 
   if ($skip_access) {
     $access = TRUE;
   }
-  elseif ($realms = message_realm_load_multiple_by_message($message_instance->iid)) {
+  elseif ($realms = message_realm_load_multiple_by_message($message->iid)) {
     foreach (message_get_plugin_messages() as $plugin) {
-      if (in_array($plugin['realm'], array_keys($realms)) && message_show_message_access($plugin, $message_instance, $realms[$plugin['realm']])) {
+      if (in_array($plugin['realm'], array_keys($realms)) && message_show_message_access($plugin, $message, $realms[$plugin['realm']])) {
         $access = TRUE;
         break;
       }
@@ -772,10 +774,26 @@ function message_show_message($message_instance, $skip_access = FALSE, $account 
   }
 
   if ($access) {
-    $output = theme('message', array('message' => $message_instance, 'output' => message_t($message_instance)));
+    $output = theme('message', array('message' => $message, 'output' => message_t($message)));
   }
 
   return $output;
+}
+
+/**
+ * Access callback for the message entity.
+ */
+function message_access($op, $entity, $account, $entity_type) {
+  $access = FALSE;
+  foreach (message_get_plugin_messages() as $plugin) {
+    if (in_array($plugin['realm'], array_keys($realms))) {
+      $access = TRUE;
+      break;
+    }
+  }
+
+  return $access;
+
 }
 
 function message_show_message_access($plugin, $message_instance, $realm_ids = array(), $account = NULL) {
