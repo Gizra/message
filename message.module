@@ -220,7 +220,6 @@ function message_entity_info() {
     'entity keys' => array(
       'id' => 'id',
       'label' => 'type',
-      // TODO: Name is entity API key?
       'name' => 'type',
     ),
     'exportable' => TRUE,
