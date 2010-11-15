@@ -254,38 +254,39 @@ function message_entity_info() {
 /**
  * Implements hook_entity_info_alter().
  *
- * Prevent recursion in message_entity_info(), by adding the bundles here.
+ * Use this hook to specify entity test bundles to avoid a recursion, as loading
+ * the entity message types needs the entity info too.
  */
 function message_entity_info_alter(&$entity_info) {
-  $types = entity_load('message_type');
-  foreach ($types as $type_name => $type) {
+  $message_types = entity_load('message_type');
+  foreach ($message_types as $type_name => $type) {
     $entity_info['message']['bundles'][$type_name] = array(
-    //@todo do we need a short label too?
+      //@todo do we need a short label too?
       'label' => $type->name,
       'admin' => array(
         'path' => 'admin/structure/messages/manage/%message_type',
-        'real path' => 'admin/structure/messages/manage/' . str_replace('_', '-', $type_name),
+        'real path' => 'admin/structure/messages/manage/' . str_replace('_', '-', $type->name),
         'bundle argument' => 4,
         'access arguments' => array('administer messages'),
       ),
     );
+
+    // Add the message realm field to the new bundle if not added yet.
+    // message_add_field_message_realm($type->name);
   }
 }
 
 /**
- * Implements hook_enable().
- *
- * Add message realm to the message entity type.This can't be in hook_install()
- * as the field isn't known yet.
+ * Add message realm field to a message bundle.
  */
-function message_enable() {
-  $field_name = MESSAGE_FIELD_REALM;
+function message_add_field_message_realm($bundle) {
   $entity_type = 'message';
-  $bundle = 'message';
-  // Make sure an inactive field doesn't exist.
-  $prior_field = field_read_field($field_name, array('include_inactive' => TRUE));
+  $field_name = MESSAGE_FIELD_REALM;
+
   $field = field_info_field($field_name);
-  if (empty($field) && empty($prior_field)) {
+  $instance = field_info_instance($entity_type, $field_name, $bundle);
+
+  if (empty($field)) {
     $field = array(
       'field_name' => $field_name,
       'type' => MESSAGE_FIELD_REALM,
@@ -295,8 +296,7 @@ function message_enable() {
     $field = field_create_field($field);
   }
 
-  $instance = field_info_instance($entity_type, $field_name, $bundle);
-  if (empty($instance) && (!$prior_field || $field)) {
+  if (empty($instance)) {
     $instance = array(
       'field_name' => $field_name,
       'bundle' => $bundle,
