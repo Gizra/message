@@ -493,7 +493,7 @@ function messge_process_message_realm($element) {
  * modules may alter.
  */
 class MessageType extends EntityDB {
-  public $type;
+  public $name;
   public $description = '';
 
   public function __construct($values = array()) {
@@ -559,7 +559,7 @@ function message_type_delete($message) {
  * modules may alter.
  */
 class Message extends EntityDB {
-  public $type;
+  public $name;
   public $arguments = array();
   public $timestamp;
 
