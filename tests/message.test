@@ -25,7 +25,7 @@ class MessageCrud extends DrupalWebTestCase {
     $web_user = $this->drupalCreateUser();
     $this->drupalLogin($web_user);
 
-    $message = message_create('foo', array(), TRUE);
+    $message = message_create('message', array(), TRUE);
 
     $mid = $message->mid;
 

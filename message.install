@@ -20,11 +20,10 @@ function message_schema() {
   $schema['message_type'] = array(
     'description' => 'Storage for user-defined message templates.',
     'export' => array(
-      'key' => 'type',
-      'key name' => t('Type'),
+      'key' => 'name',
       'identifier' => 'message_type',
       'default hook' => 'message_default_message_type',  // Function hook name.
-      'primary key' => 'type',
+      'primary key' => 'name',
       'api' => array(
         'owner' => 'message',
         'api' => 'message',  // Base name for api include files.
@@ -35,14 +34,14 @@ function message_schema() {
       'save callback' => 'message_type_save',
     ),
     'fields' => array(
-      // Although the "name" should be enough as the primary key, the numeric ID 
-      // is required for the internal use of entity API. 
+      // Although the "name" should be enough as the primary key, the numeric ID
+      // is required for the internal use of entity API.
       'id' => array(
         'type' => 'serial',
         'not null' => TRUE,
         'description' => 'Primary Key: Numeric message type ID.',
       ),
-      'type' => array(
+      'name' => array(
         'description' => 'The unified identifier for a message type.',
         'type' => 'varchar',
         'length' => 255,
@@ -81,7 +80,7 @@ function message_schema() {
         'default' => '',
       ),
     ),
-    'primary key' => array('id', 'type'),
+    'primary key' => array('id', 'name'),
   );
 
   $schema['message'] = array(
@@ -92,7 +91,7 @@ function message_schema() {
         'unsigned' => TRUE,
         'description' => 'The Unique ID of the message.',
       ),
-      'type' => array(
+      'name' => array(
         'description' => 'Reference to a message a type.',
         'type' => 'varchar',
         'length' => 255,
@@ -141,7 +140,7 @@ function message_schema() {
     ),
     'foreign keys' => array(
       'uid' => array('users' => 'uid'),
-      'type' => array('message_type' => 'type'),
+      'type' => array('message_type' => 'name'),
     ),
     'primary key' => array('mid'),
   );
