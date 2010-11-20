@@ -274,7 +274,7 @@ function message_entity_info_alter(&$entity_info) {
 }
 
 /**
- * Implements hook_message_insert().
+ * Implements hook_message_type_insert().
  */
 function message_message_type_insert($entity) {
   // Add the message realm field to the new bundle.
