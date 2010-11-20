@@ -28,11 +28,6 @@ class MessageCrud extends DrupalWebTestCase {
     $message_type = message_type_create('foo');
     $message_type->save();
 
-    // TODO: Add the message realm field to the bundle. This should be done by
-    // the message module itself, but I haven't found the right place to do it
-    // yet.
-    message_add_field_message_realm('foo');
-
     $message = message_create('foo', array(), TRUE);
 
     $mid = $message->mid;
