@@ -500,6 +500,11 @@ function message_type_create($name, $values = array(), $save = TRUE) {
   $message_type =  new MessageType($values);
   if ($save) {
     $message_type->save();
+    // FIXME: Find the right place for this.
+    // hook_message_type_insert() runs only after hook_entity_info_alter()
+    // where the bundles are inserted.
+    // Add the message realm field to the new bundle.
+    message_add_field_message_realm($message_type->name);
   }
   return $message_type;
 }
