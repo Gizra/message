@@ -361,12 +361,6 @@ function message_field_info() {
  */
 function message_field_schema($field) {
   $columns = array(
-    'mid' => array(
-      'description' => 'The message ID.',
-      'type' => 'float',
-      'unsigned' => TRUE,
-      'not null' => TRUE,
-    ),
     'realm' => array(
       'description' => 'The realm this message belongs to.',
       'type' => 'varchar',
@@ -385,7 +379,7 @@ function message_field_schema($field) {
   return array(
     'columns' => $columns,
     'indexes' => array(
-      'mid' => array('mid'),
+      'mid' => array('realm', 'realm_id'),
     ),
   );
 }
