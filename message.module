@@ -270,10 +270,15 @@ function message_entity_info_alter(&$entity_info) {
         'access arguments' => array('administer messages'),
       ),
     );
-
-    // Add the message realm field to the new bundle if not added yet.
-    // message_add_field_message_realm($type->name);
   }
+}
+
+/**
+ * Implements hook_message_insert().
+ */
+function message_message_type_insert($entity) {
+  // Add the message realm field to the new bundle.
+  message_add_field_message_realm($entity->name);
 }
 
 /**
