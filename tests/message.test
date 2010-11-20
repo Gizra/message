@@ -25,10 +25,18 @@ class MessageCrud extends DrupalWebTestCase {
     $web_user = $this->drupalCreateUser();
     $this->drupalLogin($web_user);
 
+    debug($web_user);
+
     $message_type = message_type_create('foo');
     $message_type->save();
 
-    $message = message_create('foo', array(), TRUE);
+    // TODO: Find the right place for this.
+    // hook_message_type_insert() runs only after hook_entity_info_alter()
+    // where the bundles are inserted.
+    // Add the message realm field to the new bundle.
+    message_add_field_message_realm($message_type->name);
+
+    $message = message_create('foo', array(), TRUE, $web_user);
 
     $mid = $message->mid;
 

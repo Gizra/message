@@ -254,8 +254,8 @@ function message_entity_info() {
 /**
  * Implements hook_entity_info_alter().
  *
- * Use this hook to specify entity test bundles to avoid a recursion, as loading
- * the entity message types needs the entity info too.
+ * Use this hook to specify bundles to avoid a recursion, as loading the entity
+ * message types needs the entity info too.
  */
 function message_entity_info_alter(&$entity_info) {
   $message_types = entity_load('message_type');
@@ -271,14 +271,6 @@ function message_entity_info_alter(&$entity_info) {
       ),
     );
   }
-}
-
-/**
- * Implements hook_message_type_insert().
- */
-function message_message_type_insert($entity) {
-  // Add the message realm field to the new bundle.
-  message_add_field_message_realm($entity->name);
 }
 
 /**
@@ -573,11 +565,11 @@ class Message extends EntityDB {
  *
  * TODO: Document values.
  */
-function message_create($name, $values = array(), $save = FALSE) {
+function message_create($name, $values = array(), $save = FALSE, $account = NULL) {
   global $user;
   $values['name'] = $name;
   if (empty($values['uid'])) {
-    $values['uid'] = !empty($values['account']) ? $values['account']->uid : $user->uid;
+    $values['uid'] = !empty($account) ? $account->uid : $user->uid;
   }
 
   if (empty($values['realm'])) {
