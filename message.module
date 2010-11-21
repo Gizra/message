@@ -536,8 +536,6 @@ class MessageType extends EntityDB {
 function message_type_create($name, $values = array(), $save = TRUE) {
   $values['name'] = $name;
 
-  // Add the message type text to the field.
-
   if (empty($values['text'])) {
     // Set default realm if realm wasn't specified.
     $values['text'][LANGUAGE_NONE] = '';
@@ -546,7 +544,7 @@ function message_type_create($name, $values = array(), $save = TRUE) {
   if (!empty($values['text'])) {
     // Prepare the realms to be passed inside the field.
     foreach ($values['text'] as $lang => $text) {
-      $values[MESSAGE_FIELD_MESSAGE_TYPE_TEXT][$lang][0] = $text;
+      $values[MESSAGE_FIELD_MESSAGE_TYPE_TEXT][$lang][0]['value'] = $text;
     }
   }
 
@@ -561,7 +559,20 @@ function message_type_create($name, $values = array(), $save = TRUE) {
 
     // Add the message-type-text as a field to the message type entity.
     message_add_field_message_type_text($message_type->name);
+
+    // FIXME: Only after we save the bundle, we can add it the message type text
+    // field, and then we populate it with the values. So we need to save it
+    // twice - This of course seems very wrong, but it's a workaround.
+    $message_type = message_type_load($message_type->name);
+
+    $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
+    foreach ($values['text'] as $lang => $text) {
+      $message_type->{$property}[$lang][0]['value'] = $text;
+    }
+
+    $message_type->save();
   }
+
   return $message_type;
 }
 
