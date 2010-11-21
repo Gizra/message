@@ -1,6 +1,15 @@
 ; $Id: message.info,v 1.3 2010/06/07 10:54:11 amitaibu Exp $
 name = Message
 description = "Assign messages to realms."
-core = 6.x
+core = 7.x
 package = Message
 dependencies[] = ctools
+dependencies[] = entity
+
+files[] = message.install
+files[] = message.module
+files[] = tests/message.test
+
+; Message plugins
+files[] = plugins/message/message_plugin.inc
+files[] = plugins/message/message_plugin_user.inc

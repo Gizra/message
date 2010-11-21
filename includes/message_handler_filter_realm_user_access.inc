@@ -32,7 +32,7 @@ class message_handler_filter_realm_user_access extends views_handler_filter_in_o
       foreach ($this->options['value'] as $plugin_name => $value) {
         $plugin = message_get_plugin_message($plugin_name);
         // Get all the relms and realm IDs a user can access.
-        if ($ids = message_get_accessiable_ids_by($plugin)) {
+        if ($ids = message_get_accessiable_realm_ids_by_plugin($plugin)) {
           $accessiable_ids[$plugin_name] = $ids;
         }
       }

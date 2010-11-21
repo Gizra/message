@@ -24,7 +24,7 @@ class message_handler_filter_realm_user_access_flag extends views_handler_filter
 
   function query() {
     global $user;
-    $account = drupal_clone($user);
+    $account = clone($user);
 
     $this->ensure_my_table();
     $table = $this->table_alias;
