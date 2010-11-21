@@ -85,7 +85,9 @@ function message_theme() {
 
   $items = array();
   $items['message'] = array(
-    'arguments' => array('message' => array()),
+    'arguments' => array(
+      'render element' => 'elements',
+    ),
   );
   return $items;
 }
@@ -942,8 +944,10 @@ function message_override_message_instance(&$message_instance, $override_name, $
 /**
  * Theme the message.
  */
-function theme_message($message = array()) {
-  return '<span class="message message-instance-'. $message['message']->iid .'">'. $message['output'] .'</span>';
+function theme_message($variables = array()) {
+  $message = $variables['message'];
+  $output = $variables['output'];
+  return '<span class="message-type-' . str_replace('_', '-', check_plain($message->name)) .' message-id-'. $message->mid .'">'. $output .'</span>';
 }
 
 /**
