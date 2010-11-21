@@ -33,8 +33,7 @@ class MessageCrud extends DrupalWebTestCase {
     $message_type = message_type_load('foo');
     $this->assertTrue(!empty($message_type->id), t('Message type was saved to the database'));
     // Assert the message type text field exists and is populated.
-    $this->assertEqual($message_type->{$property}[LANGUAGE_NONE][0], 'foo bar baz', t('Message type text was saved to the database.'));
-
+    $this->assertEqual($message_type->{$property}[LANGUAGE_NONE][0]['value'], 'foo bar baz', t('Message type text was saved to the database.'));
 
     $message = message_create('foo', array(), TRUE, $web_user);
     $mid = $message->mid;
