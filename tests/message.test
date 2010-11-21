@@ -22,18 +22,21 @@ class MessageCrud extends DrupalWebTestCase {
    * Test CRUD of message entity.
    */
   function testMessageCrud() {
+    global $language;
+    $lang = $language->language;
     $web_user = $this->drupalCreateUser();
     $this->drupalLogin($web_user);
 
     $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
 
-    $message_type = message_type_create('foo', array('text' => array(LANGUAGE_NONE => 'foo bar baz')), TRUE);
+    $text = $this->randomString();
+    $message_type = message_type_create('foo', array('text' => array($lang => $text)), TRUE);
 
     // Reload the message type to see it was saved
     $message_type = message_type_load('foo');
     $this->assertTrue(!empty($message_type->id), t('Message type was saved to the database'));
     // Assert the message type text field exists and is populated.
-    $this->assertEqual($message_type->{$property}[LANGUAGE_NONE][0]['value'], 'foo bar baz', t('Message type text was saved to the database.'));
+    $this->assertEqual($message_type->{$property}[$lang][0]['value'], $text, t('Message type text was saved to the database.'));
 
     $message = message_create('foo', array(), TRUE, $web_user);
     $mid = $message->mid;

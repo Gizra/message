@@ -534,11 +534,12 @@ class MessageType extends EntityDB {
  * Wrapper to create a message type stub.
  */
 function message_type_create($name, $values = array(), $save = TRUE) {
+  global $language;
   $values['name'] = $name;
 
   if (empty($values['text'])) {
-    // Set default realm if realm wasn't specified.
-    $values['text'][LANGUAGE_NONE] = '';
+    // Set default text if none was specified.
+    $values['text'][$language->language] = '';
   }
 
   if (!empty($values['text'])) {
@@ -817,19 +818,24 @@ function message_get_accessiable_realm_ids_by_plugin($plugin, $account = NULL) {
  *
  * @see t().
  */
-function message_t($message_instance) {
-  if (!empty($message_instance->hide)) {
+function message_t($message) {
+  global $language;
+  if (!empty($message->hide)) {
     return '';
   }
 
-  $string = message_get_string_i18n($message_instance);
+  $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
+  // Get the message type.
+  $message_type = message_type_load($message->name);
 
-  if (empty($message_instance->arguments)) {
+  $string = !empty($message_type->{$property}[$language->language][0]['value']) ? $message_type->{$property}[$language->language][0]['value'] : '';
+
+  if (empty($message->arguments)) {
     return $string;
   }
   else {
     // Transform arguments before inserting them.
-    foreach ($message_instance->arguments as $key => $value) {
+    foreach ($message->arguments as $key => $value) {
 
       if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
         // A replacement via callback function.
