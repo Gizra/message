@@ -779,8 +779,15 @@ function message_get_plugin_messages() {
  *
  * @param $message_instance
  *   The message instance object.
+ * @param $skip_access
+ *   Determine if access should be checked for the user. Defautls to FALSE, as
+ *   access check is probably going to happen through the Views' filter system.
  * @param $account
- *   Optional; The account that access should be checked for.
+ *   Optional; The account that access should be checked for. Defaults to the
+ *   current user.
+ * @param $lang
+ *   Optional; The language the message should return in. Defaults to the
+ *   current language.
  *
  * @return
  *   HTML with the message.
