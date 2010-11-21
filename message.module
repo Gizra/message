@@ -731,8 +731,9 @@ function message_access($op, $entity, $account = NULL, $entity_type = 'message')
     if (!empty($entity->{$property}[LANGUAGE_NONE])) {
       $plugins = message_get_plugin_messages();
 
-      // Map the realm to the plugin.
-      // TODO: Maybe the realm name should be the plugin name?
+      // Map the realm to the plugin. We don't use the plugin name as the realm
+      // name, becuase we want to keep the realm's machine readable name still
+      // more readable by humans.
       $realm_plugin = array();
       foreach ($plugins as $plugin_name => $plugin) {
         if (!empty($plugin['realm'])) {
