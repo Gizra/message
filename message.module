@@ -785,7 +785,7 @@ function message_get_plugin_messages() {
  * @return
  *   HTML with the message.
  */
-function message_show_message($message, $skip_access = FALSE, $account = NULL) {
+function message_show_message($message, $skip_access = FALSE, $account = NULL, $lang = '') {
   $output = '';
   $access = FALSE;
   if (empty($account)) {
@@ -796,7 +796,7 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL) {
   $access = $skip_access ? TRUE : message_access('view', $message, $account);
 
   if ($access) {
-    $output = theme('message', array('message' => $message, 'output' => message_t($message)));
+    $output = theme('message', array('message' => $message, 'output' => message_t($message, $lang)));
   }
 
   return $output;
@@ -818,19 +818,27 @@ function message_get_accessiable_realm_ids_by_plugin($plugin, $account = NULL) {
  * @param $message
  *   The message instance object.
  *
+ * @param $language
+ *   Optional; The language to get the text in. If not set the current language
+ *   will be used.
+ *
  * @see t().
  */
-function message_t($message) {
+function message_t($message, $lang = '') {
   global $language;
   if (!empty($message->hide)) {
     return '';
+  }
+
+  if (empty($lang)) {
+    $lang = $language->language;
   }
 
   $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
   // Get the message type.
   $message_type = message_type_load($message->name);
 
-  $string = !empty($message_type->{$property}[$language->language][0]['value']) ? $message_type->{$property}[$language->language][0]['value'] : '';
+  $string = !empty($message_type->{$property}[$lang][0]['value']) ? $message_type->{$property}[$lang][0]['value'] : '';
 
   if (empty($message->arguments)) {
     return $string;

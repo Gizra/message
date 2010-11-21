@@ -94,8 +94,36 @@ class MessageShowMessage extends DrupalWebTestCase {
   }
 
   /**
-   * Test access of message entity.
+   * Test showing a message.
    */
   function testMessageView() {
+    global $language;
+    $lang = $language->language;
+    $web_user = $this->drupalCreateUser();
+    $this->drupalLogin($web_user);
+
+    $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
+
+    $text = $this->randomString() . ' argument -- @foo';
+    $message_type = message_type_create('foo', array('text' => array($lang => $text)), TRUE);
+
+    // Reload the message type to see it was saved
+    $message_type = message_type_load('foo');
+    $this->assertTrue(!empty($message_type->id), t('Message type was saved to the database'));
+    // Assert the message type text field exists and is populated.
+    $this->assertEqual($message_type->{$property}[$lang][0]['value'], $text, t('Message type text was saved to the database.'));
+
+    $arguments = array('@foo' => $this->randomString(4));
+    $message = message_create('foo', array('arguments' => $arguments), TRUE, $web_user);
+
+    // Reload the message to see it was saved.
+    $output = message_show_message($message, TRUE, $web_user);
+
+    // Assert the arguments in the message were replaced.
+
+    // Strip tags from the output.
+    $output = strip_tags($output);
+
+    $this->assertEqual($output, strtr($text, $arguments), t('Arguments in the message were replaced.'));
   }
 }
