@@ -16,6 +16,13 @@ define('MESSAGE_REQUIRED_CTOOLS_API', '2.0-alpha1');
  */
 define('MESSAGE_FIELD_REALM', 'message_realm');
 
+
+/**
+ * Define the name of the message realm field.
+ */
+define('MESSAGE_FIELD_MESSAGE_TYPE_TEXT', 'message_type_text');
+
+
 /**
  * Implementation of hook_ctools_plugin_api().
  */
@@ -279,14 +286,13 @@ function message_entity_info_alter(&$entity_info) {
 function message_add_field_message_realm($bundle) {
   $entity_type = 'message';
   $field_name = MESSAGE_FIELD_REALM;
-
   $field = field_info_field($field_name);
   $instance = field_info_instance($entity_type, $field_name, $bundle);
 
   if (empty($field)) {
     $field = array(
       'field_name' => $field_name,
-      'type' => MESSAGE_FIELD_REALM,
+      'type' => $field_name,
       'entity_types' => array($entity_type),
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     );
@@ -298,6 +304,38 @@ function message_add_field_message_realm($bundle) {
       'field_name' => $field_name,
       'bundle' => $bundle,
       'entity_type' => $entity_type,
+    );
+
+    field_create_instance($instance);
+  }
+}
+
+/**
+ * Add message realm field to a message bundle.
+ */
+function message_add_field_message_type_text($bundle) {
+  $entity_type = 'message_type';
+  $field_name = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
+  $field = field_info_field($field_name);
+  $instance = field_info_instance($entity_type, $field_name, $bundle);
+
+  if (empty($field)) {
+    $field = array(
+      'field_name' => $field_name,
+      'type' => 'text_long',
+      'entity_types' => array($entity_type),
+      'translatable' => TRUE,
+    );
+    $field = field_create_field($field);
+  }
+
+  if (empty($instance)) {
+    $instance = array(
+      'field_name' => $field_name,
+      'bundle' => $bundle,
+      'entity_type' => $entity_type,
+      'settings' => array(),
+      'description' => t('The message type text'),
     );
 
     field_create_instance($instance);
@@ -497,7 +535,22 @@ class MessageType extends EntityDB {
  */
 function message_type_create($name, $values = array(), $save = TRUE) {
   $values['name'] = $name;
-  $message_type =  new MessageType($values);
+
+  // Add the message type text to the field.
+
+  if (empty($values['text'])) {
+    // Set default realm if realm wasn't specified.
+    $values['text'][LANGUAGE_NONE] = '';
+  }
+
+  if (!empty($values['text'])) {
+    // Prepare the realms to be passed inside the field.
+    foreach ($values['text'] as $lang => $text) {
+      $values[MESSAGE_FIELD_MESSAGE_TYPE_TEXT][$lang][0] = $text;
+    }
+  }
+
+  $message_type = new MessageType($values);
   if ($save) {
     $message_type->save();
     // FIXME: Find the right place for this.
@@ -505,6 +558,9 @@ function message_type_create($name, $values = array(), $save = TRUE) {
     // where the bundles are inserted.
     // Add the message realm field to the new bundle.
     message_add_field_message_realm($message_type->name);
+
+    // Add the message-type-text as a field to the message type entity.
+    message_add_field_message_type_text($message_type->name);
   }
   return $message_type;
 }
@@ -516,7 +572,7 @@ function message_type_create($name, $values = array(), $save = TRUE) {
  *   The name for this message type.
  *
  * @return MessageType
- *   Returns a fully-loaded message definition.
+ *   Returns a fully-loaded message type definition.
  */
 function message_type_load($name = '') {
   // Replace dashes with underscores so this can be used as menu argument
