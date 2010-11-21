@@ -34,10 +34,35 @@ class MessageCrud extends DrupalWebTestCase {
 
     // Reload the message to see it was saved.
     $message = message_load($mid);
+    $this->assertTrue(!empty($message->mid), t('Message was saved to the database'));
 
     // Assert the default realm values were saved.
     $property = MESSAGE_FIELD_REALM;
     $this->assertEqual($message->{$property}[LANGUAGE_NONE][0]['realm'], 'user', t('Message realm is assigned to the default "user" realm.'));
     $this->assertEqual($message->{$property}[LANGUAGE_NONE][0]['realm_id'], $web_user->uid, t('Message realm ID is equal to the current user.'));
+  }
+
+
+  /**
+   * Test CRUD of message entity.
+   */
+  function testMessageAccess() {
+    $user1 = $this->drupalCreateUser();
+    $user2 = $this->drupalCreateUser();
+    $this->drupalLogin($user1);
+
+    $message_type = message_type_create('foo', array(), TRUE);
+
+    $message = message_create('foo', array(), TRUE, $user1);
+
+    $mid = $message->mid;
+
+    // Reload the message to see it was saved.
+    $message = message_load($mid);
+
+    // Assert the default realm values were saved.
+    $property = MESSAGE_FIELD_REALM;
+    $this->assertTrue(message_access('view', $message, $user1), t('User may access own message.'));
+    $this->assertFalse(message_access('view', $message, $user2), t("User may not access another user's message."));
   }
 }

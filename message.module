@@ -647,90 +647,51 @@ function message_delete_multiple($mids = array()) {
 }
 
 /**
- * Get realm messages by their ID.
- *
- * @param $message_id
- *   The message ID.
- * @return
- *   Array keyed by the message realm and the realm Id as the value.
+ * Access callback for the message entity.
  */
-function message_realm_load_multiple_by_message($message_id) {
-  static $messages = array();
+function message_access($op, $entity, $account = NULL, $entity_type = 'message') {
+  global $user;
+  $access = FALSE;
+  if ($op == 'view') {
+    if (empty($account)) {
+      $account = clone $user;
+    }
 
-  if (!isset($messages[$message_id])) {
-    $result = db_query("SELECT * FROM {message_realm} WHERE iid = %d", $message_id);
+    $property = MESSAGE_FIELD_REALM;
+    if (!empty($entity->{$property}[LANGUAGE_NONE])) {
+      $plugins = message_get_plugin_messages();
 
-    while ($row = db_fetch_object($result)) {
-      $messages[$message_id][$row->realm][$row->realm_id] = $row->realm_id;
+      // Map the realm to the plugin.
+      // TODO: Maybe the realm name should be the plugin name?
+      $realm_plugin = array();
+      foreach ($plugins as $plugin_name => $plugin) {
+        if (!empty($plugin['realm'])) {
+          $realm_plugin[$plugin['realm']] = $plugin_name;
+        }
+      }
+
+      // Get all the realms IDs keyed by the message realm, to save multiple
+      // calls to access check.
+      $realms = array();
+      foreach ($entity->{$property}[LANGUAGE_NONE] as $row) {
+        $realms[$row['realm']][$row['realm_id']] = $row['realm_id'];
+      }
+
+      foreach ($realms as $realm => $realm_ids) {
+        $accessibale_ids = call_user_func($plugins[$realm_plugin[$realm]]['access']['accessible ids callback'], $account);
+        if ($access = array_intersect($accessibale_ids, $realm_ids)) {
+          break;
+        }
+      }
+    }
+    else {
+      // No realms, so access is allowed.
+      $access = TRUE;
     }
   }
-  return !empty($messages[$message_id]) ? $messages[$message_id] : array() ;
+
+  return $access;
 }
-
-/**
- * Message realm load.
- *
- * @param $iid
- * @return unknown_type
- */
-function message_realm_load($rid) {
-  return db_fetch_object(db_query("SELECT * FROM {message_realm} where rid = %d", $rid));
-}
-
-/**
- * Message realm save.
- *
- * @param $message_instance
- *
- * @return
- *   The message realm object.
- */
-function message_realm_save($message_realm) {
-  if ($existing = message_realm_load($message_realm->rid)) {
-    drupal_write_record('message_realm', $message_realm, 'rid');
-  }
-  else {
-    drupal_write_record('message_realm', $message_realm);
-  }
-  return $message_realm;
-}
-
-/**
- * Message realm delete.
- *
- * @param $rid
- *   Message realm IDs array.
- */
-function message_realm_delete($rids = array()) {
-  $placeholders = db_placeholders($rids);
-
-  db_query("DELETE FROM {message_realm} WHERE rid IN ($placeholders)", explode(',', $rids));
-}
-
-/**
- * Message realm delete by message instance ID.
- *
- * @param $iids
- *   Message instance IDs array.
- */
-function message_realm_delete_by_message_instance($iids = array()) {
-  $placeholders = db_placeholders($iids);
-
-  db_query("DELETE FROM {message_realm} WHERE iid IN ($placeholders)", implode(',', $iids));
-}
-
-/**
- * Message realm delete by realm type and realm ID.
- *
- * @param $realm
- *   The realm name.
- * @param $realm_id
- *   The realm ID.
- */
-function message_realm_delete_by_realm($realm, $realm_id) {
-  db_query("DELETE FROM {message_realm} WHERE realm = '%s' AND eid = '%s'", $realm, $realm_id);
-}
-
 
 function message_get_plugin_message($plugin_name) {
   ctools_include('plugins');
@@ -761,17 +722,7 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL) {
     $account = clone($user);
   }
 
-  if ($skip_access) {
-    $access = TRUE;
-  }
-  elseif ($realms = message_realm_load_multiple_by_message($message->iid)) {
-    foreach (message_get_plugin_messages() as $plugin) {
-      if (in_array($plugin['realm'], array_keys($realms)) && message_show_message_access($plugin, $message, $realms[$plugin['realm']])) {
-        $access = TRUE;
-        break;
-      }
-    }
-  }
+  $access = $skip_access ? TRUE : message_access('view', $message, $account);
 
   if ($access) {
     $output = theme('message', array('message' => $message, 'output' => message_t($message)));
@@ -780,43 +731,9 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL) {
   return $output;
 }
 
-/**
- * Access callback for the message entity.
- */
-function message_access($op, $entity, $account, $entity_type) {
-  $access = FALSE;
-  foreach (message_get_plugin_messages() as $plugin) {
-    if (in_array($plugin['realm'], array_keys($realms))) {
-      $access = TRUE;
-      break;
-    }
-  }
 
-  return $access;
 
-}
-
-function message_show_message_access($plugin, $message_instance, $realm_ids = array(), $account = NULL) {
-  $return = FALSE;
-
-  if (!empty($plugin['realm'])) {
-    if (empty($realm_ids)) {
-      $realms = message_realm_load_multiple_by_message($message_instance->iid);
-      $realm_ids = !empty($realms[$plugin['realm']]) ? $realms[$plugin['realm']] : array();
-    }
-
-    if ($realm_ids) {
-      if (empty($account)) {
-        global $user;
-        $account = clone($user);
-      }
-      $return = call_user_func($plugin['access']['access callback'], $plugin, $message_instance, $realm_ids, $account);
-    }
-  }
-  return $return;
-}
-
-function message_get_accessiable_ids_by($plugin, $account = NULL) {
+function message_get_accessiable_realm_ids_by_plugin($plugin, $account = NULL) {
   if (empty($account)) {
     global $user;
     $account = clone($user);
