@@ -108,7 +108,7 @@ class MessageShowMessage extends DrupalWebTestCase {
 
     // Reload the message type to see it was saved
     $message_type = message_type_load('foo');
-    $this->assertTrue(!empty($message_type->id), t('Message type was saved to the database'));
+    $this->assertTrue(!empty($message_type->id), t('Message type was saved to the database.'));
     // Assert the message type text field exists and is populated.
     $this->assertEqual($message_type->{$property}['en'][0]['value'], $text_en, t('English message type text was saved to the database.'));
     $this->assertEqual($message_type->{$property}['es'][0]['value'], $text_es, t('Spanish message type text was saved to the database.'));
