@@ -97,33 +97,33 @@ class MessageShowMessage extends DrupalWebTestCase {
    * Test showing a message.
    */
   function testMessageView() {
-    global $language;
-    $lang = $language->language;
     $web_user = $this->drupalCreateUser();
     $this->drupalLogin($web_user);
 
     $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
 
-    $text = $this->randomString() . ' argument -- @foo';
-    $message_type = message_type_create('foo', array('text' => array($lang => $text)), TRUE);
+    $text_en = $this->randomString() . ' argument -- @foo';
+    $text_es = $this->randomString() . ' argument -- @foo';
+    $message_type = message_type_create('foo', array('text' => array('en' => $text_en, 'es' => $text_es)), TRUE);
 
     // Reload the message type to see it was saved
     $message_type = message_type_load('foo');
     $this->assertTrue(!empty($message_type->id), t('Message type was saved to the database'));
     // Assert the message type text field exists and is populated.
-    $this->assertEqual($message_type->{$property}[$lang][0]['value'], $text, t('Message type text was saved to the database.'));
+    $this->assertEqual($message_type->{$property}['en'][0]['value'], $text_en, t('English message type text was saved to the database.'));
+    $this->assertEqual($message_type->{$property}['es'][0]['value'], $text_es, t('Spanish message type text was saved to the database.'));
+
 
     $arguments = array('@foo' => $this->randomString(4));
     $message = message_create('foo', array('arguments' => $arguments), TRUE, $web_user);
 
-    // Reload the message to see it was saved.
+    // Assert the arguments in the message are replaced.
     $output = message_show_message($message, TRUE, $web_user);
+    $this->assertEqual(strip_tags($output), strtr($text_en, $arguments), t('Arguments in the English message were replaced.'));
 
-    // Assert the arguments in the message were replaced.
-
-    // Strip tags from the output.
-    $output = strip_tags($output);
-
-    $this->assertEqual($output, strtr($text, $arguments), t('Arguments in the message were replaced.'));
+    // Assert the arguments in the message are replaced when showing a message
+    // from another language.
+    $output = message_show_message($message, TRUE, $web_user, 'es');
+    $this->assertEqual(strip_tags($output), strtr($text_es, $arguments), t('Arguments in the Spanish message were replaced.'));
   }
 }
