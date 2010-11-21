@@ -674,12 +674,13 @@ function message_access($op, $entity, $account = NULL, $entity_type = 'message')
       // calls to access check.
       $realms = array();
       foreach ($entity->{$property}[LANGUAGE_NONE] as $row) {
-        $realms[$row['realm']][$row['realm_id']] = $row['realm_id'];
+        $realms[$row['realm']][]= $row['realm_id'];
       }
 
       foreach ($realms as $realm => $realm_ids) {
         $accessibale_ids = call_user_func($plugins[$realm_plugin[$realm]]['access']['accessible ids callback'], $account);
-        if ($access = array_intersect($accessibale_ids, $realm_ids)) {
+        if (array_intersect($accessibale_ids, $realm_ids)) {
+          $access = TRUE;
           break;
         }
       }
