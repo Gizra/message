@@ -950,15 +950,20 @@ function message_get_realm_types() {
 /**
  * Delete messages that are related to a a deleted entity.
  *
- * For example, if a node is deleted then all the message instances that are
+ * For example, if a node is deleted then all the message that are
  * related to that node will be deleted.
  *
  * @param $entity_type
  *   The entity type.
  * @param $etid
  *   The entity ID.
+ *
+ * @return
+ *  Array with the message IDs that were deleted, or an empty array
+ *  if none were found.
  */
 function message_deleted_entity_cleanup($entity_type, $etid) {
+  $mids = array();
   $query = new EntityFieldQuery();
   $query
     ->entityCondition('entity_type', 'message')
@@ -968,10 +973,10 @@ function message_deleted_entity_cleanup($entity_type, $etid) {
 
   if ($result = $query->execute()) {
 	// Get all the message IDs.
-	$mids = array();
 	foreach ($result['message'] as $row) {
 	  $mids[] = $row->mid;	
 	} 
 	message_delete_multiple($mids);	
   }
+  return $mids;
 }
