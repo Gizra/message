@@ -80,7 +80,10 @@ function message_schema() {
         'default' => '',
       ),
     ),
-    'primary key' => array('id', 'name'),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'name' => array('name'),
+    ),
   );
 
   $schema['message'] = array(
