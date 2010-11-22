@@ -7,7 +7,7 @@
  */
 
 /**
- * Implementation of hook_views_handlers().
+ * Implements hook_views_handlers().
  */
 function message_views_handlers() {
   $data = array();
@@ -43,7 +43,7 @@ function message_views_handlers() {
 }
 
 /**
- * Implementation of hook_views_data().
+ * Implements hook_views_data().
  */
 function message_views_data() {
   $data = array();
@@ -160,4 +160,15 @@ function message_views_data() {
   }
 
   return $data;
+}
+
+/**
+ * Implements hook_field_views_data_alter().
+ */
+function message_field_views_data_alter(&$data) {
+  if (!empty($data['field_data_message_realm'])) {
+    $data['field_data_message_realm']['message_realm_realm']['filter']['handler'] = 'message_handler_filter_realm';
+    $data['field_data_message_realm']['message_realm_realm']['field']['handler'] = 'message_handler_field_realm';
+    $data['field_data_message_realm']['message_realm_realm']['argument']['handler'] = 'message_handler_argument_realm';
+  }
 }
