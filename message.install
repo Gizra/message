@@ -63,22 +63,6 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      // TODO: Add the message-text as a field.
-/*      'message' => array(
-        'descripiton' => 'The full plaintext message.',
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => TRUE,
-      ),*/
-
-      // TODO: Remove as the fields may be translatable?
-      'language' => array(
-        'description' => "The IS0-3166 name of the langauge for the associated message.",
-        'type' => 'varchar',
-        'not null' => TRUE,
-        'length' => '12',
-        'default' => '',
-      ),
     ),
     'primary key' => array('id'),
     'unique keys' => array(
@@ -106,7 +90,6 @@ function message_schema() {
         'type' => 'text',
         'serialize' => TRUE,
       ),
-      // TODO: Remove in favor of a field?
       'entity_type' => array(
         'description' => 'The type of entity being acted upon (e.g. node, user).',
         'type' => 'varchar',

@@ -364,7 +364,7 @@ function message_add_field_message_type_text($bundle) {
  * @param $extra_identifier
  *   Optioanl; The string value to save as the extra identfier.
  */
-function message_save_message($message_name, $entity_type, $eid, $arguments = array(), $realms = array(), $account = NULL, $extra_identifier = '') {
+function message_save_message($message_name, $entity_type, $etid, $arguments = array(), $realms = array(), $account = NULL, $extra_identifier = '') {
   $message = message_create($name, $values, $account);
   $message->save();
   return $message;
@@ -776,12 +776,12 @@ function message_get_plugin_messages() {
 }
 
 /**
- * Show a message by the message instance ID.
+ * Show a message by the message entity.
  *
- * @param $message_instance
- *   The message instance object.
+ * @param $message
+ *   The message entity.
  * @param $skip_access
- *   Determine if access should be checked for the user. Defautls to FALSE, as
+ *   Determine if access should be checked for the user. Defaults to FALSE, as
  *   access check is probably going to happen through the Views' filter system.
  * @param $account
  *   Optional; The account that access should be checked for. Defaults to the
@@ -809,7 +809,6 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL, $
 
   return $output;
 }
-
 
 
 function message_get_accessiable_realm_ids_by_plugin($plugin, $account = NULL) {
@@ -882,40 +881,6 @@ function message_t($message, $lang = '') {
 }
 
 /**
- * Get the string of the message.
- *
- * @param $message
- *   The message object,
- *
- * @return
- *   This function checkes if the i18n module is enabled and provides the
- *   translated string if needed. It also checkes if the message was overriden
- *   and if so, return the overriden string.
- */
-function message_get_string_i18n($message_instance) {
-  $message = message_load($message_instance->name);
-
-  if (!empty($message_instance->override)) {
-    $name_property = $message_instance->override_name;
-    $message_property = $message_instance->message;
-  }
-  else {
-    $name_property = $message->name;
-    $message_property = $message->message;
-  }
-
-  if (module_exists(i18nstrings)) {
-    // Get the translation of the original or overriden message.
-    $string = i18nstrings('messages:message:' . $name_property .':message', $message_property);
-  }
-  else {
-    $string = $message_property;
-  }
-
-  return $string;
-}
-
-/**
  * Override the message, and if i18n module is enabled, register the string.
  *
  * @param $message
@@ -983,28 +948,30 @@ function message_get_realm_types() {
 }
 
 /**
- * Delete message instances that are related to a a deleted entity.
+ * Delete messages that are related to a a deleted entity.
  *
  * For example, if a node is deleted then all the message instances that are
  * related to that node will be deleted.
  *
  * @param $entity_type
  *   The entity type.
- * @param $eid
+ * @param $etid
  *   The entity ID.
  */
-function message_deleted_entity_cleanup($entity_type, $eid) {
-  // Get all the message instanced.
-  $result = db_query("SELECT iid FROM {message_instance} WHERE entity_type = '%s' AND eid = %d", $entity_type, $eid);
+function message_deleted_entity_cleanup($entity_type, $etid) {
+  $query = new EntityFieldQuery();
+  $query
+    ->entityCondition('entity_type', 'message')
+	->propertyCondition('etid', $etid)
+	->propertyCondition('entity_type', $entity_type);
+    
 
-  $iids = array();
-  while ($row = db_fetch_object($result)) {
-    $iids[] = $row->iid;
-  }
-
-  // Instances were found and need to be deleted.
-  if ($iids) {
-    message_instance_delete($iids);
-    message_realm_delete($entity_type, $eid);
+  if ($result = $query->execute()) {
+	// Get all the message IDs.
+	$mids = array();
+	foreach ($result['message'] as $row) {
+	  $mids[] = $row->mid;	
+	} 
+	message_delete_multiple($mids);	
   }
 }
