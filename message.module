@@ -123,8 +123,7 @@ function message_ctools_plugin_type() {
  * and they are saved in a static cache. So later when they are rendered, the
  * message instances are already cached.
  *
- * @see message_instance_load_multiple().
- * @see message_show_message().
+ * @see message_load_multiple().
  */
 function message_views_pre_render(&$view) {
   // Define if this is a view that involves message instance, and thus should be
