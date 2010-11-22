@@ -21,11 +21,11 @@ files[] = plugins/message/message_plugin_og_admin.inc
 files[] = plugins/message/message_plugin_flag.inc
 
 ; Views fields
-files[] = includes/views/message_handler_filter_realm.inc
-files[] = includes/views/message_handler_filter_realm_user_access_flag.inc
-files[] = includes/views/message_handler_field_realm.inc
-files[] = includes/views/message_handler_field_message_render.inc
-files[] = includes/views/message_handler_argument_realm.inc
+files[] = includes/message_handler_filter_realm.inc
+files[] = includes/message_handler_filter_realm_user_access_flag.inc
+files[] = includes/message_handler_field_realm.inc
+files[] = includes/message_handler_field_message_render.inc
+files[] = includes/message_handler_argument_realm.inc
 
 ; 3rd party includes
 files[] = includes/views/message.views.inc

@@ -145,11 +145,11 @@ function message_views_pre_render(&$view) {
   }
 
   // Load the message instances, so they will be statically cached.
-  if ($ids && $message_instances = message_instance_load_multiple($ids)) {
+  if ($ids && $messages = message_load_multiple($ids)) {
     $remove = array();
-    foreach ($message_instances as $key => $value) {
+    foreach ($messages as $key => $entity) {
       // Check if messages should be hidden.
-      if (!empty($value->hide)) {
+      if (!empty($entity->hide)) {
 
         $remove[$key] = $key;
       }
@@ -693,6 +693,11 @@ function message_load($mid) {
   return $result ? reset($result) : FALSE;
 }
 
+function message_load_multiple($mids) {
+  $result = entity_load('message', array($mid));
+  return $result ? $result : FALSE;
+}
+
 /**
  * Message save.
  *
@@ -721,7 +726,7 @@ function message_delete_multiple($mids = array()) {
 function message_access($op, $entity, $account = NULL, $entity_type = 'message') {
   global $user;
   $access = FALSE;
-  // Check to see if the message entity is requesting not to be displayed, as 
+  // Check to see if the message entity is requesting not to be displayed, as
   // might happen if an implementing module injects the "hide" property.
   if ($op == 'view' && empty($entity->hide)) {
     if (empty($account)) {
@@ -762,7 +767,7 @@ function message_access($op, $entity, $account = NULL, $entity_type = 'message')
       $access = TRUE;
     }
   }
-  
+
   return $access;
 }
 
@@ -928,14 +933,14 @@ function message_deleted_entity_cleanup($entity_type, $etid) {
     ->entityCondition('entity_type', 'message')
 	->propertyCondition('etid', $etid)
 	->propertyCondition('entity_type', $entity_type);
-    
+
 
   if ($result = $query->execute()) {
 	// Get all the message IDs.
 	foreach ($result['message'] as $row) {
-	  $mids[] = $row->mid;	
-	} 
-	message_delete_multiple($mids);	
+	  $mids[] = $row->mid;
+	}
+	message_delete_multiple($mids);
   }
   return $mids;
 }
