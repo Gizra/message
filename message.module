@@ -721,7 +721,9 @@ function message_delete_multiple($mids = array()) {
 function message_access($op, $entity, $account = NULL, $entity_type = 'message') {
   global $user;
   $access = FALSE;
-  if ($op == 'view') {
+  // Check to see if the message entity is requesting not to be displayed, as 
+  // might happen if an implementing module injects the "hide" property.
+  if ($op == 'view' && empty($entity->hide)) {
     if (empty($account)) {
       $account = clone $user;
     }
@@ -760,7 +762,7 @@ function message_access($op, $entity, $account = NULL, $entity_type = 'message')
       $access = TRUE;
     }
   }
-
+  
   return $access;
 }
 

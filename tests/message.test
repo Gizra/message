@@ -79,7 +79,6 @@ class MessageShowMessage extends DrupalWebTestCase {
     $this->drupalLogin($user1);
 
     $message_type = message_type_create('foo', array(), TRUE);
-
     $message = message_create('foo', array(), TRUE, $user1);
 
     $mid = $message->mid;
@@ -89,8 +88,12 @@ class MessageShowMessage extends DrupalWebTestCase {
 
     // Assert the default realm values were saved.
     $property = MESSAGE_FIELD_REALM;
-    $this->assertTrue(message_access('view', $message, $user1), t('User may access own message.'));
-    $this->assertFalse(message_access('view', $message, $user2), t("User may not access another user's message."));
+    $this->assertTrue(message_access('view', $message, $user1), t('User may view own message.'));
+    $this->assertFalse(message_access('view', $message, $user2), t("User may not view a message from  a realm they do not belong to."));
+
+    // Add the "hide" property to the message entity, to see it's being hidden.
+    $message->hide = TRUE;
+    $this->assertFalse(message_access('view', $message, $user1), t('User may not view a message set to be hidden.'));
   }
 
   /**
