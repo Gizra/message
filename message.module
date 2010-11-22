@@ -881,48 +881,6 @@ function message_t($message, $lang = '') {
 }
 
 /**
- * Override the message, and if i18n module is enabled, register the string.
- *
- * @param $message
- *   The message object passed by reference.
- * @param $override_name
- *   The name of the overriden message, to be appended to the original name.
- * @param $override_message
- *   The overriden message.
- */
-function message_override_message_instance(&$message_instance, $override_name, $override_message) {
-  $message = message_load($message_instance->name);
-  $message_instance->override_name = $message->name . '_' . $override_name;
-  $message_instance->message = $override_message;
-  // Set a flag.
-  $message_instance->override = TRUE;
-
-  if (module_exists('i18nstrings')) {
-    // Register the string.
-    $cache = cache_get('message_i18nstrings');
-
-    $i18nstrings = array();
-
-    if (!empty($cache->data)) {
-      $i18nstrings = $cache->data;
-    }
-
-    $set = FALSE;
-    if (empty($i18nstrings[$message_instance->override_name])) {
-      // Create string.
-      i18nstrings_update("messages:message:$message_instance->name:message", $message_instance->message);
-      $i18nstrings[$message_instance->override_name] = TRUE;
-      $set = TRUE;
-    }
-
-    if ($set) {
-      // Cache all the strings that were translated.
-      cache_set('message_i18nstrings', $i18nstrings);
-    }
-  }
-}
-
-/**
  * Theme the message.
  */
 function theme_message($variables = array()) {
