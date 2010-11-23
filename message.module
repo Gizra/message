@@ -737,16 +737,6 @@ function message_access($op, $entity, $account = NULL, $entity_type = 'message')
     if (!empty($entity->{$property}[LANGUAGE_NONE])) {
       $plugins = message_get_plugin_messages();
 
-      // Map the realm to the plugin. We don't use the plugin name as the realm
-      // name, becuase we want to keep the realm's machine readable name still
-      // more readable by humans.
-      $realm_plugin = array();
-      foreach ($plugins as $plugin_name => $plugin) {
-        if (!empty($plugin['realm'])) {
-          $realm_plugin[$plugin['realm']] = $plugin_name;
-        }
-      }
-
       // Get all the realms IDs keyed by the message realm, to save multiple
       // calls to access check.
       $realms = array();
@@ -755,7 +745,7 @@ function message_access($op, $entity, $account = NULL, $entity_type = 'message')
       }
 
       foreach ($realms as $realm => $realm_ids) {
-        $accessibale_ids = call_user_func($plugins[$realm_plugin[$realm]]['access']['accessible ids callback'], $account);
+        $accessibale_ids = call_user_func($plugins[$realm]['access']['accessible ids callback'], $account);
         if (array_intersect($accessibale_ids, $realm_ids)) {
           $access = TRUE;
           break;

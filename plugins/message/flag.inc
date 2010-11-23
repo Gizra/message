@@ -2,9 +2,11 @@
 // $Id: message_plugin_og.inc,v 1.1 2010/06/07 10:54:11 amitaibu Exp $
 
 if (module_exists('flag')) {
-  // Message plugin deceleration. We don't declare a "realm" as we just want
-  // this plugin to add a views handler.
+  // Message plugin deceleration.
   $plugin = array(
+    // We don't declare a "realm" as we just want this plugin to add a views
+    // handler.
+    'realm' => FALSE,
     'title' => t('Flag realm'),
     'description' => t("Determine access by a flaggings of a user."),
   );

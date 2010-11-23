@@ -2,6 +2,7 @@
 // $Id: message_plugin.inc,v 1.1 2010/06/07 10:54:11 amitaibu Exp $
 
 $plugin = array(
+  'realm' => FALSE,
   'title' => t('Base plugin'),
   'description' => '',
 );
@@ -24,7 +25,7 @@ function message_plugin_accessible_ids($account) {
  */
 function message_message_process(&$plugin, $info) {
   $plugin += array(
-    'realm' => FALSE,
+    'realm' => TRUE,
     'title' => $plugin['name'],
     'description' => '',
 
