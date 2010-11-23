@@ -29,5 +29,5 @@ files[] = includes/views/message_handler_field_message_render.inc
 files[] = includes/views/message_handler_argument_realm.inc
 
 ; 3rd party includes
-files[] = includes/views/message.views.inc
-files[] = includes/views/message.views_default.inc
+files[] = includes/message.views.inc
+files[] = includes/message.views_default.inc
