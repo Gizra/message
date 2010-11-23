@@ -33,7 +33,6 @@ function message_plugin_flag_views_handlers() {
   return array(
     'message_handler_filter_realm_user_access_flag' => array(
       'parent' => 'views_handler_filter_in_operator',
-      'path' => drupal_get_path('module', 'message') .'/includes',
     ),
   );
 }
@@ -44,12 +43,12 @@ function message_plugin_flag_views_handlers() {
 function message_plugin_flag_views_data() {
   $data = array();
 
-  $data['message_realm']['message_realm_flag'] = array(
+  $data['message']['message_realm_flag'] = array(
     'title' => t('Accessible realms by flag'),
     'help' => t('The realms a user may access based on their flaggings.'),
 
     // This is a dummy field, so point it to a real field.
-    'real field' => 'iid',
+    'real field' => 'mid',
 
     'filter' => array(
       'handler' => 'message_handler_filter_realm_user_access_flag',

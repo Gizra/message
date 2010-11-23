@@ -170,5 +170,16 @@ function message_field_views_data_alter(&$data) {
     $data['field_data_message_realm']['message_realm_realm']['filter']['handler'] = 'message_handler_filter_realm';
     $data['field_data_message_realm']['message_realm_realm']['field']['handler'] = 'message_handler_field_realm';
     $data['field_data_message_realm']['message_realm_realm']['argument']['handler'] = 'message_handler_argument_realm';
+
+    // Define the message access realm here, as we want to use the almost the
+    // same filter definition.
+    $data['field_data_message_realm']['message_realm_user_access'] = array(
+      'group' => t('Message'),
+      'title' => t('Message realm access'),
+      'title short' => t('Message realm access'),
+      'help' => t('Realm access'),
+    );
+    $data['field_data_message_realm']['message_realm_user_access']['filter'] = $data['field_data_message_realm']['message_realm_realm']['filter'];
+    $data['field_data_message_realm']['message_realm_user_access']['filter']['handler'] = 'message_handler_filter_realm_user_access';
   }
 }

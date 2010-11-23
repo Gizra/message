@@ -28,9 +28,10 @@ class message_handler_filter_realm_user_access extends views_handler_filter_in_o
     $table = $this->table_alias;
 
     $accessiable_ids = array();
+    $plugins = message_get_plugin_messages();
     if (!empty($this->options['value'])) {
       foreach ($this->options['value'] as $plugin_name => $value) {
-        $plugin = message_get_plugin_message($plugin_name);
+        $plugin = $plugins[$plugin_name];
         // Get all the relms and realm IDs a user can access.
         if ($ids = message_get_accessiable_realm_ids_by_plugin($plugin)) {
           $accessiable_ids[$plugin_name] = $ids;
@@ -40,11 +41,12 @@ class message_handler_filter_realm_user_access extends views_handler_filter_in_o
     $clause = array();
     if ($accessiable_ids) {
       foreach ($accessiable_ids as $plugin_name => $ids) {
-        $plugin = message_get_plugin_message($plugin_name);
         $ids = implode(', ', $ids);
-        $realm = $plugin['realm'];
 
-        $clause[] = "($table.realm_id IN ($ids) AND $table.realm = '$realm')";
+        $realm_field = $table . '.' . $this->real_field;
+        $realm_id_field = $table . '.message_realm_realm_id';
+
+        $clause[] = "($realm_field IN ($ids) AND $realm_id_field = '$plugin_name')";
       }
     }
     else {
