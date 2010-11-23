@@ -535,6 +535,10 @@ class MessageType extends EntityDB {
  * Wrapper to create a message type stub.
  */
 function message_type_create($name, $values = array(), $save = TRUE) {
+  if (message_type_load($name)) {
+    // Don't try to re-create message type, as the name is unique.
+    return FALSE;
+  }
   global $language;
   $values['name'] = $name;
 
