@@ -810,7 +810,7 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL, $
 function message_get_accessiable_realm_ids_by_plugin($plugin, $account = NULL) {
   if (empty($account)) {
     global $user;
-    $account = clone($user);
+    $account = clone $user;
   }
   return call_user_func($plugin['access']['accessible ids callback'], $account);
 }
@@ -921,16 +921,16 @@ function message_deleted_entity_cleanup($entity_type, $etid) {
   $query = new EntityFieldQuery();
   $query
     ->entityCondition('entity_type', 'message')
-	->propertyCondition('etid', $etid)
-	->propertyCondition('entity_type', $entity_type);
+	  ->propertyCondition('etid', $etid)
+	  ->propertyCondition('entity_type', $entity_type);
 
 
   if ($result = $query->execute()) {
-	// Get all the message IDs.
-	foreach ($result['message'] as $row) {
-	  $mids[] = $row->mid;
-	}
-	message_delete_multiple($mids);
+  	// Get all the message IDs.
+  	foreach ($result['message'] as $row) {
+  	  $mids[] = $row->mid;
+  	}
+  	message_delete_multiple($mids);
   }
   return $mids;
 }
