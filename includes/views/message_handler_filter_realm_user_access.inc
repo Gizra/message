@@ -38,15 +38,17 @@ class message_handler_filter_realm_user_access extends views_handler_filter_in_o
         }
       }
     }
-    $clause = array();
+    $clause = $placeholders = array();
     if ($accessiable_ids) {
       foreach ($accessiable_ids as $plugin_name => $ids) {
-        $ids = implode(', ', $ids);
-
         $realm_id_field = $table . '.message_realm_realm_id';
         $realm_field = $table . '.' . $this->real_field;
 
-        $clause[] = "($realm_id_field IN ($ids) AND $realm_field = '$plugin_name')";
+        $clause[] = "($realm_id_field IN (:message_realm_id_" . $plugin_name . ") AND $realm_field = :message_realm_" . $plugin_name . ")";
+        $placeholders += array(
+          ':message_realm_id_' . $plugin_name => implode(',', $ids),
+          ':message_realm_' . $plugin_name => $plugin_name,
+        );
       }
     }
     else {
@@ -55,7 +57,7 @@ class message_handler_filter_realm_user_access extends views_handler_filter_in_o
       $clause[] = 'TRUE = FALSE';
     }
 
-    $clause = implode(' OR ', $clause);
-    $this->query->add_where($this->options['group'], $clause);
+    $formula = implode(' OR ', $clause);
+    $this->query->add_where($this->options['group'], $formula, $placeholders, 'formula');
   }
 }
