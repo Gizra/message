@@ -38,6 +38,10 @@ class MessageCrud extends DrupalWebTestCase {
     // Assert the message type text field exists and is populated.
     $this->assertEqual($message_type->{$property}[$lang][0]['value'], $text, t('Message type text was saved to the database.'));
 
+    // Assert message type can't be recreated.
+    $message_type = message_type_create('foo', array('text' => array($lang => $text)), TRUE);
+    $this->assertFalse($message_type, t('Message type can not be recreated with the same name.'));
+
     $message = message_create('foo', array(), TRUE, $web_user);
     $mid = $message->mid;
 
