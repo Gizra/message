@@ -43,10 +43,10 @@ class message_handler_filter_realm_user_access extends views_handler_filter_in_o
       foreach ($accessiable_ids as $plugin_name => $ids) {
         $ids = implode(', ', $ids);
 
-        $realm_field = $table . '.' . $this->real_field;
         $realm_id_field = $table . '.message_realm_realm_id';
+        $realm_field = $table . '.' . $this->real_field;
 
-        $clause[] = "($realm_field IN ($ids) AND $realm_id_field = '$plugin_name')";
+        $clause[] = "($realm_id_field IN ($ids) AND $realm_field = '$plugin_name')";
       }
     }
     else {
