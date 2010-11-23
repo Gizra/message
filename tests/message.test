@@ -105,8 +105,10 @@ class MessageShowMessage extends DrupalWebTestCase {
 
     $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
 
-    $text_en = $this->randomString() . ' argument -- @foo';
-    $text_es = $this->randomString() . ' argument -- @foo';
+    // We use randomName instead of randomString since later-on we use
+    // strip_tags, so we don't want to get characters that might be escaped.
+    $text_en = $this->randomName() . ' argument -- @foo';
+    $text_es = $this->randomName() . ' argument -- @foo';
     $message_type = message_type_create('foo', array('text' => array('en' => $text_en, 'es' => $text_es)), TRUE);
 
     // Reload the message type to see it was saved
