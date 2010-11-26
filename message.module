@@ -37,7 +37,8 @@ function message_ctools_plugin_directory($module, $type) {
     return 'plugins/message';
   }
   elseif ($type =='export_ui') {
-    return 'plugins/export_ui';
+    // Disable ctools UI for now.
+    // return 'plugins/export_ui';
   }
 }
 
@@ -203,11 +204,19 @@ function message_entity_info() {
     'fieldable' => TRUE,
     'entity keys' => array(
       'id' => 'id',
-      'label' => 'name',
+      'label' => 'description',
       'name' => 'name',
     ),
     'exportable' => TRUE,
     'bundle of' => 'message',
+    'module' => 'message',
+    'access callback' => 'message_type_access',
+    // Enable the entity API's admin UI.
+    'admin ui' => array(
+      'path' => 'admin/structure/messages',
+      'file' => 'message.admin.inc',
+      'controller class' => 'MessageTypeUIController',
+    ),
   );
   $items['message'] = array(
     'label' => t('Message'),
@@ -229,8 +238,10 @@ function message_entity_info() {
     'view modes' => array(
       'full' => array(
         'label' => t('Full'),
+        'custom settings' => FALSE,
       ),
     ),
+    'module' => 'message',
   );
   return $items;
 }
@@ -782,9 +793,15 @@ function message_access($op, $entity, $account, $entity_type) {
       break;
     }
   }
-
   return $access;
+}
 
+/**
+ * Access callback for the message type entities.
+ */
+function message_type_access($op, $entity, $account, $entity_type) {
+  // @todo Implement permission.
+  return TRUE;
 }
 
 function message_show_message_access($plugin, $message_instance, $realm_ids = array(), $account = NULL) {
