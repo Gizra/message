@@ -480,10 +480,10 @@ function messge_process_message_realm($element) {
 
 
 /**
- * Use a separate class for message types so we can specify some defaults
- * modules may alter.
+ * A class used for message types.
  */
-class MessageType extends EntityDB {
+class MessageType extends Entity {
+
   public $name;
   public $description = '';
 
@@ -494,6 +494,7 @@ class MessageType extends EntityDB {
 
 /**
  * Wrapper to create a message type stub.
+ * @todo: Remove the save parameter in favour of doing message_type_create(..)->save()
  */
 function message_type_create($name, $values = array(), $save = TRUE) {
   $values['name'] = $name;
@@ -528,7 +529,6 @@ function message_type_load($name = '') {
   return $types;
 }
 
-
 /**
  * Inserts or updates a message object into the database.
  *
@@ -555,60 +555,67 @@ function message_type_delete($message) {
 
 
 /**
- * Use a separate class for message types so we can specify some defaults
- * modules may alter.
+ * A class used for messages.
  */
-class Message extends EntityDB {
+class Message extends Entity {
+
   public $name;
   public $arguments = array();
   public $timestamp;
 
   public function __construct($values = array()) {
-    $values += array('uid' => $GLOBALS['user']->uid, 'timestamp' => time());
+    if (isset($values['user'])) {
+      $values['uid'] = $values['user']->uid;
+      unset($values['user']);
+    }
+    $values += array(
+      'uid' => $GLOBALS['user']->uid,
+      'timestamp' => time(),
+    );
+    $values += array(
+      'realm' => array(array(
+        'realm' => 'user',
+        'realm_id' => $values['uid'],
+      )),
+    );
+    $this->setRealm($values['realm']);
+    unset($values['realm']);
     parent::__construct($values, 'message');
+  }
+
+  /**
+   * Sets a new user associated with the message.
+   */
+  public function setUser($account) {
+    $this->uid = $account->uid;
+  }
+
+  /**
+   * Sets the realm for this message.
+   */
+  public function setRealm(array $realm) {
+    $this->{MESSAGE_FIELD_REALM}[LANGUAGE_NONE] = array_values($realm);
+  }
+
+  /**
+   * Gets the associated message type.
+   *
+   * @return MessageType
+   */
+  public function getType() {
+    return message_type_load($this->name);
   }
 }
 
 /**
- * Wrapper to create a message stub.
+ * Helper to easily create messages.
  *
  * TODO: Document values.
  */
-function message_create($name, $values = array(), $save = TRUE, $account = NULL) {
-  global $user;
+function message_create($name, $values = array(), $account = NULL) {
   $values['name'] = $name;
-  if (empty($values['uid'])) {
-    $values['uid'] = !empty($account) ? $account->uid : $user->uid;
-  }
-
-  if (empty($values['realm'])) {
-    // Set default realm if realm wasn't specified.
-    $values['realm'][] = array(
-      'realm' => 'user',
-      'realm_id' => $values['uid'],
-    );
-  }
-
-  if (!empty($values['realm'])) {
-    // Prepare the realms to be passed inside the field.
-    foreach ($values['realm'] as $value) {
-      $values[MESSAGE_FIELD_REALM][LANGUAGE_NONE][] = array(
-        'realm' => $value['realm'],
-        'realm_id' => $value['realm_id'],
-      );
-    }
-  }
-
-  // Remove the helper values.
-  unset ($values['realm']);
-
-  $return = new Message($values);
-
-  if ($save) {
-    $return->save();
-  }
-
-  return $return;
+  $values['user'] = $account;
+  return entity_create('message', $values);
 }
 
 /**
