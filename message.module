@@ -52,22 +52,6 @@ function message_views_api() {
 }
 
 /**
- * Implementation of hook_features_api().
- */
-function message_features_api() {
-  return array(
-    'message' => array(
-      'name' => 'Messages',
-      'api' => 'message',
-      'default_hook' => 'message_default_messages',
-      'current_version' => 1,
-      'module' => 'message',
-      'feature_source' => TRUE,
-    ),
-  );
-}
-
-/**
  * Implementation of hook_theme().
  */
 function message_theme() {
