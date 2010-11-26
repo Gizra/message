@@ -813,20 +813,6 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL, $
 }
 
 /**
- * Access callback for the message entity.
- */
-function message_access($op, $entity, $account, $entity_type) {
-  $access = FALSE;
-  foreach (message_get_plugin_messages() as $plugin) {
-    if (in_array($plugin['realm'], array_keys($realms))) {
-      $access = TRUE;
-      break;
-    }
-  }
-  return $access;
-}
-
-/**
  * Access callback for the message type entities.
  */
 function message_type_access($op, $entity, $account, $entity_type) {
