@@ -42,7 +42,8 @@ class MessageCrud extends DrupalWebTestCase {
     $message_type = message_type_create('foo', array('text' => array($lang => $text)), TRUE);
     $this->assertFalse($message_type, t('Message type can not be recreated with the same name.'));
 
-    $message = message_create('foo', array(), TRUE, $web_user);
+    $message = message_create('foo', array(), $web_user);
+    $message->save();
     $mid = $message->mid;
 
     // Reload the message to see it was saved.
@@ -52,7 +53,7 @@ class MessageCrud extends DrupalWebTestCase {
     // Assert the default realm values were saved.
     $property = MESSAGE_FIELD_REALM;
     $this->assertEqual($message->{$property}[LANGUAGE_NONE][0]['realm'], 'user', t('Message realm is assigned to the default "user" realm.'));
-    $this->assertEqual($message->{$property}[LANGUAGE_NONE][0]['realm_id'], $web_user->uid, t('Message realm ID is equal to the current user.'));
+    $this->assertEqual($message->{$property}[LANGUAGE_NONE][0]['realm_id'], $web_user->uid, t('Message realm ID is equal to the web user.'));
   }
 }
 

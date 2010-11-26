@@ -44,7 +44,8 @@ function message_ctools_plugin_directory($module, $type) {
     return 'plugins/message';
   }
   elseif ($type =='export_ui') {
-    return 'plugins/export_ui';
+    // Disable ctools UI for now.
+    // return 'plugins/export_ui';
   }
 }
 
@@ -55,22 +56,6 @@ function message_views_api() {
   return array(
     'api' => 2.0,
     'path' => drupal_get_path('module', 'message') . '/includes',
-  );
-}
-
-/**
- * Implementation of hook_features_api().
- */
-function message_features_api() {
-  return array(
-    'message' => array(
-      'name' => 'Messages',
-      'api' => 'message',
-      'default_hook' => 'message_default_messages',
-      'current_version' => 1,
-      'module' => 'message',
-      'feature_source' => TRUE,
-    ),
   );
 }
 
@@ -227,11 +212,19 @@ function message_entity_info() {
     'fieldable' => TRUE,
     'entity keys' => array(
       'id' => 'id',
-      'label' => 'name',
+      'label' => 'description',
       'name' => 'name',
     ),
     'exportable' => TRUE,
     'bundle of' => 'message',
+    'module' => 'message',
+    'access callback' => 'message_type_access',
+    // Enable the entity API's admin UI.
+    'admin ui' => array(
+      'path' => 'admin/structure/messages',
+      'file' => 'message.admin.inc',
+      'controller class' => 'MessageTypeUIController',
+    ),
   );
   $items['message'] = array(
     'label' => t('Message'),
@@ -253,8 +246,10 @@ function message_entity_info() {
     'view modes' => array(
       'full' => array(
         'label' => t('Full'),
+        'custom settings' => FALSE,
       ),
     ),
+    'module' => 'message',
   );
   return $items;
 }
@@ -519,10 +514,10 @@ function messge_process_message_realm($element) {
 
 
 /**
- * Use a separate class for message types so we can specify some defaults
- * modules may alter.
+ * A class used for message types.
  */
-class MessageType extends EntityDB {
+class MessageType extends Entity {
+
   public $name;
   public $description = '';
 
@@ -533,6 +528,7 @@ class MessageType extends EntityDB {
 
 /**
  * Wrapper to create a message type stub.
+ * @todo: Remove the save parameter in favour of doing message_type_create(..)->save()
  */
 function message_type_create($name, $values = array(), $save = TRUE) {
   if (message_type_load($name)) {
@@ -601,7 +597,6 @@ function message_type_load($name = '') {
   return $types;
 }
 
-
 /**
  * Inserts or updates a message object into the database.
  *
@@ -628,60 +623,67 @@ function message_type_delete($message) {
 
 
 /**
- * Use a separate class for message types so we can specify some defaults
- * modules may alter.
+ * A class used for messages.
  */
-class Message extends EntityDB {
+class Message extends Entity {
+
   public $name;
   public $arguments = array();
   public $timestamp;
 
   public function __construct($values = array()) {
-    $values += array('uid' => $GLOBALS['user']->uid, 'timestamp' => time());
+    if (isset($values['user'])) {
+      $values['uid'] = $values['user']->uid;
+      unset($values['user']);
+    }
+    $values += array(
+      'uid' => $GLOBALS['user']->uid,
+      'timestamp' => time(),
+    );
+    $values += array(
+      'realm' => array(array(
+        'realm' => 'user',
+        'realm_id' => $values['uid'],
+      )),
+    );
+    $this->setRealm($values['realm']);
+    unset($values['realm']);
     parent::__construct($values, 'message');
+  }
+
+  /**
+   * Sets a new user associated with the message.
+   */
+  public function setUser($account) {
+    $this->uid = $account->uid;
+  }
+
+  /**
+   * Sets the realm for this message.
+   */
+  public function setRealm(array $realm) {
+    $this->{MESSAGE_FIELD_REALM}[LANGUAGE_NONE] = array_values($realm);
+  }
+
+  /**
+   * Gets the associated message type.
+   *
+   * @return MessageType
+   */
+  public function getType() {
+    return message_type_load($this->name);
   }
 }
 
 /**
- * Wrapper to create a message stub.
+ * Helper to easily create messages.
  *
  * TODO: Document values.
  */
-function message_create($name, $values = array(), $save = TRUE, $account = NULL) {
-  global $user;
+function message_create($name, $values = array(), $account = NULL) {
   $values['name'] = $name;
-  if (empty($values['uid'])) {
-    $values['uid'] = !empty($account) ? $account->uid : $user->uid;
-  }
-
-  if (empty($values['realm'])) {
-    // Set default realm if realm wasn't specified.
-    $values['realm'][] = array(
-      'realm' => 'user',
-      'realm_id' => $values['uid'],
-    );
-  }
-
-  if (!empty($values['realm'])) {
-    // Prepare the realms to be passed inside the field.
-    foreach ($values['realm'] as $value) {
-      $values[MESSAGE_FIELD_REALM][LANGUAGE_NONE][] = array(
-        'realm' => $value['realm'],
-        'realm_id' => $value['realm_id'],
-      );
-    }
-  }
-
-  // Remove the helper values.
-  unset ($values['realm']);
-
-  $return = new Message($values);
-
-  if ($save) {
-    $return->save();
-  }
-
-  return $return;
+  $values['user'] = $account;
+  return entity_create('message', $values);
 }
 
 /**
@@ -810,6 +812,47 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL, $
   return $output;
 }
 
+/**
+ * Access callback for the message entity.
+ */
+function message_access($op, $entity, $account, $entity_type) {
+  $access = FALSE;
+  foreach (message_get_plugin_messages() as $plugin) {
+    if (in_array($plugin['realm'], array_keys($realms))) {
+      $access = TRUE;
+      break;
+    }
+  }
+  return $access;
+}
+
+/**
+ * Access callback for the message type entities.
+ */
+function message_type_access($op, $entity, $account, $entity_type) {
+  // @todo Implement permission.
+  return TRUE;
+}
+
+function message_show_message_access($plugin, $message_instance, $realm_ids = array(), $account = NULL) {
+  $return = FALSE;
+
+  if (!empty($plugin['realm'])) {
+    if (empty($realm_ids)) {
+      $realms = message_realm_load_multiple_by_message($message_instance->iid);
+      $realm_ids = !empty($realms[$plugin['realm']]) ? $realms[$plugin['realm']] : array();
+    }
+
+    if ($realm_ids) {
+      if (empty($account)) {
+        global $user;
+        $account = clone($user);
+      }
+      $return = call_user_func($plugin['access']['access callback'], $plugin, $message_instance, $realm_ids, $account);
+    }
+  }
+  return $return;
+}
 
 function message_get_accessiable_realm_ids_by_plugin($plugin, $account = NULL) {
   if (empty($account)) {

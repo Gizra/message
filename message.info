@@ -8,8 +8,7 @@ dependencies[] = entity
 
 files[] = message.install
 files[] = message.module
-
-; Test files
+files[] = message.admin.inc
 files[] = tests/message.test
 
 ; Message plugins
