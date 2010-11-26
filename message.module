@@ -640,6 +640,7 @@ class Message extends Entity {
       'uid' => $GLOBALS['user']->uid,
       'timestamp' => time(),
     );
+    // Add default realm, if one doesn't exist.
     $values += array(
       'realm' => array(array(
         'realm' => 'user',
