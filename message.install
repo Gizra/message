@@ -93,13 +93,6 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      // TODO: Add the message-text as a field.
-/*      'message' => array(
-        'descripiton' => 'The full plaintext message.',
-        'type' => 'text',
-        'size' => 'big',
-        'not null' => TRUE,
-      ),*/
 
       // TODO: Remove as the fields may be translatable?
       'language' => array(
@@ -133,34 +126,12 @@ function message_schema() {
         'type' => 'text',
         'serialize' => TRUE,
       ),
-      // TODO: Remove in favor of a field?
-      'entity_type' => array(
-        'description' => 'The type of entity being acted upon (e.g. node, user).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-       ),
-      'etid' => array(
-        'description' => 'Entity ID used to maintain the relationship between the message and the entity that is related to it.',
-        'type' => 'int',
-        'default value' => NULL,
-        'unsigned' => TRUE,
-      ),
       'uid' => array(
         'description' => 'The user ID of the acting user.',
         'type' => 'int',
         'default value' => NULL,
         'unsigned' => TRUE,
       ),
-      // TODO: Do we still need that?
-      'extra_identifier' => array(
-        'description' => 'An optional identifier that can group message instances together.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-       ),
       'timestamp' => array(
         'description' => 'When the message instance was recorded.',
         'type' => 'int',
