@@ -233,6 +233,7 @@ function message_entity_info() {
       ),
     ),
     'module' => 'message',
+    'metadata controller class' => 'MessageMetadataController'
   );
   return $items;
 }
@@ -355,6 +356,13 @@ class Message extends Entity {
   }
 
   /**
+   * Returns the user associated with the message.
+   */
+  public function user() {
+    return user_load($this->uid);
+  }
+
+  /**
    * Sets a new user associated with the message.
    */
   public function setUser($account) {
@@ -460,6 +468,9 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL) {
  * Access callback for the message entity.
  */
 function message_access($op, $entity, $account, $entity_type) {
+  // @todo FIX.
+  return TRUE;
+
   $access = FALSE;
   foreach (message_get_plugin_messages() as $plugin) {
     if (in_array($plugin['realm'], array_keys($realms))) {
