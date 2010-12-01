@@ -6,6 +6,7 @@ package = Message
 dependencies[] = ctools
 dependencies[] = entity
 
+files[] = message.info.inc
 files[] = message.install
 files[] = message.module
 files[] = message.admin.inc

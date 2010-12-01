@@ -9,13 +9,13 @@ class MessageCrud extends DrupalWebTestCase {
   public static function getInfo() {
     return array(
       'name' => 'Message CRUD',
-      'description' => 'Test the create, update and remove of Message entitys.',
+      'description' => 'Test the create, update and remove of Message entities.',
       'group' => 'Message',
     );
   }
 
   function setUp() {
-    parent::setUp('ctools', 'entity', 'message');
+    parent::setUp('message');
   }
 
   /**
@@ -25,22 +25,9 @@ class MessageCrud extends DrupalWebTestCase {
     global $language;
     $lang = $language->language;
     $web_user = $this->drupalCreateUser();
-    $this->drupalLogin($web_user);
 
-    $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
-
-    $text = $this->randomString();
-    $message_type = message_type_create('foo', array('text' => array($lang => $text)), TRUE);
-
-    // Reload the message type to see it was saved
-    $message_type = message_type_load('foo');
-    $this->assertTrue(!empty($message_type->id), t('Message type was saved to the database'));
-    // Assert the message type text field exists and is populated.
-    $this->assertEqual($message_type->{$property}[$lang][0]['value'], $text, t('Message type text was saved to the database.'));
-
-    // Assert message type can't be recreated.
-    $message_type = message_type_create('foo', array('text' => array($lang => $text)), TRUE);
-    $this->assertFalse($message_type, t('Message type can not be recreated with the same name.'));
+    $message_type = message_type_create('foo', array('message_text' => array(LANGUAGE_NONE => array(array('value' => 'Example text.')))));
+    $message_type->save();
 
     $message = message_create('foo', array(), $web_user);
     $message->save();
@@ -50,10 +37,8 @@ class MessageCrud extends DrupalWebTestCase {
     $message = message_load($mid);
     $this->assertTrue(!empty($message->mid), t('Message was saved to the database.'));
 
-    // Assert the default realm values were saved.
-    $property = MESSAGE_FIELD_REALM;
-    $this->assertEqual($message->{$property}[LANGUAGE_NONE][0]['realm'], 'user', t('Message realm is assigned to the default "user" realm.'));
-    $this->assertEqual($message->{$property}[LANGUAGE_NONE][0]['realm_id'], $web_user->uid, t('Message realm ID is equal to the web user.'));
+    $this->assertEqual($message->uid, $web_user->uid, 'Message has been saved for the right user.');
+    $this->assertEqual($message->getType()->message_text[LANGUAGE_NONE][0]['value'], 'Example text.', 'Message type text has been saved.');
   }
 }
 
@@ -76,48 +61,24 @@ class MessageShowMessage extends DrupalWebTestCase {
 
 
   /**
-   * Test access of message entity.
-   */
-  function testMessageAccess() {
-    $user1 = $this->drupalCreateUser();
-    $user2 = $this->drupalCreateUser();
-    $this->drupalLogin($user1);
-
-    $message_type = message_type_create('foo', array(), TRUE);
-    $message = message_create('foo', array(), TRUE, $user1);
-
-    $mid = $message->mid;
-
-    // Reload the message to see it was saved.
-    $message = message_load($mid);
-
-    // Assert the default realm values were saved.
-    $property = MESSAGE_FIELD_REALM;
-    $this->assertTrue(message_access('view', $message, $user1), t('User may view own message.'));
-    $this->assertFalse(message_access('view', $message, $user2), t("User may not view a message from  a realm they do not belong to."));
-
-    // Add the "hide" property to the message entity, to see it's being hidden.
-    $message->hide = TRUE;
-    $this->assertFalse(message_access('view', $message, $user1), t('User may not view a message set to be hidden.'));
-  }
-
-  /**
    * Test showing a message.
    */
   function testMessageView() {
     $web_user = $this->drupalCreateUser();
     $this->drupalLogin($web_user);
 
-    $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
+    $property = MESSAGE_FIELD_MESSAGE_TEXT;
 
     // We use randomName instead of randomString since later-on we use
     // strip_tags, so we don't want to get characters that might be escaped.
     $text_en = $this->randomName() . ' argument -- @foo';
     $text_es = $this->randomName() . ' argument -- @foo';
-    $message_type = message_type_create('foo', array('text' => array('en' => $text_en, 'es' => $text_es)), TRUE);
+    $message_type = message_type_create('foo', array('message_text' => array('en' => array(array('value' => $text_en)), 'es' => array(array('value' => $text_es)))));
+    $message_type->save();
 
     // Reload the message type to see it was saved
     $message_type = message_type_load('foo');
+    debug($message_type);
     $this->assertTrue(!empty($message_type->id), t('Message type was saved to the database.'));
     // Assert the message type text field exists and is populated.
     $this->assertEqual($message_type->{$property}['en'][0]['value'], $text_en, t('English message type text was saved to the database.'));
@@ -125,7 +86,8 @@ class MessageShowMessage extends DrupalWebTestCase {
 
 
     $arguments = array('@foo' => $this->randomName(4));
-    $message = message_create('foo', array('arguments' => $arguments), TRUE, $web_user);
+    $message = message_create('foo', array('arguments' => $arguments), $web_user);
+    $message->save();
 
     // Assert the arguments in the message are replaced.
     $output = message_show_message($message, TRUE, $web_user);

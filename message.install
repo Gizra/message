@@ -7,9 +7,39 @@
  */
 
 /**
+ * Implements hook_install().
+ */
+function message_install() {
+  // Create the field holding the message text.
+  $field = array(
+    'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
+    'type' => 'text',
+    'entity_types' => array('message_type'),
+    'cardinality' => 1,
+    'translatable' => TRUE,
+    'locked' => TRUE,
+  );
+  $field = field_create_field($field);
+  $instance = array(
+    'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
+    'bundle' => 'message_type',
+    'entity_type' => 'message_type',
+    'label' => t('Message text'),
+    'description' => t('This is the text of all messages of this type.'),
+    'required' => TRUE,
+  );
+  field_create_instance($instance);
+
+  variable_del('message_entity_delete_cleanup');
+}
+
+/**
  * Implements hook_uninstall().
  */
 function message_uninstall() {
+  $instance = field_info_instance('message_type', 'message_text', 'message_type');
+  field_delete_instance($instance);
+  field_delete_field("message_text");
   variable_del('message_entity_delete_cleanup');
 }
 
@@ -90,33 +120,12 @@ function message_schema() {
         'type' => 'text',
         'serialize' => TRUE,
       ),
-      'entity_type' => array(
-        'description' => 'The type of entity being acted upon (e.g. node, user).',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-       ),
-      'etid' => array(
-        'description' => 'Entity ID used to maintain the relationship between the message and the entity that is related to it.',
-        'type' => 'int',
-        'default value' => NULL,
-        'unsigned' => TRUE,
-      ),
       'uid' => array(
         'description' => 'The user ID of the acting user.',
         'type' => 'int',
         'default value' => NULL,
         'unsigned' => TRUE,
       ),
-      // TODO: Do we still need that?
-      'extra_identifier' => array(
-        'description' => 'An optional identifier that can group message instances together.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-       ),
       'timestamp' => array(
         'description' => 'When the message instance was recorded.',
         'type' => 'int',

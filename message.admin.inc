@@ -49,6 +49,8 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     '#description' => t('A unique machine-readable name for this message type. It must only contain lowercase letters, numbers, and underscores.'),
   );
 
+  field_attach_form('message_type', $message_type, $form, $form_state);
+
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
@@ -66,6 +68,13 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     );
   }
   return $form;
+}
+
+/**
+ * Validation callback.
+ */
+function message_type_form_validate($form, &$form_state) {
+  entity_form_field_validate('message_type', $form, $form_state);
 }
 
 /**

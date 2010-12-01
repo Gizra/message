@@ -14,13 +14,7 @@ define('MESSAGE_REQUIRED_CTOOLS_API', '2.0-alpha1');
 /**
  * Define the name of the message realm field.
  */
-define('MESSAGE_FIELD_REALM', 'message_realm');
-
-
-/**
- * Define the name of the message realm field.
- */
-define('MESSAGE_FIELD_MESSAGE_TYPE_TEXT', 'message_type_text');
+define('MESSAGE_FIELD_MESSAGE_TEXT', 'message_text');
 
 
 /**
@@ -42,10 +36,6 @@ function message_ctools_plugin_directory($module, $type) {
   }
   if ($module =='message' && $type == 'message') {
     return 'plugins/message';
-  }
-  elseif ($type =='export_ui') {
-    // Disable ctools UI for now.
-    // return 'plugins/export_ui';
   }
 }
 
@@ -250,6 +240,7 @@ function message_entity_info() {
       ),
     ),
     'module' => 'message',
+    'metadata controller class' => 'MessageMetadataController'
   );
   return $items;
 }
@@ -277,243 +268,6 @@ function message_entity_info_alter(&$entity_info) {
 }
 
 /**
- * Add message realm field to a message bundle.
- */
-function message_add_field_message_realm($bundle) {
-  $entity_type = 'message';
-  $field_name = MESSAGE_FIELD_REALM;
-  $field = field_info_field($field_name);
-  $instance = field_info_instance($entity_type, $field_name, $bundle);
-
-  if (empty($field)) {
-    $field = array(
-      'field_name' => $field_name,
-      'type' => $field_name,
-      'entity_types' => array($entity_type),
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-    );
-    $field = field_create_field($field);
-  }
-
-  if (empty($instance)) {
-    $instance = array(
-      'field_name' => $field_name,
-      'bundle' => $bundle,
-      'entity_type' => $entity_type,
-    );
-
-    field_create_instance($instance);
-  }
-}
-
-/**
- * Add message realm field to a message bundle.
- */
-function message_add_field_message_type_text($bundle) {
-  $entity_type = 'message_type';
-  $field_name = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
-  $field = field_info_field($field_name);
-  $instance = field_info_instance($entity_type, $field_name, $bundle);
-
-  if (empty($field)) {
-    $field = array(
-      'field_name' => $field_name,
-      'type' => 'text_long',
-      'entity_types' => array($entity_type),
-      'translatable' => TRUE,
-    );
-    $field = field_create_field($field);
-  }
-
-  if (empty($instance)) {
-    $instance = array(
-      'field_name' => $field_name,
-      'bundle' => $bundle,
-      'entity_type' => $entity_type,
-      'settings' => array(),
-      'description' => t('The message type text'),
-    );
-
-    field_create_instance($instance);
-  }
-}
-
-/**
- * API function; Save a message.
- *
- * @param $message_name
- *   The message name.
- * @param $entity_type
- *   The entity type.
- * @param $etid
- *   The entity ID.
- * @param $arguments
- *   Optional; Array of arguments to pass to the callback function.
- * @param $realms
- *   Optioanl; An array of arrays keyed with the realm ID. If no realms are
- *   provided then a the message instance will be assigned by default to the
- *   user realm, with the user ID as the realm ID.
- * @param $account
- *   Optional; The user object, if empty the logged in user will be used.
- * @param $extra_identifier
- *   Optioanl; The string value to save as the extra identfier.
- */
-function message_save_message($message_name, $entity_type, $etid, $arguments = array(), $realms = array(), $account = NULL, $extra_identifier = '') {
-  $message = message_create($name, $values, $account);
-  $message->save();
-  return $message;
-}
-
-/**
- * Field settings
- */
-
-/**
- * Implements hook_field_info().
- */
-function message_field_info() {
-  return array(
-    MESSAGE_FIELD_REALM => array(
-      'label' => t('Message realm'),
-      'description' => t('This field stores realms associated with the message.'),
-      'default_widget' => MESSAGE_FIELD_REALM,
-      'default_formatter' => 'message_realm_formatter',
-    ),
-  );
-}
-
-/**
- * Implement hook_field_schema().
- */
-function message_field_schema($field) {
-  $columns = array(
-    'realm' => array(
-      'description' => 'The realm this message belongs to.',
-      'type' => 'varchar',
-      'length' => 255,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-    'realm_id' => array(
-      'description' => 'The unique ID of the realm.',
-      'type' => 'varchar',
-      'length' => 255,
-      'not null' => TRUE,
-      'default' => '',
-    ),
-  );
-  return array(
-    'columns' => $columns,
-    'indexes' => array(
-      'mid' => array('realm', 'realm_id'),
-    ),
-  );
-}
-
-/**
- * Implements hook_field_formatter_info().
- */
-function message_field_formatter_info() {
-  return array(
-    'message_realm_formatter' => array(
-      'label' => t('Message realm'),
-      'field types' => array('message_realm'),
-    ),
-  );
-}
-
-/**
- * Implement hook_field_widget_info().
- */
-function message_field_widget_info() {
-  return array(
-    MESSAGE_FIELD_REALM => array(
-      'label' => t('Message realm'),
-      'field types' => array(MESSAGE_FIELD_REALM),
-      'behaviors' => array(
-        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
-      ),
-      'settings' => array(),
-    ),
-  );
-}
-
-/**
- * Implement hook_field_widget_form().
- */
-function message_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $base) {
-  $element = $base;
-  $widget = $instance['widget'];
-
-  if ($widget['type'] == MESSAGE_FIELD_REALM) {
-    $element += array(
-      // Input should be TRUE only if there are groups that can be selected.
-      '#type' => 'message_realm',
-    );
-  }
-
-  return $element;
-}
-
-/**
- * Implement hook_field_is_empty().
- */
-function message_field_is_empty($item, $field) {
-  return empty($item['mid']);
-}
-
-
-/**
- * Implements hook_element_info().
- */
-function message_element_info() {
-  $types = array();
-  $types['message_realm'] = array(
-    '#input' => TRUE,
-    '#multiple' => TRUE,
-    '#process' => array('form_process_select', 'messge_process_message_realm'),
-    '#theme_wrappers' => array('form_element'),
-  );
-
-  return $types;
-}
-
-/**
- * Process the "message_realm" form element.
- *
- * Expands the element into a select list with the realm types, and a text field
- * text accepts the realm ID.
- */
-function messge_process_message_realm($element) {
-  $options = message_get_realm_types();
-  $element['realm'] =  array(
-    '#type' => 'select',
-    '#title' => t('Realm'),
-    '#options' => $options,
-    // FIXME:
-    '#default_value' => array(),
-    '#required' => TRUE,
-    '#attributes' => array('class' => array('message-realm')),
-  );
-
-  $element['realm_id'] =  array(
-    '#type' => 'textfield',
-    '#title' => t('Realm ID'),
-    // FIXME:
-    '#default_value' => '',
-    '#required' => TRUE,
-    '#attributes' => array('class' => array('message-realm-id')),
-  );
-
-  return $element;
-}
-
-/**
- * Load & crud functions ==============================================
- */
-
-
-/**
  * A class used for message types.
  */
 class MessageType extends Entity {
@@ -527,55 +281,14 @@ class MessageType extends Entity {
 }
 
 /**
- * Wrapper to create a message type stub.
- * @todo: Remove the save parameter in favour of doing message_type_create(..)->save()
+ * Creates a new message type.
+ *
+ * @return MessageType
+ *   Returns a new message type object.
  */
-function message_type_create($name, $values = array(), $save = TRUE) {
-  if (message_type_load($name)) {
-    // Don't try to re-create message type, as the name is unique.
-    return FALSE;
-  }
-  global $language;
+function message_type_create($name, $values = array()) {
   $values['name'] = $name;
-
-  if (empty($values['text'])) {
-    // Set default text if none was specified.
-    $values['text'][$language->language] = '';
-  }
-
-  if (!empty($values['text'])) {
-    // Prepare the realms to be passed inside the field.
-    foreach ($values['text'] as $lang => $text) {
-      $values[MESSAGE_FIELD_MESSAGE_TYPE_TEXT][$lang][0]['value'] = $text;
-    }
-  }
-
-  $message_type = new MessageType($values);
-  if ($save) {
-    $message_type->save();
-    // FIXME: Find the right place for this.
-    // hook_message_type_insert() runs only after hook_entity_info_alter()
-    // where the bundles are inserted.
-    // Add the message realm field to the new bundle.
-    message_add_field_message_realm($message_type->name);
-
-    // Add the message-type-text as a field to the message type entity.
-    message_add_field_message_type_text($message_type->name);
-
-    // FIXME: Only after we save the bundle, we can add it the message type text
-    // field, and then we populate it with the values. So we need to save it
-    // twice - This of course seems very wrong, but it's a workaround.
-    $message_type = message_type_load($message_type->name);
-
-    $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
-    foreach ($values['text'] as $lang => $text) {
-      $message_type->{$property}[$lang][0]['value'] = $text;
-    }
-
-    $message_type->save();
-  }
-
-  return $message_type;
+  return entity_create('message_type', $values);
 }
 
 /**
@@ -636,20 +349,21 @@ class Message extends Entity {
       $values['uid'] = $values['user']->uid;
       unset($values['user']);
     }
-    $values += array(
-      'uid' => $GLOBALS['user']->uid,
-      'timestamp' => time(),
-    );
-    // Add default realm, if one doesn't exist.
-    $values += array(
-      'realm' => array(array(
-        'realm' => 'user',
-        'realm_id' => $values['uid'],
-      )),
-    );
-    $this->setRealm($values['realm']);
-    unset($values['realm']);
+
     parent::__construct($values, 'message');
+    if (!isset($this->uid)) {
+      $this->uid = $GLOBALS['user']->uid;
+    }
+    if (!isset($this->timestamp)) {
+      $this->timestamp = time();
+    }
+  }
+
+  /**
+   * Returns the user associated with the message.
+   */
+  public function user() {
+    return user_load($this->uid);
   }
 
   /**
@@ -657,13 +371,6 @@ class Message extends Entity {
    */
   public function setUser($account) {
     $this->uid = $account->uid;
-  }
-
-  /**
-   * Sets the realm for this message.
-   */
-  public function setRealm(array $realm) {
-    $this->{MESSAGE_FIELD_REALM}[LANGUAGE_NONE] = array_values($realm);
   }
 
   /**
@@ -680,6 +387,7 @@ class Message extends Entity {
  * Helper to easily create messages.
  *
  * TODO: Document values.
+ * TODO: Add separate parameter for arguments?
  */
 function message_create($name, $values = array(), $account = NULL) {
   $values['name'] = $name;
@@ -731,6 +439,9 @@ function message_delete_multiple($mids = array()) {
  * Access callback for the message entity.
  */
 function message_access($op, $entity, $account = NULL, $entity_type = 'message') {
+  // @todo FIX to account for realm field.
+  return TRUE;
+
   global $user;
   $access = FALSE;
   // Check to see if the message entity is requesting not to be displayed, as
@@ -766,16 +477,6 @@ function message_access($op, $entity, $account = NULL, $entity_type = 'message')
   }
 
   return $access;
-}
-
-function message_get_plugin_message($plugin_name) {
-  ctools_include('plugins');
-  return ctools_get_plugins('message', 'message', $plugin_name);
-}
-
-function message_get_plugin_messages() {
-  ctools_include('plugins');
-  return ctools_get_plugins('message', 'message');
 }
 
 /**
@@ -819,26 +520,6 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL, $
 function message_type_access($op, $entity, $account, $entity_type) {
   // @todo Implement permission.
   return TRUE;
-}
-
-function message_show_message_access($plugin, $message_instance, $realm_ids = array(), $account = NULL) {
-  $return = FALSE;
-
-  if (!empty($plugin['realm'])) {
-    if (empty($realm_ids)) {
-      $realms = message_realm_load_multiple_by_message($message_instance->iid);
-      $realm_ids = !empty($realms[$plugin['realm']]) ? $realms[$plugin['realm']] : array();
-    }
-
-    if ($realm_ids) {
-      if (empty($account)) {
-        global $user;
-        $account = clone($user);
-      }
-      $return = call_user_func($plugin['access']['access callback'], $plugin, $message_instance, $realm_ids, $account);
-    }
-  }
-  return $return;
 }
 
 function message_get_accessiable_realm_ids_by_plugin($plugin, $account = NULL) {
@@ -933,6 +614,16 @@ function message_get_realm_types() {
   }
 
   return $options;
+}
+
+function message_get_plugin_message($plugin_name) {
+  ctools_include('plugins');
+  return ctools_get_plugins('message', 'message', $plugin_name);
+}
+
+function message_get_plugin_messages() {
+  ctools_include('plugins');
+  return ctools_get_plugins('message', 'message');
 }
 
 /**
