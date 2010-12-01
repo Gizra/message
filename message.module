@@ -264,33 +264,6 @@ function message_entity_info_alter(&$entity_info) {
 }
 
 /**
- * API function; Save a message.
- *
- * @param $message_name
- *   The message name.
- * @param $entity_type
- *   The entity type.
- * @param $etid
- *   The entity ID.
- * @param $arguments
- *   Optional; Array of arguments to pass to the callback function.
- * @param $realms
- *   Optioanl; An array of arrays keyed with the realm ID. If no realms are
- *   provided then a the message instance will be assigned by default to the
- *   user realm, with the user ID as the realm ID.
- * @param $account
- *   Optional; The user object, if empty the logged in user will be used.
- * @param $extra_identifier
- *   Optioanl; The string value to save as the extra identfier.
- */
-function message_save_message($message_name, $entity_type, $eid, $arguments = array(), $realms = array(), $account = NULL, $extra_identifier = '') {
-  $message = message_create($name, $values, $account);
-  $message->save();
-  return $message;
-}
-
-
-/**
  * Load & crud functions ==============================================
  */
 
@@ -406,6 +379,7 @@ class Message extends Entity {
  * Helper to easily create messages.
  *
  * TODO: Document values.
+ * TODO: Add separate parameter for arguments?
  */
 function message_create($name, $values = array(), $account = NULL) {
   $values['name'] = $name;
