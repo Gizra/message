@@ -281,16 +281,14 @@ class MessageType extends Entity {
 }
 
 /**
- * Wrapper to create a message type stub.
- * @todo: Remove the save parameter in favour of doing message_type_create(..)->save()
+ * Creates a new message type.
+ *
+ * @return MessageType
+ *   Returns a new message type object.
  */
-function message_type_create($name, $values = array(), $save = TRUE) {
+function message_type_create($name, $values = array()) {
   $values['name'] = $name;
-  $message_type =  new MessageType($values);
-  if ($save) {
-    $message_type->save();
-  }
-  return $message_type;
+  return entity_create('message_type', $values);
 }
 
 /**
