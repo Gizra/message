@@ -7,9 +7,39 @@
  */
 
 /**
+ * Implements hook_install().
+ */
+function message_install() {
+  // Create the field holding the message text.
+  $field = array(
+    'field_name' => 'message_text',
+    'type' => 'text',
+    'entity_types' => array('message_type'),
+    'cardinality' => 1,
+    'translatable' => TRUE,
+    'locked' => TRUE,
+  );
+  $field = field_create_field($field);
+  $instance = array(
+    'field_name' => 'message_text',
+    'bundle' => 'message_type',
+    'entity_type' => 'message_type',
+    'label' => t('Message text'),
+    'description' => t('This is the text of all messages of this type.'),
+    'required' => TRUE,
+  );
+  field_create_instance($instance);
+
+  variable_del('message_entity_delete_cleanup');
+}
+
+/**
  * Implements hook_uninstall().
  */
 function message_uninstall() {
+  $instance = field_info_instance('message_type', 'message_text', 'message_type');
+  field_delete_instance($instance);
+  field_delete_field("message_text");
   variable_del('message_entity_delete_cleanup');
 }
 
