@@ -345,11 +345,13 @@ class Message extends Entity {
       $values['uid'] = $values['user']->uid;
       unset($values['user']);
     }
-    $values += array(
-      'uid' => $GLOBALS['user']->uid,
-      'timestamp' => time(),
-    );
     parent::__construct($values, 'message');
+    if (!isset($this->uid)) {
+      $this->uid = $GLOBALS['user']->uid;
+    }
+    if (!isset($this->timestamp)) {
+      $this->timestamp = time();
+    }
   }
 
   /**
