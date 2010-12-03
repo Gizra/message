@@ -552,7 +552,7 @@ function message_t($message, $lang = '') {
     $lang = $language->language;
   }
 
-  $property = MESSAGE_FIELD_MESSAGE_TYPE_TEXT;
+  $property = MESSAGE_FIELD_MESSAGE_TEXT;
   // Get the message type.
   $message_type = message_type_load($message->name);
 

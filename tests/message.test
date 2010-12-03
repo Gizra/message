@@ -56,7 +56,12 @@ class MessageShowMessage extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('ctools', 'entity', 'message');
+    parent::setUp('locale', 'message');
+
+    require_once DRUPAL_ROOT . '/includes/locale.inc';
+    for ($i = 0; $i < 2; ++$i) {
+      locale_add_language('l' . $i, $this->randomString(), $this->randomString());
+    }
   }
 
 
@@ -71,9 +76,9 @@ class MessageShowMessage extends DrupalWebTestCase {
 
     // We use randomName instead of randomString since later-on we use
     // strip_tags, so we don't want to get characters that might be escaped.
-    $text_en = $this->randomName() . ' argument -- @foo';
-    $text_es = $this->randomName() . ' argument -- @foo';
-    $message_type = message_type_create('foo', array('message_text' => array('en' => array(array('value' => $text_en)), 'es' => array(array('value' => $text_es)))));
+    $text1 = $this->randomName() . ' argument -- @foo';
+    $text2 = $this->randomName() . ' argument -- @foo';
+    $message_type = message_type_create('foo', array('message_text' => array('l0' => array(array('value' => $text1)), 'l1' => array(array('value' => $text2)))));
     $message_type->save();
 
     // Reload the message type to see it was saved
@@ -81,8 +86,8 @@ class MessageShowMessage extends DrupalWebTestCase {
     debug($message_type);
     $this->assertTrue(!empty($message_type->id), t('Message type was saved to the database.'));
     // Assert the message type text field exists and is populated.
-    $this->assertEqual($message_type->{$property}['en'][0]['value'], $text_en, t('English message type text was saved to the database.'));
-    $this->assertEqual($message_type->{$property}['es'][0]['value'], $text_es, t('Spanish message type text was saved to the database.'));
+    $this->assertEqual($message_type->{$property}['l0'][0]['value'], $text1, t('First language message text was saved to the database.'));
+    $this->assertEqual($message_type->{$property}['l1'][0]['value'], $text2, t('Second language message text was saved to the database.'));
 
 
     $arguments = array('@foo' => $this->randomName(4));
@@ -91,11 +96,11 @@ class MessageShowMessage extends DrupalWebTestCase {
 
     // Assert the arguments in the message are replaced.
     $output = message_show_message($message, TRUE, $web_user);
-    $this->assertEqual(strip_tags($output), strtr($text_en, $arguments), t('Arguments in the English message were replaced.'));
+    $this->assertEqual(strip_tags($output), strtr($text1, $arguments), t('Arguments in the first language message were replaced.'));
 
     // Assert the arguments in the message are replaced when showing a message
     // from another language.
     $output = message_show_message($message, TRUE, $web_user, 'es');
-    $this->assertEqual(strip_tags($output), strtr($text_es, $arguments), t('Arguments in the Spanish message were replaced.'));
+    $this->assertEqual(strip_tags($output), strtr($text2, $arguments), t('Arguments in the second language message were replaced.'));
   }
 }
