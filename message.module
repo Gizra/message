@@ -216,6 +216,11 @@ function message_entity_info() {
       'controller class' => 'MessageTypeUIController',
     ),
   );
+
+  if (module_exists('locale')) {
+    $items['message_type']['translation']['locale'] = TRUE;
+  }
+
   $items['message'] = array(
     'label' => t('Message'),
     'controller class' => 'EntityAPIController',
