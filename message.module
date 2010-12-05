@@ -414,7 +414,7 @@ function message_load($mid) {
 }
 
 function message_load_multiple($mids) {
-  $result = entity_load('message', array($mid));
+  $result = entity_load('message', array($mids));
   return $result ? $result : FALSE;
 }
 
