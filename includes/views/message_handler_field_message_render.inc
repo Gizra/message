@@ -31,8 +31,7 @@ class message_handler_field_message_render extends views_handler_field {
   }
 
   function render($values) {
-    if (!empty($values->iid)) {
-      $message = message_load($values->iid);
+    if (!empty($values->mid) && $message = message_load($values->mid)) {
       return message_show_message($message, $this->options['skip_access']);
     }
   }
