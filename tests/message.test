@@ -22,8 +22,6 @@ class MessageCrud extends DrupalWebTestCase {
    * Test CRUD of message entity.
    */
   function testMessageCrud() {
-    global $language;
-    $lang = $language->language;
     $web_user = $this->drupalCreateUser();
 
     $message_type = message_type_create('foo', array('message_text' => array(LANGUAGE_NONE => array(array('value' => 'Example text.')))));
