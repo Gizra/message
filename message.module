@@ -549,9 +549,6 @@ function message_get_accessiable_realm_ids_by_plugin($plugin, $account = NULL) {
  */
 function message_t($message, $lang = '') {
   global $language;
-  if (!empty($message->hide)) {
-    return '';
-  }
 
   if (empty($lang)) {
     $lang = $language->language;
