@@ -357,9 +357,13 @@ function message_load($mid) {
   return $result ? reset($result) : FALSE;
 }
 
-function message_load_multiple($mids) {
-  $result = entity_load('message', array($mids));
-  return $result ? $result : FALSE;
+/**
+ * Loads multiple messages.
+ *
+ * @see entity_load().
+ */
+function message_load_multiple($mids, $conditions = array()) {
+  return entity_load('message', $mids, $conditions);
 }
 
 /**
