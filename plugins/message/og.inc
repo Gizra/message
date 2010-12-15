@@ -4,7 +4,6 @@
 if (module_exists('og')) {
   // Message plugin deceleration.
   $plugin = array(
-    'realm' => 'og',
     'title' => t('Organic groups realm'),
     'description' => t("Determine access by a user's membership in a group."),
   );

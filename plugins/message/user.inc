@@ -2,7 +2,6 @@
 // $Id$
 
 $plugin = array(
-  'realm' => 'user',
   'title' => t('User realm'),
   'description' => t("Determine access by a user's ID."),
 );
