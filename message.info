@@ -10,7 +10,9 @@ files[] = message.info.inc
 files[] = message.install
 files[] = message.module
 files[] = message.admin.inc
-files[] = tests/message.test
+
+; Tests
+files[] = message.test
 
 ; Message plugins
 files[] = plugins/message/message_plugin.inc
