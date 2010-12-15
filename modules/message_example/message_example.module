@@ -58,7 +58,7 @@ function message_example_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
     // is automatically assigned to the user passed in the function, or if no
     // user object is provided, then to the acting user.
     $account = user_load($node->uid);
-    message_save_message('message_example_node_' . $op, 'node', $node->nid, $arguments, array(), $account);
+    message_save_message_to_realms('message_example_node_' . $op, 'node', $node->nid, $arguments, array(), $account);
   }
 }
 
@@ -101,7 +101,7 @@ function message_example_comment(&$a1, $op) {
     $realms[] = array('realm' => 'user', 'realm id' => $account->uid);
     $realms[] = array('realm' => 'node', 'realm id' => $nid);
 
-    message_save_message('message_example_comment_insert', 'comment', $cid, $arguments, $realms, $account);
+    message_save_message_to_realms('message_example_comment_insert', 'comment', $cid, $arguments, $realms, $account);
   }
 }
 
@@ -146,7 +146,7 @@ function message_example_flag($op, $flag, $content_id, $account, $fcid) {
 
     if ($arguments) {
       // Save the message to the user realm.
-      message_save_message($flag->name, $flag->content_type, $content_id, $arguments);
+      message_save_message_to_realms($flag->name, $flag->content_type, $content_id, $arguments);
     }
   }
 }

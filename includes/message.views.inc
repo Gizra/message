@@ -7,7 +7,7 @@
  */
 
 /**
- * Implements hook_views_handlers().
+ * Implementation of hook_views_handlers().
  */
 function message_views_handlers() {
   $data = array();
@@ -43,20 +43,89 @@ function message_views_handlers() {
 }
 
 /**
- * Implements hook_views_data().
+ * Implementation of hook_views_data().
  */
 function message_views_data() {
   $data = array();
 
-  $data['message']['table']['group'] = t('Message');
-  $data['message']['table']['base'] = array(
-    'field' => 'mid',
+  $data['message_realm']['table']['group'] = t('Message realm');
+
+  $data['message_realm']['realm_id'] = array(
+    'title' => t('Realm ID'),
+    'help' => t('The realm ID the message belongs to.'),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    // Information for accepting a realm ID as a filter.
+    'filter' => array(
+      'handler' => 'views_handler_filter_string',
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_string',
+    ),
+  );
+
+  $data['message_realm']['realm_id_numeric'] = array(
+    'title' => t('Realm ID (numeric)'),
+    'help' => t('The realm ID the message belongs to in case it is numeric (thus allowing more Views features).'),
+    // This is a dummy field, so point it to a real field.
+    'real field' => 'realm_id',
+
+    'field' => array(
+      'handler' => 'views_handler_field',
+      'click sortable' => TRUE,
+    ),
+    'argument' => array(
+      'handler' => 'views_handler_argument_numeric',
+    ),
+    'filter' => array(
+      'handler' => 'views_handler_filter_numeric',
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+  );
+
+  $data['message_realm']['message_plugin_realm'] = array(
+    'title' => t('Accessible realms'),
+    'help' => t('The realms a user may access.'),
+
+    // This is a dummy field, so point it to a real field.
+    'real field' => 'iid',
+
+    'filter' => array(
+      'handler' => 'message_handler_filter_realm_user_access',
+    ),
+  );
+
+  $data['message_realm']['realm'] = array(
+    'title' => t('Realm'),
+    'help' => t('The type of the realm (e.g. "user realm").'),
+    'field' => array(
+      'handler' => 'message_handler_field_realm',
+      'click sortable' => TRUE,
+    ),
+    'sort' => array(
+      'handler' => 'views_handler_sort',
+    ),
+    'filter' => array(
+      'handler' => 'message_handler_filter_realm',
+    ),
+    'argument' => array(
+      'handler' => 'message_handler_argument_realm',
+    ),
+  );
+
+
+  $data['message_instance']['table']['group'] = t('Message');
+  $data['message_instance']['table']['base'] = array(
+    'field' => 'iid',
     'title' => t('Message'),
     'help' => t('Messages that are related to enteties. Can be used as activity stream.'),
   );
 
   // Database columns.
-  $data['message']['mid'] = array(
+  $data['message_instance']['iid'] = array(
     'title' => t('Activity Unique ID'),
     'help' => t('The unique id for each activity'),
     'field' => array(
@@ -65,9 +134,17 @@ function message_views_data() {
     'sort' => array(
       'handler' => 'views_handler_sort',
     ),
+    'relationship' => array(
+      'title' => t('Message realm'),
+      'help' => t('Relate a message to the message realm.'),
+      'handler' => 'views_handler_relationship',
+      'base' => 'message_realm',
+      'base field' => 'iid',
+      'label' => t('Message realm'),
+    ),
   );
 
-  $data['message']['name'] = array(
+  $data['message_instance']['name'] = array(
     'title' => t('Message name'),
     'help' => t('Reference to a message in the message table.'),
     'field' => array(
@@ -81,7 +158,7 @@ function message_views_data() {
     ),
   );
 
-  $data['message']['entity_type'] = array(
+  $data['message_instance']['entity_type'] = array(
     'title' => t('Entity type'),
     'help' => t('The type of entity being acted upon (e.g. node, user).'),
     'field' => array(
@@ -95,7 +172,7 @@ function message_views_data() {
     ),
   );
 
-  $data['message']['etid'] = array(
+  $data['message_instance']['eid'] = array(
     'title' => t('Entity ID'),
     'help' => t('Entity ID used to maintain the relationship between the message and the entity that is related to it.'),
     'field' => array(
@@ -106,7 +183,7 @@ function message_views_data() {
     ),
   );
 
-  $data['message']['uid'] = array(
+  $data['message_instance']['uid'] = array(
     'title' => t('User'),
     'help' => t('The user that is associated with the message.'),
     'relationship' => array(
@@ -116,7 +193,7 @@ function message_views_data() {
     ),
   );
 
-  $data['message']['extra_identifier'] = array(
+  $data['message_instance']['extra_identifier'] = array(
     'title' => t('Extra identifier'),
     'help' => t('An optional identifier that can group message instances together.'),
     'field' => array(
@@ -127,7 +204,7 @@ function message_views_data() {
     ),
   );
 
-  $data['message']['timestamp'] = array(
+  $data['message_instance']['timestamp'] = array(
     'title' => t('Creation date'),
     'help' => t('The time that the message was created.'),
     'field' => array(
@@ -139,11 +216,11 @@ function message_views_data() {
     ),
   );
 
-  $data['message']['render'] = array(
+  $data['message_instance']['render'] = array(
     'title' => t('Show message'),
     'help' => t('Show a message.'),
     // This is a dummy field, so point it to a real field.
-    'real field' => 'mid',
+    'real field' => 'iid',
 
     'field' => array(
       'handler' => 'message_handler_field_message_render',
@@ -160,26 +237,4 @@ function message_views_data() {
   }
 
   return $data;
-}
-
-/**
- * Implements hook_field_views_data_alter().
- */
-function message_field_views_data_alter(&$data) {
-  if (!empty($data['field_data_message_realm'])) {
-    $data['field_data_message_realm']['message_realm_realm']['filter']['handler'] = 'message_handler_filter_realm';
-    $data['field_data_message_realm']['message_realm_realm']['field']['handler'] = 'message_handler_field_realm';
-    $data['field_data_message_realm']['message_realm_realm']['argument']['handler'] = 'message_handler_argument_realm';
-
-    // Define the message access realm here, as we want to use the almost the
-    // same filter definition.
-    $data['field_data_message_realm']['message_realm_user_access'] = array(
-      'group' => t('Message'),
-      'title' => t('Message realm access'),
-      'title short' => t('Message realm access'),
-      'help' => t('Realm access'),
-    );
-    $data['field_data_message_realm']['message_realm_user_access']['filter'] = $data['field_data_message_realm']['message_realm_realm']['filter'];
-    $data['field_data_message_realm']['message_realm_user_access']['filter']['handler'] = 'message_handler_filter_realm_user_access';
-  }
 }

@@ -1,3 +1,4 @@
+core = "6.x"
 dependencies[] = "flag"
 dependencies[] = "message"
 dependencies[] = "views"
@@ -14,7 +15,3 @@ features[views_api][] = "api:2"
 name = "Message example"
 package = "Message"
 project = "message_example"
-
-core = 7.x
-
-files[] = message_example.module
