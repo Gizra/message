@@ -1,0 +1,45 @@
+<?php
+// $Id: message.install,v 1.5 2010/06/07 10:54:11 amitaibu Exp $
+
+/**
+ * @file
+ * Install, update, and uninstall functions for the message realm module.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function message_realm_install() {
+  // Create the field holding the message realm and realm ID.
+  $field = array(
+    'field_name' => MESSAGE_FIELD_MESSAGE_REALM,
+    'type' => 'text',
+    'entity_types' => array('message'),
+    'cardinality' => 1,
+    'locked' => TRUE,
+    'settings' => array(
+      'allowed_values' => '',
+      'allowed_values_function' => 'message_realm_get_realm_types',
+    ),
+  );
+  $field = field_create_field($field);
+
+  // TODO: Do we need to create the instance fir the message bundle, or we need
+  // to add it for each message bundle? this whole entity as bundle is indeed
+  // confusing ;)
+  $instance = array(
+    'field_name' => MESSAGE_FIELD_MESSAGE_REALM,
+    'bundle' => 'message',
+    'entity_type' => 'message',
+    'label' => t('Message realm'),
+    'description' => t('This is the realm the message will be assigned to.'),
+  );
+  field_create_instance($instance);
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function message_realm_uninstall() {
+  field_delete_field(MESSAGE_FIELD_MESSAGE_REALM);
+}

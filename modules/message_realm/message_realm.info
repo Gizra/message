@@ -2,5 +2,7 @@ description = "Example for the Message module."
 name = "Message realm"
 package = "Message"
 core = 7.x
+dependencies[] = message
 
 files[] = message_realm.module
+files[] = message_realm.install
