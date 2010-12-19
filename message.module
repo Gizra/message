@@ -186,7 +186,7 @@ function message_type_create($name, $values = array()) {
   // error.
   // TODO: Return the existing message type, instead of FALSE?
   $return = FALSE;
-  if ($message_type = message_type_load($name)) {
+  if (!message_type_load($name)) {
     $values['name'] = $name;
     $return = entity_create('message_type', $values);
   }
