@@ -15,7 +15,7 @@ if (module_exists('flag')) {
 /**
 * Get all the flaggings a user did in a certain flag.
 */
-function message_plugin_flag_accessible_ids($account, $flag_name) {
+function message_realm_plugin_flag_accessible_ids($account, $flag_name) {
   $access = array();
   if ($flag = flag_get_flag($flag_name)) {
     // Get all the flaggings of the user in the flag.

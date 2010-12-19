@@ -12,6 +12,6 @@ if (module_exists('og')) {
 /**
 * Get all groups a user belongs to.
 */
-function message_plugin_og_accessible_ids($account) {
+function message_realm_plugin_og_accessible_ids($account) {
   return !empty($account->og_groups) ? array_keys($account->og_groups) : array();
 }

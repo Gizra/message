@@ -9,7 +9,7 @@ if (module_exists('og')) {
   );
 }
 
-function message_plugin_og_admin_accessible_ids($account) {
+function message_realm_plugin_og_admin_accessible_ids($account) {
   $gids = array();
   foreach ($account->og_groups as $key => $value) {
     if (!empty($value['is_admin'])) {
