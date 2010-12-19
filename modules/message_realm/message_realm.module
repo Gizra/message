@@ -16,6 +16,27 @@ define('MESSAGE_REALM_FIELD_MESSAGE_REALM', 'message_realm_realm');
 define('MESSAGE_REALM_FIELD_MESSAGE_REALM_ID', 'message_realm_realm_id');
 
 /**
+ * Implements hook_menu().
+ */
+function message_realm_menu() {
+  $items = array();
+
+  $items['admin/structure/messages/manage/%message_type/message-realm'] = array(
+    'title' => 'Message realm',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('message_realm_admin_fields'),
+    'access callback' => 'user_access',
+    'access arguments' => array('administer messages'),
+    'description' => 'Add message realm fields.',
+    'file' => 'message_realm.admin.inc',
+    'type' => MENU_LOCAL_TASK,
+  );
+
+  return $items;
+
+}
+
+/**
  * Implementation of hook_views_api().
  */
 function message_realm_views_api() {
