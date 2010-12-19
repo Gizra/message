@@ -6,38 +6,12 @@
  * API functions to manipulate messages.
  */
 
-/**
- * Minimum CTools version needed.
- */
-define('MESSAGE_REQUIRED_CTOOLS_API', '2.0-alpha1');
+
 
 /**
  * Define the name of the message realm field.
  */
 define('MESSAGE_FIELD_MESSAGE_TEXT', 'message_text');
-
-
-/**
- * Implementation of hook_ctools_plugin_api().
- */
-function message_ctools_plugin_api($module, $api) {
-  if ($module == 'message' && $api == 'plugins') {
-    return array('version' => 1);
-  }
-}
-
-/**
- * Implementation of hook_ctools_plugin_directory().
- */
-function message_ctools_plugin_directory($module, $type) {
-  // Safety: go away if CTools is not at an appropriate version.
-  if (!module_invoke('ctools', 'api_version', MESSAGE_REQUIRED_CTOOLS_API)) {
-    return;
-  }
-  if ($module =='message' && $type == 'message') {
-    return 'plugins/message';
-  }
-}
 
 /**
  * Implementation of hook_views_api().
@@ -53,40 +27,12 @@ function message_views_api() {
  * Implementation of hook_theme().
  */
 function message_theme() {
-  // Safety: go away if CTools is not at an appropriate version.
-  if (!module_invoke('ctools', 'api_version', MESSAGE_REQUIRED_CTOOLS_API)) {
-    return;
-  }
-
   $items = array();
   $items['message'] = array(
     'arguments' => array(
       'render element' => 'elements',
     ),
   );
-  return $items;
-}
-
-/**
- * Implements hook_ctools_plugin_type()
- *
- * Inform the plugin system that Message modules owns message, export-ui
- * plugins.
- */
-function message_ctools_plugin_type() {
-  $items = array();
-
-  $items['message'] = array(
-    'process' => array(
-      'function' => 'message_message_process',
-      'file' => 'message_plugin.inc',
-      'path' => drupal_get_path('module', 'message') . '/plugins/message',
-    ),
-    'classes' => array('handler'),
-  );
-
-  $items['export_ui'] = array();
-
   return $items;
 }
 
@@ -406,7 +352,7 @@ function message_access($op, $entity, $account = NULL, $entity_type = 'message')
 
     $property = MESSAGE_FIELD_REALM;
     if (!empty($entity->{$property}[LANGUAGE_NONE])) {
-      $plugins = message_get_plugin_messages();
+      $plugins = message_realm_get_plugin_message_realms();
 
       // Get all the realms IDs keyed by the message realm, to save multiple
       // calls to access check.
@@ -552,31 +498,6 @@ function theme_message($variables = array()) {
   return '<span class="message-type-' . str_replace('_', '-', check_plain($message->name)) .' message-id-'. $message->mid .'">'. $output .'</span>';
 }
 
-/**
- * Return an array of realms keyed by the plugin name and the realm value.
- */
-function message_get_realm_types() {
-  $options = &drupal_static(__FUNCTION__, array());
-  if (empty($options)) {
-    foreach (message_get_plugin_messages() as $plugin) {
-      if (!empty($plugin['realm'])) {
-        $options[$plugin['name']] = check_plain($plugin['title']);
-      }
-    }
-  }
-
-  return $options;
-}
-
-function message_get_plugin_message($plugin_name) {
-  ctools_include('plugins');
-  return ctools_get_plugins('message', 'message', $plugin_name);
-}
-
-function message_get_plugin_messages() {
-  ctools_include('plugins');
-  return ctools_get_plugins('message', 'message');
-}
 
 /**
  * Delete messages that are related to a a deleted entity.

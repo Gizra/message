@@ -15,7 +15,7 @@ class message_handler_filter_realm_user_access extends views_handler_filter_in_o
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Realm type');
-      $this->value_options = message_get_realm_types();
+      $this->value_options = message_realm_get_realm_types();
     }
   }
 
@@ -28,7 +28,7 @@ class message_handler_filter_realm_user_access extends views_handler_filter_in_o
     $table = $this->table_alias;
 
     $accessiable_ids = array();
-    $plugins = message_get_plugin_messages();
+    $plugins = message_realm_get_plugin_message_realms();
     if (!empty($this->options['value'])) {
       foreach ($this->options['value'] as $plugin_name => $value) {
         $plugin = $plugins[$plugin_name];

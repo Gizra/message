@@ -1,0 +1,6 @@
+description = "Example for the Message module."
+name = "Message realm"
+package = "Message"
+core = 7.x
+
+files[] = message_realm.module

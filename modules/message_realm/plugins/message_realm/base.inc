@@ -7,7 +7,7 @@ $plugin = array(
   'description' => '',
 );
 
-function message_plugin_access($plugin, $message_instance, $realm_ids, $account) {
+function message_realm_plugin_access($plugin, $message_instance, $realm_ids, $account) {
   $access = FALSE;
   if ($plugin['realm'] && $realm_ids && $accessibale_ids = call_user_func($plugin['access']['accessible ids callback'], $account)) {
     $access = array_intersect($accessibale_ids, $realm_ids);
@@ -15,7 +15,7 @@ function message_plugin_access($plugin, $message_instance, $realm_ids, $account)
   return $access;
 }
 
-function message_plugin_accessible_ids($account) {
+function message_realm_plugin_accessible_ids($account) {
   return array();
 }
 
@@ -23,7 +23,7 @@ function message_plugin_accessible_ids($account) {
 /**
  * Provide defaults for a message plugin.
  */
-function message_message_process(&$plugin, $info) {
+function message_realm_plugin_process(&$plugin, $info) {
   $plugin += array(
     'realm' => TRUE,
     'title' => $plugin['name'],
@@ -37,8 +37,8 @@ function message_message_process(&$plugin, $info) {
       'data callback' => function_exists('message_plugin_' . $plugin['name'] . '_views_data') ? 'message_plugin_' . $plugin['name'] . '_views_data' : FALSE,
     ),
     'access' => array(
-      'access callback' => function_exists('message_plugin_' . $plugin['name'] . '_access') ? 'message_plugin_' . $plugin['name'] . '_access' : 'message_plugin_access',
-      'accessible ids callback' => function_exists('message_plugin_' . $plugin['name'] . '_accessible_ids') ? 'message_plugin_' . $plugin['name'] . '_accessible_ids' : 'message_plugin_accessible_ids',
+      'access callback' => function_exists('message_plugin_' . $plugin['name'] . '_access') ? 'message_plugin_' . $plugin['name'] . '_access' : 'message_realm_plugin_access',
+      'accessible ids callback' => function_exists('message_plugin_' . $plugin['name'] . '_accessible_ids') ? 'message_plugin_' . $plugin['name'] . '_accessible_ids' : 'message_realm_plugin_accessible_ids',
     ),
   );
 }
