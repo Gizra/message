@@ -14,10 +14,10 @@ function message_realm_views_handlers() {
 
   // Add message's core handlers.
   $handlers = array(
-    'message_handler_field_realm' => 'views_handler_field',
-    'message_handler_filter_realm' => 'views_handler_filter_in_operator',
-    'message_handler_argument_realm' => 'views_handler_argument',
-    'message_handler_filter_realm_user_access' => 'views_handler_filter_in_operator',
+    'message_realm_handler_field_realm' => 'views_handler_field',
+    'message_realm_handler_filter_realm' => 'views_handler_filter_in_operator',
+    'message_realm_handler_argument_realm' => 'views_handler_argument',
+    'message_realm_handler_filter_realm_user_access' => 'views_handler_filter_in_operator',
   );
 
   foreach ($handlers as $handler => $parent) {
@@ -63,9 +63,9 @@ function message_realm_views_data() {
  */
 function message_realm_field_views_data_alter(&$data) {
   if (!empty($data['field_data_message_realm'])) {
-    $data['field_data_message_realm']['message_realm_realm']['filter']['handler'] = 'message_handler_filter_realm';
-    $data['field_data_message_realm']['message_realm_realm']['field']['handler'] = 'message_handler_field_realm';
-    $data['field_data_message_realm']['message_realm_realm']['argument']['handler'] = 'message_handler_argument_realm';
+    $data['field_data_message_realm']['message_realm_realm']['filter']['handler'] = 'message_realm_handler_filter_realm';
+    $data['field_data_message_realm']['message_realm_realm']['field']['handler'] = 'message_realm_handler_field_realm';
+    $data['field_data_message_realm']['message_realm_realm']['argument']['handler'] = 'message_realm_handler_argument_realm';
 
     // Define the message access realm here, as we want to use the almost the
     // same filter definition.
@@ -76,6 +76,6 @@ function message_realm_field_views_data_alter(&$data) {
       'help' => t('Realm access'),
     );
     $data['field_data_message_realm']['message_realm_user_access']['filter'] = $data['field_data_message_realm']['message_realm_realm']['filter'];
-    $data['field_data_message_realm']['message_realm_user_access']['filter']['handler'] = 'message_handler_filter_realm_user_access';
+    $data['field_data_message_realm']['message_realm_user_access']['filter']['handler'] = 'message_realm_handler_filter_realm_user_access';
   }
 }

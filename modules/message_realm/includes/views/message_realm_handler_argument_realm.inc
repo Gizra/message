@@ -5,7 +5,7 @@
  * Argument handler to accept a realm.
  */
 
-class message_handler_argument_realm extends views_handler_argument {
+class message_realm_handler_argument_realm extends views_handler_argument {
   function construct() {
     parent::construct('realm');
   }

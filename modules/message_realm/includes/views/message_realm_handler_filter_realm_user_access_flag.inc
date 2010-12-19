@@ -8,7 +8,7 @@
 /**
  * Default argument plugin to extract the users being followed.
  */
-class message_handler_filter_realm_user_access_flag extends views_handler_filter_in_operator {
+class message_realm_handler_filter_realm_user_access_flag extends views_handler_filter_in_operator {
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Realm filter by flag');

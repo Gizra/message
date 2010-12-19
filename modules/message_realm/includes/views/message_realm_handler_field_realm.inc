@@ -5,7 +5,7 @@
  * @file
  * Field handler to translate a realm type into its readable form.
  */
-class message_handler_field_realm extends views_handler_field {
+class message_realm_handler_field_realm extends views_handler_field {
   function render($values) {
 
     return $this->realm_type($values->{$this->field_alias});
