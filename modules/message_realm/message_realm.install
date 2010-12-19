@@ -8,11 +8,13 @@
 
 /**
  * Implements hook_install().
+ *
+ * Create the field holding the message realm and realm ID.
  */
 function message_realm_install() {
-  // Create the field holding the message realm and realm ID.
+   // Message realm field.
   $field = array(
-    'field_name' => MESSAGE_FIELD_MESSAGE_REALM,
+    'field_name' => MESSAGE_REALM_FIELD_MESSAGE_REALM,
     'type' => 'text',
     'entity_types' => array('message'),
     'cardinality' => 1,
@@ -24,15 +26,34 @@ function message_realm_install() {
   );
   $field = field_create_field($field);
 
-  // TODO: Do we need to create the instance fir the message bundle, or we need
+  // TODO: Do we need to create the instance for the message bundle, or we need
   // to add it for each message bundle? this whole entity as bundle is indeed
   // confusing ;)
   $instance = array(
-    'field_name' => MESSAGE_FIELD_MESSAGE_REALM,
+    'field_name' => MESSAGE_REALM_FIELD_MESSAGE_REALM,
     'bundle' => 'message',
     'entity_type' => 'message',
     'label' => t('Message realm'),
     'description' => t('This is the realm the message will be assigned to.'),
+  );
+  field_create_instance($instance);
+
+  // Message realm ID field.
+  $field = array(
+    'field_name' => MESSAGE_REALM_FIELD_MESSAGE_REALM_ID,
+    'type' => 'text',
+    'entity_types' => array('message'),
+    'cardinality' => 1,
+    'locked' => TRUE,
+  );
+  $field = field_create_field($field);
+
+  $instance = array(
+    'field_name' => MESSAGE_REALM_FIELD_MESSAGE_REALM_ID,
+    'bundle' => 'message',
+    'entity_type' => 'message',
+    'label' => t('Message realm ID'),
+    'description' => t('This is the realm ID the message will be assigned to.'),
   );
   field_create_instance($instance);
 }
@@ -41,5 +62,6 @@ function message_realm_install() {
  * Implements hook_uninstall().
  */
 function message_realm_uninstall() {
-  field_delete_field(MESSAGE_FIELD_MESSAGE_REALM);
+  field_delete_field(MESSAGE_REALM_FIELD_MESSAGE_REALM);
+  field_delete_field(MESSAGE_REALM_FIELD_MESSAGE_REALM_ID);
 }

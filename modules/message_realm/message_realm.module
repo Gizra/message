@@ -11,9 +11,9 @@
  */
 define('MESSAGE_REALM_REQUIRED_CTOOLS_API', '2.0-alpha1');
 
-define('MESSAGE_FIELD_MESSAGE_REALM', 'message_realm_realm');
+define('MESSAGE_REALM_FIELD_MESSAGE_REALM', 'message_realm_realm');
 
-define('MESSAGE_FIELD_MESSAGE_REALM_ID', 'message_realm_realm_id');
+define('MESSAGE_REALM_FIELD_MESSAGE_REALM_ID', 'message_realm_realm_id');
 
 /**
  * Implementation of hook_views_api().
