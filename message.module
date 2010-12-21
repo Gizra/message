@@ -499,7 +499,14 @@ function message_t($message, $lang = '') {
   global $language;
 
   if (empty($lang)) {
-    $lang = $language->language;
+    // TODO: This should be better handled by D7 core.
+    // See http://drupal.org/node/989540
+    if (module_exists('locale')) {
+      $lang = $language->language;
+    }
+    else {
+      $lang = LANGUAGE_NONE;
+    }
   }
 
   $property = MESSAGE_FIELD_MESSAGE_TEXT;
