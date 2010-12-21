@@ -208,7 +208,7 @@ function message_entity_info_alter(&$entity_info) {
       'label' => $type->name,
       'admin' => array(
         'path' => 'admin/structure/messages/manage/%message_type',
-        'real path' => 'admin/structure/messages/manage/' . str_replace('_', '-', $type->name),
+        'real path' => 'admin/structure/messages/manage/' . $type->name,
         'bundle argument' => 4,
         'access arguments' => array('administer messages'),
       ),
