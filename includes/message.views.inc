@@ -78,6 +78,16 @@ function message_views_data() {
     ),
   );
 
+  $data['message']['uid'] = array(
+    'title' => t('User'),
+    'help' => t('The user that is associated with the message.'),
+    'relationship' => array(
+      'base' => 'users',
+      'handler' => 'views_handler_relationship',
+      'label' => t('Message user'),
+    ),
+  );
+
   $data['message']['render'] = array(
     'title' => t('Show message'),
     'help' => t('Show a message.'),
