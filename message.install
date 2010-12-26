@@ -85,14 +85,6 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      // TODO: Remove this in favor of a field or keep it for simplicity?
-      'tag' => array(
-        'description' => 'Tag for this message.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
     ),
     'primary key' => array('id'),
     'unique keys' => array(
@@ -120,6 +112,8 @@ function message_schema() {
         'type' => 'text',
         'serialize' => TRUE,
       ),
+      // TODO: Can we remove this in favor of user reference? How will Views
+      // relationship work?
       'uid' => array(
         'description' => 'The user ID of the acting user.',
         'type' => 'int',
