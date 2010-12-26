@@ -39,8 +39,7 @@ function message_install() {
 function message_uninstall() {
   $instance = field_info_instance('message_type', 'message_text', 'message_type');
   field_delete_instance($instance);
-  field_delete_field("message_text");
-  variable_del('message_entity_delete_cleanup');
+  field_delete_field('message_text');
 }
 
 /**

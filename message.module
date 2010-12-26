@@ -37,50 +37,6 @@ function message_theme() {
 }
 
 /**
- * Implementation of hook_nodeapi().
- */
-function message_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
-  // Advanced implementation may want to disable the cleanup and do it
-  // themselves.
-  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
-    return;
-  }
-  // Preform basic clean up when a node is deleted.
-  if ($op == 'delete') {
-    message_deleted_entity_cleanup('node', $node->nid);
-  }
-}
-
-/**
- * Implementation of hook_comment().
- */
-function message_comment(&$a1, $op) {
-  // Advanced implementation may want to disable the cleanup and do it
-  // themselves.
-  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
-    return;
-  }
-  // Preform basic clean up when a comment is deleted.
-  if ($op == 'delete') {
-  }
-}
-
-/**
- * Implementation of hook_user().
- */
-function message_user($op, &$edit, &$account, $category = NULL) {
-  // Advanced implementation may want to disable the cleanup and do it
-  // themselves.
-  if (!variable_get('message_entity_delete_cleanup', TRUE)) {
-    return;
-  }
-  if ($op == 'delete') {
-    // Preform basic clean up when a user is deleted.
-    message_deleted_entity_cleanup('user', $account->uid);
-  }
-}
-
-/**
  * Implements hook_entity_info().
  */
 function message_entity_info() {
@@ -504,39 +460,4 @@ function theme_message($variables = array()) {
   $message = $variables['message'];
   $output = $variables['output'];
   return '<span class="message-type-' . str_replace('_', '-', check_plain($message->name)) .' message-id-'. $message->mid .'">'. $output .'</span>';
-}
-
-
-/**
- * Delete messages that are related to a a deleted entity.
- *
- * For example, if a node is deleted then all the message that are
- * related to that node will be deleted.
- *
- * @param $entity_type
- *   The entity type.
- * @param $etid
- *   The entity ID.
- *
- * @return
- *  Array with the message IDs that were deleted, or an empty array
- *  if none were found.
- */
-function message_deleted_entity_cleanup($entity_type, $etid) {
-  $mids = array();
-  $query = new EntityFieldQuery();
-  $query
-    ->entityCondition('entity_type', 'message')
-	  ->propertyCondition('etid', $etid)
-	  ->propertyCondition('entity_type', $entity_type);
-
-
-  if ($result = $query->execute()) {
-  	// Get all the message IDs.
-  	foreach ($result['message'] as $row) {
-  	  $mids[] = $row->mid;
-  	}
-  	message_delete_multiple($mids);
-  }
-  return $mids;
 }
