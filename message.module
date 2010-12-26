@@ -134,18 +134,19 @@ class MessageType extends Entity {
 /**
  * Creates a new message type.
  *
+ * If a message type already exists, an exception will be thrown.
+ *
  * @return MessageType
  *   Returns a new message type object.
  */
 function message_type_create($name, $values = array()) {
   // Make sure the message type doesn't already exist, to prevent duplicate key
   // error.
-  // TODO: Return the existing message type, instead of FALSE?
-  $return = FALSE;
-  if (!message_type_load($name)) {
-    $values['name'] = $name;
-    $return = entity_create('message_type', $values);
+  if (message_type_load($name)) {
+    throw new Exception('Message type ' . check_plain($name) . ' already exists.');
   }
+  $values['name'] = $name;
+  $return = entity_create('message_type', $values);
 
   return $return;
 }
