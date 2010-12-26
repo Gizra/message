@@ -11,7 +11,7 @@
  *
  * @ingroup views
  */
-class message_realm_handler_field_message_render extends views_handler_field {
+class message_handler_field_message_render extends views_handler_field {
   function option_definition() {
     $options = parent::option_definition();
     $options['skip_access'] = array('default' => FALSE);

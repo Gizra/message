@@ -20,7 +20,7 @@ function message_views_handlers() {
   foreach ($handlers as $handler => $parent) {
     $data['handlers'][$handler] = array(
       'parent' => $parent,
-      'path' => drupal_get_path('module', 'message') .'/includes',
+      'path' => drupal_get_path('module', 'message') .'/includes/views',
     );
   }
 
