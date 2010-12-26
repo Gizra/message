@@ -110,7 +110,7 @@ function message_entity_info_alter(&$entity_info) {
       'label' => $type->name,
       'admin' => array(
         'path' => 'admin/structure/messages/manage/%message_type',
-        'real path' => 'admin/structure/messages/manage/' . str_replace('_', '-', $type->name),
+        'real path' => 'admin/structure/messages/manage/' . $type->name,
         'bundle argument' => 4,
         'access arguments' => array('administer messages'),
       ),
@@ -410,7 +410,14 @@ function message_t($message, $lang = '') {
   global $language;
 
   if (empty($lang)) {
-    $lang = $language->language;
+    // TODO: This should be better handled by D7 core.
+    // See http://drupal.org/node/989540
+    if (module_exists('locale')) {
+      $lang = $language->language;
+    }
+    else {
+      $lang = LANGUAGE_NONE;
+    }
   }
 
   $property = MESSAGE_FIELD_MESSAGE_TEXT;
