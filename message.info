@@ -7,28 +7,14 @@ dependencies[] = ctools
 dependencies[] = entity
 
 files[] = message.info.inc
-files[] = message.install
 files[] = message.module
 files[] = message.admin.inc
 
 ; Tests
 files[] = message.test
 
-; Message plugins
-files[] = plugins/message/message_plugin.inc
-files[] = plugins/message/message_plugin_user.inc
-files[] = plugins/message/message_plugin_role.inc
-files[] = plugins/message/message_plugin_og.inc
-files[] = plugins/message/message_plugin_og_admin.inc
-files[] = plugins/message/message_plugin_flag.inc
-
 ; Views fields
-files[] = includes/views/message_handler_filter_realm.inc
-files[] = includes/views/message_handler_filter_realm_user_access_flag.inc
-files[] = includes/views/message_handler_filter_realm_user_access.inc
-files[] = includes/views/message_handler_field_realm.inc
 files[] = includes/views/message_handler_field_message_render.inc
-files[] = includes/views/message_handler_argument_realm.inc
 
 ; 3rd party includes
 files[] = includes/message.views.inc
