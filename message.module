@@ -301,46 +301,11 @@ function message_delete_multiple($mids = array()) {
 
 /**
  * Access callback for the message entity.
+ *
+ * TODO: Do we need this function?
  */
 function message_access($op, $entity, $account = NULL, $entity_type = 'message') {
-  // @todo FIX to account for realm field.
   return TRUE;
-
-  global $user;
-  $access = FALSE;
-  // Check to see if the message entity is requesting not to be displayed, as
-  // might happen if an implementing module injects the "hide" property.
-  if ($op == 'view' && empty($entity->hide)) {
-    if (empty($account)) {
-      $account = clone $user;
-    }
-
-    $property = MESSAGE_FIELD_REALM;
-    if (!empty($entity->{$property}[LANGUAGE_NONE])) {
-      $plugins = message_realm_get_plugin_message_realms();
-
-      // Get all the realms IDs keyed by the message realm, to save multiple
-      // calls to access check.
-      $realms = array();
-      foreach ($entity->{$property}[LANGUAGE_NONE] as $row) {
-        $realms[$row['realm']][]= $row['realm_id'];
-      }
-
-      foreach ($realms as $realm => $realm_ids) {
-        $accessibale_ids = call_user_func($plugins[$realm]['access']['accessible ids callback'], $account);
-        if (array_intersect($accessibale_ids, $realm_ids)) {
-          $access = TRUE;
-          break;
-        }
-      }
-    }
-    else {
-      // No realms, so access is allowed.
-      $access = TRUE;
-    }
-  }
-
-  return $access;
 }
 
 /**
@@ -366,7 +331,7 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL, $
   $access = FALSE;
   if (empty($account)) {
     global $user;
-    $account = clone($user);
+    $account = clone $user;
   }
 
   $access = $skip_access ? TRUE : message_access('view', $message, $account);
@@ -384,14 +349,6 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL, $
 function message_type_access($op, $entity, $account, $entity_type) {
   // @todo Implement permission.
   return TRUE;
-}
-
-function message_get_accessiable_realm_ids_by_plugin($plugin, $account = NULL) {
-  if (empty($account)) {
-    global $user;
-    $account = clone $user;
-  }
-  return call_user_func($plugin['access']['accessible ids callback'], $account);
 }
 
 /**
