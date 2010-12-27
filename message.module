@@ -6,8 +6,6 @@
  * API functions to manipulate messages.
  */
 
-
-
 /**
  * Define the name of the message realm field.
  */
@@ -21,19 +19,6 @@ function message_views_api() {
     'api' => 2.0,
     'path' => drupal_get_path('module', 'message') . '/includes',
   );
-}
-
-/**
- * Implementation of hook_theme().
- */
-function message_theme() {
-  $items = array();
-  $items['message'] = array(
-    'arguments' => array(
-      'render element' => 'elements',
-    ),
-  );
-  return $items;
 }
 
 /**
@@ -241,6 +226,79 @@ class Message extends Entity {
   public function getType() {
     return message_type_load($this->name);
   }
+
+  /**
+   * Generate an array for rendering the entity.
+   *
+   * @see entity_view()
+   */
+  public function view($view_mode = 'full', $langcode = NULL) {
+    global $language;
+    $view =  parent::view($view_mode, $langcode);
+
+    $key = !empty($this->is_new) ? 0 : $this->mid;
+    $view['message'][$key]['message_render'] = array(
+      '#markup' => $this->buildMessage($langcode),
+      '#prefix' => '<span class="message message-type-' . str_replace('_', '-', $this->getType()->name) . ' message-id-' . $key . '">',
+      '#suffix' => '</span>',
+    );
+    return $view;
+  }
+
+  /**
+   * Replace arguments with their placeholders.
+   *
+   * @param $langcode
+   *   Optional; The language to get the text in. If not set the current language
+   *   will be used.
+   */
+  function buildMessage($langcode = NULL) {
+    $output = '';
+
+    if (empty($langcode)) {
+      $langcode = LANGUAGE_NONE;
+    }
+
+    $message_type = $this->getType();
+
+    if (!empty($message_type->{MESSAGE_FIELD_MESSAGE_TEXT}[$langcode][0]['value'])) {
+      $output = $message_type->{MESSAGE_FIELD_MESSAGE_TEXT}[$langcode][0]['value'];
+    }
+
+    if (!empty($this->arguments)) {
+      // Transform arguments before inserting them.
+      // FIXME: Check if arguments is array or text, and prepare arguments
+      // accordingly.
+      $args = array();
+      foreach ($this->arguments as $key => $value) {
+
+        if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
+          // A replacement via callback function.
+          $value = call_user_func_array($value['callback'], $value['callback arguments']);
+        }
+
+        switch ($key[0]) {
+          case '@':
+            // Escaped only.
+            $args[$key] = check_plain($value);
+            break;
+
+          case '%':
+          default:
+            // Escaped and placeholder.
+            $args[$key] = theme('placeholder', $value);
+            break;
+
+          case '!':
+            // Pass-through.
+            $args[$key] = $value;
+        }
+      }
+      $output = strtr($output, $args);
+    }
+    return $output;
+  }
+
 }
 
 /**
@@ -349,80 +407,4 @@ function message_show_message($message, $skip_access = FALSE, $account = NULL, $
 function message_type_access($op, $entity, $account, $entity_type) {
   // @todo Implement permission.
   return TRUE;
-}
-
-/**
- * Replace arguments with their placeholders.
- *
- * @param $message
- *   The message instance object.
- *
- * @param $language
- *   Optional; The language to get the text in. If not set the current language
- *   will be used.
- *
- * @see t().
- */
-function message_t($message, $lang = '') {
-  global $language;
-
-  if (empty($lang)) {
-    // TODO: This should be better handled by D7 core.
-    // See http://drupal.org/node/989540
-    if (module_exists('locale')) {
-      $lang = $language->language;
-    }
-    else {
-      $lang = LANGUAGE_NONE;
-    }
-  }
-
-  $property = MESSAGE_FIELD_MESSAGE_TEXT;
-  // Get the message type.
-  $message_type = message_type_load($message->name);
-
-  $string = !empty($message_type->{$property}[$lang][0]['value']) ? $message_type->{$property}[$lang][0]['value'] : '';
-
-  if (empty($message->arguments)) {
-    return $string;
-  }
-  else {
-    // Transform arguments before inserting them.
-    // FIXME: Check if arguments is array or text, and prepare arguments
-    // accordingly.
-    foreach ($message->arguments as $key => $value) {
-
-      if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
-        // A replacement via callback function.
-        $value = call_user_func_array($value['callback'], $value['callback arguments']);
-      }
-
-      switch ($key[0]) {
-        case '@':
-          // Escaped only.
-          $args[$key] = check_plain($value);
-          break;
-
-        case '%':
-        default:
-          // Escaped and placeholder.
-          $args[$key] = theme('placeholder', $value);
-          break;
-
-        case '!':
-          // Pass-through.
-          $args[$key] = $value;
-      }
-    }
-    return strtr($string, $args);
-  }
-}
-
-/**
- * Theme the message.
- */
-function theme_message($variables = array()) {
-  $message = $variables['message'];
-  $output = $variables['output'];
-  return '<span class="message-type-' . str_replace('_', '-', check_plain($message->name)) .' message-id-'. $message->mid .'">'. $output .'</span>';
 }
