@@ -246,12 +246,11 @@ class Message extends Entity {
    * @see entity_view()
    */
   public function view($view_mode = 'full', $langcode = NULL) {
-    global $language;
     $view =  parent::view($view_mode, $langcode);
 
     $key = !empty($this->is_new) ? 0 : $this->mid;
     $view['message'][$key]['message_render'] = array(
-      '#markup' => $this->buildMessage($langcode),
+      '#markup' => $this->getText($langcode),
       '#prefix' => '<span class="message message-type-' . str_replace('_', '-', $this->getType()->name) . ' message-id-' . $key . '">',
       '#suffix' => '</span>',
     );
@@ -265,7 +264,7 @@ class Message extends Entity {
    *   Optional; The language to get the text in. If not set the current language
    *   will be used.
    */
-  function buildMessage($langcode = NULL) {
+  function getText($langcode = NULL) {
     $output = '';
 
     if (empty($langcode)) {
@@ -377,41 +376,6 @@ function message_delete_multiple($mids = array()) {
  */
 function message_access($op, $entity, $account = NULL, $entity_type = 'message') {
   return TRUE;
-}
-
-/**
- * Show a message by the message entity.
- *
- * @param $message
- *   The message entity.
- * @param $skip_access
- *   Determine if access should be checked for the user. Defaults to FALSE, as
- *   access check is probably going to happen through the Views' filter system.
- * @param $account
- *   Optional; The account that access should be checked for. Defaults to the
- *   current user.
- * @param $lang
- *   Optional; The language the message should return in. Defaults to the
- *   current language.
- *
- * @return
- *   HTML with the message.
- */
-function message_show_message($message, $skip_access = FALSE, $account = NULL, $lang = '') {
-  $output = '';
-  $access = FALSE;
-  if (empty($account)) {
-    global $user;
-    $account = clone $user;
-  }
-
-  $access = $skip_access ? TRUE : message_access('view', $message, $account);
-
-  if ($access) {
-    $output = theme('message', array('message' => $message, 'output' => message_t($message, $lang)));
-  }
-
-  return $output;
 }
 
 /**
