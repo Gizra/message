@@ -111,8 +111,6 @@ function message_schema() {
         'type' => 'text',
         'serialize' => TRUE,
       ),
-      // TODO: Can we remove this in favor of user reference? How will Views
-      // relationship work?
       'uid' => array(
         'description' => 'The user ID of the acting user.',
         'type' => 'int',
