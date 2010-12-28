@@ -233,12 +233,11 @@ class Message extends Entity {
    * @see entity_view()
    */
   public function view($view_mode = 'full', $langcode = NULL) {
-    global $language;
     $view =  parent::view($view_mode, $langcode);
 
     $key = !empty($this->is_new) ? 0 : $this->mid;
     $view['message'][$key]['message_render'] = array(
-      '#markup' => $this->buildMessage($langcode),
+      '#markup' => $this->getText($langcode),
       '#prefix' => '<span class="message message-type-' . str_replace('_', '-', $this->getType()->name) . ' message-id-' . $key . '">',
       '#suffix' => '</span>',
     );
@@ -252,7 +251,7 @@ class Message extends Entity {
    *   Optional; The language to get the text in. If not set the current language
    *   will be used.
    */
-  function buildMessage($langcode = NULL) {
+  function getText($langcode = NULL) {
     $output = '';
 
     if (empty($langcode)) {
