@@ -382,6 +382,5 @@ function message_access($op, $entity, $account = NULL, $entity_type = 'message')
  * Access callback for the message type entities.
  */
 function message_type_access($op, $entity, $account, $entity_type) {
-  // @todo Implement permission.
-  return TRUE;
+  return user_access('administer message types', $account);
 }
