@@ -102,12 +102,14 @@ class MessageShowMessage extends DrupalWebTestCase {
     $message->save();
 
     // Assert the arguments in the message are replaced.
-    $output = message_show_message($message, TRUE, $web_user, 'l0');
-    $this->assertEqual(strip_tags($output), strtr($text1, $arguments), t('Arguments in the first language message were replaced.'));
+    $output = $message->view('full', 'l0');
+    $output = trim(strip_tags(render($output)));
+    $this->assertEqual($output, strtr($text1, $arguments), t('Arguments in the first language message were replaced.'));
 
     // Assert the arguments in the message are replaced when showing a message
     // from another language.
-    $output = message_show_message($message, TRUE, $web_user, 'l1');
+    $output = $message->view('full', 'l1');
+    $output = trim(strip_tags(render($output)));
     $this->assertEqual(strip_tags($output), strtr($text2, $arguments), t('Arguments in the second language message were replaced.'));
   }
 }
