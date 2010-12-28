@@ -22,6 +22,19 @@ function message_views_api() {
 }
 
 /**
+ * Implements hook_permission().
+ */
+function message_permission() {
+  $permissions = array();
+  $permissions['administer message types'] = array(
+    'title' => t('Administer message types'),
+    'description' => t('Administer message types that can be used to log an event.'),
+  );
+
+  return $permissions;
+}
+
+/**
  * Implements hook_entity_info().
  */
 function message_entity_info() {
