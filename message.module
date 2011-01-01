@@ -192,7 +192,6 @@ function message_type_delete($message) {
   return entity_delete('message_type', $message);
 }
 
-
 /**
  * A class used for messages.
  */
@@ -316,8 +315,17 @@ class Message extends Entity {
 /**
  * Helper to easily create messages.
  *
- * TODO: Document values.
- * TODO: Add separate parameter for arguments?
+ * @param $name
+ *   The message type name.
+ * @param $values
+ *   Array with the following keys:
+ *   - "arguments" - Array with arguments that should be replaced on run time in
+ *     the message type.
+ *   - "timestamp" - The unix timestamp of the creation time of the message. If
+ *     empty the current time will be used.
+ * @param $account
+ *   Optional; The user object to associate the message with. If empty, the
+ *   current user will be used.
  */
 function message_create($name, $values = array(), $account = NULL) {
   $values['name'] = $name;
