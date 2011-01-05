@@ -1,6 +1,21 @@
 ; $Id$
 name = Message
 description = "Assign messages to realms."
-core = 6.x
+core = 7.x
 package = Message
 dependencies[] = ctools
+dependencies[] = entity
+
+files[] = message.info.inc
+files[] = message.module
+files[] = message.admin.inc
+
+; Tests
+files[] = message.test
+
+; Views fields
+files[] = includes/views/message_handler_field_message_render.inc
+
+; 3rd party includes
+files[] = includes/message.views.inc
+files[] = includes/message.views_default.inc

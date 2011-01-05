@@ -16,7 +16,7 @@ class MessageMetadataController extends EntityDefaultMetadataController {
     $properties = &$info[$this->type]['properties'];
 
     $properties['name'] = array(
-      'setter callback' => 'entity_metadata_verbatim_set',
+      'setter callback' => 'entity_property_verbatim_set',
       // @todo: add in permission
       // 'setter permission' => 'administer profiles',
       'required' => TRUE,
@@ -30,8 +30,8 @@ class MessageMetadataController extends EntityDefaultMetadataController {
       'label' => t("User"),
       'type' => 'user',
       'description' => t("The user for which to log the message."),
-      'getter callback' => 'entity_metadata_getter_method',
-      'setter callback' => 'entity_metadata_setter_method',
+      'getter callback' => 'entity_property_getter_method',
+      'setter callback' => 'entity_property_setter_method',
       // @todo: add in permission
       // 'setter permission' => 'administer profiles',
       'required' => TRUE,
@@ -41,8 +41,8 @@ class MessageMetadataController extends EntityDefaultMetadataController {
       'label' => t("Arguments"),
       'type' => 'text',
       'description' => t("The arguments to associate with the message."),
-      'getter callback' => 'entity_metadata_verbatim_get',
-      'setter callback' => 'entity_metadata_verbatim_set',
+      'getter callback' => 'entity_property_verbatim_get',
+      'setter callback' => 'entity_property_verbatim_set',
       // @todo: add in permission
       // 'setter permission' => 'administer profiles',
     );
