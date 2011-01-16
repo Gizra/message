@@ -84,7 +84,7 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-    ),
+    ) + entity_exportable_schema_fields(),
     'primary key' => array('id'),
     'unique keys' => array(
       'name' => array('name'),
@@ -131,4 +131,24 @@ function message_schema() {
     'primary key' => array('mid'),
   );
   return $schema;
+}
+
+
+/**
+ * Add in the exportable entity db columns as required by the entity API.
+ */
+function message_update_7000() {
+  db_add_field('message_type', 'status', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => ENTITY_CUSTOM,
+    'size' => 'tiny',
+    'description' => 'The exportable status of the entity.',
+  ));
+  db_add_field('message_type', 'module', array(
+    'description' => 'The name of the providing module if the entity has been defined in code.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+  ));
 }
