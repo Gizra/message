@@ -48,20 +48,6 @@ function message_uninstall() {
 function message_schema() {
   $schema['message_type'] = array(
     'description' => 'Storage for user-defined message templates.',
-    'export' => array(
-      'key' => 'name',
-      'identifier' => 'message_type',
-      'default hook' => 'message_default_message_type',  // Function hook name.
-      'primary key' => 'name',
-      'api' => array(
-        'owner' => 'message',
-        'api' => 'message',  // Base name for api include files.
-        'minimum_version' => 1,
-        'current_version' => 1,
-      ),
-      'load callback' => 'message_type_load',
-      'save callback' => 'message_type_save',
-    ),
     'fields' => array(
       // Although the "name" should be enough as the primary key, the numeric ID
       // is required for the internal use of entity API.
