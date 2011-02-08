@@ -50,6 +50,9 @@ function message_entity_info() {
       'name' => 'name',
     ),
     'exportable' => TRUE,
+    'export' => array(
+      'default hook' => 'default_message_type',
+    ),
     'bundle of' => 'message',
     'module' => 'message',
     'access callback' => 'message_type_access',
