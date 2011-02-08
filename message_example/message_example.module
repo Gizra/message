@@ -1,5 +1,9 @@
 <?php
 
+include_once('message_example.features.inc');
+// TODO: Shouldn't this be loaded by entity API?
+include_once('message_example.message.inc');
+
 /**
  * Implementation of hook_node_insert().
  */
