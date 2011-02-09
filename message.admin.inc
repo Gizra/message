@@ -51,6 +51,13 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
 
   field_attach_form('message_type', $message_type, $form, $form_state);
 
+  $form['argument_keys'] = array(
+    '#title' => t('Replacement tokens'),
+    '#type' => 'textfield',
+    '#default_value' => implode(', ', $message_type->argument_keys),
+    '#description' => t('A comma-separated list of replacement tokens, e.g. %title or !url, of which the message text makes use of. Each replacement token has to start with one of the special characters "@", "%" or "!". This character controls the sanitization method used, analogously to the <a href="!link">t()</a> function.', array('!link' => 'http://api.drupal.org/api/drupal/includes--bootstrap.inc/function/t/7')),
+  );
+
   $form['actions'] = array('#type' => 'actions');
   $form['actions']['submit'] = array(
     '#type' => 'submit',
@@ -82,6 +89,7 @@ function message_type_form_validate($form, &$form_state) {
  */
 function message_type_form_submit(&$form, &$form_state) {
   $message_type = entity_ui_form_submit_build_entity($form, $form_state);
+  $message_type->argument_keys = array_map('trim', explode(',', $message_type->argument_keys));
   // Save and go back.
   $message_type->save();
   $form_state['redirect'] = 'admin/structure/messages';

@@ -1,13 +1,11 @@
 ; $Id: message.info,v 1.3 2010/06/07 10:54:11 amitaibu Exp $
 name = Message
-description = "Assign messages to realms."
+description = "A general message logging utility."
 core = 7.x
 package = Message
-dependencies[] = ctools
 dependencies[] = entity
 
 files[] = message.info.inc
-files[] = message.module
 files[] = message.admin.inc
 
 ; Tests

@@ -30,7 +30,10 @@ function message_permission() {
     'title' => t('Administer message types'),
     'description' => t('Administer message types that can be used to log an event.'),
   );
-
+  $permissions['create messages'] = array(
+    'title' => t('Create messages'),
+    'description' => t('Log new messages.'),
+  );
   return $permissions;
 }
 
@@ -126,6 +129,7 @@ class MessageType extends Entity {
 
   public $name;
   public $description = '';
+  public $argument_keys = array();
 
   public function __construct($values = array()) {
     parent::__construct($values, 'message_type');
@@ -156,12 +160,14 @@ function message_type_create($name, $values = array()) {
  * Message type loader.
  *
  * @param $type_name
- *   The name for this message type.
+ *   (optional) The name for this message type. If no type is given all existing
+ *   types are returned.
  *
  * @return MessageType
- *   Returns a fully-loaded message type definition.
+ *   Returns a fully-loaded message type definition if a type name is passed.
+ *   Else an array containing all types is returned.
  */
-function message_type_load($name = '') {
+function message_type_load($name = NULL) {
   // Replace dashes with underscores so this can be used as menu argument
   // loader too.
   $types = entity_load('message_type', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
@@ -228,9 +234,12 @@ class Message extends Entity {
 
   /**
    * Sets a new user associated with the message.
+   *
+   * @param $account
+   *   The user account object or the user account id (uid).
    */
   public function setUser($account) {
-    $this->uid = $account->uid;
+    $this->uid = is_object($account) ? $account->uid : $account;
   }
 
   /**
@@ -300,7 +309,7 @@ class Message extends Entity {
           case '%':
           default:
             // Escaped and placeholder.
-            $args[$key] = theme('placeholder', $value);
+            $args[$key] = drupal_placeholder($value);
             break;
 
           case '!':
@@ -312,7 +321,6 @@ class Message extends Entity {
     }
     return $output;
   }
-
 }
 
 /**
@@ -382,11 +390,9 @@ function message_delete_multiple($mids = array()) {
 
 /**
  * Access callback for the message entity.
- *
- * TODO: Do we need this function?
  */
 function message_access($op, $entity, $account = NULL, $entity_type = 'message') {
-  return TRUE;
+  return user_access('create messages');
 }
 
 /**
@@ -394,4 +400,18 @@ function message_access($op, $entity, $account = NULL, $entity_type = 'message')
  */
 function message_type_access($op, $entity, $account, $entity_type) {
   return user_access('administer message types', $account);
+}
+
+/**
+ * Entity property info getter callback for getting arguments.
+ */
+function message_property_get_argument($arguments, array $options, $name, $type, $context) {
+  return isset($arguments[$context['message_replace_char'] . $name]) ? $arguments[$context['message_replace_char'] . $name] : NULL;
+}
+
+/**
+ * Entity property info setter callback for arguments.
+ */
+function message_property_set_argument(&$arguments, $name, $value, $langcode, $type, $context) {
+  $arguments[$context['message_replace_char'] . $name] = $value;
 }
