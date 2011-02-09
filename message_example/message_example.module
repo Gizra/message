@@ -14,7 +14,7 @@ function message_example_node_insert(&$node) {
     // The link will be replaced with the url of the node using url() upon
     // display. Even if the node alias changes, then the link will always be
     // displayed correctly.
-    '@link' => array(
+    '@url' => array(
       'callback' => 'url',
       'callback arguments' => array('node/' . $node->nid),
     ),
