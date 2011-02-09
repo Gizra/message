@@ -45,6 +45,9 @@ class MessageMetadataController extends EntityDefaultMetadataController {
         'property info' => array(),
       );
       foreach ($type->argument_keys as $key) {
+        // Add the argument keys so they can later be referenced by
+        // entity-metadata. For example if the message is "hello @foo", then
+        // that key will be available via message:argument:foo.
         $key_name = substr($key, 1);
         $info['message']['bundles'][$name]['properties']['arguments']['property info'][$key_name] = array(
           'type' => 'text',
@@ -52,6 +55,7 @@ class MessageMetadataController extends EntityDefaultMetadataController {
           'description' => t('The replacement value for @key', array('@key' => $key)),
           'getter callback' => 'message_property_get_argument',
           'setter callback' => 'message_property_set_argument',
+          // Get the first character of the replacement key.
           'sanitized' => ($key[0] == '!') ? TRUE : FALSE,
           'message_replace_char' => $key[0],
         );
