@@ -116,8 +116,14 @@ function message_schema() {
       ),
     ),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
-      'type' => array('message_type' => 'name'),
+      'message_type' => array(
+        'table' => 'message_type',
+        'columns' => array('name' => 'name'),
+      ),
+      'owner' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
     'primary key' => array('mid'),
   );
