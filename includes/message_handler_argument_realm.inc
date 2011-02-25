@@ -1,5 +1,4 @@
 <?php
-// $Id$
 /**
  * @file
  * Argument handler to accept a realm.

@@ -1,4 +1,3 @@
-// $Id$
 
 A general logging utility that can be used as (yet another) activity module.
 

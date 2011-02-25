@@ -1,4 +1,3 @@
-// $Id$
 
 1) Enable message example module and its dependencies.
 2) Create or update a node.

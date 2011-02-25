@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 if (module_exists('flag')) {
   // Message plugin deceleration. We don't declare a "realm" as we just want

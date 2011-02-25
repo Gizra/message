@@ -1,5 +1,4 @@
 <?php
-// $Id$
 
 $plugin = array(
   'title' => t('User realm'),
