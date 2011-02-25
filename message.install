@@ -1,4 +1,5 @@
 <?php
+// $Id: message.install,v 1.5 2010/06/07 10:54:11 amitaibu Exp $
 
 /**
  * @file
@@ -38,8 +39,7 @@ function message_install() {
 function message_uninstall() {
   $instance = field_info_instance('message_type', 'message_text', 'message_type');
   field_delete_instance($instance);
-  field_delete_field("message_text");
-  variable_del('message_entity_delete_cleanup');
+  field_delete_field('message_text');
 }
 
 /**
@@ -48,20 +48,6 @@ function message_uninstall() {
 function message_schema() {
   $schema['message_type'] = array(
     'description' => 'Storage for user-defined message templates.',
-    'export' => array(
-      'key' => 'name',
-      'identifier' => 'message_type',
-      'default hook' => 'message_default_message_type',  // Function hook name.
-      'primary key' => 'name',
-      'api' => array(
-        'owner' => 'message',
-        'api' => 'message',  // Base name for api include files.
-        'minimum_version' => 1,
-        'current_version' => 1,
-      ),
-      'load callback' => 'message_type_load',
-      'save callback' => 'message_type_save',
-    ),
     'fields' => array(
       // Although the "name" should be enough as the primary key, the numeric ID
       // is required for the internal use of entity API.
@@ -84,15 +70,12 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      // TODO: Remove this in favor of a field or keep it for simplicity?
-      'tag' => array(
-        'description' => 'Tag for this message.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
+      'argument_keys' => array(
+        'description' => 'Serialized array with the argument keys',
+        'type' => 'text',
+        'serialize' => TRUE,
       ),
-    ),
+    ) + entity_exportable_schema_fields(),
     'primary key' => array('id'),
     'unique keys' => array(
       'name' => array('name'),
@@ -133,10 +116,48 @@ function message_schema() {
       ),
     ),
     'foreign keys' => array(
-      'uid' => array('users' => 'uid'),
-      'type' => array('message_type' => 'name'),
+      'message_type' => array(
+        'table' => 'message_type',
+        'columns' => array('name' => 'name'),
+      ),
+      'owner' => array(
+        'table' => 'users',
+        'columns' => array('uid' => 'uid'),
+      ),
     ),
     'primary key' => array('mid'),
   );
   return $schema;
 }
+
+
+/**
+ * Add in the exportable entity db columns as required by the entity API.
+ */
+function message_update_7000() {
+  db_add_field('message_type', 'status', array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => ENTITY_CUSTOM,
+    'size' => 'tiny',
+    'description' => 'The exportable status of the entity.',
+  ));
+  db_add_field('message_type', 'module', array(
+    'description' => 'The name of the providing module if the entity has been defined in code.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => FALSE,
+  ));
+}
+
+/**
+ * Add the argument keys column of a message type.
+ */
+function message_update_7001() {
+  db_add_field('message_type', 'argument_keys', array(
+    'description' => 'Serialized array with the argument keys',
+    'type' => 'text',
+    'serialize' => TRUE,
+  ));
+}
+

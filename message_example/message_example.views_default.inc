@@ -1,18 +1,18 @@
 <?php
 
 /**
- * Implement hook_views_default_views().
+ * Implementation of hook_views_default_views().
  */
-function message_views_default_views() {
-  /*
-   * View 'message'
-   */
+function message_example_views_default_views() {
+  $views = array();
+
+  // Exported view: message_example
   $view = new view;
-  $view->name = 'message';
-  $view->description = 'Show all existing messages.';
-  $view->tag = 'Message';
+  $view->name = 'message_example';
+  $view->description = '';
+  $view->tag = '';
   $view->base_table = 'message';
-  $view->human_name = 'Message';
+  $view->human_name = 'Message example';
   $view->core = 7;
   $view->api_version = '3.0-alpha1';
   $view->disabled = FALSE; /* Edit this to true to make a default view disabled initially */
@@ -87,7 +87,47 @@ function message_views_default_views() {
   $handler->display->display_options['sorts']['mid']['table'] = 'message';
   $handler->display->display_options['sorts']['mid']['field'] = 'mid';
   $handler->display->display_options['sorts']['mid']['order'] = 'DESC';
-  $translatables['message'] = array(
+  /* Argument: Fields: field_node_ref (field_node_ref) - nid */
+  $handler->display->display_options['arguments']['field_node_ref_nid']['id'] = 'field_node_ref_nid';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['table'] = 'field_data_field_node_ref';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['field'] = 'field_node_ref_nid';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['style_plugin'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['default_argument_type'] = 'flag_user_flaggings';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['default_argument_options']['flag_name'] = TRUE;
+  $handler->display->display_options['arguments']['field_node_ref_nid']['validate_fail'] = 'ignore';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['field_node_ref_nid']['not'] = 0;
+
+  /* Display: Watched node content */
+  $handler = $view->new_display('panel_pane', 'Watched node content', 'panel_pane_1');
+  $handler->display->display_options['display_description'] = 'Node content a user flagged.';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Argument: Fields: field_node_ref (field_node_ref) - nid */
+  $handler->display->display_options['arguments']['field_node_ref_nid']['id'] = 'field_node_ref_nid';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['table'] = 'field_data_field_node_ref';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['field'] = 'field_node_ref_nid';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['style_plugin'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['default_argument_type'] = 'flag_user_flaggings';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['default_argument_options']['flag_name'] = TRUE;
+  $handler->display->display_options['arguments']['field_node_ref_nid']['break_phrase'] = 1;
+  $handler->display->display_options['arguments']['field_node_ref_nid']['not'] = 0;
+
+  /* Display: Watched user content */
+  $handler = $view->new_display('panel_pane', 'Watched user content', 'panel_pane_2');
+  $handler->display->display_options['display_description'] = 'User content a user flagged.';
+  $handler->display->display_options['defaults']['arguments'] = FALSE;
+  /* Argument: Fields: field_node_ref (field_node_ref) - nid */
+  $handler->display->display_options['arguments']['field_node_ref_nid']['id'] = 'field_node_ref_nid';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['table'] = 'field_data_field_node_ref';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['field'] = 'field_node_ref_nid';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['style_plugin'] = 'default_summary';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['default_argument_type'] = 'flag_user_flaggings';
+  $handler->display->display_options['arguments']['field_node_ref_nid']['default_argument_options']['flag_name'] = TRUE;
+  $handler->display->display_options['arguments']['field_node_ref_nid']['break_phrase'] = 1;
+  $handler->display->display_options['arguments']['field_node_ref_nid']['not'] = 0;
+  $translatables['message_example'] = array(
     t('Defaults'),
     t('more'),
     t('Apply'),
@@ -100,7 +140,14 @@ function message_views_default_views() {
     t('Offset'),
     t('No messages created yet.'),
     t('Message user'),
+    t('All'),
+    t('Watched node content'),
+    t('Node content a user flagged.'),
+    t('View panes'),
+    t('Watched user content'),
+    t('User content a user flagged.'),
   );
+
   $views[$view->name] = $view;
 
   return $views;

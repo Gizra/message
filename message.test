@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 /**
  * Test the Message CRUD handling.
@@ -36,6 +37,15 @@ class MessageCrud extends DrupalWebTestCase {
 
     $this->assertEqual($message->uid, $web_user->uid, 'Message has been saved for the right user.');
     $this->assertEqual($message->getType()->message_text[LANGUAGE_NONE][0]['value'], 'Example text.', 'Message type text has been saved.');
+
+    // Make sure an exception is thrown if message type alreayd exists.
+    try {
+      $message_type = message_type_create('foo');
+      $this->fail("Creating the same message type hasn't created an exception.");
+    }
+    catch (Exception $e) {
+      $this->pass("Exception was thrown: ". $e->getMessage());
+    }
   }
 }
 
@@ -92,12 +102,14 @@ class MessageShowMessage extends DrupalWebTestCase {
     $message->save();
 
     // Assert the arguments in the message are replaced.
-    $output = message_show_message($message, TRUE, $web_user, 'l0');
-    $this->assertEqual(strip_tags($output), strtr($text1, $arguments), t('Arguments in the first language message were replaced.'));
+    $output = $message->view('full', 'l0');
+    $output = trim(strip_tags(render($output)));
+    $this->assertEqual($output, strtr($text1, $arguments), t('Arguments in the first language message were replaced.'));
 
     // Assert the arguments in the message are replaced when showing a message
     // from another language.
-    $output = message_show_message($message, TRUE, $web_user, 'l1');
+    $output = $message->view('full', 'l1');
+    $output = trim(strip_tags(render($output)));
     $this->assertEqual(strip_tags($output), strtr($text2, $arguments), t('Arguments in the second language message were replaced.'));
   }
 }
