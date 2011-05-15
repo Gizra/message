@@ -21,10 +21,9 @@ class MessageMetadataController extends EntityDefaultMetadataController {
       'description' => t('The message type.'),
     ) + $properties['name'];
 
-    // Use "user" instead of the uid property.
-    unset($properties['uid']);
     unset($properties['arguments']);
 
+    // We don't unser the uid property so it can be used in Views.
     $properties['user'] = array(
       'label' => t("User"),
       'type' => 'user',

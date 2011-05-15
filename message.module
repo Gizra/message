@@ -95,7 +95,8 @@ function message_entity_info() {
       ),
     ),
     'module' => 'message',
-    'metadata controller class' => 'MessageMetadataController'
+    'metadata controller class' => 'MessageMetadataController',
+    'views controller class' => 'MessageViewsController',
   );
   return $items;
 }
