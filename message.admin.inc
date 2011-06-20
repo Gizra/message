@@ -36,6 +36,7 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     '#default_value' => $message_type->description,
     '#description' => t('The human-readable description of this message type.'),
     '#required' => TRUE,
+    '#weight' => -5,
   );
   // Machine-readable type name.
   $form['name'] = array(
@@ -47,6 +48,7 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
       'source' => array('description'),
     ),
     '#description' => t('A unique machine-readable name for this message type. It must only contain lowercase letters, numbers, and underscores.'),
+    '#weight' => -5,
   );
 
   field_attach_form('message_type', $message_type, $form, $form_state);
