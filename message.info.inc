@@ -41,6 +41,15 @@ class MessageMetadataController extends EntityDefaultMetadataController {
       'description' => t('The time the message has been logged.'),
     ) + $properties['timestamp'];
 
+    // Add a property providing the final text for use with entity tokens.
+    $properties['text'] = array(
+      'type' => 'text',
+      'label' => t('The message text'),
+      'getter callback' => 'message_property_get_text',
+      'description' => t('The message text with all replacement arguments applied.'),
+      'sanitize' => 'filter_xss',
+    );
+
     // Add in the arguments specific to the bundles.
     foreach (message_type_load() as $name => $type) {
       $info['message']['bundles'][$name]['properties']['arguments'] = array(

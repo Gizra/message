@@ -411,3 +411,11 @@ function message_property_get_argument($arguments, array $options, $name, $type,
 function message_property_set_argument(&$arguments, $name, $value, $langcode, $type, $context) {
   $arguments[$context['message_replace_char'] . $name] = $value;
 }
+
+/**
+ * Entity property info getter callback for getting the final message text.
+ */
+function message_property_get_text($message, array $options) {
+  $langcode = isset($options['language']) ? $options['language']->language : LANGUAGE_NONE;
+  return $message->getText($langcode);
+}
