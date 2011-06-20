@@ -22,16 +22,24 @@ class MessageMetadataController extends EntityDefaultMetadataController {
     ) + $properties['name'];
 
     unset($properties['arguments']);
+    // Unset the uid property, as it is available via the user anyway.
+    unset($properties['uid']);
 
-    // We don't unser the uid property so it can be used in Views.
     $properties['user'] = array(
       'label' => t("User"),
       'type' => 'user',
       'description' => t("The user for which to log the message."),
       'getter callback' => 'entity_property_getter_method',
       'setter callback' => 'entity_property_setter_method',
+      'schema field' => 'uid',
       'required' => TRUE,
     );
+
+    $properties['timestamp'] = array(
+      'type' => 'date',
+      'setter callback' => 'entity_property_verbatim_set',
+      'description' => t('The time the message has been logged.'),
+    ) + $properties['timestamp'];
 
     // Add in the arguments specific to the bundles.
     foreach (message_type_load() as $name => $type) {
