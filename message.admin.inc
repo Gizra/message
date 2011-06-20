@@ -91,7 +91,7 @@ function message_type_form_validate($form, &$form_state) {
  */
 function message_type_form_submit(&$form, &$form_state) {
   $message_type = entity_ui_form_submit_build_entity($form, $form_state);
-  $message_type->argument_keys = array_map('trim', explode(',', $message_type->argument_keys));
+  $message_type->argument_keys = array_filter(array_map('trim', explode(',', $message_type->argument_keys)));
   // Save and go back.
   $message_type->save();
   $form_state['redirect'] = 'admin/structure/messages';

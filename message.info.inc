@@ -43,7 +43,8 @@ class MessageMetadataController extends EntityDefaultMetadataController {
         'setter callback' => 'entity_property_verbatim_set',
         'property info' => array(),
       );
-      foreach ($type->argument_keys as $key) {
+      $keys = array_filter($type->argument_keys);
+      foreach ($keys as $key) {
         // Add the argument keys so they can later be referenced by
         // entity-metadata. For example if the message is "hello @foo", then
         // that key will be available via message:argument:foo.
