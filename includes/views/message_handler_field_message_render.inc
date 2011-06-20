@@ -15,10 +15,10 @@ class message_handler_field_message_render extends views_handler_field {
 
   function render($values) {
     if (!empty($values->mid) && $message = message_load($values->mid)) {
-      $output = $message->view();
-      // Render only the "message_render", making sure other fields added to
+      $output = $message->buildContent();
+      // Render only the message text, making sure other fields added to
       // the entity aren't printed as well.
-      return render($output['message'][$message->mid]['message_render']);
+      return render($output['text']);
     }
   }
 }

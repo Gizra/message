@@ -133,6 +133,14 @@ class MessageType extends Entity {
   public function __construct($values = array()) {
     parent::__construct($values, 'message_type');
   }
+
+  /**
+   * Retrieves the configured message text in a certain language.
+   */
+  public function getText($langcode = LANGUAGE_NONE, $options = array()) {
+    // Let the metadata wrapper deal with the language foo.
+    return entity_metadata_wrapper('message_type', $this)->language($langcode)->{MESSAGE_FIELD_MESSAGE_TEXT}->value($options);
+  }
 }
 
 /**
@@ -251,20 +259,18 @@ class Message extends Entity {
   }
 
   /**
-   * Generate an array for rendering the entity.
+   * Generate an array for rendering the entity's content.
    *
-   * @see entity_view()
+   * @see entity_build_content()
    */
-  public function view($view_mode = 'full', $langcode = NULL) {
-    $view =  parent::view($view_mode, $langcode);
-
-    $key = !empty($this->is_new) ? 0 : $this->mid;
-    $view['message'][$key]['message_render'] = array(
+  public function buildContent($view_mode = 'full', $langcode = NULL) {
+    $key = !empty($this->mid) ? 'id-' . $this->mid : 'new';
+    $content['text'] = array(
       '#markup' => $this->getText($langcode),
-      '#prefix' => '<span class="message message-type-' . str_replace('_', '-', $this->getType()->name) . ' message-id-' . $key . '">',
+      '#prefix' => '<span class="message message-type-' . str_replace('_', '-', $this->getType()->name) . ' message-' . $key . '">',
       '#suffix' => '</span>',
     );
-    return $view;
+    return entity_get_controller($this->entityType)->buildContent($this, $view_mode, $langcode, $content);
   }
 
   /**
@@ -274,18 +280,9 @@ class Message extends Entity {
    *   Optional; The language to get the text in. If not set the current language
    *   will be used.
    */
-  function getText($langcode = NULL) {
-    $output = '';
+  public function getText($langcode = LANGUAGE_NONE) {
 
-    if (empty($langcode)) {
-      $langcode = LANGUAGE_NONE;
-    }
-
-    $message_type = $this->getType();
-
-    if (!empty($message_type->{MESSAGE_FIELD_MESSAGE_TEXT}[$langcode][0]['value'])) {
-      $output = $message_type->{MESSAGE_FIELD_MESSAGE_TEXT}[$langcode][0]['value'];
-    }
+    $output = $this->getType()->getText($langcode);
 
     if (!empty($this->arguments)) {
       // Transform arguments before inserting them.
