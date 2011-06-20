@@ -43,7 +43,7 @@ function message_permission() {
 function message_entity_info() {
   $items['message_type'] = array(
     'label' => t('Message type'),
-    'controller class' => 'EntityAPIController',
+    'controller class' => 'EntityAPIControllerExportable',
     'entity class' => 'MessageType',
     'base table' => 'message_type',
     'fieldable' => TRUE,
@@ -108,8 +108,7 @@ function message_entity_info() {
  * message types needs the entity info too.
  */
 function message_entity_info_alter(&$entity_info) {
-  $message_types = entity_load('message_type');
-  foreach ($message_types as $type_name => $type) {
+  foreach (message_type_load() as $type_name => $type) {
     $entity_info['message']['bundles'][$type_name] = array(
       //@todo do we need a short label too?
       'label' => $type->name,
@@ -171,7 +170,7 @@ function message_type_create($name, $values = array()) {
 function message_type_load($name = NULL) {
   // Replace dashes with underscores so this can be used as menu argument
   // loader too.
-  $types = entity_load('message_type', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
+  $types = entity_load_multiple_by_name('message_type', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
   if (isset($name)) {
     return isset($types[$name]) ? $types[$name] : FALSE;
   }
