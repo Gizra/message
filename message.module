@@ -335,6 +335,10 @@ class Message extends Entity {
  *   current user will be used.
  */
 function message_create($name, $values = array(), $account = NULL) {
+  if (empty($account)) {
+    global $user;
+    $account = clone $user;
+  }
   $values['name'] = $name;
   $values['user'] = $account;
   return entity_create('message', $values);
