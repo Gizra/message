@@ -9,11 +9,12 @@ function message_example_default_message_type() {
     "name" : "create_content",
     "description" : "Create content",
     "statusKey" : "status",
+    "argument_keys" : [ "@url @title" ],
     "message_text" : { "und" : [
         {
-          "value" : "created \\u003ca href=\\"@url\\"\\u003e@title\\u003c\\/a\\u003e",
-          "format" : null,
-          "safe_value" : "created \\u0026lt;a href=\\u0026quot;@url\\u0026quot;\\u0026gt;@title\\u0026lt;\\/a\\u0026gt;"
+          "value" : "created \u003ca href=\"@url\"\u003e@title\u003c\/a\u003e",
+          "format" : "filtered_html",
+          "safe_value" : "\u003cp\u003ecreated \u003ca href=\"@url\"\u003e@title\u003c\/a\u003e\u003c\/p\u003e\n"
         }
       ]
     },
