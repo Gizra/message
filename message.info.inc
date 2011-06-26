@@ -47,7 +47,8 @@ class MessageMetadataController extends EntityDefaultMetadataController {
       'label' => t('The message text'),
       'getter callback' => 'message_property_get_text',
       'description' => t('The message text with all replacement arguments applied.'),
-      'sanitize' => 'filter_xss',
+      // The tokens are already sanitized if needed.
+      'sanitize' => TRUE,
     );
 
     // Add in the arguments specific to the bundles.
