@@ -1,13 +1,9 @@
 <?php
 
-include_once('message_example.features.inc');
-// TODO: Shouldn't this be loaded by entity API?
-include_once('message_example.message.inc');
-
 /**
  * Implementation of hook_node_insert().
  */
-function message_example_node_insert(&$node) {
+function message_example_node_insert($node) {
   global $user;
   // Set the arguments that would be replaced on run-time.
   $arguments = array(

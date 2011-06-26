@@ -4,6 +4,7 @@
  * Implementation of hook_default_message_type().
  */
 function message_example_default_message_type() {
+  dpm('fooo');
   $items = array();
   $items['create_content'] = entity_import('message_type', '{
     "name" : "create_content",
