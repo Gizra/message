@@ -4,6 +4,8 @@
  * Implement hook_views_default_views().
  */
 function message_views_default_views() {
+  $views = array();
+
   $view = new view;
   $view->name = 'message';
   $view->description = 'Show all existing messages.';
@@ -139,6 +141,23 @@ function message_views_default_views() {
   $handler->display->display_options['sorts']['timestamp']['table'] = 'message';
   $handler->display->display_options['sorts']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['order'] = 'DESC';
+  /* Contextual filter: Message: User uid */
+  $handler->display->display_options['arguments']['user']['id'] = 'user';
+  $handler->display->display_options['arguments']['user']['table'] = 'message';
+  $handler->display->display_options['arguments']['user']['field'] = 'user';
+  $handler->display->display_options['arguments']['user']['default_action'] = 'default';
+  $handler->display->display_options['arguments']['user']['title_enable'] = 1;
+  $handler->display->display_options['arguments']['user']['title'] = '%1 messages';
+  $handler->display->display_options['arguments']['user']['default_argument_type'] = 'current_user';
+  $handler->display->display_options['arguments']['user']['default_argument_skip_url'] = 0;
+  $handler->display->display_options['arguments']['user']['summary']['number_of_records'] = '0';
+  $handler->display->display_options['arguments']['user']['summary']['format'] = 'default_summary';
+  $handler->display->display_options['arguments']['user']['summary_options']['items_per_page'] = '25';
+  $handler->display->display_options['arguments']['user']['specify_validation'] = 1;
+  $handler->display->display_options['arguments']['user']['validate']['type'] = 'user';
+  $handler->display->display_options['arguments']['user']['validate_options']['restrict_roles'] = 0;
+  $handler->display->display_options['arguments']['user']['break_phrase'] = 0;
+  $handler->display->display_options['arguments']['user']['not'] = 0;
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');
@@ -163,6 +182,8 @@ function message_views_default_views() {
     t('User'),
     t('Timestamp'),
     t('Text'),
+    t('All'),
+    t('%1 messages'),
     t('Page'),
   );
 
