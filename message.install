@@ -13,7 +13,7 @@ function message_install() {
   // Create the field holding the message text.
   $field = array(
     'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
-    'type' => 'text',
+    'type' => 'text_long',
     'entity_types' => array('message_type'),
     'cardinality' => 1,
     'translatable' => TRUE,
@@ -27,6 +27,9 @@ function message_install() {
     'label' => t('Message text'),
     'description' => t('This is the text of all messages of this type.'),
     'required' => TRUE,
+    'settings' => array(
+      'text_processing' => 1,
+    ),
   );
   field_create_instance($instance);
 
@@ -177,4 +180,23 @@ function message_update_7001() {
     'serialize' => TRUE,
   ));
 }
+
+/**
+ * Update the message type text field to have text processing.
+ */
+function message_update_7002() {
+  $instance = array(
+    'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
+    'bundle' => 'message_type',
+    'entity_type' => 'message_type',
+    'label' => t('Message text'),
+    'description' => t('This is the text of all messages of this type.'),
+    'required' => TRUE,
+    'settings' => array(
+      'text_processing' => 1,
+    ),
+  );
+  field_update_instance($instance);
+}
+
 

@@ -313,7 +313,7 @@ class Message extends Entity {
             $args[$key] = $value;
         }
       }
-      $output = strtr($output, $args);
+      $output = strtr($output['safe_value'], $args);
     }
     return $output;
   }
