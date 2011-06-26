@@ -269,11 +269,8 @@ class Message extends Entity {
    * @see entity_build_content()
    */
   public function buildContent($view_mode = 'full', $langcode = NULL) {
-    $key = !empty($this->mid) ? 'id-' . $this->mid : 'new';
     $content['text'] = array(
       '#markup' => $this->getText($langcode),
-      '#prefix' => '<span class="message message-type-' . str_replace('_', '-', $this->getType()->name) . ' message-' . $key . '">',
-      '#suffix' => '</span>',
     );
     return entity_get_controller($this->entityType)->buildContent($this, $view_mode, $langcode, $content);
   }
