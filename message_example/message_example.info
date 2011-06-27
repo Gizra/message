@@ -1,5 +1,6 @@
 core = "7.x"
 dependencies[] = "message"
+dependencies[] = "node_reference"
 description = "Message example."
 features[message_type][] = "create_content"
 name = "Message example"
