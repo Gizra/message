@@ -1,7 +1,12 @@
 <?php
 
 /**
- * Implementation of hook_node_insert().
+ * @file
+ * Message example.
+ */
+
+/**
+ * Implements of hook_node_insert().
  */
 function message_example_node_insert($node) {
   global $user;
