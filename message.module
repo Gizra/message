@@ -138,13 +138,18 @@ class MessageType extends Entity {
    * Retrieves the configured message text in a certain language.
    */
   public function getText($langcode = LANGUAGE_NONE, $options = array()) {
-    // As the text is already sanitized, it does not really matter if we enable
-    // sanitizing, as it would be default. However, one can change the field
-    // instance (e.g. to have no text processing) we make sure we still properly
-    // sanitize the value.
-    $options['sanitize'] = TRUE;
+    // Set default values.
+    $options += array(
+      // As the text is already sanitized, it does not really matter if we
+      // enable sanitizing, as it would be default. However, one can change the
+      // field instance (e.g. to have no text processing) we make sure we still
+      // properly sanitize the value.
+      'sanitize' => TRUE,
+      // The field name from which the text should be extracted.
+      'field name' => MESSAGE_FIELD_MESSAGE_TEXT,
+    );
     // Let the metadata wrapper deal with the language.
-    return entity_metadata_wrapper('message_type', $this)->language($langcode)->{MESSAGE_FIELD_MESSAGE_TEXT}->value($options);
+    return entity_metadata_wrapper('message_type', $this)->language($langcode)->$options['field name']->value($options);
   }
 }
 
