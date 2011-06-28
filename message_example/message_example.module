@@ -6,7 +6,7 @@
  */
 
 /**
- * Implements of hook_node_insert().
+ * Implements hook_node_insert().
  */
 function message_example_node_insert($node) {
   global $user;
