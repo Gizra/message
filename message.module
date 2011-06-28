@@ -286,10 +286,12 @@ class Message extends Entity {
    * @param $langcode
    *   Optional; The language to get the text in. If not set the current language
    *   will be used.
+   * @param $options
+   *   Optional; Array to be passed to MessageType::getText().
    */
-  public function getText($langcode = LANGUAGE_NONE) {
+  public function getText($langcode = LANGUAGE_NONE, $options = array()) {
 
-    $output = $this->getType()->getText($langcode);
+    $output = $this->getType()->getText($langcode, $options = array());
 
     if (!empty($this->arguments)) {
       // Transform arguments before inserting them.
