@@ -56,7 +56,7 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
   $form['argument_keys'] = array(
     '#title' => t('Replacement tokens'),
     '#type' => 'textfield',
-    '#default_value' => implode(', ', $message_type->argument_keys),
+    '#default_value' => implode(', ', (array) $message_type->argument_keys),
     '#description' => t('A comma-separated list of replacement tokens, e.g. %title or !url, of which the message text makes use of. Each replacement token has to start with one of the special characters "@", "%" or "!". This character controls the sanitization method used, analogously to the <a href="!link">t()</a> function.', array('!link' => 'http://api.drupal.org/api/drupal/includes--bootstrap.inc/function/t/7')),
   );
 
