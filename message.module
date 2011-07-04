@@ -156,6 +156,15 @@ class MessageType extends Entity {
     }
     return $property->value($options);
   }
+
+
+  public function save() {
+    parent::save();
+    // Clear the entity property info cache, as changed argument-keys result
+    // in different entity property info.
+    entity_property_info_cache_clear();
+  }
+
 }
 
 /**
