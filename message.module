@@ -149,7 +149,12 @@ class MessageType extends Entity {
       'field name' => MESSAGE_FIELD_MESSAGE_TEXT,
     );
     // Let the metadata wrapper deal with the language.
-    return entity_metadata_wrapper('message_type', $this)->language($langcode)->$options['field name']->value($options);
+    $property = entity_metadata_wrapper('message_type', $this)->language($langcode)->$options['field name'];
+    // If the property is of type 'text_formatted' get the processed text value.
+    if ($property instanceof EntityStructureWrapper && isset($property->value)) {
+      $property = $property->value;
+    }
+    return $property->value($options);
   }
 }
 
@@ -322,7 +327,7 @@ class Message extends Entity {
             $args[$key] = $value;
         }
       }
-      $output = strtr($output['safe_value'], $args);
+      $output = strtr($output, $args);
     }
     return $output;
   }
