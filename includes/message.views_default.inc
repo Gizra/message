@@ -112,6 +112,7 @@ function message_views_default_views() {
   $handler->display->display_options['fields']['message_render']['element_default_classes'] = 1;
   $handler->display->display_options['fields']['message_render']['hide_empty'] = 0;
   $handler->display->display_options['fields']['message_render']['empty_zero'] = 0;
+  $handler->display->display_options['fields']['message_render']['hide_alter_empty'] = 0;
   /* Field: User: Name */
   $handler->display->display_options['fields']['name']['id'] = 'name';
   $handler->display->display_options['fields']['name']['table'] = 'users';
@@ -141,6 +142,17 @@ function message_views_default_views() {
   $handler->display->display_options['sorts']['timestamp']['table'] = 'message';
   $handler->display->display_options['sorts']['timestamp']['field'] = 'timestamp';
   $handler->display->display_options['sorts']['timestamp']['order'] = 'DESC';
+  /* Filter criterion: Message: Name */
+  $handler->display->display_options['filters']['name']['id'] = 'name';
+  $handler->display->display_options['filters']['name']['table'] = 'message';
+  $handler->display->display_options['filters']['name']['field'] = 'name';
+  $handler->display->display_options['filters']['name']['exposed'] = TRUE;
+  $handler->display->display_options['filters']['name']['expose']['operator_id'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['label'] = 'Message type';
+  $handler->display->display_options['filters']['name']['expose']['operator'] = 'name_op';
+  $handler->display->display_options['filters']['name']['expose']['identifier'] = 'name';
+  $handler->display->display_options['filters']['name']['expose']['multiple'] = 1;
+  $handler->display->display_options['filters']['name']['expose']['reduce'] = 0;
 
   /* Display: Page */
   $handler = $view->new_display('page', 'Page', 'page_1');
@@ -150,23 +162,7 @@ function message_views_default_views() {
   $handler->display->display_options['menu']['description'] = 'A list of all messages.';
   $handler->display->display_options['menu']['weight'] = '0';
   $handler->display->display_options['menu']['name'] = 'management';
-  $translatables['message'] = array(
-    t('Defaults'),
-    t('more'),
-    t('Apply'),
-    t('Reset'),
-    t('Sort by'),
-    t('Asc'),
-    t('Desc'),
-    t('Items per page'),
-    t('- All -'),
-    t('Offset'),
-    t('No messages created yet.'),
-    t('User'),
-    t('Timestamp'),
-    t('Text'),
-    t('Page'),
-  );
+
 
   $views[$view->name] = $view;
 
