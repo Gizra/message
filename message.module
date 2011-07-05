@@ -40,6 +40,27 @@ function message_permission() {
  * Implements hook_entity_info().
  */
 function message_entity_info() {
+  $items['message_type_category'] = array(
+    'label' => t('Message type category'),
+    'controller class' => 'EntityAPIControllerExportable',
+    'entity class' => 'MessageTypeCategory',
+    'base table' => 'message_type_category',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'id',
+      'label' => 'description',
+      'name' => 'category',
+    ),
+    'exportable' => TRUE,
+    'export' => array(
+      'default hook' => 'default_message_type_category',
+    ),
+    'bundle of' => 'message_type',
+    'module' => 'message',
+    'access callback' => 'message_type_category_access',
+    // We don't use entity API's admin UI.
+  );
+
   $items['message_type'] = array(
     'label' => t('Message type'),
     'controller class' => 'EntityAPIControllerExportable',
@@ -50,6 +71,11 @@ function message_entity_info() {
       'id' => 'id',
       'label' => 'description',
       'name' => 'name',
+      'bundle' => 'category',
+    ),
+    'bundles' => array(),
+    'bundle keys' => array(
+      'bundle' => 'category',
     ),
     'exportable' => TRUE,
     'export' => array(
@@ -107,6 +133,12 @@ function message_entity_info() {
  * message types needs the entity info too.
  */
 function message_entity_info_alter(&$entity_info) {
+  foreach (message_type_category_load() as $category_name => $category) {
+    $entity_info['message_type']['bundles'][$category_name] = array(
+      //@todo do we need a short label too?
+      'label' => $category->category,
+    );
+  }
   foreach (message_type_load() as $type_name => $type) {
     $entity_info['message']['bundles'][$type_name] = array(
       //@todo do we need a short label too?
@@ -122,6 +154,87 @@ function message_entity_info_alter(&$entity_info) {
 }
 
 /**
+ * A class used for message types category.
+ */
+class MessageTypeCategory extends Entity {
+
+  public $category;
+  public $description = '';
+
+  public function __construct($values = array()) {
+    parent::__construct($values, 'message_type_category');
+  }
+
+
+}
+
+/**
+ * Creates a new message type category.
+ *
+ * If a message type category already exists, an exception will be thrown.
+ *
+ * @return MessageTypeCategory
+ *   Returns a new message type category object.
+ */
+function message_type_category_create($category, $values = array()) {
+  // Make sure the message type doesn't already exist, to prevent duplicate key
+  // error.
+  if (message_type_category($category)) {
+    throw new Exception('Message type vategory' . check_plain($category) . ' already exists.');
+  }
+  $values['category'] = $category;
+  $return = entity_create('message_type_category', $values);
+
+  return $return;
+}
+
+/**
+ * Message type category loader.
+ *
+ * @param $name
+ *   (optional) The name for this message type category. If no type is given all
+ *   existing message types category are returned.
+ *
+ * @return MessageType
+ *   Returns a fully-loaded message type category definition if a name is
+ *   passed. Else an array containing all message types category is returned.
+ */
+function message_type_category_load($name = NULL) {
+  // Replace dashes with underscores so this can be used as menu argument
+  // loader too.
+  $types = entity_load_multiple_by_name('message_type_category', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
+  if (isset($name)) {
+    return isset($types[$name]) ? $types[$name] : FALSE;
+  }
+  return $types;
+}
+
+/**
+ * Inserts or updates a message type category object into the database.
+ *
+ * @param $message
+ *   The message type category object to be inserted.
+ *
+ * @return
+ *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
+ *   SAVED_UPDATED is returned depending on the operation performed.
+ */
+function message_type_category_save($message) {
+  return entity_save('message_type_category', $message);
+}
+
+/**
+ * Deletes an existing message type category.
+ *
+ * @param $message
+ *   The message type category object to be deleted.
+ */
+function message_type_category_delete($message) {
+  return entity_delete('message_type_category', $message);
+}
+
+
+/**
  * A class used for message types.
  */
 class MessageType extends Entity {
@@ -129,6 +242,8 @@ class MessageType extends Entity {
   public $name;
   public $description = '';
   public $argument_keys = array();
+  // Set the default message type category of the message type.
+  public $category = 'message_type';
 
   public function __construct($values = array()) {
     parent::__construct($values, 'message_type');
@@ -190,7 +305,7 @@ function message_type_create($name, $values = array()) {
 /**
  * Message type loader.
  *
- * @param $type_name
+ * @param $name
  *   (optional) The name for this message type. If no type is given all existing
  *   types are returned.
  *

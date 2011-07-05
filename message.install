@@ -49,6 +49,52 @@ function message_uninstall() {
  * Implements hook_schema()
  */
 function message_schema() {
+  $schema['message_type_category'] = array(
+    'description' => 'Storage for user-defined message category.',
+    'fields' => array(
+      // Although the "category" should be enough as the primary key, the
+      // numeric ID is required for the internal use of entity API.
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Numeric message type category ID.',
+      ),
+      'category' => array(
+        'description' => 'The unified identifier for a message type category.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'description' => array(
+        'description' => 'Description for this message type category.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        // Set the default to ENTITY_CUSTOM without using the constant as it is
+        // not safe to use it at this point.
+        'default' => 0x01,
+        'size' => 'tiny',
+        'description' => 'The exportable status of the entity.',
+      ),
+      'module' => array(
+        'description' => 'The name of the providing module if the entity has been defined in code.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'category' => array('category'),
+    ),
+  );
+
   $schema['message_type'] = array(
     'description' => 'Storage for user-defined message templates.',
     'fields' => array(
@@ -66,8 +112,15 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'category' => array(
+        'description' => 'Reference to a message type category.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'message_type',
+      ),
       'description' => array(
-        'description' => 'Description for this message.',
+        'description' => 'Description for this message type.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
@@ -199,4 +252,62 @@ function message_update_7002() {
   field_update_instance($instance);
 }
 
+/**
+ * Add message type category.
+ */
+function message_update_7003() {
+  $schema['message_type_category'] = array(
+    'description' => 'Storage for user-defined message category.',
+    'fields' => array(
+      // Although the "category" should be enough as the primary key, the
+      // numeric ID is required for the internal use of entity API.
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Numeric message type category ID.',
+      ),
+      'category' => array(
+        'description' => 'The unified identifier for a message type category.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'description' => array(
+        'description' => 'Description for this message type category.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'status' => array(
+        'type' => 'int',
+        'not null' => TRUE,
+        // Set the default to ENTITY_CUSTOM without using the constant as it is
+        // not safe to use it at this point.
+        'default' => 0x01,
+        'size' => 'tiny',
+        'description' => 'The exportable status of the entity.',
+      ),
+      'module' => array(
+        'description' => 'The name of the providing module if the entity has been defined in code.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => FALSE,
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'category' => array('category'),
+    ),
+  );
+  db_create_table('message_type_category', $schema['message_type_category']);
 
+  db_add_field('message_type', 'category', array(
+    'description' => 'Reference to a message type category.',
+    'type' => 'varchar',
+    'length' => 255,
+    'not null' => TRUE,
+    'default' => 'message_type',
+  ));
+}

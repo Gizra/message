@@ -61,6 +61,7 @@ function message_example_default_message_type() {
   $items = array();
   $items['create_content'] = entity_import('message_type', '{
     "name" : "create_content",
+    "category" : "message_type",
     "description" : "Create content",
     "statusKey" : "status",
     "argument_keys" : [ "@url @title" ],

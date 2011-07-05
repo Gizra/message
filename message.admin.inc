@@ -19,6 +19,32 @@ class MessageTypeUIController extends EntityDefaultUIController {
     $items[$this->path]['description'] = 'Manage message types, including fields.';
     return $items;
   }
+
+  /**
+   * Overridden to customize the field location.
+   */
+  public function entityFormSubmitBuildEntity($form, &$form_state) {
+    // We cannot use entity_form_submit_build_entity() any more.
+    $entity = $form_state['message_type'];
+
+    // Extract form values.
+    form_state_values_clean($form_state);
+    foreach ($form_state['values'] as $key => $value) {
+      if ($key != 'message_type_fields') {
+        $entity->$key = $value;
+      }
+    }
+    // Invoke all specified builders for copying form values to entity
+    // properties.
+    // @see entity_form_submit_build_entity()
+    if (isset($form['#entity_builders'])) {
+      foreach ($form['#entity_builders'] as $function) {
+        $function('message_type', $entity, $form, $form_state);
+      }
+    }
+    field_attach_submit('message_type', $entity, $form['message_type_fields'], $form_state);
+    return $entity;
+  }
 }
 
 /**
@@ -42,7 +68,7 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
   $form['name'] = array(
     '#type' => 'machine_name',
     '#default_value' => isset($message_type->name) ? $message_type->name : '',
-    '#disabled' => entity_has_status('message_type', $message_type, ENTITY_IN_CODE),
+    '#disabled' => $message_type->hasStatus(ENTITY_IN_CODE),
     '#machine_name' => array(
       'exists' => 'message_type_load',
       'source' => array('description'),
@@ -51,7 +77,54 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     '#weight' => -5,
   );
 
-  field_attach_form('message_type', $message_type, $form, $form_state);
+  // We might have gotten the message type category via ajax, so set it in the
+  // message type entity.
+  if (!empty($form_state['values']['message_type_category'])) {
+    $message_type->category = $form_state['values']['message_type_category'];
+  }
+
+  if ($op == 'add') {
+    // Get all the message type category, and allow user to choose one using ajax.
+    $options = array();
+    $options['message_type'] = t('Default message type category');
+    foreach (message_type_category_load() as $message_category) {
+      $options[$message_category->category] = !empty($message_category->description) ? $message_category->description : $message_type->category;
+    }
+
+    $form['message_type_category'] = array(
+      '#title' => t('Message type category'),
+      '#type' => 'select',
+      '#options' => $options,
+      '#default_value' => $message_type->category,
+      '#description' => t('Select the message type category.'),
+      '#required' => TRUE,
+      '#ajax' => array(
+        'callback' => 'message_type_fields_ajax_callback',
+        'wrapper' => 'message-type-wrapper',
+      ),
+    );
+  }
+  else {
+    if ($message_category = message_type_category_load($message_type->category)) {
+      $value = !empty($message_category->description) ? check_plain($message_category->description) : check_plain($message_type->category);
+    }
+    else {
+      $value = t('Default message type category');
+    }
+    $form['message_type_category'] = array(
+      '#title' => t('Message type category'),
+      '#type' => 'item',
+      '#markup' => $value,
+    );
+  }
+
+  $form['message_type_fields'] = array(
+    '#prefix' => '<div id="message-type-wrapper">',
+    '#suffix' => '</div>',
+    '#tree' => TRUE,
+    '#parents' => array('message_type_fields'),
+  );
+  field_attach_form('message_type', $message_type, $form['message_type_fields'], $form_state);
 
   $form['argument_keys'] = array(
     '#title' => t('Replacement tokens'),
@@ -67,7 +140,7 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     '#weight' => 40,
   );
 
-  if (!entity_has_status('message_type', $message_type, ENTITY_IN_CODE) && $op != 'add') {
+  if (!$message_type->hasStatus(ENTITY_IN_CODE) && $op != 'add') {
     $form['actions']['delete'] = array(
       '#type' => 'submit',
       '#value' => t('Delete message type'),
@@ -80,10 +153,20 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
 }
 
 /**
- * Validation callback.
+ * AJAX callback to attach the message type fields to the form.
+ *
+ * Since the controlling logic for populating the form is in the form builder
+ * function, all we do here is select the element and return it to be updated.
  */
-function message_type_form_validate($form, &$form_state) {
-  entity_form_field_validate('message_type', $form, $form_state);
+function message_type_fields_ajax_callback(array $form, array &$form_state) {
+  return $form['message_type_fields'];
+}
+
+/**
+ * Form API validation callback for the type form.
+ */
+function message_type_form_validate($form, $form_state) {
+  field_attach_form_validate('message_type', $form_state['message_type'], $form['message_type_fields'], $form_state);
 }
 
 /**
