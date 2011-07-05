@@ -162,7 +162,24 @@ function message_views_default_views() {
   $handler->display->display_options['menu']['description'] = 'A list of all messages.';
   $handler->display->display_options['menu']['weight'] = '0';
   $handler->display->display_options['menu']['name'] = 'management';
-
+  $translatables['message'] = array(
+    t('Defaults'),
+    t('more'),
+    t('Apply'),
+    t('Reset'),
+    t('Sort by'),
+    t('Asc'),
+    t('Desc'),
+    t('Items per page'),
+    t('- All -'),
+    t('Offset'),
+    t('No messages created yet.'),
+    t('User'),
+    t('Timestamp'),
+    t('Text'),
+    t('Message type'),
+    t('Page'),
+  );
 
   $views[$view->name] = $view;
 
