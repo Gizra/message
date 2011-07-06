@@ -419,8 +419,7 @@ class Message extends Entity {
    *   Optional; Array to be passed to MessageType::getText().
    */
   public function getText($langcode = LANGUAGE_NONE, $options = array()) {
-
-    $output = $this->getType()->getText($langcode, $options = array());
+    $output = $this->getType()->getText($langcode, $options);
 
     if (!empty($this->arguments)) {
       // Transform arguments before inserting them.
