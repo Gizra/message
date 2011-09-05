@@ -25,13 +25,6 @@ function message_example_node_insert($node) {
     // see message_example_comment() for an example of using a callback to get
     // the most up-to-date title.
     '@title' => $node->title,
-
-    // Add the teaser argument. The teaser may contain HTML, so we make sure
-    // it's not escaped by prefixing the argument with the "!" sign.
-    '!teaser' => array(
-      'callback' => 'message_example_node_view_teaser',
-      'callback arguments' => array($node->nid),
-    ),
   );
 
   // Save the message and assign it to the user realm. Since another user,
@@ -39,19 +32,19 @@ function message_example_node_insert($node) {
   // with another user, we make sure the user realm is populated with the
   // node's author, instead of the acting user (although in most cases it
   // would be the same user).
-  // The following example demonstrates that we don't need to explicetly set
+  // The following example demonstrates that we don't need to explicitly set
   // the realm to the user, since if no realms are provided then the message
   // is automatically assigned to the user passed in the function, or if no
   // user object is provided, then to the acting user.
   $account = user_load($node->uid);
 
-  $values = array(
-    'arguments' => $arguments,
-    // Save reference to the node in the node reference field.
-    'field_node_ref' => array(LANGUAGE_NONE => array(array('nid' => $node->nid))),
-  );
-
-  $message = message_create('create_content', $values, $account)->save();
+  $message = message_create('create_content', array('arguments' => $arguments), $account);
+  // Save reference to the node in the node reference field. We use the entity
+  // metadata wrapper.
+  $wrapper = entity_metadata_wrapper('message', $message);
+  $wrapper->field_node_ref->set($node);
+  // Save the Message entity.
+  $wrapper->save();
 }
 
 /**
