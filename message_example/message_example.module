@@ -5,6 +5,8 @@
  * Message example.
  */
 
+include_once('message_example.features.inc');
+
 /**
  * Implements hook_node_insert().
  */
