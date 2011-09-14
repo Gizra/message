@@ -180,7 +180,7 @@ function message_type_category_create($category, $values = array()) {
   // Make sure the message type doesn't already exist, to prevent duplicate key
   // error.
   if (message_type_category($category)) {
-    throw new Exception('Message type vategory' . check_plain($category) . ' already exists.');
+    throw new Exception('Message type category' . check_plain($category) . ' already exists.');
   }
   $values['category'] = $category;
   $return = entity_create('message_type_category', $values);
