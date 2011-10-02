@@ -19,6 +19,7 @@ class MessageMetadataController extends EntityDefaultMetadataController {
       'setter callback' => 'entity_property_verbatim_set',
       'required' => TRUE,
       'description' => t('The message type.'),
+      'type' => 'message_type',
     ) + $properties['name'];
 
     unset($properties['arguments']);
