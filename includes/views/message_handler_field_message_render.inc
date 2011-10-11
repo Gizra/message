@@ -1,5 +1,4 @@
 <?php
-// $Id: message_handler_field_message_render.inc,v 1.2 2010/06/07 10:54:11 amitaibu Exp $
 
 /**
  * @file

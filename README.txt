@@ -1,5 +1,3 @@
-// $Id: README.txt,v 1.6 2010/06/07 10:54:11 amitaibu Exp $
-
 A general logging utility that can be used as (yet another) activity module.
 
 The main differences between message module and activity module are:
