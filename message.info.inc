@@ -15,12 +15,12 @@ class MessageMetadataController extends EntityDefaultMetadataController {
     $info = parent::entityPropertyInfo();
     $properties = &$info[$this->type]['properties'];
 
-    $properties['name'] = array(
+    $properties['type'] = array(
       'setter callback' => 'entity_property_verbatim_set',
       'required' => TRUE,
       'description' => t('The message type.'),
       'type' => 'message_type',
-    ) + $properties['name'];
+    ) + $properties['type'];
 
     unset($properties['arguments']);
     // Unset the uid property, as it is available via the user anyway.
