@@ -144,14 +144,14 @@ class MessageRulesIntegrationTestCase extends DrupalWebTestCase {
     $rule = rule();
     $rule->action('entity_create', array(
       'type' => 'message',
-      'param_name' => 'foo',
+      'param_type' => 'foo',
       'param_user' => entity_metadata_wrapper('user', $GLOBALS['user']),
     ));
     $rule->integrityCheck();
     $rule->execute();
 
     // Checker whether a new message has been saved.
-    $messages = message_load_multiple(FALSE, array('name' => 'foo'));
+    $messages = message_load_multiple(FALSE, array('type' => 'foo'));
     $message = reset($messages);
 
     $this->assertTrue(!empty($message), 'Message has been saved using Rules.');

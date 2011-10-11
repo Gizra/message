@@ -107,7 +107,7 @@ function message_entity_info() {
       'id' => 'mid',
       // The message has no label.
       'label' => FALSE,
-      'bundle' => 'name',
+      'bundle' => 'type',
     ),
     'bundles' => array(),
     'bundle keys' => array(
@@ -352,7 +352,7 @@ function message_type_delete($message) {
  */
 class Message extends Entity {
 
-  public $name;
+  public $type;
   public $arguments = array();
   public $timestamp;
 
@@ -394,7 +394,7 @@ class Message extends Entity {
    * @return MessageType
    */
   public function getType() {
-    return message_type_load($this->name);
+    return message_type_load($this->type);
   }
 
   /**
@@ -459,7 +459,7 @@ class Message extends Entity {
 /**
  * Helper to easily create messages.
  *
- * @param $name
+ * @param $type
  *   The message type name.
  * @param $values
  *   Array with the following keys:
@@ -471,12 +471,12 @@ class Message extends Entity {
  *   Optional; The user object to associate the message with. If empty, the
  *   current user will be used.
  */
-function message_create($name, $values = array(), $account = NULL) {
+function message_create($type, $values = array(), $account = NULL) {
   if (empty($account)) {
     global $user;
     $account = clone $user;
   }
-  $values['name'] = $name;
+  $values['type'] = $type;
   $values['user'] = $account;
   return entity_create('message', $values);
 }

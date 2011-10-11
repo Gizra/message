@@ -161,7 +161,7 @@ function message_schema() {
         'unsigned' => TRUE,
         'description' => 'The Unique ID of the message.',
       ),
-      'name' => array(
+      'type' => array(
         'description' => 'Reference to a message a type.',
         'type' => 'varchar',
         'length' => 255,
@@ -189,7 +189,7 @@ function message_schema() {
     'foreign keys' => array(
       'message_type' => array(
         'table' => 'message_type',
-        'columns' => array('name' => 'name'),
+        'columns' => array('type' => 'name'),
       ),
       'owner' => array(
         'table' => 'users',
@@ -310,4 +310,18 @@ function message_update_7003() {
     'not null' => TRUE,
     'default' => 'message_type',
   ));
+}
+
+/**
+ * Rename the 'name' column to 'type' in {Message}.
+ */
+function message_update_7004() {
+  $column = array(
+      'description' => 'Reference to a message a type.',
+      'type' => 'varchar',
+      'length' => 255,
+      'not null' => TRUE,
+      'default' => '',
+  );
+  db_change_field('message', 'name', 'type', $column);
 }
