@@ -96,6 +96,19 @@ function message_entity_info() {
     $items['message_type']['translation']['locale'] = TRUE;
   }
 
+  // Add bundle info but bypass entity_load() as we cannot use it here.
+  $message_categories = db_select('message_type_category', 'mtc')
+    ->fields('mtc')
+    ->execute()
+    ->fetchAllAssoc('category');
+
+  foreach ($message_categories as $category_name => $category) {
+    $items['message_type']['bundles'][$category_name] = array(
+      //@todo do we need a short label too?
+      'label' => $category->category,
+    );
+  }
+
   $items['message'] = array(
     'label' => t('Message'),
     'controller class' => 'EntityAPIController',
@@ -123,24 +136,15 @@ function message_entity_info() {
     'metadata controller class' => 'MessageMetadataController',
     'views controller class' => 'MessageViewsController',
   );
-  return $items;
-}
 
-/**
- * Implements hook_entity_info_alter().
- *
- * Use this hook to specify bundles to avoid a recursion, as loading the entity
- * message types needs the entity info too.
- */
-function message_entity_info_alter(&$entity_info) {
-  foreach (message_type_category_load() as $category_name => $category) {
-    $entity_info['message_type']['bundles'][$category_name] = array(
-      //@todo do we need a short label too?
-      'label' => $category->category,
-    );
-  }
-  foreach (message_type_load() as $type_name => $type) {
-    $entity_info['message']['bundles'][$type_name] = array(
+  // Add bundle info but bypass entity_load() as we cannot use it here.
+  $message_types = db_select('message_type', 'mt')
+    ->fields('mt')
+    ->execute()
+    ->fetchAllAssoc('name');
+
+  foreach ($message_types as $type_name => $type) {
+    $items['message']['bundles'][$type_name] = array(
       //@todo do we need a short label too?
       'label' => $type->name,
       'admin' => array(
@@ -151,6 +155,8 @@ function message_entity_info_alter(&$entity_info) {
       ),
     );
   }
+
+  return $items;
 }
 
 /**
