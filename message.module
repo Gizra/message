@@ -97,16 +97,18 @@ function message_entity_info() {
   }
 
   // Add bundle info but bypass entity_load() as we cannot use it here.
-  $message_categories = db_select('message_type_category', 'mtc')
-    ->fields('mtc')
-    ->execute()
-    ->fetchAllAssoc('category');
+  if (db_table_exists('message_type_category')) {
+    $message_categories = db_select('message_type_category', 'mtc')
+      ->fields('mtc')
+      ->execute()
+      ->fetchAllAssoc('category');
 
-  foreach ($message_categories as $category_name => $category) {
-    $items['message_type']['bundles'][$category_name] = array(
-      //@todo do we need a short label too?
-      'label' => $category->category,
-    );
+    foreach ($message_categories as $category_name => $category) {
+      $items['message_type']['bundles'][$category_name] = array(
+        //@todo do we need a short label too?
+        'label' => $category->category,
+      );
+    }
   }
 
   $items['message'] = array(
