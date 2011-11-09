@@ -369,6 +369,9 @@ class Message extends Entity {
       $values['uid'] = $values['user']->uid;
       unset($values['user']);
     }
+    if (isset($values['type']) && is_object($values['type'])) {
+      $values['type'] = $values['type']->name;
+    }
 
     parent::__construct($values, 'message');
     if (!isset($this->uid)) {
