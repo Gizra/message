@@ -50,6 +50,7 @@ class MessageTypeUIController extends EntityDefaultUIController {
  * Generates the message type editing form.
  */
 function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
+  global $language;
   if ($op == 'clone') {
     $message_type->label .= ' (cloned)';
     $message_type->name .= '_clone';
@@ -123,7 +124,7 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     '#tree' => TRUE,
     '#parents' => array('message_type_fields'),
   );
-  field_attach_form('message_type', $message_type, $form['message_type_fields'], $form_state);
+  field_attach_form('message_type', $message_type, $form['message_type_fields'], $form_state, $language->language);
 
   $form['argument_keys'] = array(
     '#title' => t('Replacement tokens'),
