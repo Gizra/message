@@ -65,7 +65,7 @@ class MessageMetadataController extends EntityDefaultMetadataController {
       foreach ($keys as $key) {
         // Add the argument keys so they can later be referenced by
         // entity-metadata. For example if the message is "hello @foo", then
-        // that key will be available via message:argument:foo.
+        // that key will be available via message:arguments:foo.
         $key_name = substr($key, 1);
         $info['message']['bundles'][$name]['properties']['arguments']['property info'][$key_name] = array(
           'type' => 'text',
