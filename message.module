@@ -365,7 +365,7 @@ class Message extends Entity {
   public $timestamp;
 
   public function __construct($values = array()) {
-    if (isset($values['user'])) {
+    if (!isset($values['uid']) && isset($values['user'])) {
       $values['uid'] = $values['user']->uid;
       unset($values['user']);
     }
