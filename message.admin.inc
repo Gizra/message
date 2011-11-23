@@ -50,7 +50,6 @@ class MessageTypeUIController extends EntityDefaultUIController {
  * Generates the message type editing form.
  */
 function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
-  global $language;
   if ($op == 'clone') {
     $message_type->label .= ' (cloned)';
     $message_type->name .= '_clone';
@@ -118,13 +117,43 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     );
   }
 
+  $form['language'] = array(
+    '#title' => t('Field language'),
+    '#description' => t('The language code that will be saved with the field values. This is used to allow translation of fields.'),
+  );
+
+  $field_language = NULL;
+  if (module_exists('locale')) {
+    $options = array();
+    foreach (language_list() as $key => $value) {
+      $options[$key] = $value->name;
+    }
+    $field_language = !empty($form_state['values']['language']) ? $form_state['values']['language'] : key($options);
+    $form['language'] += array(
+      '#type' => 'select',
+      '#options' => $options,
+      '#required' => TRUE,
+      '#default_value' => $field_language,
+      '#ajax' => array(
+        'callback' => 'message_type_fields_ajax_callback',
+        'wrapper' => 'message-type-wrapper',
+      ),
+    );
+  }
+  else {
+    $form['language'] += array(
+      '#type' => 'item',
+      '#markup' => t('Undefined language'),
+    );
+  }
+
   $form['message_type_fields'] = array(
     '#prefix' => '<div id="message-type-wrapper">',
     '#suffix' => '</div>',
     '#tree' => TRUE,
     '#parents' => array('message_type_fields'),
   );
-  field_attach_form('message_type', $message_type, $form['message_type_fields'], $form_state, $language->language);
+  field_attach_form('message_type', $message_type, $form['message_type_fields'], $form_state, $field_language);
 
   $form['argument_keys'] = array(
     '#title' => t('Replacement tokens'),
