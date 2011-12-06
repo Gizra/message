@@ -441,7 +441,7 @@ class Message extends Entity {
 
         if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
           // A replacement via callback function.
-          $value = call_user_func_array($value['callback'], array($value['callback arguments'], $this));
+          $value = call_user_func_array($value['callback'], $value['callback arguments']);
         }
 
         switch ($key[0]) {
