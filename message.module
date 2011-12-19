@@ -438,17 +438,14 @@ class Message extends Entity {
       // accordingly.
       $args = array();
       foreach ($this->arguments as $key => $value) {
-
         if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
-          // Indicate if we should pass the message object as-well.
-          $value += array('pass message' => FALSE);
           // A replacement via callback function.
+          $value += array('pass message' => FALSE);
           if ($value['pass message']) {
-            $value = call_user_func_array($value['callback'], array($value['callback arguments'], $this));
+            // Pass the message object as-well.
+            $value['callback arguments'] += array($this);
           }
-          else {
-            $value = call_user_func_array($value['callback'], array($value['callback arguments']));
-          }
+          $value = call_user_func_array($value['callback'], $value['callback arguments']);
         }
 
         switch ($key[0]) {
