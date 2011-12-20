@@ -443,7 +443,7 @@ class Message extends Entity {
           $value += array('pass message' => FALSE);
           if ($value['pass message']) {
             // Pass the message object as-well.
-            $value['callback arguments'] += array($this);
+            $value['callback arguments'][] = $this;
           }
           $value = call_user_func_array($value['callback'], $value['callback arguments']);
         }
