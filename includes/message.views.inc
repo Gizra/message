@@ -22,6 +22,8 @@ class MessageViewsController extends EntityDefaultViewsController {
       'handler' => 'message_handler_field_message_render',
     );
 
+    $data['message']['type']['filter']['handler'] = 'message_handler_filter_message_type';
+
     return $data;
   }
 }

@@ -15,3 +15,4 @@ files[] = message.test
 ; Views includes
 files[] = includes/message.views.inc
 files[] = includes/views/message_handler_field_message_render.inc
+files[] = includes/views/message_handler_filter_message_type.inc
