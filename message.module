@@ -259,6 +259,19 @@ class MessageType extends Entity {
 
   /**
    * Retrieves the configured message text in a certain language.
+   *
+   * @param $langcode
+   *   The language code of the Message text field, the text should be
+   *   extracted from.
+   * @param $options
+   *   Array of options to pass to the metadata-wrapper:
+   *   - 'field name': The name of the Message text field, text should be
+   *     extracted from.
+   *   - 'sanitize': Indicate if text should be escaped.
+   *
+   * @return
+   *   A string with the text from the field, with all the tokens
+   *   converted into their actual value.
    */
   public function getText($langcode = LANGUAGE_NONE, $options = array()) {
     // Set default values.
