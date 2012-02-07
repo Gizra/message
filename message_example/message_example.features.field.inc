@@ -20,9 +20,8 @@ function message_example_field_default_fields() {
       'field_name' => 'field_node_ref',
       'foreign keys' => array(),
       'indexes' => array(
-        'target_entity' => array(
-          0 => 'target_type',
-          1 => 'target_id',
+        'target_id' => array(
+          0 => 'target_id',
         ),
       ),
       'module' => 'entityreference',
