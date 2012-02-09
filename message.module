@@ -443,14 +443,16 @@ class Message extends Entity {
    *   Optional; Array to be passed to MessageType::getText().
    */
   public function getText($langcode = LANGUAGE_NONE, $options = array()) {
-    $output = $this->getType()->getText($langcode, $options);
+    $message_type = $this->getType();
+    // Message arguments will override the message type arguments.
+    $message_type->arguments = !empty($message_type->arguments) ? $message_type->arguments : array();
+    $this->arguments = !empty($this->arguments) ? $this->arguments : array();
+    $arguments = array_merge($message_type->arguments, $this->arguments);
+    $output = $message_type->getText($langcode, $options);
 
-    if (!empty($this->arguments)) {
-      // Transform arguments before inserting them.
-      // FIXME: Check if arguments is array or text, and prepare arguments
-      // accordingly.
+    if (!empty($arguments)) {
       $args = array();
-      foreach ($this->arguments as $key => $value) {
+      foreach ($arguments as $key => $value) {
         if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
           // A replacement via callback function.
           $value += array('pass message' => FALSE);

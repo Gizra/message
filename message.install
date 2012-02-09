@@ -145,6 +145,11 @@ function message_schema() {
         'length' => 255,
         'not null' => FALSE,
       ),
+      'arguments' => array(
+        'description' => 'Serialized array with the arguments',
+        'type' => 'text',
+        'serialize' => TRUE,
+      ),
     ),
     'primary key' => array('id'),
     'unique keys' => array(
@@ -323,4 +328,17 @@ function message_update_7004() {
       'default' => '',
   );
   db_change_field('message', 'name', 'type', $column);
+}
+
+
+/**
+ * Add "arguments" column to message-type.
+ */
+function message_update_7005() {
+  $column = array(
+    'description' => 'Serialized array with the arguments',
+    'type' => 'text',
+    'serialize' => TRUE,
+  );
+  db_add_field('message_type', 'arguments', $column);
 }
