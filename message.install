@@ -42,6 +42,11 @@ function message_uninstall() {
   $instance = field_info_instance('message_type', 'message_text', 'message_type');
   field_delete_instance($instance);
   field_delete_field('message_text');
+
+  variable_del('message_delete_cron_limit');
+  variable_del('message_purge_enable');
+  variable_del('message_purge_quota');
+  variable_del('message_purge_days');
 }
 
 /**
@@ -146,9 +151,15 @@ function message_schema() {
         'not null' => FALSE,
       ),
       'arguments' => array(
-        'description' => 'Serialized array with the arguments',
+        'description' => 'Serialized array with the arguments.',
         'type' => 'text',
         'serialize' => TRUE,
+      ),
+      'data' => array(
+        'description' => 'Serialized array with general data.',
+        'type' => 'text',
+        'serialize' => TRUE,
+        'size' => 'big',
       ),
     ),
     'primary key' => array('id'),
@@ -341,4 +352,17 @@ function message_update_7005() {
     'serialize' => TRUE,
   );
   db_add_field('message_type', 'arguments', $column);
+}
+
+/**
+ * Add "data" column to message-type.
+ */
+function message_update_7006() {
+  $column = array(
+    'description' => 'Serialized array with general data.',
+    'type' => 'text',
+    'serialize' => TRUE,
+    'size' => 'big',
+  );
+  db_add_field('message_type', 'data', $column);
 }

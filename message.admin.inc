@@ -47,6 +47,46 @@ class MessageTypeUIController extends EntityDefaultUIController {
 }
 
 /**
+ * Menu callback; Admin settings form.
+ */
+function message_user_admin_settings($form_state) {
+  $form = array();
+
+  $form['message_purge_enable'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Purge messages'),
+    '#description' => t('When enabled, old messages will be deleted.'),
+    '#default_value' => variable_get('message_purge_enable', FALSE),
+  );
+
+  $states = array(
+    'visible' => array(
+      ':input[name="message_purge_enable"]' => array('checked' => TRUE),
+    ),
+  );
+
+  $form['message_purge_quota'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Messages quota'),
+    '#description' => t('Maximal (approximate) amount of messages of this type.'),
+    '#default_value' => variable_get('message_purge_quota', NULL),
+    '#element_validate' => array('element_validate_integer_positive'),
+    '#states' => $states,
+  );
+
+  $form['message_purge_days'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Purge messages older than'),
+    '#description' => t('Maximal message age in days.'),
+    '#default_value' => variable_get('message_purge_days', NULL),
+    '#element_validate' => array('element_validate_integer_positive'),
+    '#states' => $states,
+  );
+
+  return system_settings_form($form);
+}
+
+/**
  * Generates the message type editing form.
  */
 function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
@@ -160,6 +200,62 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     '#type' => 'textfield',
     '#default_value' => implode(', ', (array) $message_type->argument_keys),
     '#description' => t('A comma-separated list of replacement tokens, e.g. %title or !url, of which the message text makes use of. Each replacement token has to start with one of the special characters "@", "%" or "!". This character controls the sanitization method used, analogously to the <a href="!link">t()</a> function.', array('!link' => 'http://api.drupal.org/api/drupal/includes--bootstrap.inc/function/t/7')),
+  );
+
+  $form['data'] = array(
+    // Placeholder for other module to add their settings, that should be added
+    // to the data column.
+    '#tree' => TRUE,
+  );
+
+  $form['data']['purge'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Purge settings'),
+  );
+
+  $form['data']['purge']['override'] = array(
+    '#title' => t('Override global settings'),
+    '#type' => 'checkbox',
+    '#description' => t('Override global purge settings for messages of this type.'),
+    '#default_value' => !empty($message_type->data['purge']['override']),
+  );
+
+  $states = array(
+    'visible' => array(
+      ':input[name="data[purge][override]"]' => array('checked' => TRUE),
+    ),
+  );
+
+  $form['data']['purge']['enabled'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Purge messages'),
+    '#description' => t('When enabled, old messages will be deleted.'),
+    '#default_value' => !empty($message_type->data['purge']['enabled']),
+    '#states' => $states,
+  );
+
+  $states = array(
+    'visible' => array(
+      ':input[name="data[purge][enabled]"]' => array('checked' => TRUE),
+    ),
+  );
+
+  $form['data']['purge']['quota'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Messages quota'),
+    '#description' => t('Maximal (approximate) amount of messages of this type.'),
+    '#default_value' => !empty($message_type->data['purge']['quota']) ? $message_type->data['purge']['quota'] : '',
+    '#element_validate' => array('element_validate_integer_positive'),
+    '#states' => $states,
+  );
+
+  $form['data']['purge']['days'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Purge messages older than'),
+    '#description' => t('Maximal message age in days.'),
+    '#default_value' => !empty($message_type->data['purge']['days']) ? $message_type->data['purge']['days'] : '',
+    '#element_validate' => array('element_validate_integer_positive'),
+    '#states' => $states,
   );
 
   $form['actions'] = array('#type' => 'actions');

@@ -11,6 +11,11 @@
 define('MESSAGE_FIELD_MESSAGE_TEXT', 'message_text');
 
 /**
+ * The maximal amount of messages to be purged upon hook_cron()
+ */
+define('MESSAGE_PURGE_LIMIT', 100);
+
+/**
  * Implementation of hook_views_api().
  */
 function message_views_api() {
@@ -159,6 +164,146 @@ function message_entity_info() {
   }
 
   return $items;
+}
+
+/**
+ * Implements hook_menu().
+ */
+function message_menu() {
+  $items = array();
+
+  $items['admin/config/message'] = array(
+    'title' => 'Message settings',
+    'description' => 'Manage message purging upon cron.',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('message_user_admin_settings'),
+    'access arguments' => array('administer messages'),
+    'file' => 'message.admin.inc',
+  );
+
+  return $items;
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Fetch all message types and purge old messages.
+ */
+function message_cron() {
+  // The maximal amount of messages to purge per cron run.
+  $purge_limit = variable_get('message_delete_cron_limit', MESSAGE_PURGE_LIMIT);
+  // Messages to be deleted.
+  $purge_messages = array();
+  // Names of non global-purge-settings overriding message types.
+  $no_override_type_names = array();
+  // Message types that override global purge settings.
+  $override_types = array();
+
+  // Iterate all message types to distinguish between overriding and non-
+  // overriding types.
+  foreach (message_type_load() as $message_type) {
+    if (empty($message_type->data['purge']['override'])) {
+      $no_override_type_names[] = $message_type->name;
+    }
+    else {
+      // For overriding types, store the type and not its name to later extract
+      // the specific purge settings.
+      $override_types[] = $message_type;
+    }
+  }
+
+  // Gather purgeable messages of overriding types.
+  foreach ($override_types as $message_type) {
+    // Ignore message type with unchecked "Purge messages". Also make sure that
+    // purging settings are present.
+    if (empty($message_type->data['purge']) || empty($message_type->data['purge']['enabled'])) {
+      continue;
+    }
+
+    $purge_messages += message_get_purgeable_by_type($purge_limit, $message_type->name, $message_type->data['purge']);
+  }
+
+  // Gather purgeable messages of non-overriding types according to global
+  // settings.
+  if (!empty($no_override_type_names)) {
+    // Do nothing if purge isn't enabled.
+    if (variable_get('message_purge_enable', FALSE)) {
+      $purge_settings = array(
+        'quota' => variable_get('message_purge_quota', NULL),
+        'days' => variable_get('message_purge_days', NULL),
+      );
+
+      $purge_messages += message_get_purgeable_by_type($purge_limit, $no_override_type_names, $purge_settings);
+    }
+  }
+
+  // Delete all gathered messages.
+  if (!empty($purge_messages)) {
+    message_delete_multiple(array_keys($purge_messages));
+  }
+}
+
+/**
+ * Find purgeable messages according to type and purge settings.
+ *
+ * @param $purge_limit
+ *   The maximal amount of messages to fetch. Decremented each time messages
+ *   are fetched.
+ * @param $message_type_name
+ *   Either a single message type name or an array of names.
+ * @param $purge_settings
+ *   Array containing purging settings: 'quota' and 'days'.
+ *
+ * @return array
+ *   Messages of the given type(s) that should be purged according to the given
+ *   settings.
+ */
+function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge_settings) {
+  if ($purge_limit <= 0) {
+    return;
+  }
+
+  // Messages to be deleted.
+  $purge_messages = array();
+
+  // Base query for both purging methods.
+  $base_query = new EntityFieldQuery();
+  $base_query->entityCondition('entity_type', 'message', '=')
+    ->propertyCondition('type', $message_type_name, is_array($message_type_name) ? 'IN' : '=')
+    // Sort descending, the get the newest first.
+    ->propertyOrderBy('timestamp', 'DESC')
+    ->propertyOrderBy('mid', 'DESC');
+
+  // Purge according to quota definition.
+  if (!empty($purge_settings['quota'])) {
+    $quota_query = clone $base_query;
+    $result = $quota_query
+      ->range($purge_settings['quota'], $purge_limit)
+      ->execute();
+
+    if (!empty($result['message'])) {
+      $purge_limit -= count($result['message']);
+      $purge_messages += $result['message'];
+    }
+  }
+
+  // Purge according to maximal age definition.
+  if (!empty($purge_settings['days'])) {
+    $age_query = clone $base_query;
+    // Find messages older than current time - maximal age in days times
+    // the seconds per day.
+    $earlier_than = time() - $purge_settings['days'] * 86400;
+    $result = $age_query->propertyCondition('timestamp', $earlier_than, '<')
+      ->range(0, $purge_limit)
+      ->execute();
+
+    if (!empty($result['message'])) {
+      $purge_limit -= count($result['message']);
+      $purge_messages += $result['message'];
+    }
+  }
+
+  return $purge_messages;
 }
 
 /**
