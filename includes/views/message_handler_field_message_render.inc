@@ -47,6 +47,7 @@ class message_handler_field_message_render extends views_handler_field {
       '#default_value' => $this->options['field_name'],
       '#required' => TRUE,
     );
+    parent::options_form($form, $form_state);
   }
 
   function render($values) {
