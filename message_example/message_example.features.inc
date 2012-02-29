@@ -5,7 +5,7 @@
  */
 
 /**
- * Implementation of hook_default_message_type().
+ * Implements hook_default_message_type().
  */
 function message_example_default_message_type() {
   $items = array();
@@ -14,6 +14,9 @@ function message_example_default_message_type() {
     "description" : "Create content",
     "argument_keys" : [ "@url @title" ],
     "category" : "message_type",
+    "language" : "en",
+    "arguments" : null,
+    "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
     "message_text" : { "und" : [
         {
           "value" : "created \\u003ca href=\\"@url\\"\\u003e@title\\u003c\\/a\\u003e",

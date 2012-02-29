@@ -77,6 +77,13 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
+      'language' => array(
+        'description' => 'The {languages}.language of this message type category.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
       'status' => array(
         'type' => 'int',
         'not null' => TRUE,
@@ -134,6 +141,13 @@ function message_schema() {
         'description' => 'Serialized array with the argument keys',
         'type' => 'text',
         'serialize' => TRUE,
+      ),
+      'language' => array(
+        'description' => 'The {languages}.language of this message type.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
       ),
       'status' => array(
         'type' => 'int',
@@ -199,6 +213,13 @@ function message_schema() {
         'type' => 'int',
         'not null' => TRUE,
         'unsigned' => TRUE,
+      ),
+      'language' => array(
+        'description' => 'The {languages}.language of this message.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
       ),
     ),
     'foreign keys' => array(
@@ -365,4 +386,65 @@ function message_update_7006() {
     'size' => 'big',
   );
   db_add_field('message_type', 'data', $column);
+}
+
+/**
+ * Add "language" column to all Message's related entities.
+ */
+function message_update_7007(&$sandbox) {
+  // Update the existing entities, with the default language.
+  $langcode = language_default()->language;
+
+  $tables = array(
+    'message_type_category',
+    'message_type',
+    'message',
+  );
+
+  if (!isset($sandbox['total'])) {
+    foreach ($tables as $key => $table) {
+      $name = str_replace('_', ' ', $table);
+      $column = array(
+        'description' => "The {languages}.language of this $name.",
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      );
+      db_add_field($table, 'language', $column);
+
+      if ($table == 'message') {
+        // We don't want to time out when updating messages, so we will
+        // process it using batches.
+        $query = db_select($table);
+        $sandbox['last'] = 0;
+        $sandbox['total'] = $query->countQuery()->execute()->fetchField();
+        $sandbox['#finished'] = 0;
+      }
+      else {
+        db_update($table)
+          ->fields(array(
+            'language' => $langcode,
+          ))
+          ->execute();
+      }
+    }
+  }
+  elseif ($sandbox['total'] && $sandbox['last'] <= $sandbox['total']) {
+    // Update messages.
+    $batch_size = 200;
+    db_update('message')
+      ->fields(array(
+        'language' => $langcode,
+      ))
+      ->condition('mid', $sandbox['last'], '>')
+      ->execute();
+
+    $sandbox['last'] += $batch_size;
+    $sandbox['#finished'] = min(0.99, $sandbox['last'] / $sandbox['total']);
+  }
+  else {
+    // Finished processing.
+    $sandbox['#finished'] = 1;
+  }
 }

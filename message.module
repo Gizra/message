@@ -336,6 +336,9 @@ function message_type_category_create($category, $values = array()) {
     throw new Exception('Message type category' . check_plain($category) . ' already exists.');
   }
   $values['category'] = $category;
+  $values += array(
+    'language' => language_default()->language,
+  );
   $return = entity_create('message_type_category', $values);
 
   return $return;
@@ -463,6 +466,9 @@ function message_type_create($name, $values = array()) {
     throw new Exception('Message type ' . check_plain($name) . ' already exists.');
   }
   $values['name'] = $name;
+  $values += array(
+    'language' => language_default()->language,
+  );
   $return = entity_create('message_type', $values);
 
   return $return;
@@ -653,6 +659,9 @@ function message_create($type, $values = array(), $account = NULL) {
   }
   $values['type'] = $type;
   $values['user'] = $account;
+  $values += array(
+    'language' => language_default()->language,
+  );
   return entity_create('message', $values);
 }
 
