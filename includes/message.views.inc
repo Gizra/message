@@ -16,7 +16,7 @@ class MessageViewsController extends EntityDefaultViewsController {
     $data = parent::views_data();
 
     $data['message']['message_render']['field'] = array(
-      'title' => 'Render message',
+      'title' => 'Render message (Get text)',
       'real field' => 'mid',
       'help' => t('Show the message by replacing any tokens with their real value.'),
       'handler' => 'message_handler_field_message_render',
