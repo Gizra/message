@@ -25,6 +25,15 @@ function message_views_api() {
   );
 }
 
+ /**
+ * Implements hook_ctools_plugin_directory().
+ */
+function message_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'ctools') {
+    return 'ctools/' . $plugin;
+  }
+}
+
 /**
  * Implements hook_permission().
  */
@@ -431,16 +440,33 @@ class MessageType extends Entity {
       'sanitize' => TRUE,
       // The field name from which the text should be extracted.
       'field name' => MESSAGE_FIELD_MESSAGE_TEXT,
+      // Determine if the text of just a single delta should be returned.
+      'partials' => FALSE,
+      'partial delta' => 0,
     );
     // Let the metadata wrapper deal with the language.
     $property = entity_metadata_wrapper('message_type', $this)->language($langcode)->$options['field name'];
-    // If the property is of type 'text_formatted' get the processed text value.
-    if ($property->value($options) && $property instanceof EntityStructureWrapper && isset($property->value)) {
-      $property = $property->value;
-    }
-    return $property->value($options);
-  }
 
+    $delta = $options['partial delta'];
+    if (!empty($options['partials']) && $delta >= $property->count()) {
+      // Delta is bigger than the existing field, so return early, to
+      // prevent an error.
+      return;
+    }
+
+    if (!empty($options['partials'])) {
+      $property_item = $this->getValue($property, $delta, $options);
+      return $property_item->value($options);
+    }
+    else {
+      $output = '';
+      foreach (array_keys($property->value($options)) as $delta) {
+        $property_item = $this->getValue($property, $delta, $options);
+        $output .= $property_item->value($options);
+      }
+      return $output;
+    }
+  }
 
   public function save() {
     parent::save();
@@ -449,6 +475,17 @@ class MessageType extends Entity {
     entity_property_info_cache_clear();
   }
 
+  /**
+   * Helper function to get the value from a property.
+   */
+  protected function getValue($property, $delta, $options) {
+    // If the property is of type 'text_formatted' get the processed text
+    // value.
+    if ($property->get($delta)->value($options) && $property->get($delta) instanceof EntityStructureWrapper && isset($property->get($delta)->value)) {
+      $property = $property->get($delta)->value;
+    }
+    return $property;
+  }
 }
 
 /**

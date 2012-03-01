@@ -18,6 +18,8 @@ class message_handler_field_message_render extends views_handler_field {
   function option_definition() {
     $options = parent::option_definition();
     $options['field_name'] = array('default' => MESSAGE_FIELD_MESSAGE_TEXT);
+    $options['partials'] = array('default' => FALSE);
+    $options['partials_delta'] = array('default' => 0);
     return $options;
   }
 
@@ -47,13 +49,35 @@ class message_handler_field_message_render extends views_handler_field {
       '#default_value' => $this->options['field_name'],
       '#required' => TRUE,
     );
+
+    // Get all the text fields attached to a message-type.
+    $form['partials'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Partial'),
+      '#description' => t('Render only a single delta out of the whole message (in case it is separated in multiple deltas).'),
+      '#default_value' => $this->options['partials'],
+    );
+
+    $form['partials_delta'] = array(
+      '#type' => 'select',
+      '#title' => t('Partial delta'),
+      '#description' => t('The delta to use for partial rendering.'),
+      '#default_value' => $this->options['partials_delta'],
+      '#options' => range(0, 20),
+      '#dependency' => array('edit-options-partials' => array(TRUE)),
+    );
+
     parent::options_form($form, $form_state);
   }
 
   function render($values) {
     $field_alias = $this->field_alias;
     if (!empty($values->$field_alias) && $message = message_load($values->$field_alias)) {
-      $options = array('field name' => $this->options['field_name']);
+      $options = array(
+        'field name' => $this->options['field_name'],
+        'partials' => $this->options['partials'],
+        'partial delta' => $this->options['partials_delta'],
+      );
       return $message->getText(NULL, $options);
     }
   }

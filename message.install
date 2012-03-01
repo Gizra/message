@@ -14,7 +14,7 @@ function message_install() {
     'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
     'type' => 'text_long',
     'entity_types' => array('message_type'),
-    'cardinality' => 1,
+    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     'translatable' => TRUE,
     'locked' => TRUE,
   );
@@ -447,4 +447,13 @@ function message_update_7007(&$sandbox) {
     // Finished processing.
     $sandbox['#finished'] = 1;
   }
+}
+
+/**
+ * Make message-text field cardinality unlimited.
+ */
+function message_update_7008() {
+  $field = field_info_field(MESSAGE_FIELD_MESSAGE_TEXT);
+  $field['cardinality'] = FIELD_CARDINALITY_UNLIMITED;
+  field_update_field($field);
 }
