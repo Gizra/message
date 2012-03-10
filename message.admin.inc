@@ -91,8 +91,7 @@ function message_user_admin_settings($form_state) {
  */
 function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
   if ($op == 'clone') {
-    $message_type->label .= ' (cloned)';
-    $message_type->name .= '_clone';
+    $message_type->description .= ' (cloned)';
   }
 
   $form['description'] = array(
