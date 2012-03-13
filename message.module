@@ -339,6 +339,7 @@ class MessageTypeCategory extends Entity {
  *   Returns a new message type category object.
  */
 function message_type_category_create($category, $values = array()) {
+  global $language;
   // Make sure the message type doesn't already exist, to prevent duplicate key
   // error.
   if (message_type_category($category)) {
@@ -346,7 +347,7 @@ function message_type_category_create($category, $values = array()) {
   }
   $values['category'] = $category;
   $values += array(
-    'language' => language_default()->language,
+    'language' => $language->language,
   );
   $return = entity_create('message_type_category', $values);
 
@@ -503,6 +504,7 @@ class MessageType extends Entity {
  *   Returns a new message type object.
  */
 function message_type_create($name, $values = array()) {
+  global $language;
   // Make sure the message type doesn't already exist, to prevent duplicate key
   // error.
   if (message_type_load($name)) {
@@ -510,7 +512,7 @@ function message_type_create($name, $values = array()) {
   }
   $values['name'] = $name;
   $values += array(
-    'language' => language_default()->language,
+    'language' => $language->language,
   );
   $return = entity_create('message_type', $values);
 
@@ -696,6 +698,7 @@ class Message extends Entity {
  *   current user will be used.
  */
 function message_create($type, $values = array(), $account = NULL) {
+  global $language;
   if (empty($account)) {
     global $user;
     $account = clone $user;
@@ -703,7 +706,7 @@ function message_create($type, $values = array(), $account = NULL) {
   $values['type'] = $type;
   $values['user'] = $account;
   $values += array(
-    'language' => language_default()->language,
+    'language' => $language->language,
   );
   return entity_create('message', $values);
 }
