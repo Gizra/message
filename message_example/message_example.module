@@ -11,23 +11,7 @@ include_once('message_example.features.inc');
  * Implements hook_node_insert().
  */
 function message_example_node_insert($node) {
-  global $user;
-  // Set the arguments that would be replaced on run-time.
-  $arguments = array(
-    // The link will be replaced with the url of the node using url() upon
-    // display. Even if the node alias changes, then the link will always be
-    // displayed correctly.
-    '@url' => array(
-      'callback' => 'url',
-      'callback arguments' => array('node/' . $node->nid),
-    ),
-    // The title of the node will be sanitized using check_plain() upon
-    // display. We hard code the title to prevent a node load, but if the
-    // node's title will change it will not be reflected in the message.
-    // see message_example_comment() for an example of using a callback to get
-    // the most up-to-date title.
-    '@title' => $node->title,
-  );
+  $arguments = message_example_node_arguments($node);
 
   // Save the message and assign it to the user realm. Since another user,
   // usually an admin might create the node, but populate the author field
@@ -40,11 +24,227 @@ function message_example_node_insert($node) {
   // user object is provided, then to the acting user.
   $account = user_load($node->uid);
 
-  $message = message_create('create_content', array('arguments' => $arguments), $account);
-  // Save reference to the node in the node reference field. We use the entity
-  // metadata wrapper.
+  $message = message_create('example_create_node', array('arguments' => $arguments), $account);
+  // Save reference to the node in the node reference field, and the
+  // "publish" state (i.e. if the node is published or unpublished).
   $wrapper = entity_metadata_wrapper('message', $message);
   $wrapper->field_node_ref->set($node);
-  // Save the Message entity.
+  $wrapper->field_published->set($node->status);
   $wrapper->save();
+}
+
+/**
+ * Implements hook_comment_insert().
+ */
+function message_example_comment_insert($comment) {
+  $account = user_load($comment->uid);
+  $node = node_load($comment->nid);
+  $arguments = message_example_node_arguments($node);
+  $options = array(
+    'fragment' => 'comment-' . $comment->cid,
+  );
+  $arguments += array(
+    '@comment-url' => array(
+      'callback' => 'url',
+      'callback arguments' => array('comment/' . $comment->cid, $options),
+    )
+  );
+
+  $message = message_create('example_create_comment', array('arguments' => $arguments), $account);
+  // Save reference to the node in the node reference field, and the
+  // "publish" state (i.e. if the node is published or unpublished).
+  $wrapper = entity_metadata_wrapper('message', $message);
+  $wrapper->field_node_ref->set($node);
+  $wrapper->field_comment_ref->set($comment);
+
+  // The message should be published only if the node and the comment are
+  // both published.
+  $published = $node->status && $comment->status;
+  $wrapper->field_published->set($published);
+  $wrapper->save();
+}
+
+/**
+ * Implements hook_user_insert()
+ */
+function message_example_user_insert(&$edit, $account, $category) {
+  $arguments = message_example_user_arguments($account);
+  $message = message_create('example_user_register', array('arguments' => $arguments), $account);
+  $wrapper = entity_metadata_wrapper('message', $message);
+  $wrapper->field_published->set($account->status);
+  $wrapper->save();
+}
+
+/**
+ * Helper function to prepare user arguments.
+ */
+function message_example_user_arguments($account) {
+  $arguments = array(
+    // The link will be replaced with the url of the node using url() upon
+    // display. Even if the node alias changes, then the link will always
+    // be displayed correctly.
+    '@user-url' => array(
+      'callback' => 'url',
+      'callback arguments' => array('user/' . $account->uid),
+    ),
+    '!user-picture' => array(
+      'callback' => 'message_example_user_picture',
+      'callback arguments' => array($account->uid),
+    ),
+    // Assuming a user name wont change in our example, we hard code the
+    // user name. Otherwise we could have used a callback.
+    '@user-name' => format_username($account),
+  );
+  return $arguments;
+}
+
+
+/**
+ * Helper function to prepare node arguments.
+ */
+function message_example_node_arguments($node) {
+  $account = user_load($node->uid);
+  $arguments = message_example_user_arguments($account);
+  // @user-url, @user-picture, @user-name, @node-url, @node-title, !teaser
+  // Set the arguments that would be replaced on run-time.
+  $arguments += array(
+    '@node-url' => array(
+      'callback' => 'url',
+      'callback arguments' => array('node/' . $node->nid),
+    ),
+    // The title of the node will be sanitized using check_plain() upon
+    // display. We hard code the title to prevent a node load, but if the
+    // node's title will change it will not be reflected in the message.
+    // see message_example_comment_insert() for an example of using a
+    // callback to get the most up-to-date title.
+    '@node-title' => $node->title,
+    // The teaser is prefixed with "!", as it might contain HTML.
+    '!teaser' => array(
+      'callback' => 'message_example_trim_body_text',
+      // We could pass in the callback arguments the text to term or the
+      // node ID, however as we already have this information of the node
+      // attached to the field_node_ref, we will use the info to extract
+      // the the needed text.
+      'callback arguments' => array(),
+      'pass message' => TRUE,
+    ),
+  );
+
+  return $arguments;
+}
+
+/**
+ * Message callback; Return HTML of a user picture.
+ */
+function message_example_user_picture($uid) {
+  $account = user_load($uid);
+  return theme('user_picture', array('account' => $account));
+}
+
+/**
+ * Message callback; Trim text of a body field.
+ *
+ * @param $message
+ *   The Message entity.
+ *
+ * @see views_trim_text()
+ */
+function message_example_trim_body_text(Message $message) {
+  $wrapper = entity_metadata_wrapper('message', $message);
+  $entity_type = $message->type == 'example_create_node' ? 'node' : 'comment';
+  $field_name = $entity_type == 'node' ? 'field_node_ref' : 'field_comment_ref';
+
+  // The wrapper is now wrapping the node or the comment entity.
+  $wrapper = $wrapper->$field_name;
+  $field_name = $message->type == 'example_create_node' ? 'body' : 'comment_body';
+
+  if (!$wrapper->{$field_name}->value()) {
+    // Body field is empty.
+    return;
+  }
+
+  $body = $wrapper->{$field_name}->value->value();
+  $options = array(
+    'max_length' => 50,
+    'html' => TRUE,
+  );
+  $body_trimmed = views_trim_text($options, $body);
+
+  $options = array();
+  if ($entity_type == 'node') {
+    $id = $wrapper->getIdentifier();
+    $url = "node/$id";
+  }
+  else {
+    $id = $wrapper->node->getIdentifier();
+    $url = "comment/$id";
+    $options['fragment'] = "comment-$id";
+  }
+
+  if (strlen($body) > strlen($body_trimmed)) {
+    // Add a "Read more" before the closing <p>.
+    $body_trimmed = substr_replace($body_trimmed, '... ' . l(t('Read more'), $url, $options) . '</p>', -4);
+  }
+
+  return $body_trimmed;
+}
+
+/**
+ * Implements hook_node_update().
+ */
+function message_example_node_update($node) {
+  message_example_update_message_status('node', $node);
+}
+
+/**
+ * Implements hook_comment_update().
+ */
+function message_example_comment_update($comment) {
+  message_example_update_message_status('comment', $comment);
+}
+
+/**
+ * Update the "published" field in the message entity, when it changes in the
+ * related entity.
+ *
+ * @param $entity_type
+ *   The entity type (node or comment).
+ * @param $entity
+ *   The entity object.
+ */
+function message_example_update_message_status($entity_type, $entity) {
+  if ($entity->status == $entity->original->status) {
+    // status didn't change.
+    return;
+  }
+  list($id) = entity_extract_ids($entity_type, $entity);
+  $field_name = 'field_' . $entity_type . '_ref';
+
+  $query = new EntityFieldQuery();
+  $result = $query
+    ->entityCondition('entity_type', 'message')
+    ->fieldCondition($field_name, 'target_id',  $id, '=')
+    ->execute();
+
+  if (empty($result['message'])) {
+    return;
+  }
+
+  foreach (array_keys($result['message']) as $mid) {
+    $wrapper = entity_metadata_wrapper('message', $mid);
+    // If comment status changed, we still need to check the node as-well.
+    if ($entity_type == 'comment') {
+      $node = node_load($entity->nid);
+      $status = intval($entity->status && $node->status);
+    }
+    else {
+      // The entity is the node.
+      $status = $entity->status;
+    }
+    if ($wrapper->field_published->value() != $status) {
+      // Status changed, so update the message entity.
+      $wrapper->field_published->set($status);
+      $wrapper->save();
+    }
+  }
 }
