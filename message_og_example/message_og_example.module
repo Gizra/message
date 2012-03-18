@@ -11,7 +11,7 @@ include_once('message_og_example.features.inc');
  * Implements hook_og_membership_insert().
  */
 function message_og_example_og_membership_insert($og_membership) {
-  if ($og_membership->state != OG_STATE_ACTIVE || $og_membership->entity_type == 'user') {
+  if ($og_membership->state != OG_STATE_ACTIVE || $og_membership->entity_type != 'user') {
     // Membership isn't active.
     return;
   }
