@@ -36,9 +36,9 @@ function message_example_default_message_type() {
     "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
     "message_text" : { "und" : [
         {
-          "value" : "\\u003ca href=\\"@user-url\\"\\u003e!user-picture\\u003c\\/a\\u003e",
+          "value" : "!user-picture",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"@user-url\\"\\u003e!user-picture\\u003c\\/a\\u003e\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003cp\\u003e!user-picture\\u003c\\/p\\u003e\\n"
         },
         {
           "value" : "\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e \\u003ca href=\\"@comment-url\\"\\u003ecommented\\u003c\\/a\\u003e on @node-title",
@@ -71,9 +71,9 @@ function message_example_default_message_type() {
     "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
     "message_text" : { "und" : [
         {
-          "value" : "\\u003ca href=\\"@user-url\\"\\u003e!user-picture\\u003c\\/a\\u003e",
+          "value" : "!user-picture",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"@user-url\\"\\u003e!user-picture\\u003c\\/a\\u003e\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003cp\\u003e!user-picture\\u003c\\/p\\u003e\\n"
         },
         {
           "value" : "\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e created \\u003ca href=\\"@node-url\\"\\u003e@node-title\\u003c\\/a\\u003e",
@@ -99,9 +99,9 @@ function message_example_default_message_type() {
     "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
     "message_text" : { "und" : [
         {
-          "value" : "\\u003ca href=\\"@user-url\\"\\u003e!user-picture\\u003c\\/a\\u003e",
+          "value" : "!user-picture",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"@user-url\\"\\u003e!user-picture\\u003c\\/a\\u003e\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003cp\\u003e!user-picture\\u003c\\/p\\u003e\\n"
         },
         {
           "value" : "\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e registered.",

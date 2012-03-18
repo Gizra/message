@@ -150,13 +150,17 @@ function message_example_user_picture($uid) {
  * @see views_trim_text()
  */
 function message_example_trim_body_text(Message $message) {
+  if (empty($message->field_comment_ref) && empty($message->field_node_ref)) {
+    return;
+  }
+
   $wrapper = entity_metadata_wrapper('message', $message);
-  $entity_type = $message->type == 'example_create_node' ? 'node' : 'comment';
-  $field_name = $entity_type == 'node' ? 'field_node_ref' : 'field_comment_ref';
+  $entity_type = !empty($message->field_comment_ref) ? 'comment' : 'node';
+  $field_name = $entity_type == 'comment' ? 'field_comment_ref' : 'field_node_ref';
 
   // The wrapper is now wrapping the node or the comment entity.
   $wrapper = $wrapper->$field_name;
-  $field_name = $message->type == 'example_create_node' ? 'body' : 'comment_body';
+  $field_name = $entity_type == 'comment' ? 'comment_body' : 'body';
 
   if (!$wrapper->{$field_name}->value()) {
     // Body field is empty.
