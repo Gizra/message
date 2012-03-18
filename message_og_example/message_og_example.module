@@ -21,7 +21,7 @@ function message_og_example_og_membership_insert($og_membership) {
     return;
   }
 
-  if (!$og_membership->gid) {
+  if (!$og_membership->etid) {
     // Don't capture membership of anonymous user, that might be caused
     // when using Devel generate.
     return;
