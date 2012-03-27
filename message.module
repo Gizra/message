@@ -471,7 +471,8 @@ class MessageType extends Entity {
     }
     else {
       // Single value field.
-      return $property->value($options);
+      $property_item = $this->getValue($property, $delta, $options);
+      return $property_item->value($options);
     }
   }
 
@@ -484,11 +485,28 @@ class MessageType extends Entity {
 
   /**
    * Helper function to get the value from a property.
+   *
+   * If the property is of type 'text_formatted' get the processed text
+   * value.
+   *
+   * @param $property
+   *   The wrapped property object.
+   * @param $delta
+   *   The delta of the field.
+   * @param $options
+   *   Array of options that might be needed to get the field value.
+   *
+   * @return
+   *   The wrapped property that can be used to get the text value of the
+   *   field (i.e. safe-value or plain text).
    */
   protected function getValue($property, $delta, $options) {
-    // If the property is of type 'text_formatted' get the processed text
-    // value.
-    if ($property->get($delta)->value($options) && $property->get($delta) instanceof EntityStructureWrapper && isset($property->get($delta)->value)) {
+    if ($property instanceof EntityStructureWrapper && isset($property->value)) {
+      // Single value field.
+      $property = $property->value;
+    }
+    elseif ($property instanceof EntityListWrapper && $property->get($delta)->value($options) && $property->get($delta) instanceof EntityStructureWrapper && isset($property->get($delta)->value)) {
+      // Multiple value field.
       $property = $property->get($delta)->value;
     }
     return $property;
