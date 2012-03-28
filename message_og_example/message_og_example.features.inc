@@ -22,28 +22,21 @@ function message_og_example_default_message_type() {
   $items['example_og_post_in_group'] = entity_import('message_type', '{
     "name" : "example_og_post_in_group",
     "description" : "Example - OG post in group",
-    "argument_keys" : [
-      "@user-url",
-      "!user-picture",
-      "@user-name",
-      "@node-url",
-      "@node-title",
-      "!groups"
-    ],
+    "argument_keys" : [ "!teaser", "!groups" ],
     "category" : "message_type",
     "language" : "en",
     "arguments" : null,
     "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
     "message_text" : { "und" : [
         {
-          "value" : "!user-picture",
+          "value" : "[message:user:picture]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e!user-picture\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003cp\\u003e[message:user:picture]\\u003c\\/p\\u003e\\n"
         },
         {
-          "value" : "\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e posted \\u003ca href=\\"@node-url\\"\\u003e@node-title\\u003c\\/a\\u003e in !groups.",
-          "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e posted \\u003ca href=\\"@node-url\\"\\u003e@node-title\\u003c\\/a\\u003e in !groups.\\u003c\\/p\\u003e\\n"
+          "value" : "\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e posted \\u003ca href=\\"[message:field-node-ref:url]\\"\\u003e[message:field-node-ref:title]\\u003c\\/a\\u003e in !groups.",
+          "format" : "full_html",
+          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e posted \\u003ca href=\\"[message:field-node-ref:url]\\"\\u003e[message:field-node-ref:title]\\u003c\\/a\\u003e in !groups.\\u003c\\/p\\u003e\\n"
         },
         {
           "value" : "!teaser",
@@ -57,21 +50,21 @@ function message_og_example_default_message_type() {
   $items['example_og_user_membership'] = entity_import('message_type', '{
     "name" : "example_og_user_membership",
     "description" : "Example - OG user membership",
-    "argument_keys" : [ "@user-url", "!user-picture", "@user-name", "@node-url", "@node-title" ],
+    "argument_keys" : [],
     "category" : "message_type",
     "language" : "en",
     "arguments" : null,
     "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
     "message_text" : { "und" : [
         {
-          "value" : "!user-picture",
+          "value" : "[message:user:picture]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e!user-picture\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003cp\\u003e[message:user:picture]\\u003c\\/p\\u003e\\n"
         },
         {
-          "value" : "\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e joined \\u003ca href=\\"@node-url\\"\\u003e@node-title\\u003c\\/a\\u003e group.",
-          "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e joined \\u003ca href=\\"@node-url\\"\\u003e@node-title\\u003c\\/a\\u003e group.\\u003c\\/p\\u003e\\n"
+          "value" : "\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e joined \\u003ca href=\\"[message:field-node-groups-ref:0:url]\\"\\u003e[message:field-node-groups-ref:0:title]\\u003c\\/a\\u003e group.",
+          "format" : "full_html",
+          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e joined \\u003ca href=\\"[message:field-node-groups-ref:0:url]\\"\\u003e[message:field-node-groups-ref:0:title]\\u003c\\/a\\u003e group.\\u003c\\/p\\u003e\\n"
         }
       ]
     },

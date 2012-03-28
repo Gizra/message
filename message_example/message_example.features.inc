@@ -22,28 +22,21 @@ function message_example_default_message_type() {
   $items['example_create_comment'] = entity_import('message_type', '{
     "name" : "example_create_comment",
     "description" : "Example - Create comment",
-    "argument_keys" : [
-      "@user-url",
-      "!user-picture",
-      "@user-name",
-      "@comment-url",
-      "@node-title",
-      "!teaser"
-    ],
+    "argument_keys" : [ "!teaser" ],
     "category" : "message_type",
     "language" : "en",
     "arguments" : null,
     "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
     "message_text" : { "und" : [
         {
-          "value" : "!user-picture",
+          "value" : "[message:user:picture]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e!user-picture\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003cp\\u003e[message:user:picture]\\u003c\\/p\\u003e\\n"
         },
         {
-          "value" : "\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e \\u003ca href=\\"@comment-url\\"\\u003ecommented\\u003c\\/a\\u003e on @node-title",
-          "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e \\u003ca href=\\"@comment-url\\"\\u003ecommented\\u003c\\/a\\u003e on @node-title\\u003c\\/p\\u003e\\n"
+          "value" : "\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e \\u003ca href=\\"[message:field-comment-ref:url]\\"\\u003ecommented\\u003c\\/a\\u003e on [message:field-node-ref:title]",
+          "format" : "full_html",
+          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e \\u003ca href=\\"[message:field-comment-ref:url]\\"\\u003ecommented\\u003c\\/a\\u003e on [message:field-node-ref:title]\\u003c\\/p\\u003e\\n"
         },
         {
           "value" : "!teaser",
@@ -57,28 +50,21 @@ function message_example_default_message_type() {
   $items['example_create_node'] = entity_import('message_type', '{
     "name" : "example_create_node",
     "description" : "Example - Create node",
-    "argument_keys" : [
-      "@user-url",
-      "!user-picture",
-      "@user-name",
-      "@node-url",
-      "@node-title",
-      "!teaser"
-    ],
+    "argument_keys" : [ "!user-picture" ],
     "category" : "message_type",
     "language" : "en",
-    "arguments" : null,
+    "arguments" : [],
     "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
     "message_text" : { "und" : [
         {
-          "value" : "!user-picture",
+          "value" : "[message:user:picture]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e!user-picture\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003cp\\u003e[message:user:picture]\\u003c\\/p\\u003e\\n"
         },
         {
-          "value" : "\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e created \\u003ca href=\\"@node-url\\"\\u003e@node-title\\u003c\\/a\\u003e",
-          "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e created \\u003ca href=\\"@node-url\\"\\u003e@node-title\\u003c\\/a\\u003e\\u003c\\/p\\u003e\\n"
+          "value" : "\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e created \\u003ca href=\\"[message:field-node-ref:url]\\"\\u003e[message:field-node-ref:title]\\u003c\\/a\\u003e",
+          "format" : "full_html",
+          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e created \\u003ca href=\\"[message:field-node-ref:url]\\"\\u003e[message:field-node-ref:title]\\u003c\\/a\\u003e\\u003c\\/p\\u003e\\n"
         },
         {
           "value" : "!teaser",
@@ -99,14 +85,14 @@ function message_example_default_message_type() {
     "data" : { "purge" : { "override" : 0, "enabled" : 0, "quota" : "", "days" : "" } },
     "message_text" : { "und" : [
         {
-          "value" : "!user-picture",
+          "value" : "[message:user:picture]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e!user-picture\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003cp\\u003e[message:user:picture]\\u003c\\/p\\u003e\\n"
         },
         {
-          "value" : "\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e registered.",
-          "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"@user-url\\"\\u003e@user-name\\u003c\\/a\\u003e registered.\\u003c\\/p\\u003e\\n"
+          "value" : "\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e registered.",
+          "format" : "full_html",
+          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e registered.\\u003c\\/p\\u003e\\n"
         }
       ]
     },

@@ -172,6 +172,34 @@ class MessageShowMessage extends DrupalWebTestCase {
     $options['partial delta'] = 1;
     $this->assertEqual($text2 . "\n", strip_tags($message->getText(LANGUAGE_NONE, $options)), t('Got correct text for the 2nd delta.'));
   }
+
+  /**
+   * Test token replacement in a message type.
+   */
+  function testTokens() {
+    module_enable(array('entity_token'));
+
+    $user1 = $this->drupalCreateUser();
+    $random_text = $this->randomName();
+    $token_message = '[message:user:name] ' . $random_text;
+    $replaced_message = $user1->name . ' ' . $random_text;
+
+    $message_type = message_type_create('foo');
+    $message_type->{MESSAGE_FIELD_MESSAGE_TEXT} = array(
+      LANGUAGE_NONE => array(
+        0 => array('value' => $token_message, 'format' => 'plain_text'),
+      ),
+    );
+    $message_type->save();
+
+    $message = message_create('foo', array(), $user1);
+
+    $this->assertEqual($replaced_message . "\n", strip_tags($message->getText()), t('Got correct text after token replacement.'));
+
+    // Test not replacing tokens setting enabled.
+    $message->data['token replace'] = FALSE;
+    $this->assertEqual($token_message . "\n", strip_tags($message->getText()), t('Got correct text without token replacement.'));
+  }
 }
 
 

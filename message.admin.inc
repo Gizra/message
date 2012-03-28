@@ -194,6 +194,24 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
   );
   field_attach_form('message_type', $message_type, $form['message_type_fields'], $form_state, $field_language);
 
+  $token_types = module_exists('entity_token') ? array('message_type', 'message') : array();
+  if (!$token_types) {
+    $form['entity_token'] = array('#markup' => '<p>' . t('Optional: Enable "Entity token" module to use Message and Message-type related tokens.') . '</p>');
+  }
+
+  if (module_exists('token')) {
+    $form['token_tree'] = array(
+      '#theme' => 'token_tree',
+      '#token_types' => array('all') + $token_types,
+    );
+  }
+  else {
+    $form['token_tree'] = array(
+      '#markup' => '<p>' . t("Optional: Install <a href='@token-url'>Token</a> module, to show a the list of available tokens.", array('@token-url' => 'http://drupal.org/project/token')) . '</p>',
+    );
+
+  }
+
   $form['argument_keys'] = array(
     '#title' => t('Replacement tokens'),
     '#type' => 'textfield',
