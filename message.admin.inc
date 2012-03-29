@@ -202,7 +202,7 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
   if (module_exists('token')) {
     $form['token_tree'] = array(
       '#theme' => 'token_tree',
-      '#token_types' => array('all') + $token_types,
+      '#token_types' => array_merge(array('all'), $token_types),
     );
   }
   else {
