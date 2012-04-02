@@ -705,10 +705,7 @@ class Message extends Entity {
     }
     if ($output && !(isset($this->data['token replace']) && $this->data['token replace'] == FALSE)) {
       // Message isn't explicetly denying token replace, so process the text.
-      $context = array(
-        'message' => $this,
-        'message_type' => $message_type,
-      );
+      $context = array('message' => $this);
 
       $token_options = !empty($this->data['token options']) ? $this->data['token options'] : array();
       $output = token_replace($output, $context, $token_options);
