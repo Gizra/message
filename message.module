@@ -501,7 +501,7 @@ class MessageType extends Entity {
    *   field (i.e. safe-value or plain text).
    */
   protected function getValue($property, $delta, $options) {
-    if ($property instanceof EntityStructureWrapper && isset($property->value)) {
+    if ($property instanceof EntityStructureWrapper && isset($property->value) && $property->value($options)) {
       // Single value field.
       $property = $property->value;
     }
