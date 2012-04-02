@@ -658,6 +658,12 @@ class Message extends Entity {
    */
   public function getText($langcode = LANGUAGE_NONE, $options = array()) {
     $message_type = $this->getType();
+
+    if (!$message_type) {
+      // Message type does not exist any more.
+      return '';
+    }
+
     // Message arguments will override the message type arguments.
     $message_type->arguments = !empty($message_type->arguments) ? $message_type->arguments : array();
     $this->arguments = !empty($this->arguments) ? $this->arguments : array();
