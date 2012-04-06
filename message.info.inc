@@ -74,7 +74,7 @@ class MessageMetadataController extends EntityDefaultMetadataController {
           'getter callback' => 'message_property_get_argument',
           'setter callback' => 'message_property_set_argument',
           // Get the first character of the replacement key.
-          'sanitized' => ($key[0] == '!') ? TRUE : FALSE,
+          'sanitized' => $key[0] == '!',
           'message_replace_char' => $key[0],
         );
       }
