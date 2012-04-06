@@ -445,8 +445,14 @@ class MessageType extends Entity {
       'partials' => FALSE,
       'partial delta' => 0,
     );
+
+    $property = entity_metadata_wrapper('message_type', $this);
+    if (empty($property->$options['field name'])) {
+      // Field doesn't exist.
+      return;
+    }
     // Let the metadata wrapper deal with the language.
-    $property = entity_metadata_wrapper('message_type', $this)->language($langcode)->$options['field name'];
+    $property = $property->language($langcode)->$options['field name'];
 
     $delta = $options['partial delta'];
     if (!empty($options['partials']) && $delta >= $property->count()) {
