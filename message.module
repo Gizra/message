@@ -720,7 +720,7 @@ class Message extends Entity {
   }
 
   /**
-   * Overriden save.
+   * Implements Entity::save().
    *
    * Auto create arguments based on syntax.
    *
