@@ -11,8 +11,6 @@ include_once('message_example.features.inc');
  * Implements hook_node_insert().
  */
 function message_example_node_insert($node) {
-  $arguments = message_example_node_arguments($node);
-
   // Save the message and assign it to the user realm. Since another user,
   // usually an admin might create the node, but populate the author field
   // with another user, we make sure the user realm is populated with the
@@ -24,7 +22,7 @@ function message_example_node_insert($node) {
   // user object is provided, then to the acting user.
   $account = user_load($node->uid);
 
-  $message = message_create('example_create_node', array('arguments' => $arguments), $account);
+  $message = message_create('example_create_node', array('uid' => $account->uid));
   // Save reference to the node in the node reference field, and the
   // "publish" state (i.e. if the node is published or unpublished).
   $wrapper = entity_metadata_wrapper('message', $message);
@@ -39,9 +37,8 @@ function message_example_node_insert($node) {
 function message_example_comment_insert($comment) {
   $account = user_load($comment->uid);
   $node = node_load($comment->nid);
-  $arguments = message_example_node_arguments($node);
 
-  $message = message_create('example_create_comment', array('arguments' => $arguments), $account);
+  $message = message_create('example_create_comment', array(), $account);
   // Save reference to the node in the node reference field, and the
   // "publish" state (i.e. if the node is published or unpublished).
   $wrapper = entity_metadata_wrapper('message', $message);
@@ -63,26 +60,6 @@ function message_example_user_insert(&$edit, $account, $category) {
   $wrapper = entity_metadata_wrapper('message', $message);
   $wrapper->field_published->set($account->status);
   $wrapper->save();
-}
-
-/**
- * Helper function to prepare node arguments.
- */
-function message_example_node_arguments($node) {
-  // Set the arguments that would be replaced on run-time.
-  $arguments = array(
-    '!teaser' => array(
-      'callback' => 'message_example_trim_body_text',
-      // We could pass in the callback arguments the text to term or the
-      // node ID, however as we already have this information of the node
-      // attached to the field_node_ref, we will use the info to extract
-      // the the needed text.
-      'callback arguments' => array(),
-      'pass message' => TRUE,
-    ),
-  );
-
-  return $arguments;
 }
 
 /**

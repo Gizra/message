@@ -31,17 +31,17 @@ function message_example_default_message_type() {
         {
           "value" : "[message:user:picture]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e[message:user:picture]\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E[message:user:picture]\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e \\u003ca href=\\"[message:field-comment-ref:url]\\"\\u003ecommented\\u003c\\/a\\u003e on [message:field-node-ref:title]",
+          "value" : "\\u003Ca href=\\u0022[message:user:url]\\u0022\\u003E@{message:user:name}\\u003C\\/a\\u003E \\u003Ca href=\\u0022[message:field-comment-ref:url]\\u0022\\u003Ecommented\\u003C\\/a\\u003E on [message:field-node-ref:title]",
           "format" : "full_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e \\u003ca href=\\"[message:field-comment-ref:url]\\"\\u003ecommented\\u003c\\/a\\u003e on [message:field-node-ref:title]\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E\\u003Ca href=\\u0022[message:user:url]\\u0022\\u003E@{message:user:name}\\u003C\\/a\\u003E \\u003Ca href=\\u0022[message:field-comment-ref:url]\\u0022\\u003Ecommented\\u003C\\/a\\u003E on [message:field-node-ref:title]\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "!teaser",
+          "value" : "[message:field-comment-ref:comment-teaser]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e!teaser\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E[message:field-comment-ref:comment-teaser]\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -59,17 +59,17 @@ function message_example_default_message_type() {
         {
           "value" : "[message:user:picture]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e[message:user:picture]\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E[message:user:picture]\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e created \\u003ca href=\\"[message:field-node-ref:url]\\"\\u003e[message:field-node-ref:title]\\u003c\\/a\\u003e",
+          "value" : "\\u003Ca href=\\u0022[message:user:url]\\u0022\\u003E@{message:user:name}\\u003C\\/a\\u003E created \\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:title]\\u003C\\/a\\u003E",
           "format" : "full_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e created \\u003ca href=\\"[message:field-node-ref:url]\\"\\u003e[message:field-node-ref:title]\\u003c\\/a\\u003e\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E\\u003Ca href=\\u0022[message:user:url]\\u0022\\u003E@{message:user:name}\\u003C\\/a\\u003E created \\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:title]\\u003C\\/a\\u003E\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "!teaser",
+          "value" : "[message:field-node-ref:node-teaser]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e!teaser\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E[message:field-node-ref:node-teaser]\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -87,12 +87,12 @@ function message_example_default_message_type() {
         {
           "value" : "[message:user:picture]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e[message:user:picture]\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E[message:user:picture]\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e registered.",
+          "value" : "\\u003Ca href=\\u0022[message:user:url]\\u0022\\u003E@{message:user:name}\\u003C\\/a\\u003E registered.",
           "format" : "full_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e registered.\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E\\u003Ca href=\\u0022[message:user:url]\\u0022\\u003E@{message:user:name}\\u003C\\/a\\u003E registered.\\u003C\\/p\\u003E\\n"
         }
       ]
     },

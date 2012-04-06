@@ -29,8 +29,7 @@ function message_og_example_og_membership_insert($og_membership) {
 
   $node = node_load($og_membership->gid);
     // Create a "User joined" message.
-  $arguments = message_example_node_arguments($node);
-  $message = message_create('example_og_user_membership', array('arguments' => $arguments, 'uid' => $og_membership->etid));
+  $message = message_create('example_og_user_membership', array('uid' => $og_membership->etid));
 
   $wrapper = entity_metadata_wrapper('message', $message);
   $wrapper->field_node_groups_ref[] = $node;
@@ -67,8 +66,11 @@ function message_og_example_node_insert($node) {
     return;
   }
 
-  // Create a "Post in group" message.
-  $arguments = message_example_node_arguments($node);
+  // Create a "Post in group" message. We don't use a token replacement
+  // here as it needs to get the data from multiple values of the field.
+  // Furthermore, this replacement probably doesn't make sense outside of
+  // this message-type context, so we don't want to add another token,
+  // that will not be used.
   $arguments['!groups'] = array(
     'callback' => 'message_og_example_group_list',
     'pass message' => TRUE,
@@ -83,7 +85,7 @@ function message_og_example_node_insert($node) {
 }
 
 /**
- * Show a comma separated list of groups.
+ * Message callback; Show a comma separated list of groups.
  *
  * @param $message
  *   The message entity.

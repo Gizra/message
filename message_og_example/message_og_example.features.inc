@@ -22,7 +22,7 @@ function message_og_example_default_message_type() {
   $items['example_og_post_in_group'] = entity_import('message_type', '{
     "name" : "example_og_post_in_group",
     "description" : "Example - OG post in group",
-    "argument_keys" : [ "!teaser", "!groups" ],
+    "argument_keys" : [ "!groups" ],
     "category" : "message_type",
     "language" : "en",
     "arguments" : null,
@@ -31,17 +31,17 @@ function message_og_example_default_message_type() {
         {
           "value" : "[message:user:picture]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e[message:user:picture]\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E[message:user:picture]\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e posted \\u003ca href=\\"[message:field-node-ref:url]\\"\\u003e[message:field-node-ref:title]\\u003c\\/a\\u003e in !groups.",
+          "value" : "\\u003Ca href=\\u0022[message:user:url]\\u0022\\u003E[message:user:name]\\u003C\\/a\\u003E posted \\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:title]\\u003C\\/a\\u003E in !groups.",
           "format" : "full_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e posted \\u003ca href=\\"[message:field-node-ref:url]\\"\\u003e[message:field-node-ref:title]\\u003c\\/a\\u003e in !groups.\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E\\u003Ca href=\\u0022[message:user:url]\\u0022\\u003E[message:user:name]\\u003C\\/a\\u003E posted \\u003Ca href=\\u0022[message:field-node-ref:url]\\u0022\\u003E[message:field-node-ref:title]\\u003C\\/a\\u003E in !groups.\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "!teaser",
+          "value" : "[message:field-node-ref:node-teaser]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e!teaser\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E[message:field-node-ref:node-teaser]\\u003C\\/p\\u003E\\n"
         }
       ]
     },
@@ -59,12 +59,12 @@ function message_og_example_default_message_type() {
         {
           "value" : "[message:user:picture]",
           "format" : "filtered_html",
-          "safe_value" : "\\u003cp\\u003e[message:user:picture]\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E[message:user:picture]\\u003C\\/p\\u003E\\n"
         },
         {
-          "value" : "\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e joined \\u003ca href=\\"[message:field-node-groups-ref:0:url]\\"\\u003e[message:field-node-groups-ref:0:title]\\u003c\\/a\\u003e group.",
+          "value" : "\\u003Ca href=\\u0022[message:user:url]\\u0022\\u003E@{message:user:name}\\u003C\\/a\\u003E joined \\u003Ca href=\\u0022[message:field-node-groups-ref:0:url]\\u0022\\u003E[message:field-node-groups-ref:0:title]\\u003C\\/a\\u003E group.",
           "format" : "full_html",
-          "safe_value" : "\\u003cp\\u003e\\u003ca href=\\"[message:user:url]\\"\\u003e[message:user:name]\\u003c\\/a\\u003e joined \\u003ca href=\\"[message:field-node-groups-ref:0:url]\\"\\u003e[message:field-node-groups-ref:0:title]\\u003c\\/a\\u003e group.\\u003c\\/p\\u003e\\n"
+          "safe_value" : "\\u003Cp\\u003E\\u003Ca href=\\u0022[message:user:url]\\u0022\\u003E@{message:user:name}\\u003C\\/a\\u003E joined \\u003Ca href=\\u0022[message:field-node-groups-ref:0:url]\\u0022\\u003E[message:field-node-groups-ref:0:title]\\u003C\\/a\\u003E group.\\u003C\\/p\\u003E\\n"
         }
       ]
     },
