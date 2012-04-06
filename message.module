@@ -712,6 +712,75 @@ class Message extends Entity {
     }
     return $output;
   }
+
+  /**
+   * Overriden save.
+   *
+   * Auto create arguments based on syntax.
+   *
+   * If in one of the message text fields there is a token in the
+   * following syntax @{message:user:name}, message will check if it is a
+   * valid token, and if so, will create a new arguments, e.g.:
+   *
+   * @code
+   *   $message->arguments['@{message:user:name}'] = 'foo';
+   * @endcode
+   *
+   * Like this, it is possible to hardcode a token value, upon the message
+   * creation, without the need to retrieve the token value each time the
+   * message is displayed.
+   *
+   * This can be used for example, to hardcode the user's name, assuming
+   * it will not change on the site.
+   */
+  public function save() {
+    if (empty($this->is_new) || !empty($this->data['skip token hardcode'])) {
+      // Message isn't new, or message explicetly doesn't want token
+      // hardcoding
+      parent::save();
+      return;
+    }
+
+    $context = array('message' => $this);
+    $token_options = !empty($this->data['token options']) ? $this->data['token options'] : array();
+
+    $message_type = $this->getType();
+    $wrapper = entity_metadata_wrapper('message_type', $message_type);
+
+    // Iterate over the text fields.
+    $tokens = array();
+    foreach (field_info_instances('message_type', $message_type->category) as $instance) {
+      $field_name = $instance['field_name'];
+      $field = field_info_field($field_name);
+      if (!in_array($field['type'], array('text', 'text_long'))) {
+        // Not a text field.
+        continue;
+      }
+
+      if (!$output = $message_type->getText(NULL, array('field name' => $field_name))) {
+        // Field is empty.
+        continue;
+      }
+
+      // Check for our hardcode syntax.
+      $matches = array();
+      preg_match_all('/[@|%|\!]\{([a-z0-9:_\-]+?)\}/i', $output, $matches);
+      if (!$matches) {
+        continue;
+      }
+      foreach ($matches[1] as $delta => $token) {
+        $output = token_replace('[' . $token . ']', $context, $token_options);
+        if ($output != '[' . $token . ']') {
+          // Token was replaced.
+          $argument = $matches[0][$delta];
+          $tokens[$argument] = $output;
+        }
+      }
+    }
+
+    $this->arguments = array_merge($this->arguments, $tokens);
+    parent::save();
+  }
 }
 
 /**
