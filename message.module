@@ -670,10 +670,7 @@ class Message extends Entity {
       return '';
     }
 
-    // Message arguments will override the message type arguments.
-    $message_type->arguments = !empty($message_type->arguments) ? $message_type->arguments : array();
-    $this->arguments = !empty($this->arguments) ? $this->arguments : array();
-    $arguments = array_merge($message_type->arguments, $this->arguments);
+    $arguments = message_get_property_values($this, 'arguments');
     $output = $message_type->getText($langcode, $options);
 
     if (!empty($arguments)) {
@@ -709,11 +706,12 @@ class Message extends Entity {
       }
       $output = strtr($output, $args);
     }
-    if ($output && !(isset($this->data['token replace']) && $this->data['token replace'] == FALSE)) {
+    $token_replace = message_get_property_values($this, 'data', 'token replace', TRUE);
+    if ($output && $token_replace) {
       // Message isn't explicetly denying token replace, so process the text.
       $context = array('message' => $this);
 
-      $token_options = !empty($this->data['token options']) ? $this->data['token options'] : array();
+      $token_options = message_get_property_values($this, 'data', 'token options');
       $output = token_replace($output, $context, $token_options);
     }
     return $output;
@@ -896,4 +894,55 @@ function message_property_set_argument(&$arguments, $name, $value, $langcode, $t
 function message_property_get_text($message, array $options) {
   $langcode = isset($options['language']) ? $options['language']->language : LANGUAGE_NONE;
   return $message->getText($langcode);
+}
+
+/**
+ * Get the values of a message property.
+ *
+ * The value of the message, after intersecting with the same values
+ * from the message-type. For example, it is possible to assign
+ * $message_type->arguments and $message->arguments. In case there are the
+ * same keys in the array, the $message will override the ones from the
+ * message-type.
+ *
+ * @param $message
+ *   The message object.
+ * @param $name
+ *   The property name.
+ * @param $key
+ *   Optional; If the property is an array, the key to be used to get the
+ *   value.
+ * @param $default_value
+ *   Optional; The default value to assign, if no value is given.
+ *
+ * @return
+ *   The merged values, or if no value if found and empty array.
+ */
+function message_get_property_values(Message $message, $name, $key = NULL, $default_value = array()) {
+  $message_type = $message->getType();
+
+  if (isset($key)) {
+    $type_value = isset($message_type->{$name}[$key]) ? $message_type->{$name}[$key] : array();
+    $value = isset($message->{$name}[$key]) ? $message->{$name}[$key] : array();
+  }
+  else {
+    $type_value = isset($message_type->{$name}) ? $message_type->{$name} : array();
+    $value = isset($message->{$name}) ? $message->{$name} : array();
+  }
+
+  if (isset($value) && !is_array($value)) {
+    // Value was found on the message.
+    return $value;
+  }
+  elseif (isset($type_value) && !is_array($type_value)) {
+    // Value was found on the message type.
+    return $type_value;
+  }
+  elseif (!empty($value) || !empty($type_value)){
+    // Value was found in one of the entities, and it's an array, so merge.
+    return array_merge($type_value, $value);
+  }
+
+  // No value found, so return the default value.
+  return $default_value;
 }
