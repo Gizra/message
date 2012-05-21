@@ -22,8 +22,9 @@ Tokens
   display the current request time instead of the token.
   E.g. [message:user:mail] will be replaced with the message author's username
   (When displaying the message).
-  If the message has fields (e.g field_ref), its contents will accessible
-  by the token system as well under [message:X]. (For instance: [message:X:title]).
+  If the message has fields (e.g field_node_ref), its contents will accessible
+  by the token system as well under [message:field_node_ref].
+  (For instance: [message:field_node_ref:title]).
   This relies on "Entity token" module that ships with Entity API.
   Enabling "Token" module is also recommened, as it provides more tokens
   and shows a token browser in the message type creation page.
@@ -52,7 +53,7 @@ Tokens
     'callback arguments' => array('x', 'z')
   )
   That will get the string '!replaced-by-foo' in the message body to be replaced
-  by the output of foo('x', 'z').
+  by the output of calling foo('x', 'z').
 
 Partials
 ========
