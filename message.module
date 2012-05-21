@@ -316,6 +316,11 @@ function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge
 }
 
 /**
+ * Provide a separate Exception so it can be caught separately.
+ */
+class MessageException extends Exception {}
+
+/**
  * A class used for message types category.
  */
 class MessageTypeCategory extends Entity {
@@ -354,7 +359,7 @@ function message_type_category_create($category, $values = array()) {
   // Make sure the message type doesn't already exist, to prevent duplicate key
   // error.
   if (message_type_category($category)) {
-    throw new Exception('Message type category' . check_plain($category) . ' already exists.');
+    throw new MessageException('Message type category' . check_plain($category) . ' already exists.');
   }
   $values['category'] = $category;
   $values += array(
@@ -641,7 +646,7 @@ function message_type_create($name, $values = array()) {
   // Make sure the message type doesn't already exist, to prevent duplicate key
   // error.
   if (message_type_load($name)) {
-    throw new Exception('Message type ' . check_plain($name) . ' already exists.');
+    throw new MessageException('Message type ' . check_plain($name) . ' already exists.');
   }
   $values['name'] = $name;
   $values += array(
