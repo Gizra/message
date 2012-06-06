@@ -181,7 +181,7 @@ function message_entity_info() {
 function message_menu() {
   $items = array();
 
-  $items['admin/config/message'] = array(
+  $items['admin/config/system/message'] = array(
     'title' => 'Message settings',
     'description' => 'Manage message purging upon cron.',
     'page callback' => 'drupal_get_form',
