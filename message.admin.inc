@@ -52,7 +52,12 @@ class MessageTypeUIController extends EntityDefaultUIController {
 function message_user_admin_settings($form_state) {
   $form = array();
 
-  $form['message_purge_enable'] = array(
+  $form['purge'] = array(
+    '#type' => 'fieldset',
+    '#title' => t('Purge settings'),
+  );
+
+  $form['purge']['message_purge_enable'] = array(
     '#type' => 'checkbox',
     '#title' => t('Purge messages'),
     '#description' => t('When enabled, old messages will be deleted.'),
@@ -65,7 +70,7 @@ function message_user_admin_settings($form_state) {
     ),
   );
 
-  $form['message_purge_quota'] = array(
+  $form['purge']['message_purge_quota'] = array(
     '#type' => 'textfield',
     '#title' => t('Messages quota'),
     '#description' => t('Maximal (approximate) amount of messages of this type.'),
@@ -74,13 +79,27 @@ function message_user_admin_settings($form_state) {
     '#states' => $states,
   );
 
-  $form['message_purge_days'] = array(
+  $form['purge']['message_purge_days'] = array(
     '#type' => 'textfield',
     '#title' => t('Purge messages older than'),
     '#description' => t('Maximal message age in days.'),
     '#default_value' => variable_get('message_purge_days', NULL),
     '#element_validate' => array('element_validate_integer_positive'),
     '#states' => $states,
+  );
+
+  $options = array();
+  foreach (entity_get_info() as $entity_id => $entity) {
+    $options[$entity_id] = $entity['label'];
+  }
+
+  $form['message_delete_on_entity_delete'] = array(
+    '#title' => t('Enable messages auto delete referencing these entities'),
+    '#type' => 'select',
+    '#multiple' => TRUE,
+    '#options' => $options,
+    '#default_value' => variable_get('message_delete_on_entity_delete', array('node', 'user', 'taxonomy_term', 'comment')),
+    '#description' => t('Messages that reference entities of these types will be deleted when the entity gets deleted.'),
   );
 
   return system_settings_form($form);

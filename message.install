@@ -47,6 +47,7 @@ function message_uninstall() {
   variable_del('message_purge_enable');
   variable_del('message_purge_quota');
   variable_del('message_purge_days');
+  variable_del('message_delete_on_entity_delete');
 }
 
 /**
