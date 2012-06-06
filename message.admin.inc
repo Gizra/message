@@ -11,15 +11,6 @@
 class MessageTypeUIController extends EntityDefaultUIController {
 
   /**
-   * Overrides hook_menu() defaults.
-   */
-  public function hook_menu() {
-    $items = parent::hook_menu();
-    $items[$this->path]['description'] = 'Manage message types, including fields.';
-    return $items;
-  }
-
-  /**
    * Overridden to customize the field location.
    */
   public function entityFormSubmitBuildEntity($form, &$form_state) {
