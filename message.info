@@ -7,12 +7,17 @@ dependencies[] = entity
 
 ; Entity API includes
 files[] = message.info.inc
-files[] = message.admin.inc
+files[] = includes/message.admin.inc
+files[] = includes/message.exception.inc
+files[] = includes/message.message_type_category.inc
+files[] = includes/message.message_type.inc
+files[] = includes/message.message.inc
 
 ; Tests
 files[] = message.test
 
 ; Views includes
-files[] = includes/message.views.inc
-files[] = includes/views/message_handler_field_message_render.inc
-files[] = includes/views/message_handler_filter_message_type.inc
+files[] = includes/views/message.views.inc
+files[] = includes/views/handlers/message_handler_field_message_render.inc
+files[] = includes/views/handlers/message_handler_filter_message_type.inc
+
