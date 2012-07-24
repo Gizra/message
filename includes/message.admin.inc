@@ -64,7 +64,7 @@ function message_user_admin_settings($form_state) {
   $form['purge']['message_purge_quota'] = array(
     '#type' => 'textfield',
     '#title' => t('Messages quota'),
-    '#description' => t('Maximal (approximate) amount of messages of this type.'),
+    '#description' => t('Maximal (approximate) amount of messages.'),
     '#default_value' => variable_get('message_purge_quota', NULL),
     '#element_validate' => array('element_validate_integer_positive'),
     '#states' => $states,
@@ -85,12 +85,12 @@ function message_user_admin_settings($form_state) {
   }
 
   $form['message_delete_on_entity_delete'] = array(
-    '#title' => t('Enable messages auto delete referencing these entities'),
+    '#title' => t('Auto delete messages referencing the following entities'),
     '#type' => 'select',
     '#multiple' => TRUE,
     '#options' => $options,
     '#default_value' => variable_get('message_delete_on_entity_delete', array('node', 'user', 'taxonomy_term', 'comment')),
-    '#description' => t('Messages that reference entities of these types will be deleted when the entity gets deleted.'),
+    '#description' => t('Messages that reference entities of these types will be deleted when the referenced entity gets deleted.'),
   );
 
   return system_settings_form($form);
@@ -280,7 +280,7 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
   $form['data']['purge']['days'] = array(
     '#type' => 'textfield',
     '#title' => t('Purge messages older than'),
-    '#description' => t('Maximal message age in days.'),
+    '#description' => t('Maximal message age in days, for messages of this type.'),
     '#default_value' => !empty($message_type->data['purge']['days']) ? $message_type->data['purge']['days'] : '',
     '#element_validate' => array('element_validate_integer_positive'),
     '#states' => $states,
