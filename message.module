@@ -438,6 +438,35 @@ function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge
 }
 
 /**
+ * Implements hook_field_extra_fields().
+ */
+function message_field_extra_fields() {
+  $return = array();
+  foreach (message_type_load() as $message_type) {
+    $wrapper = entity_metadata_wrapper('message_type', $message_type);
+    // Iterate over any "message-text" field.
+    foreach (field_info_instances('message_type', $message_type->category) as $field_name => $value) {
+      $field = field_info_field($field_name);
+      if (empty($field['settings']['message_text'])) {
+        continue;
+      }
+
+      $count = $wrapper->{MESSAGE_FIELD_MESSAGE_TEXT}->count();
+      for ($delta = 0; $delta < $count; $delta++) {
+        $params = array('@label' => $value['label'], '@delta' => $delta);
+        $return['message'][$message_type->name]['display'][$field['field_name'] . '_' . $delta] = array(
+          'label' => $count == 1 ? $value['label'] : t('@label @delta partial', $params),
+          'description' => $count == 1 ? t('Complete rendered message text.') : t('Rendered message text of the @delta partial', $params),
+          'weight' => $delta,
+        );
+      }
+    }
+  }
+
+  return $return;
+}
+
+/**
  * Creates a new message type category.
  *
  * If a message type category already exists, an exception will be thrown.

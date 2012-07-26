@@ -187,6 +187,9 @@ class MessageType extends Entity {
     // Clear the entity property info cache, as changed argument-keys result
     // in different entity property info.
     entity_property_info_cache_clear();
+
+    // Clear the field info cache, so extra fields info is purged.
+    _field_info_collate_fields(TRUE);
   }
 
   /**

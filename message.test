@@ -106,15 +106,13 @@ class MessageShowMessage extends DrupalWebTestCase {
     $message->save();
 
     // Assert the arguments in the message are replaced.
-    $output = $message->view('full', 'l0');
-    $output = trim(strip_tags(render($output)));
-    $this->assertEqual($output, strtr($text1, $arguments), t('Arguments in the first language message were replaced.'));
+    $output = $message->getText('l0');
+    $this->assertEqual(trim(strip_tags($output)), strtr($text1, $arguments), t('Arguments in the first language message were replaced.'));
 
     // Assert the arguments in the message are replaced when showing a message
     // from another language.
-    $output = $message->view('full', 'l1');
-    $output = trim(strip_tags(render($output)));
-    $this->assertEqual(strip_tags($output), strtr($text2, $arguments), t('Arguments in the second language message were replaced.'));
+    $output = $message->getText('l1');
+    $this->assertEqual(trim(strip_tags($output)), strtr($text2, $arguments), t('Arguments in the second language message were replaced.'));
   }
 
   /**
@@ -173,7 +171,93 @@ class MessageShowMessage extends DrupalWebTestCase {
     $this->assertEqual($text2 . "\n", strip_tags($message->getText(LANGUAGE_NONE, $options)), t('Got correct text for the 2nd delta.'));
   }
 
+  /**
+   * Test rendering partials as extra-fields.
+   */
+  function testExtraField() {
+    $message_type = message_type_create('foo');
+    $wrapper = entity_metadata_wrapper('message_type', $message_type);
+    $wrapper->{MESSAGE_FIELD_MESSAGE_TEXT}[] = array('value' => 'first partial', 'format' => 'plain_text');
+    $wrapper->{MESSAGE_FIELD_MESSAGE_TEXT}[] = array('value' => 'second partial', 'format' => 'plain_text');
+    $wrapper->{MESSAGE_FIELD_MESSAGE_TEXT}[] = array('value' => 'third partial', 'format' => 'plain_text');
+    $wrapper->save();
 
+    $display = field_extra_fields_get_display('message', 'foo', 'default');
+    $this->assertEqual(count($display), 3, 'All partials appear in extra-fields.');
+    $this->assertTrue(!empty($display['message_text_0']) && !empty($display['message_text_1']) && !empty($display['message_text_2']), 'All partials appear in extra-fields with the correct name.');
+
+    // Check field info cache is cleared on message type save.
+    $wrapper->{MESSAGE_FIELD_MESSAGE_TEXT}[] = array('value' => 'fourth partial', 'format' => 'plain_text');
+    $wrapper->save();
+
+    $display = field_extra_fields_get_display('message', 'foo', 'default');
+    $this->assertEqual(count($display), 4, 'All partials appear in extra-fields, after re-save.');
+    $this->assertTrue(!empty($display['message_text_0']) && !empty($display['message_text_1']) && !empty($display['message_text_2']) && !empty($display['message_text_3']), 'All partials appear in extra-fields with the correct name, after re-save.');
+
+    $message = message_create('foo');
+
+    // Ensure partials get rendered, before changing any display settings.
+    $build = $message->view();
+    $text = drupal_render($build);
+    $partial1_pos = strpos($text, 'first partial');
+    $partial2_pos = strpos($text, 'second partial');
+    $partial3_pos = strpos($text, 'third partial');
+    $partial4_pos = strpos($text, 'fourth partial');
+
+    $this->assertTrue($partial1_pos && $partial2_pos && $partial3_pos && $partial4_pos, 'All partials found in rendered message text.');
+
+    // Enable the Full view mode, hide the first partial,
+    // and display the last partial first.
+    $settings = field_bundle_settings('message', 'foo');
+    $settings['view_modes']['full']['custom_settings'] = TRUE;
+    $settings['extra_fields']['display']['message_text_0']['full'] = array('weight' => 0, 'visible' => FALSE);
+    $settings['extra_fields']['display']['message_text_1']['full'] = array('weight' => 5, 'visible' => TRUE);
+    $settings['extra_fields']['display']['message_text_2']['full'] = array('weight' => 10, 'visible' => TRUE);
+    $settings['extra_fields']['display']['message_text_3']['full'] = array('weight' => -5, 'visible' => TRUE);
+    field_bundle_settings('message', 'foo', $settings);
+
+    // Render the message text using Full view mode.
+    $build = $message->view('full');
+    $text = drupal_render($build);
+    $partial2_pos = strpos($text, 'second partial');
+    $partial3_pos = strpos($text, 'third partial');
+    $partial4_pos = strpos($text, 'fourth partial');
+
+    $this->assertNoText('first partial', 'First partial successfully hidden from rendered text using Full view mode.');
+    $this->assertTrue($partial2_pos && $partial3_pos && $partial4_pos, 'All partials configured to be visible were rendered.');
+    $this->assertTrue(($partial4_pos < $partial2_pos) && ($partial2_pos < $partial3_pos), 'All partials are rendered in the correct order after re-ordering.');
+
+    // Create a Field API text field to render between partials.
+    $field = array(
+      'field_name' => 'field_bar',
+      'type' => 'text',
+    );
+    field_create_field($field);
+    $instance = array(
+      'field_name' => 'field_bar',
+      'label' => 'Bar',
+      'entity_type' => 'message',
+      'bundle' => 'foo',
+      'settings' => array(),
+      'display' => array(
+        // Set weight to render between first two partials.
+        'full' => array('visible' => TRUE, 'weight' => -3),
+      ),
+    );
+    field_create_instance($instance);
+
+    $message_wrapper = entity_metadata_wrapper('message', $message);
+    $message_wrapper->field_bar->set('sample field text');
+
+    $build = $message->view('full');
+    $text = drupal_render($build);
+    $partial2_pos = strpos($text, 'second partial');
+    $partial3_pos = strpos($text, 'third partial');
+    $partial4_pos = strpos($text, 'fourth partial');
+    $field_pos = strpos($text, 'sample field text');
+
+    $this->assertTrue(($partial4_pos < $field_pos) && ($field_pos < $partial2_pos), 'Text field rendered between two partials.');
+  }
 }
 
 /**
