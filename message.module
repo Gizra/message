@@ -478,7 +478,7 @@ function message_type_category_create($category, $values = array()) {
   global $language;
   // Make sure the message type doesn't already exist, to prevent duplicate key
   // error.
-  if (message_type_category($category)) {
+  if (message_type_category_load($category)) {
     throw new MessageException('Message type category' . check_plain($category) . ' already exists.');
   }
   $values['category'] = $category;
