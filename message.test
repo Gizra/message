@@ -184,7 +184,7 @@ class MessageShowMessage extends DrupalWebTestCase {
 
     $display = field_extra_fields_get_display('message', 'foo', 'default');
     $this->assertEqual(count($display), 3, 'All partials appear in extra-fields.');
-    $this->assertTrue(!empty($display['message_text_0']) && !empty($display['message_text_1']) && !empty($display['message_text_2']), 'All partials appear in extra-fields with the correct name.');
+    $this->assertTrue(!empty($display['message_text__0']) && !empty($display['message_text__1']) && !empty($display['message_text__2']), 'All partials appear in extra-fields with the correct name.');
 
     // Check field info cache is cleared on message type save.
     $wrapper->{MESSAGE_FIELD_MESSAGE_TEXT}[] = array('value' => 'fourth partial', 'format' => 'plain_text');
@@ -192,7 +192,7 @@ class MessageShowMessage extends DrupalWebTestCase {
 
     $display = field_extra_fields_get_display('message', 'foo', 'default');
     $this->assertEqual(count($display), 4, 'All partials appear in extra-fields, after re-save.');
-    $this->assertTrue(!empty($display['message_text_0']) && !empty($display['message_text_1']) && !empty($display['message_text_2']) && !empty($display['message_text_3']), 'All partials appear in extra-fields with the correct name, after re-save.');
+    $this->assertTrue(!empty($display['message_text__0']) && !empty($display['message_text__1']) && !empty($display['message_text__2']) && !empty($display['message_text__3']), 'All partials appear in extra-fields with the correct name, after re-save.');
 
     $message = message_create('foo');
 
@@ -210,10 +210,10 @@ class MessageShowMessage extends DrupalWebTestCase {
     // and display the last partial first.
     $settings = field_bundle_settings('message', 'foo');
     $settings['view_modes']['full']['custom_settings'] = TRUE;
-    $settings['extra_fields']['display']['message_text_0']['full'] = array('weight' => 0, 'visible' => FALSE);
-    $settings['extra_fields']['display']['message_text_1']['full'] = array('weight' => 5, 'visible' => TRUE);
-    $settings['extra_fields']['display']['message_text_2']['full'] = array('weight' => 10, 'visible' => TRUE);
-    $settings['extra_fields']['display']['message_text_3']['full'] = array('weight' => -5, 'visible' => TRUE);
+    $settings['extra_fields']['display']['message_text__0']['full'] = array('weight' => 0, 'visible' => FALSE);
+    $settings['extra_fields']['display']['message_text__1']['full'] = array('weight' => 5, 'visible' => TRUE);
+    $settings['extra_fields']['display']['message_text__2']['full'] = array('weight' => 10, 'visible' => TRUE);
+    $settings['extra_fields']['display']['message_text__3']['full'] = array('weight' => -5, 'visible' => TRUE);
     field_bundle_settings('message', 'foo', $settings);
 
     // Render the message text using Full view mode.
@@ -257,6 +257,41 @@ class MessageShowMessage extends DrupalWebTestCase {
     $field_pos = strpos($text, 'sample field text');
 
     $this->assertTrue(($partial4_pos < $field_pos) && ($field_pos < $partial2_pos), 'Text field rendered between two partials.');
+  }
+
+  /**
+   * Test rendering message text fields other than MESSAGE_FIELD_MESSAGE_TEXT
+   * as extra fields.
+   */
+  function testOtherExtraField() {
+    $field = array(
+      'field_name' => 'baz',
+      'type' => 'text',
+      'entity_types' => array('message_type'),
+      'settings' => array(
+        // Mark this as a message text field.
+        'message_text' => TRUE,
+      ),
+    );
+    field_create_field($field);
+
+    $instance = array(
+      'field_name' => 'baz',
+      'bundle' => 'message_type',
+      'entity_type' => 'message_type',
+    );
+    field_create_instance($instance);
+
+    $message_type = message_type_create('foo');
+    $wrapper = entity_metadata_wrapper('message_type', $message_type);
+    $wrapper->{MESSAGE_FIELD_MESSAGE_TEXT}[] = array('value' => 'first field', 'format' => 'plain_text');
+    $wrapper->baz->set('other field');
+    $wrapper->save();
+
+    $message = message_create('foo');
+    $build = $message->buildContent();
+    $this->assertTrue($build['message_text_message_text_0']['#markup'], '<p>first field</p>', 'Default message-text field appears correctly.');
+    $this->assertTrue($build['message_text_baz_0']['#markup'], 'other field', 'Non-default message-text field appears correctly.');
   }
 }
 

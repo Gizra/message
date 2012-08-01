@@ -347,8 +347,9 @@ function message_entity_delete($entity, $entity_type) {
     $messages = message_load_multiple(array_keys($check_mids));
     foreach ($messages as $message) {
       foreach ($check_mids[$message->mid] as $field_name) {
+        $field = field_info_field($field_name);
         $wrapper = entity_metadata_wrapper('message', $message);
-        $count = $wrapper->$field_name->count();
+        $count = $field['cardinality'] == 1 ? 1 : $wrapper->{$field_name}->count();
 
         // The amount of entities actually referenced with this field.
         // Would have been nicer to use $count to determine the amount of
@@ -451,10 +452,10 @@ function message_field_extra_fields() {
         continue;
       }
 
-      $count = $wrapper->{MESSAGE_FIELD_MESSAGE_TEXT}->count();
+      $count = $field['cardinality'] == 1 ? 1 : $wrapper->{$field_name}->count();
       for ($delta = 0; $delta < $count; $delta++) {
         $params = array('@label' => $value['label'], '@delta' => $delta);
-        $return['message'][$message_type->name]['display'][$field['field_name'] . '_' . $delta] = array(
+        $return['message'][$message_type->name]['display'][$field['field_name'] . '__' . $delta] = array(
           'label' => $count == 1 ? $value['label'] : t('@label @delta partial', $params),
           'description' => $count == 1 ? t('Complete rendered message text.') : t('Rendered message text of the @delta partial', $params),
           'weight' => $delta,
