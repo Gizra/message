@@ -104,13 +104,15 @@ class Message extends Entity {
       // Field name might have double underscore as-well, so we need to
       // make sure we get it right. For this we inverse the string, and
       // exlpode the first double-underscores.
+      // e.g. message__field-name__0
       $inverse = strrev($key);
       $argument = explode('__', $inverse, 2);
       if (count($argument) != 2) {
         continue;
       }
       $delta = strrev($argument[0]);
-      $field_name = strrev($argument[1]);
+      // "message__" is 9 chars.
+      $field_name = substr(strrev($argument[1]), 9);
 
       if (!is_numeric($delta)) {
         continue;
@@ -127,7 +129,7 @@ class Message extends Entity {
         'field name' => $field_name,
       );
 
-      $content['message_text_' . $field_name .'_' . $delta] = array(
+      $content['message__' . $field_name .'__' . $delta] = array(
         '#markup' => $this->getText($langcode, $options),
         '#weight' => $value['weight'],
       );
