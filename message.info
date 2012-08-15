@@ -20,4 +20,4 @@ files[] = message.test
 files[] = includes/views/message.views.inc
 files[] = includes/views/handlers/message_handler_field_message_render.inc
 files[] = includes/views/handlers/message_handler_filter_message_type.inc
-
+files[] = includes/views/handlers/message_handler_filter_message_type_category.inc
