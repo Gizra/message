@@ -53,7 +53,7 @@ function hook_message_view($message, $view_mode, $langcode) {
  *
  * @see hook_entity_view_alter()
  */
-function hook_message_view_alter($build) {
+function hook_message_view_alter(&$build) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
@@ -73,7 +73,6 @@ function hook_message_view_alter($build) {
  */
 function hook_default_message_type() {
   $defaults['main'] = entity_create('message_type', array(
-    // É
   ));
   return $defaults;
 }
@@ -118,7 +117,6 @@ function hook_form_message_type_form_alter(&$form, &$form_state) {
  */
 function hook_default_message_type_category() {
   $defaults['main'] = entity_create('message_type_category', array(
-    // É
   ));
   return $defaults;
 }
