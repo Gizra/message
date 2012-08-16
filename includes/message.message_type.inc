@@ -149,11 +149,11 @@ class MessageType extends Entity {
     $field_name = $options['field name'];
     $params = array('%field' => $field_name);
     if (!$field = field_info_field($field_name)) {
-      throw new MessageException(format_string('Field @field does not exist.', $params));
+      throw new MessageException(format_string('Field %field does not exist.', $params));
     }
 
     if (empty($field['settings']['message_text'])) {
-      throw new MessageException(format_string('Field @field is not a message-text.', $params));
+      throw new MessageException(format_string('Field %field is not a message-text.', $params));
     }
 
     $property = entity_metadata_wrapper('message_type', $this);
