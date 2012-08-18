@@ -167,7 +167,7 @@ function message_entity_info() {
         'path' => 'admin/structure/messages/manage/%message_type',
         'real path' => 'admin/structure/messages/manage/' . $type->name,
         'bundle argument' => 4,
-        'access arguments' => array('administer messages'),
+        'access arguments' => array('administer message types'),
       ),
     );
   }
@@ -186,7 +186,7 @@ function message_menu() {
     'description' => 'Manage message purging upon cron.',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('message_user_admin_settings'),
-    'access arguments' => array('administer messages'),
+    'access arguments' => array('administer message types'),
     'file' => 'includes/message.admin.inc',
   );
 
