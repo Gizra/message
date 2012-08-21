@@ -63,51 +63,6 @@ function message_example_user_insert(&$edit, $account, $category) {
 }
 
 /**
- * Message callback; Trim text of a body field and add "Ream more" link.
- *
- * As there is no token to retrieve a trimmed version of the body field that
- * is attached to the node or comment, we have a custom callback to handle it.
- *
- * @param $message
- *   The Message entity.
- *
- * @see views_trim_text()
- */
-function message_example_trim_body_text(Message $message) {
-  if (empty($message->field_comment_ref) && empty($message->field_node_ref)) {
-    return;
-  }
-
-  $wrapper = entity_metadata_wrapper('message', $message);
-  $entity_type = !empty($message->field_comment_ref) ? 'comment' : 'node';
-  $field_name = $entity_type == 'comment' ? 'field_comment_ref' : 'field_node_ref';
-
-  // The wrapper is now wrapping the node or the comment entity.
-  $wrapper = $wrapper->$field_name;
-  $field_name = $entity_type == 'comment' ? 'comment_body' : 'body';
-
-  if (!$wrapper->{$field_name}->value()) {
-    // Body field is empty.
-    return;
-  }
-
-  $body = $wrapper->{$field_name}->value->value();
-  $options = array(
-    'max_length' => 50,
-    'html' => TRUE,
-  );
-  $body_trimmed = views_trim_text($options, $body);
-  $uri = entity_uri($entity_type, $wrapper->value());
-
-  if (strlen($body) > strlen($body_trimmed)) {
-    // Add a "Read more" before the closing <p>.
-    $body_trimmed = substr_replace($body_trimmed, '... ' . l(t('Read more'), $uri['path'], $uri['options']) . '</p>', -4);
-  }
-
-  return $body_trimmed;
-}
-
-/**
  * Implements hook_node_update().
  */
 function message_example_node_update($node) {
