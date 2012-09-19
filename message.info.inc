@@ -51,8 +51,14 @@ class MessageMetadataController extends EntityDefaultMetadataController {
       'sanitize' => TRUE,
     );
 
+    // Bypass entity_load() as we cannot use it here.
+    $message_types = db_select('message_type', 'mt')
+      ->fields('mt')
+      ->execute()
+      ->fetchAllAssoc('name');
+
     // Add in the arguments specific to the bundles.
-    foreach (message_type_load() as $name => $type) {
+    foreach ($message_types as $name => $type) {
       $info['message']['bundles'][$name]['properties']['arguments'] = array(
         'label' => t('Message arguments'),
         'type' => 'struct',
@@ -61,7 +67,7 @@ class MessageMetadataController extends EntityDefaultMetadataController {
         'setter callback' => 'entity_property_verbatim_set',
         'property info' => array(),
       );
-      $keys = array_filter($type->argument_keys);
+      $keys = array_filter(unserialize($type->argument_keys));
       foreach ($keys as $key) {
         // Add the argument keys so they can later be referenced by
         // entity-metadata. For example if the message is "hello @foo", then
