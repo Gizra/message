@@ -93,7 +93,99 @@ function message_user_admin_settings($form_state) {
     '#description' => t('Messages that reference entities of these types will be deleted when the referenced entity gets deleted.'),
   );
 
+  // Display link to the copy form if the locale module is enabled.
+  if (module_exists('locale')) {
+    $form['links'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Other settings'),
+    );
+
+    $form['links']['text_copy'] = array(
+      '#markup' => l(t('Copy messages text fields from one language to others'), 'admin/config/system/message/text-copy'),
+    );
+  }
+
   return system_settings_form($form);
+}
+
+/**
+ * Menu callback; Texts copying settings form.
+ */
+function message_admin_text_copy($form, $form_state) {
+  // Only display the form if the locale module is enabled.
+  if (!module_exists('locale')) {
+    $form['_notice'] = array(
+      '#markup' => t('Copying messages text fields is dependent on the locale module.'),
+    );
+    return $form;
+  }
+
+  $languages = language_list();
+  $language_options = array(LANGUAGE_NONE => t('"Language none"'));
+  foreach ($languages as $langcode => $language) {
+    $language_options[$langcode] = $language->name;
+  }
+
+  $form['origin'] = array(
+    '#type' => 'select',
+    '#title' => t('Select a language to copy from'),
+    '#options' => $language_options,
+    '#required' => TRUE,
+  );
+
+  $form['destinations'] = array(
+    '#type' => 'select',
+    '#title' => t('Select languages to copy to'),
+    '#multiple' => TRUE,
+    '#options' => $language_options,
+    '#required' => TRUE,
+  );
+
+  $form['override'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Override existing text'),
+    '#description' => t('When checked, existing text in the destination languages will be overriden by the origin language.'),
+  );
+
+  $form['submit'] = array(
+    '#type' => 'submit',
+    '#value' => t('Copy'),
+  );
+
+  return $form;
+}
+
+/**
+ * Submit callback for the copy texts form.
+ */
+function message_admin_text_copy_submit($form, $form_state) {
+  $batch = array(
+    'title' => t('Copying messages texts betweem languages'),
+    'operations' => array(
+      array(
+        'message_admin_text_copy_batch',
+        array(
+          $form_state['values']['origin'],
+          $form_state['values']['destinations'],
+          $form_state['values']['override'],
+        ),
+      ),
+    ),
+    'init_message' => t('Starting message texts copying.'),
+    'progress_message' => t('Processed @current out of @total.'),
+    'error_message' => t('Message texts copying has encountered an error.'),
+  );
+
+  batch_set($batch);
+}
+
+/**
+ * Validate callback for the copy texts form.
+ */
+function message_admin_text_copy_validate($form, $form_state) {
+  if (in_array($form_state['values']['origin'], $form_state['values']['destinations'])) {
+    form_set_error('destinations', t('Cannot copy language values into itself.'));
+  }
 }
 
 /**

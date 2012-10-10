@@ -188,6 +188,15 @@ function message_menu() {
     'file' => 'includes/message.admin.inc',
   );
 
+  $items['admin/config/system/message/text-copy'] = array(
+    'title' => 'Copy messages text fields',
+    'description' => 'Copy messages text fields from one language to others',
+    'page callback' => 'drupal_get_form',
+    'page arguments' => array('message_admin_text_copy'),
+    'access arguments' => array('administer message types'),
+    'file' => 'includes/message.admin.inc',
+  );
+
   return $items;
 }
 
@@ -761,4 +770,82 @@ function message_get_property_values(Message $message, $name, $key = NULL, $defa
 
   // No value found, so return the default value.
   return $default_value;
+}
+
+/**
+ * Find all message text fields.
+ *
+ * @return
+ *   Array of all field names that are marked as message-text.
+ */
+function message_get_text_fields() {
+  $message_fields = array();
+  foreach (field_info_fields() as $field_name => $field) {
+    if (!empty($field['settings']['message_text']) && $field['settings']['message_text']) {
+      $message_fields[] = $field_name;
+    }
+  }
+
+  return $message_fields;
+}
+
+/**
+ * Batch callback. Copy the message text fields from one language to others.
+ *
+ * @param $origin_lang
+ *   The origin language.
+ * @param $dest_langs
+ *   List of destination languages.
+ * @param $override
+ *   Whether to override existing values.
+ */
+function message_admin_text_copy_batch($origin_lang, $dest_langs, $override, &$context) {
+  if (empty($context['sandbox'])) {
+    $context['sandbox']['progress'] = 0;
+    $context['sandbox']['current_id'] = 0;
+    $context['sandbox']['max'] = db_select('message_type')
+      ->countQuery()
+      ->execute()
+      ->fetchField();
+  }
+
+  $result = db_select('message_type', 'mt')
+    ->fields('mt', array('id'))
+    ->condition('id', $context['sandbox']['current_id'], '>')
+    ->orderBy('id')
+    ->range(0, 50)
+    ->execute();
+
+  foreach ($result as $row) {
+    $context['sandbox']['progress']++;
+    $context['sandbox']['current_id'] = $row->id;
+
+    $entity = entity_load_single('message_type', $row->id);
+    // Ignore the current message type if it has no value in its origin
+    // language.
+    if (empty($entity->message_text[$origin_lang])) {
+      continue;
+    }
+    foreach ($entity->message_text[$origin_lang] as $delta => $message_text) {
+      // Copy the message text values from the origin language to the
+      // destination languages.
+      foreach ($dest_langs as $dest_lang) {
+        foreach (message_get_text_fields() as $field_name) {
+          // Check if there's already a value in the destination language. If so,
+          // skip it unless override is checked.
+          if (!$override && !empty($entity->{$field_name}[$dest_lang][$delta])) {
+            continue;
+          }
+          // Copy the origin language text.
+          $entity->{$field_name}[$dest_lang][$delta] = $message_text;
+        }
+      }
+    }
+    // Save the message type with the updated texts.
+    message_type_save($entity);
+  }
+
+  if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
+    $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
+  }
 }
