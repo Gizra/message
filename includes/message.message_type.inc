@@ -158,6 +158,12 @@ class MessageType extends Entity {
 
     $property = entity_metadata_wrapper('message_type', $this);
 
+    if (empty($langcode) && module_exists('locale')) {
+      // Get the langcode from the current language.
+      global $language;
+      $langcode = $language->language;
+    }
+
     // Let the metadata wrapper deal with the language.
     $property = $property->language($langcode)->$options['field name'];
 

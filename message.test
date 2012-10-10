@@ -84,6 +84,9 @@ class MessageShowMessage extends DrupalWebTestCase {
     $text2 = $this->randomName() . ' argument -- @foo';
     $message_type = message_type_create('foo');
     $message_type->{$property} = array(
+      'en' => array(
+        0 => array('value' => 'english text'),
+      ),
       'l0' => array(
         0 => array('value' => $text1),
       ),
@@ -113,6 +116,11 @@ class MessageShowMessage extends DrupalWebTestCase {
     // from another language.
     $output = $message->getText('l1');
     $this->assertEqual(trim(strip_tags($output)), strtr($text2, $arguments), t('Arguments in the second language message were replaced.'));
+
+    // Assert value is of current language when Locale is enabled and langocde is NULL.
+    global $language;
+    $output = $message->getText(NULL);
+    $this->assertEqual(trim(strip_tags($output)), 'english text', 'Assert value is of current language when Locale is enabled and langocde is NULL.');
   }
 
   /**
