@@ -781,7 +781,7 @@ function message_get_property_values(Message $message, $name, $key = NULL, $defa
 function message_get_text_fields() {
   $message_fields = array();
   foreach (field_info_fields() as $field_name => $field) {
-    if (!empty($field['settings']['message_text']) && $field['settings']['message_text']) {
+    if (!empty($field['settings']['message_text'])) {
       $message_fields[] = $field_name;
     }
   }
