@@ -476,6 +476,60 @@ function message_field_extra_fields() {
 }
 
 /**
+ * Implements hook_field_attach_form().
+ *
+ * Add on every message-text field partail, indication to which view-mode
+ * it is assigned to.
+ */
+function message_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode) {
+  if ($entity_type != 'message_type' || empty($entity->name)) {
+    return;
+  }
+
+  $bundle_settings = field_bundle_settings('message', $entity->name);
+  $entity_info = entity_get_info('message');
+  $current_view_modes = array();
+  // Build array keyed by the delta, and the view-modes as value.
+  foreach (message_get_text_fields() as $field_name) {
+    foreach ($bundle_settings['extra_fields']['display'] as $delta => $view_modes) {
+      $identeifer = "message__{$field_name}__";
+      if (strpos($delta, $identeifer) !== 0) {
+        // Field doesn't exist.
+        continue;
+      }
+
+      $delta = str_replace($identeifer, '', $delta);
+      foreach ($view_modes as $view_mode => $value) {
+        if ($value['visible']) {
+          $url = "admin/structure/messages/manage/{$entity->name}/display/{$view_mode}";
+          $current_view_modes[$field_name][$delta][] = l($entity_info['view modes'][$view_mode]['label'], $url);
+        }
+      }
+    }
+  }
+
+  foreach (message_get_text_fields() as $field_name) {
+    if (empty($form[$field_name])) {
+      continue;
+    }
+
+    $langcodes = $form[$field_name];
+    foreach (element_children($langcodes) as $langcode) {
+      $deltas = $form[$field_name][$langcode];
+      foreach (element_children($deltas) as $delta) {
+        if (empty($current_view_modes[$field_name][$delta])) {
+          continue;
+        }
+
+        $form[$field_name][$langcode][$delta]['view_mode'] = array(
+          '#markup' => t('View modes: !view-modes', array('!view-modes' => implode(', ', $current_view_modes[$field_name][$delta]))),
+        );
+      }
+    }
+  }
+}
+
+/**
  * Creates a new message type category.
  *
  * If a message type category already exists, an exception will be thrown.
