@@ -105,7 +105,7 @@ function message_example_views_default_views() {
   $handler = $view->new_display('page', 'Page', 'page');
   $handler->display->display_options['path'] = 'message-example';
   $handler->display->display_options['menu']['type'] = 'normal';
-  $handler->display->display_options['menu']['title'] = 'Messasge example';
+  $handler->display->display_options['menu']['title'] = 'Message example';
   $handler->display->display_options['menu']['description'] = 'Typical UAS (User activity stream).';
   $handler->display->display_options['menu']['weight'] = '0';
   $handler->display->display_options['menu']['context'] = 0;
