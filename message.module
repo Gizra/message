@@ -98,6 +98,7 @@ function message_entity_info() {
     'bundle of' => 'message',
     'module' => 'message',
     'access callback' => 'message_type_access',
+    'entity cache' => module_exists('entitycache'),
     // Enable the entity API's admin UI.
     'admin ui' => array(
       'path' => 'admin/structure/messages',
@@ -150,6 +151,7 @@ function message_entity_info() {
     'module' => 'message',
     'metadata controller class' => 'MessageMetadataController',
     'views controller class' => 'MessageViewsController',
+    'entity cache' => module_exists('entitycache'),
   );
 
   // Add bundle info but bypass entity_load() as we cannot use it here.

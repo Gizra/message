@@ -239,6 +239,20 @@ function message_schema() {
     ),
     'primary key' => array('mid'),
   );
+
+  // Cache bins for Entity-cache module.
+  $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
+  $types = array(
+    'message_type_category',
+    'message_type',
+    'message',
+  );
+
+  foreach ($types as $type) {
+    $schema["cache_entity_$type"] = $cache_schema;
+    $schema["cache_entity_$type"]['description'] = "Cache table used to store $type entity records.";
+  }
+
   return $schema;
 }
 
@@ -471,4 +485,25 @@ function message_update_7009() {
   $field = field_info_field(MESSAGE_FIELD_MESSAGE_TEXT);
   $field['settings']['message_text'] = TRUE;
   field_update_field($field);
+}
+
+/**
+ * Create cache bins for Entity-cache module.
+ */
+function message_update_7010() {
+  $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
+  $types = array(
+    'message_type_category',
+    'message_type',
+    'message',
+  );
+
+  foreach ($types as $type) {
+    $schema["cache_entity_$type"] = $cache_schema;
+    $schema["cache_entity_$type"]['description'] = "Cache table used to store $type entity records.";
+  }
+
+  foreach ($schema as $name => $table) {
+    db_create_table($name, $table);
+  }
 }
