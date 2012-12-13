@@ -238,6 +238,10 @@ function message_schema() {
       ),
     ),
     'primary key' => array('mid'),
+    'indexes' => array(
+      'type' => array('type'),
+      'timestamp' => array('timestamp'),
+    ),
   );
 
   // Cache bins for Entity-cache module.
@@ -507,3 +511,12 @@ function message_update_7010() {
     db_create_table($name, $table);
   }
 }
+
+/**
+ * Add an index to message.type and message.timestamp.
+ */
+function message_update_7011() {
+  db_add_index('message', 'type', array('type'));
+  db_add_index('message', 'timestamp', array('timestamp'));
+}
+
