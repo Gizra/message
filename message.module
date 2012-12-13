@@ -906,3 +906,19 @@ function message_admin_text_copy_batch($origin_lang, $dest_langs, $override, &$c
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
   }
 }
+
+/**
+ * Implements hook_features_message_type_alter().
+ *
+ * Add field_bundle_settings variable when a message-type is exported and
+ * Strongarm module exists.
+ */
+function message_features_pipe_message_type_alter(&$pipe, $data, $export) {
+  if (empty($data) || !module_exists('strongarm')) {
+    return;
+  }
+
+  foreach ($data as $message_type) {
+    $pipe['variable'][] = "field_bundle_settings_message__{$message_type}";
+  }
+}
