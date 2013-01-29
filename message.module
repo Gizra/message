@@ -757,6 +757,13 @@ function message_type_access($op, $entity, $account, $entity_type) {
 }
 
 /**
+ * Access callback for the message type categories.
+ */
+function message_type_category_access($op, $entity, $account, $entity_type) {
+  return user_access('administer message types', $account);
+}
+
+/**
  * Entity property info getter callback for getting arguments.
  */
 function message_property_get_argument($arguments, array $options, $name, $type, $context) {
