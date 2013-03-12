@@ -504,7 +504,8 @@ function message_field_attach_form($entity_type, $entity, &$form, &$form_state, 
       foreach ($view_modes as $view_mode => $value) {
         if ($value['visible']) {
           $url = "admin/structure/messages/manage/{$entity->name}/display/{$view_mode}";
-          $current_view_modes[$field_name][$delta][] = l($entity_info['view modes'][$view_mode]['label'], $url);
+          $label = $view_mode == 'default' ? t('Default') : $entity_info['view modes'][$view_mode]['label'];
+          $current_view_modes[$field_name][$delta][] = l($label, $url);
         }
       }
     }
