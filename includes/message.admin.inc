@@ -312,14 +312,18 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     $form['token_tree'] = array(
       '#markup' => '<p>' . t("Optional: Install <a href='@token-url'>Token</a> module, to show a the list of available tokens.", array('@token-url' => 'http://drupal.org/project/token')) . '</p>',
     );
-
   }
+
+  $params = array(
+    '@url-rules' => 'http://drupal.org/project/rules',
+    '!link' => 'http://api.drupal.org/api/drupal/includes--bootstrap.inc/function/t/7',
+  );
 
   $form['argument_keys'] = array(
     '#title' => t('Replacement tokens'),
     '#type' => 'textfield',
     '#default_value' => implode(', ', (array) $message_type->argument_keys),
-    '#description' => t('A comma-separated list of replacement tokens, e.g. %title or !url, of which the message text makes use of. Each replacement token has to start with one of the special characters "@", "%" or "!". This character controls the sanitization method used, analogously to the <a href="!link">t()</a> function.', array('!link' => 'http://api.drupal.org/api/drupal/includes--bootstrap.inc/function/t/7')),
+    '#description' => t('Optional: For <a href="@url-rules">Rules</a> module, in order to set argument using Rules actions, a comma-separated list of replacement tokens, e.g. %title or !url, of which the message text makes use of. Each replacement token has to start with one of the special characters "@", "%" or "!". This character controls the sanitization method used, analogously to the <a href="!link">t()</a> function.', $params),
   );
 
   $form['data'] = array(
