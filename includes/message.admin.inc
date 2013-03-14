@@ -332,6 +332,14 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     '#tree' => TRUE,
   );
 
+
+  $form['data']['token options']['clear'] = array(
+    '#title' => t('Clear empty tokens'),
+    '#type' => 'checkbox',
+    '#description' => t('When this option is selected, empty tokens will be removed from display.'),
+    '#default_value' => isset($message_type->data['token options']['clear']) ? $message_type->data['token options']['clear'] : FALSE,
+  );
+
   $form['data']['purge'] = array(
     '#type' => 'fieldset',
     '#title' => t('Purge settings'),
