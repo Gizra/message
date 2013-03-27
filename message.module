@@ -155,10 +155,12 @@ function message_entity_info() {
   );
 
   // Add bundle info but bypass entity_load() as we cannot use it here.
-  $message_types = db_select('message_type', 'mt')
-    ->fields('mt')
-    ->execute()
-    ->fetchAllAssoc('name');
+  if (db_table_exists('message_type')) {
+    $message_types = db_select('message_type', 'mt')
+      ->fields('mt')
+      ->execute()
+      ->fetchAllAssoc('name');
+  }
 
   foreach ($message_types as $type_name => $type) {
     $items['message']['bundles'][$type_name] = array(
