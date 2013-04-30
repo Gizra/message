@@ -194,6 +194,9 @@ function message_admin_text_copy_validate($form, $form_state) {
 function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
   if ($op == 'clone') {
     $message_type->description .= ' (cloned)';
+    // Save the original message type into form state so that the submit
+    // handler can clone its field instances.
+    $form_state['original_message_type'] = menu_get_object('entity_object', 4);
   }
 
   $form['description'] = array(
@@ -432,8 +435,18 @@ function message_type_form_validate($form, $form_state) {
 function message_type_form_submit(&$form, &$form_state) {
   $message_type = entity_ui_form_submit_build_entity($form, $form_state);
   $message_type->argument_keys = array_filter(array_map('trim', explode(',', $message_type->argument_keys)));
-  // Save and go back.
   $message_type->save();
+
+  // If this was a clone operation, clone the field instances as well.
+  $op = $form_state['build_info']['args'][1];
+  if ($op == 'clone') {
+    $original_instances = field_info_instances('message', $form_state['original_message_type']->name);
+    foreach ($original_instances as $instance) {
+      $instance['bundle'] = $message_type->name;
+      field_create_instance($instance);
+    }
+  }
+
   $form_state['redirect'] = 'admin/structure/messages';
 }
 
