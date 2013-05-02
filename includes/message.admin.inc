@@ -270,9 +270,11 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
   if (module_exists('locale')) {
     $options = array();
     foreach (language_list() as $key => $value) {
-      $options[$key] = $value->name;
+      if (!empty($value->enabled)) {
+        $options[$key] = $value->name;
+      }
     }
-    $field_language = !empty($form_state['values']['language']) ? $form_state['values']['language'] : key($options);
+    $field_language = !empty($form_state['values']['language']) ? $form_state['values']['language'] : language_default()->language;
     $form['language'] += array(
       '#type' => 'select',
       '#options' => $options,
