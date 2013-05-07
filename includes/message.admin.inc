@@ -236,7 +236,7 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
 
     $form['message_type_category'] = array(
       '#title' => t('Message type category'),
-      '#type' => 'select',
+      '#type' => count($options) > 1 ? 'select' : 'value',
       '#options' => $options,
       '#default_value' => $message_type->category,
       '#description' => t('Select the message type category.'),
@@ -256,7 +256,7 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     }
     $form['message_type_category'] = array(
       '#title' => t('Message type category'),
-      '#type' => 'item',
+      '#type' => count(message_type_category_load()) > 1 ? 'item' : 'value',
       '#markup' => $value,
     );
   }
