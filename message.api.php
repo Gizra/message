@@ -113,10 +113,10 @@ function hook_form_message_type_form_alter(&$form, &$form_state) {
  * @return
  *   An array of default message type categories, keyed by machine names.
  *
- * @see hook_default_message_type_category_alter()
+ * @see hook_default_message_category_alter()
  */
-function hook_default_message_type_category() {
-  $defaults['main'] = entity_create('message_type_category', array(
+function hook_default_message_category() {
+  $defaults['main'] = entity_create('message_category', array(
   ));
   return $defaults;
 }
@@ -127,9 +127,9 @@ function hook_default_message_type_category() {
  * @param array $defaults
  *   An array of default message type categories, keyed by machine names.
  *
- * @see hook_default_message_type_category()
+ * @see hook_default_message_category()
  */
-function hook_default_message_type_category_alter(array &$defaults) {
+function hook_default_message_category_alter(array &$defaults) {
   $defaults['main']->name = 'custom name';
 }
 

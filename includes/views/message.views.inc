@@ -27,7 +27,7 @@ class MessageViewsController extends EntityDefaultViewsController {
       'title' => 'Message category',
       'help' => 'Filter messages by message type category.',
       'filter' => array(
-        'handler' => 'message_handler_filter_message_type_category',
+        'handler' => 'message_handler_filter_message_category',
         'real field' => 'type',
       )
     );

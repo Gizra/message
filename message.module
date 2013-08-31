@@ -458,18 +458,18 @@ function message_field_attach_form($entity_type, $entity, &$form, &$form_state, 
  * @return MessageTypeCategory
  *   Returns a new message type category object.
  */
-function message_type_category_create($category, $values = array()) {
+function message_category_create($category, $values = array()) {
   global $language;
   // Make sure the message type doesn't already exist, to prevent duplicate key
   // error.
-  if (message_type_category_load($category)) {
+  if (message_category_load($category)) {
     throw new MessageException('Message type category' . check_plain($category) . ' already exists.');
   }
   $values['category'] = $category;
   $values += array(
     'language' => $language->language,
   );
-  $return = entity_create('message_type_category', $values);
+  $return = entity_create('message_category', $values);
 
   return $return;
 }
@@ -485,10 +485,10 @@ function message_type_category_create($category, $values = array()) {
  *   Returns a fully-loaded message type category definition if a name is
  *   passed. Else an array containing all message types category is returned.
  */
-function message_type_category_load($name = NULL) {
+function message_category_load($name = NULL) {
   // Replace dashes with underscores so this can be used as menu argument
   // loader too.
-  $types = entity_load_multiple_by_name('message_type_category', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
+  $types = entity_load_multiple_by_name('message_category', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
   if (isset($name)) {
     return isset($types[$name]) ? $types[$name] : FALSE;
   }
@@ -505,8 +505,8 @@ function message_type_category_load($name = NULL) {
  *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
  *   SAVED_UPDATED is returned depending on the operation performed.
  */
-function message_type_category_save($message) {
-  return entity_save('message_type_category', $message);
+function message_category_save($message) {
+  return entity_save('message_category', $message);
 }
 
 /**
@@ -515,8 +515,8 @@ function message_type_category_save($message) {
  * @param $message
  *   The message type category object to be deleted.
  */
-function message_type_category_delete($message) {
-  return entity_delete('message_type_category', $message);
+function message_category_delete($message) {
+  return entity_delete('message_category', $message);
 }
 
 /**
@@ -678,7 +678,7 @@ function message_type_access($op, $entity, $account, $entity_type) {
 /**
  * Access callback for the message type categories.
  */
-function message_type_category_access($op, $entity, $account, $entity_type) {
+function message_category_access($op, $entity, $account, $entity_type) {
   return user_access('administer message types', $account);
 }
 

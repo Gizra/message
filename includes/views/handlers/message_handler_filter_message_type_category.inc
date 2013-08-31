@@ -1,12 +1,12 @@
 <?php
 
-class message_handler_filter_message_type_category extends views_handler_filter_in_operator {
+class message_handler_filter_message_category extends views_handler_filter_in_operator {
   function get_value_options() {
     if (!isset($this->value_options)) {
       $this->value_title = t('Message type category');
       $options = array();
       $options['message_type'] = t('Default message type category');
-      foreach (message_type_category_load() as $message_category) {
+      foreach (message_category_load() as $message_category) {
         $options[$message_category->category] = !empty($message_category->description) ? $message_category->description : $message_type->category;
       }
       $this->value_options = $options;

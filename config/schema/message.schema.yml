@@ -25,7 +25,7 @@ message.type.*:
 
 message.category.*:
   type: mapping
-  label: 'Message category'
+  label: 'Message type category'
   mapping:
     type:
       type: string

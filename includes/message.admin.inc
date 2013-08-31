@@ -222,19 +222,19 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
 
   // We might have gotten the message type category via ajax, so set it in the
   // message type entity.
-  if (!empty($form_state['values']['message_type_category'])) {
-    $message_type->category = $form_state['values']['message_type_category'];
+  if (!empty($form_state['values']['message_category'])) {
+    $message_type->category = $form_state['values']['message_category'];
   }
 
   if ($op == 'add') {
     // Get all the message type category, and allow user to choose one using ajax.
     $options = array();
     $options['message_type'] = t('Default message type category');
-    foreach (message_type_category_load() as $message_category) {
+    foreach (message_category_load() as $message_category) {
       $options[$message_category->category] = !empty($message_category->description) ? $message_category->description : $message_type->category;
     }
 
-    $form['message_type_category'] = array(
+    $form['message_category'] = array(
       '#title' => t('Message type category'),
       '#type' => count($options) > 1 ? 'select' : 'value',
       '#options' => $options,
@@ -248,15 +248,15 @@ function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
     );
   }
   else {
-    if ($message_category = message_type_category_load($message_type->category)) {
+    if ($message_category = message_category_load($message_type->category)) {
       $value = !empty($message_category->description) ? check_plain($message_category->description) : check_plain($message_type->category);
     }
     else {
       $value = t('Default message type category');
     }
-    $form['message_type_category'] = array(
+    $form['message_category'] = array(
       '#title' => t('Message type category'),
-      '#type' => count(message_type_category_load()) > 1 ? 'item' : 'value',
+      '#type' => count(message_category_load()) > 1 ? 'item' : 'value',
       '#markup' => $value,
     );
   }

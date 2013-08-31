@@ -131,7 +131,7 @@ function message_schema() {
   // Cache bins for Entity-cache module.
   $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
   $types = array(
-    'message_type_category',
+    'message_category',
     'message_type',
     'message',
   );
@@ -199,7 +199,7 @@ function message_update_7002() {
  * Add message type category.
  */
 function message_update_7003() {
-  $schema['message_type_category'] = array(
+  $schema['message_category'] = array(
     'description' => 'Storage for user-defined message category.',
     'fields' => array(
       // Although the "category" should be enough as the primary key, the
@@ -244,7 +244,7 @@ function message_update_7003() {
       'category' => array('category'),
     ),
   );
-  db_create_table('message_type_category', $schema['message_type_category']);
+  db_create_table('message_category', $schema['message_category']);
 
   db_add_field('message_type', 'category', array(
     'description' => 'Reference to a message type category.',
@@ -303,7 +303,7 @@ function message_update_7007(&$sandbox) {
   $langcode = language_default()->language;
 
   $tables = array(
-    'message_type_category',
+    'message_category',
     'message_type',
     'message',
   );
@@ -381,7 +381,7 @@ function message_update_7009() {
 function message_update_7010() {
   $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
   $types = array(
-    'message_type_category',
+    'message_category',
     'message_type',
     'message',
   );

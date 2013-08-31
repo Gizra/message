@@ -22,6 +22,6 @@ class MessageTypeCategory extends Entity {
   public $description = '';
 
   public function __construct($values = array()) {
-    parent::__construct($values, 'message_type_category');
+    parent::__construct($values, 'message_category');
   }
 }
