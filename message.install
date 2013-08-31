@@ -65,135 +65,6 @@ function message_uninstall() {
  * Implements hook_schema()
  */
 function message_schema() {
-  $schema['message_type_category'] = array(
-    'description' => 'Storage for user-defined message category.',
-    'fields' => array(
-      // Although the "category" should be enough as the primary key, the
-      // numeric ID is required for the internal use of entity API.
-      'id' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Numeric message type category ID.',
-      ),
-      'category' => array(
-        'description' => 'The unified identifier for a message type category.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'description' => array(
-        'description' => 'Description for this message type category.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'language' => array(
-        'description' => 'The {languages}.language of this message type category.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'status' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        // Set the default to ENTITY_CUSTOM without using the constant as it is
-        // not safe to use it at this point.
-        'default' => 0x01,
-        'size' => 'tiny',
-        'description' => 'The exportable status of the entity.',
-      ),
-      'module' => array(
-        'description' => 'The name of the providing module if the entity has been defined in code.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-      ),
-    ),
-    'primary key' => array('id'),
-    'unique keys' => array(
-      'category' => array('category'),
-    ),
-  );
-
-  $schema['message_type'] = array(
-    'description' => 'Storage for user-defined message templates.',
-    'fields' => array(
-      // Although the "name" should be enough as the primary key, the numeric ID
-      // is required for the internal use of entity API.
-      'id' => array(
-        'type' => 'serial',
-        'not null' => TRUE,
-        'description' => 'Primary Key: Numeric message type ID.',
-      ),
-      'name' => array(
-        'description' => 'The unified identifier for a message type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'category' => array(
-        'description' => 'Reference to a message type category.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => 'message_type',
-      ),
-      'description' => array(
-        'description' => 'Description for this message type.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'argument_keys' => array(
-        'description' => 'Serialized array with the argument keys',
-        'type' => 'text',
-        'serialize' => TRUE,
-      ),
-      'language' => array(
-        'description' => 'The {languages}.language of this message type.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
-      'status' => array(
-        'type' => 'int',
-        'not null' => TRUE,
-        // Set the default to ENTITY_CUSTOM without using the constant as it is
-        // not safe to use it at this point.
-        'default' => 0x01,
-        'size' => 'tiny',
-        'description' => 'The exportable status of the entity.',
-      ),
-      'module' => array(
-        'description' => 'The name of the providing module if the entity has been defined in code.',
-        'type' => 'varchar',
-        'length' => 255,
-        'not null' => FALSE,
-      ),
-      'arguments' => array(
-        'description' => 'Serialized array with the arguments.',
-        'type' => 'text',
-        'serialize' => TRUE,
-      ),
-      'data' => array(
-        'description' => 'Serialized array with general data.',
-        'type' => 'text',
-        'serialize' => TRUE,
-        'size' => 'big',
-      ),
-    ),
-    'primary key' => array('id'),
-    'unique keys' => array(
-      'name' => array('name'),
-    ),
-  );
-
   $schema['message'] = array(
     'description' => 'An instance of a message type (e.g. like a node is an instance of a node type).',
     'fields' => array(
@@ -201,6 +72,12 @@ function message_schema() {
         'type' => 'serial',
         'unsigned' => TRUE,
         'description' => 'The Unique ID of the message.',
+      ),
+      'uuid' => array(
+        'description' => 'Unique Key: Universally unique identifier for this entity.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
       ),
       'type' => array(
         'description' => 'Reference to a message a type.',
