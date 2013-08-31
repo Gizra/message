@@ -5,6 +5,8 @@
  * API functions to manipulate messages.
  */
 
+use \Drupal\message\MessageException;
+
 /**
  * Define the name of the message realm field.
  */

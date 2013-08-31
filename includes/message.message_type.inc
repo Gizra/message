@@ -5,6 +5,8 @@
  * A class used for message types.
  */
 
+use \Drupal\message\MessageException;
+
 class MessageType extends Entity {
 
   /**

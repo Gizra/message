@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Provide a separate Exception so it can be caught separately.
+ * Contains \Drupal\message\MessageException.
  */
 
 class MessageException extends Exception {}
