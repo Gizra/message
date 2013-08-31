@@ -5,6 +5,8 @@
  * Install, update, and uninstall functions for the message module.
  */
 
+use Drupal\field\Field;
+
 /**
  * Implements hook_install().
  */
@@ -22,7 +24,9 @@ function message_install() {
       'message_text' => TRUE,
     ),
   );
-  $field = field_create_field($field);
+
+  entity_create('field_entity', $field)->save();
+
   $instance = array(
     'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
     'bundle' => 'message_type',
@@ -34,24 +38,27 @@ function message_install() {
       'text_processing' => 1,
     ),
   );
-  field_create_instance($instance);
 
-  variable_del('message_entity_delete_cleanup');
+  entity_create('field_instance', $instance)->save();
 }
 
 /**
  * Implements hook_uninstall().
  */
 function message_uninstall() {
-  $instance = field_info_instance('message_type', 'message_text', 'message_type');
-  field_delete_instance($instance);
-  field_delete_field('message_text');
+  Field::fieldInfo()->getField('message_text')->delete();
 
-  variable_del('message_delete_cron_limit');
-  variable_del('message_purge_enable');
-  variable_del('message_purge_quota');
-  variable_del('message_purge_days');
-  variable_del('message_delete_on_entity_delete');
+  $variables = array(
+    'message_delete_cron_limit',
+    'message_purge_enable',
+    'message_purge_quota',
+    'message_purge_days',
+    'message_delete_on_entity_delete',
+  );
+
+  foreach ($variables as $variable) {
+    Drupal::config('message')->delete($variable);
+  }
 }
 
 /**
