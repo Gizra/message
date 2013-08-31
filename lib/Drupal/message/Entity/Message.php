@@ -22,7 +22,6 @@ use Drupal\Core\Annotation\Translation;
  *   module = "message",
  *   base_table = "message",
  *   fieldable = TRUE,
- *   translatable = FALSE,
  *   controllers = {
  *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
  *   },

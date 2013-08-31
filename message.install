@@ -128,17 +128,6 @@ function message_schema() {
     ),
   );
 
-  // Cache bins for Entity-cache module.
-  $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
-  $types = array(
-    'message',
-  );
-
-  foreach ($types as $type) {
-    $schema["cache_entity_$type"] = $cache_schema;
-    $schema["cache_entity_$type"]['description'] = "Cache table used to store $type entity records.";
-  }
-
   return $schema;
 }
 
