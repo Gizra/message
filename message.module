@@ -21,10 +21,12 @@ define('MESSAGE_PURGE_LIMIT', 100);
  * Implementation of hook_views_api().
  */
 function message_views_api() {
+  /*
   return array(
     'api' => 3,
     'path' => drupal_get_path('module', 'message') . '/includes/views',
   );
+  */
 }
 
 /**
@@ -559,7 +561,7 @@ function message_type_create($name, $values = array()) {
 function message_type_load($name = NULL) {
   // Replace dashes with underscores so this can be used as menu argument
   // loader too.
-  $types = entity_load_multiple_by_name('message_type', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
+  $types = entity_load_multiple('message_type', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
   if (isset($name)) {
     return isset($types[$name]) ? $types[$name] : FALSE;
   }

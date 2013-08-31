@@ -57,7 +57,7 @@ function message_uninstall() {
   );
 
   foreach ($variables as $variable) {
-    Drupal::config('message')->delete($variable);
+    \Drupal::config('message')->delete($variable);
   }
 }
 
@@ -131,8 +131,6 @@ function message_schema() {
   // Cache bins for Entity-cache module.
   $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
   $types = array(
-    'message_category',
-    'message_type',
     'message',
   );
 
