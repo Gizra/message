@@ -33,7 +33,7 @@ use Drupal\Core\Annotation\Translation;
  *   },
  *   bundle_keys = {
  *     "bundle" = "type"
- *   },
+ *   }
  * )
  */
 class Message extends ConfigEntityBase implements ConfigEntityInterface {
