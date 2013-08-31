@@ -531,16 +531,16 @@ function message_category_delete($message) {
  * @return MessageType
  *   Returns a new message type object.
  */
-function message_type_create($name, $values = array()) {
-  global $language;
+function message_type_create($id, $values = array()) {
   // Make sure the message type doesn't already exist, to prevent duplicate key
   // error.
-  if (message_type_load($name)) {
-    throw new MessageException('Message type ' . check_plain($name) . ' already exists.');
+  if (message_type_load($id)) {
+    throw new MessageException('Message type ' . check_plain($id) . ' already exists.');
   }
-  $values['name'] = $name;
+
+  $values['id'] = $id;
   $values += array(
-    'language' => $language->language,
+    'language' => \Drupal::languageManager()->getLanguage()->id,
   );
   $return = entity_create('message_type', $values);
 

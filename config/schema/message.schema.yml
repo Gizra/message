@@ -4,7 +4,7 @@ message.type.*:
   type: mapping
   label: 'Message type'
   mapping:
-    type:
+    id:
       type: string
       label: 'Machine-readable name'
     uuid:
@@ -27,7 +27,7 @@ message.category.*:
   type: mapping
   label: 'Message type category'
   mapping:
-    type:
+    id:
       type: string
       label: 'Machine-readable name'
     uuid:

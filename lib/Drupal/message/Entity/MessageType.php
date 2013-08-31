@@ -8,9 +8,11 @@
 namespace Drupal\message\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Language\Language;
 
 /**
  * Defines the Message type configuration entity.
@@ -38,9 +40,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *
    * @var string
    *
-   * @todo Rename to $id.
-   */
-  public $type;
+  public $id;
 
   /**
    * The UUID of the node type.
@@ -145,7 +145,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    * {@inheritdoc}
    */
   public function id() {
-    return $this->type;
+    return $this->id;
   }
 
   /**
@@ -177,7 +177,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *   A string with the text from the field, with all the tokens
    *   converted into their actual value.
    */
-  public function getText($langcode = LANGUAGE_NONE, $options = array()) {
+  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $options = array()) {
     // Set default values.
     $options += array(
       // As the text is already sanitized, it does not really matter if we
