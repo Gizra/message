@@ -1,4 +1,5 @@
 name: Message
+type: module
 description: "A general message logging utility."
 core: 8.x
 package: Message
