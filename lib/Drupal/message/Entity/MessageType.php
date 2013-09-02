@@ -7,22 +7,22 @@
 
 namespace Drupal\message\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Language\Language;
 
 /**
- * Defines the Message type configuration entity.
+ * Defines the Message type entity class.
  *
  * @EntityType(
  *   id = "message_type",
  *   label = @Translation("Message type"),
  *   module = "message",
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *     "storage" = "Drupal\Core\Entity\DatabaseStorageControllerNG"
  *   },
  *   config_prefix = "message.type",
  *   bundle_of = "message",
@@ -33,7 +33,7 @@ use Drupal\Core\Language\Language;
  *   }
  * )
  */
-class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
+class MessageType extends EntityNG implements ContentEntityInterface {
 
   /**
    * The machine name of this node type.
@@ -159,6 +159,41 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
         'entity' => $this,
       ),
     );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions($entity_type) {
+    $properties['id'] = array(
+      'label' => t('Message type ID'),
+      'description' => t('The message type ID.'),
+      'type' => 'integer_field',
+      'read-only' => TRUE,
+    );
+    $properties['uuid'] = array(
+      'label' => t('UUID'),
+      'description' => t('The term UUID.'),
+      'type' => 'uuid_field',
+      'read-only' => TRUE,
+    );
+    $properties['langcode'] = array(
+      'label' => t('Language code'),
+      'description' => t('The term language code.'),
+      'type' => 'language_field',
+    );
+    $properties['name'] = array(
+      'label' => t('Name'),
+      'description' => t('The message type name.'),
+      'type' => 'string_field',
+    );
+    $properties['description'] = array(
+      'label' => t('Description'),
+      'description' => t('A description of the message type.'),
+      'type' => 'string_field',
+    );
+
+    return $properties;
   }
 
   /**

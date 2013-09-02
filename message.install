@@ -15,7 +15,7 @@ function message_install() {
   $field = array(
     'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
     'type' => 'text_long',
-    'entity_types' => array('message_type'),
+    'entity_type' => 'message_type',
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
     'translatable' => TRUE,
     'locked' => TRUE,
@@ -65,6 +65,73 @@ function message_uninstall() {
  * Implements hook_schema()
  */
 function message_schema() {
+  $schema['message_type'] = array(
+    'description' => 'Storage for user-defined message templates.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'not null' => TRUE,
+        'description' => 'Primary Key: Numeric message type ID.',
+      ),
+      'uuid' => array(
+        'description' => 'Unique Key: Universally unique identifier for this entity.',
+        'type' => 'varchar',
+        'length' => 128,
+        'not null' => FALSE,
+      ),
+      'name' => array(
+        'description' => 'The unified identifier for a message type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'category' => array(
+        'description' => 'Reference to a message category.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => 'message_type',
+      ),
+      'description' => array(
+        'description' => 'Description for this message type.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'argument_keys' => array(
+        'description' => 'Serialized array with the argument keys',
+        'type' => 'text',
+        'serialize' => TRUE,
+      ),
+      // @todo: Rename on update.
+      'langcode' => array(
+        'description' => 'The {languages}.langcode of this message type.',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'arguments' => array(
+        'description' => 'Serialized array with the arguments.',
+        'type' => 'text',
+        'serialize' => TRUE,
+      ),
+      'data' => array(
+        'description' => 'Serialized array with general data.',
+        'type' => 'text',
+        'serialize' => TRUE,
+        'size' => 'big',
+      ),
+    ),
+    'primary key' => array('id'),
+    'unique keys' => array(
+      'name' => array('name'),
+      'uuid' => array('uuid'),
+    ),
+  );
+
   $schema['message'] = array(
     'description' => 'An instance of a message type (e.g. like a node is an instance of a node type).',
     'fields' => array(
@@ -103,8 +170,9 @@ function message_schema() {
         'not null' => TRUE,
         'unsigned' => TRUE,
       ),
-      'language' => array(
-        'description' => 'The {languages}.language of this message.',
+      // @todo: Rename on update.
+      'langcode' => array(
+        'description' => 'The {languages}.langcode of this message.',
         'type' => 'varchar',
         'length' => 12,
         'not null' => TRUE,
@@ -125,6 +193,9 @@ function message_schema() {
     'indexes' => array(
       'type_index' => array('type'),
       'timestamp' => array('timestamp'),
+    ),
+    'unique keys' => array(
+      'uuid' => array('uuid'),
     ),
   );
 
