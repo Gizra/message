@@ -13,6 +13,8 @@ use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Language\Language;
+use Drupal\message\MessageException;
+use Drupal\field\Field;
 
 /**
  * Defines the Message type entity class.
@@ -270,7 +272,7 @@ class MessageType extends EntityNG implements MessageTypeInterface {
 
     $field_name = $options['field name'];
     $params = array('%field' => $field_name);
-    if (!$field = field_info_field($field_name)) {
+    if (!$field = Field::fieldInfo()->getField('message_type', $field_name)) {
       throw new MessageException(format_string('Field %field does not exist.', $params));
     }
 
@@ -278,9 +280,9 @@ class MessageType extends EntityNG implements MessageTypeInterface {
       throw new MessageException(format_string('Field %field is not a message-text.', $params));
     }
 
-    if (empty($langcode) && module_exists('locale')) {
+    if (empty($langcode) && \Drupal::moduleHandler()->moduleExists('locale')) {
       // Get the langcode from the current language.
-      global $language;
+      $language = Drupal::languageManager()->getLanguage();
       $langcode = $language->language;
     }
 
@@ -288,62 +290,22 @@ class MessageType extends EntityNG implements MessageTypeInterface {
     $property = $this->getTranslation($langcode)->$options['field name'];
 
     $delta = $options['partial delta'];
-    $count = $field['cardinality'] == 1 ? 1 : $property->count();
 
-    if (!empty($options['partials']) && $delta >= $count) {
+    if (!empty($options['partials']) && $delta >= $property->count()) {
       // Delta is bigger than the existing field, so return early, to
       // prevent an error.
       return;
     }
 
     if (!empty($options['partials'])) {
-      // Get partial, not the whole text.
-      $property_item = $this->getValueFromProperty($property, $delta, $options);
-      return $property_item->value($options);
+      return $property->get($delta)->value;
     }
-    elseif ($property instanceof EntityListWrapper) {
-      // Multiple value field.
+    else {
       $output = '';
-      foreach (array_keys($property->value($options)) as $delta) {
-        $property_item = $this->getValue($property, $delta, $options);
-        $output .= $property_item->value($options);
+      foreach ($property as $item) {
+        $output .= $item->value;
       }
       return $output;
     }
-    else {
-      // Single value field.
-      $property_item = $this->getValue($property, $delta, $options);
-      return $property_item->value($options);
-    }
   }
-
-  /**
-   * Helper function to get the value from a property.
-   *
-   * If the property is of type 'text_formatted' get the processed text
-   * value.
-   *
-   * @param $property
-   *   The wrapped property object.
-   * @param $delta
-   *   The delta of the field.
-   * @param $options
-   *   Array of options that might be needed to get the field value.
-   *
-   * @return
-   *   The wrapped property that can be used to get the text value of the
-   *   field (i.e. safe-value or plain text).
-   */
-  protected function getValueFromProperty($property, $delta, $options) {
-    if ($property instanceof EntityStructureWrapper && isset($property->value) && $property->value($options)) {
-      // Single value field.
-      $property = $property->value;
-    }
-    elseif ($property instanceof EntityListWrapper && $property->get($delta)->value($options) && $property->get($delta) instanceof EntityStructureWrapper && isset($property->get($delta)->value)) {
-      // Multiple value field.
-      $property = $property->get($delta)->value;
-    }
-    return $property;
-  }
-
 }
