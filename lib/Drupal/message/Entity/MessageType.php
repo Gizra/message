@@ -41,7 +41,7 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    * The machine name of this node type.
    *
    * @var string
-   *
+   */
   public $id;
 
   /**
@@ -192,6 +192,11 @@ class MessageType extends EntityNG implements MessageTypeInterface {
     $properties['description'] = array(
       'label' => t('Description'),
       'description' => t('A description of the message type.'),
+      'type' => 'string_field',
+    );
+    $properties['category'] = array(
+      'label' => t('Catgeory'),
+      'description' => t('The message category.'),
       'type' => 'string_field',
     );
 
