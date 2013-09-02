@@ -249,25 +249,17 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    *   Array of options to pass to the metadata-wrapper:
    *   - 'field name': The name of the Message text field, text should be
    *     extracted from.
-   *   - 'sanitize': Indicate if text should be escaped.
+   *   - 'delta': Optional; If set, returns the output only from a single delta
+   *     of the message-text field.
    *
    * @return
-   *   A string with the text from the field, with all the tokens
-   *   converted into their actual value.
+   *   A string with the text from the field.
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $options = array()) {
     // Set default values.
     $options += array(
-      // As the text is already sanitized, it does not really matter if we
-      // enable sanitizing, as it would be default. However, one can change the
-      // field instance (e.g. to have no text processing) we make sure we still
-      // properly sanitize the value.
-      'sanitize' => TRUE,
       // The field name from which the text should be extracted.
       'field name' => MESSAGE_FIELD_MESSAGE_TEXT,
-      // Determine if the text of just a single delta should be returned.
-      'partials' => FALSE,
-      'partial delta' => 0,
     );
 
     $field_name = $options['field name'];
@@ -289,15 +281,14 @@ class MessageType extends EntityNG implements MessageTypeInterface {
     // Let the metadata wrapper deal with the language.
     $property = $this->getTranslation($langcode)->$options['field name'];
 
-    $delta = $options['partial delta'];
+    if (isset($options['delta'])) {
+      $delta = $options['delta'];
 
-    if (!empty($options['partials']) && $delta >= $property->count()) {
-      // Delta is bigger than the existing field, so return early, to
-      // prevent an error.
-      return;
-    }
-
-    if (!empty($options['partials'])) {
+      if ($delta >= $property->count()) {
+        // Delta is bigger than the existing field, so return early, to
+        // prevent an error.
+        return;
+      }
       return $property->get($delta)->value;
     }
     else {
