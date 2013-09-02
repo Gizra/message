@@ -150,16 +150,9 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    * Tokens settings assigned to message-type can be overriden by the ones
    * assigned to the message.
    *
-   * @see message_get_property_values()
-   *
    * @var array
    */
-  private $data = array();
-
-  /**
-   * @todo: Remove this from schema.
-   */
-  private $argument_keys = array();
+  private $settings = array();
 
   /**
    * {@inheritdoc}
@@ -224,15 +217,8 @@ class MessageType extends EntityNG implements MessageTypeInterface {
       'type' => 'string_field',
     );
 
-    // @todo: Remove.
-    $properties['argument_keys'] = array(
-      'label' => t('Arguments'),
-      'description' => t('A serialized array of arguments.'),
-      'type' => 'string_field',
-    );
-
-    $properties['data'] = array(
-      'label' => t('Data'),
+    $properties['settings'] = array(
+      'label' => t('Settings'),
       'description' => t('A serialized array of settings override.'),
       'type' => 'string_field',
     );

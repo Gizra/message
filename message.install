@@ -62,7 +62,9 @@ function message_uninstall() {
 }
 
 /**
- * Implements hook_schema()
+ * Implements hook_schema().
+ *
+ * @todo: drop argument_keys on update.
  */
 function message_schema() {
   $schema['message_type'] = array(
@@ -100,11 +102,6 @@ function message_schema() {
         'not null' => TRUE,
         'default' => '',
       ),
-      'argument_keys' => array(
-        'description' => 'Serialized array with the argument keys',
-        'type' => 'text',
-        'serialize' => TRUE,
-      ),
       // @todo: Rename on update.
       'langcode' => array(
         'description' => 'The {languages}.langcode of this message type.',
@@ -118,8 +115,8 @@ function message_schema() {
         'type' => 'text',
         'serialize' => TRUE,
       ),
-      'data' => array(
-        'description' => 'Serialized array with general data.',
+      'settings' => array(
+        'description' => 'Serialized array with settings.',
         'type' => 'text',
         'serialize' => TRUE,
         'size' => 'big',
@@ -164,8 +161,9 @@ function message_schema() {
         'default value' => NULL,
         'unsigned' => TRUE,
       ),
-      'timestamp' => array(
-        'description' => 'When the message instance was recorded.',
+      // @todo: Rename on update.
+      'created' => array(
+        'description' => 'The time that the message was created.',
         'type' => 'int',
         'not null' => TRUE,
         'unsigned' => TRUE,
