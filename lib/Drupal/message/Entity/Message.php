@@ -7,10 +7,15 @@
 
 namespace Drupal\message\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Entity\EntityNG;
+use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Entity\EntityStorageControllerInterface;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
+use Drupal\Core\Language\Language;
+use Drupal\message\MessageException;
+use Drupal\field\Field;
+use Drupal\message\Entity\MessageInterface;
 
 /**
  * Defines the Message entity class.
@@ -23,7 +28,7 @@ use Drupal\Core\Annotation\Translation;
  *   base_table = "message",
  *   fieldable = TRUE,
  *   controllers = {
- *     "storage" = "Drupal\Core\Config\Entity\ConfigStorageController"
+ *     "storage" = "Drupal\Core\Entity\DatabaseStorageControllerNG"
  *   },
  *   entity_keys = {
  *     "id" = "mid",
@@ -35,7 +40,7 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class Message extends ConfigEntityBase implements ConfigEntityInterface {
+class Message extends EntityNG implements MessageInterface {
 
   /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
@@ -93,7 +98,7 @@ class Message extends ConfigEntityBase implements ConfigEntityInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
-    $properties['nid'] = array(
+    $properties['mid'] = array(
       'label' => t('Message ID'),
       'description' => t('The message ID.'),
       'type' => 'integer_field',
@@ -109,7 +114,11 @@ class Message extends ConfigEntityBase implements ConfigEntityInterface {
     $properties['type'] = array(
       'label' => t('Type'),
       'description' => t('The message type.'),
-      'type' => 'string_field',
+      'type' => 'entity_reference_field',
+      'settings' => array(
+        'target_type' => 'message_type',
+        'default_value' => 0,
+      ),
       'read-only' => TRUE,
     );
     $properties['langcode'] = array(
@@ -128,10 +137,9 @@ class Message extends ConfigEntityBase implements ConfigEntityInterface {
     );
     $properties['created'] = array(
       'label' => t('Created'),
-      'description' => t('The time that the node was created.'),
+      'description' => t('The time that the message was created.'),
       'type' => 'integer_field',
     );
     return $properties;
   }
-
 }
