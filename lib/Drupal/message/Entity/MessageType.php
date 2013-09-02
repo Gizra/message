@@ -27,13 +27,15 @@ use Drupal\Core\Language\Language;
  *   config_prefix = "message.type",
  *   bundle_of = "message",
  *   entity_keys = {
- *     "id" = "type",
+ *     "id" = "id",
+ *     "bundle" = "category",
  *     "label" = "label",
  *     "uuid" = "uuid"
- *   }
+ *   },
+ *   base_table = "message_type"
  * )
  */
-class MessageType extends EntityNG implements ContentEntityInterface {
+class MessageType extends EntityNG implements MessageTypeInterface {
 
   /**
    * The machine name of this node type.
@@ -103,10 +105,10 @@ class MessageType extends EntityNG implements ContentEntityInterface {
    *
    * @var array
    */
-  public $argument = array();
+  public $arguments = array();
 
   /**
-   * Set the default message type category of the message type.
+   * Set the default message category of the message type.
    *
    * @var string
    */

@@ -18,4 +18,4 @@ message.category.*:
       label: 'Description'
     langcode:
       type: string
-      label: 'Language'
+      label: 'Default language'
