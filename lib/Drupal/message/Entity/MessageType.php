@@ -41,32 +41,39 @@ use Drupal\Core\Language\Language;
 class MessageType extends EntityNG implements MessageTypeInterface {
 
   /**
+   * The ID of this message type.
+   *
+   * @var string
+   */
+  private $id;
+
+  /**
    * The machine name of this message type.
    *
    * @var string
    */
-  public $id;
+  private $name;
 
   /**
    * The UUID of the message type.
    *
    * @var string
    */
-  public $uuid;
+  private $uuid;
 
   /**
    * The human-readable name of the message type.
    *
    * @var string
    */
-  public $label;
+  private $label;
 
   /**
    * A brief description of this message type.
    *
    * @var string
    */
-  public $description;
+  private $description;
 
   /**
    * Array with the arguments and their replacement value, or callacbks.
@@ -108,14 +115,14 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    *
    * @var array
    */
-  public $arguments = array();
+  private $arguments = array();
 
   /**
    * Set the default message category of the message type.
    *
    * @var string
    */
-  public $category = NULL;
+  private $category = NULL;
 
   /**
    * Serialized array with misc options.
@@ -144,7 +151,12 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    *
    * @var array
    */
-  public $data = array();
+  private $data = array();
+
+  /**
+   * @todo: Remove this from schema.
+   */
+  private $argument_keys = array();
 
   /**
    * {@inheritdoc}
@@ -204,6 +216,13 @@ class MessageType extends EntityNG implements MessageTypeInterface {
     );
 
     $properties['arguments'] = array(
+      'label' => t('Arguments'),
+      'description' => t('A serialized array of arguments.'),
+      'type' => 'string_field',
+    );
+
+    // @todo: Remove.
+    $properties['argument_keys'] = array(
       'label' => t('Arguments'),
       'description' => t('A serialized array of arguments.'),
       'type' => 'string_field',
