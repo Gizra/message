@@ -541,6 +541,7 @@ function message_type_create($name, $values = array()) {
   $values['name'] = $name;
   $values += array(
     'language' => \Drupal::languageManager()->getLanguage()->id,
+    'category' => 'message_type',
   );
   $return = entity_create('message_type', $values);
 

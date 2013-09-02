@@ -32,34 +32,37 @@ use Drupal\Core\Language\Language;
  *     "label" = "label",
  *     "uuid" = "uuid"
  *   },
+ *   bundle_keys = {
+ *     "bundle" = "type"
+ *   },
  *   base_table = "message_type"
  * )
  */
 class MessageType extends EntityNG implements MessageTypeInterface {
 
   /**
-   * The machine name of this node type.
+   * The machine name of this message type.
    *
    * @var string
    */
   public $id;
 
   /**
-   * The UUID of the node type.
+   * The UUID of the message type.
    *
    * @var string
    */
   public $uuid;
 
   /**
-   * The human-readable name of the node type.
+   * The human-readable name of the message type.
    *
    * @var string
    */
   public $label;
 
   /**
-   * A brief description of this node type.
+   * A brief description of this message type.
    *
    * @var string
    */
@@ -75,7 +78,7 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    * @code
    *
    * // Assuming out message-text is:
-   * // %user-name created <a href="@node-url">@node-title</a>
+   * // %user-name created <a href="@message-url">@message-title</a>
    *
    * $message_type->arguments = array(
    *   // Hard code the argument.
@@ -83,15 +86,15 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    *
    *   // Use a callback, and provide callbacks arguments.
    *   // The following example will call Drupal core's url() function to
-   *   // get the most up-to-date path of node ID 1.
-   *   '@node-url' => array(
+   *   // get the most up-to-date path of message ID 1.
+   *   '@message-url' => array(
    *      'callback' => 'url',
-   *      'callback arguments' => array('node/1'),
+   *      'callback arguments' => array('message/1'),
    *    ),
    *
    *   // Use callback, but instead of passing callback argument, we will
    *   // pass the Message entity itself.
-   *   '@node-title' => array(
+   *   '@message-title' => array(
    *      'callback' => 'example_bar',
    *      'pass message' => TRUE,
    *    ),
@@ -112,7 +115,7 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    *
    * @var string
    */
-  public $category = 'message_type';
+  public $category = NULL;
 
   /**
    * Serialized array with misc options.
@@ -147,7 +150,7 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    * {@inheritdoc}
    */
   public function id() {
-    return $this->id;
+    return $this->get('id')->value;
   }
 
   /**
