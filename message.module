@@ -5,8 +5,6 @@
  * API functions to manipulate messages.
  */
 
-use \Drupal\message\MessageException;
-
 /**
  * Define the name of the message realm field.
  */
@@ -455,100 +453,6 @@ function message_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, 
 }
 
 /**
- * Creates a new message type category.
- *
- * If a message type category already exists, an exception will be thrown.
- *
- * @return MessageTypeCategory
- *   Returns a new message type category object.
- */
-function message_category_create($category, $values = array()) {
-  global $language;
-  // Make sure the message type doesn't already exist, to prevent duplicate key
-  // error.
-  if (message_category_load($category)) {
-    throw new MessageException('Message type category' . check_plain($category) . ' already exists.');
-  }
-  $values['category'] = $category;
-  $values += array(
-    'language' => $language->language,
-  );
-  $return = entity_create('message_category', $values);
-
-  return $return;
-}
-
-/**
- * Message type category loader.
- *
- * @param $name
- *   (optional) The name for this message type category. If no type is given all
- *   existing message types category are returned.
- *
- * @return MessageType
- *   Returns a fully-loaded message type category definition if a name is
- *   passed. Else an array containing all message types category is returned.
- */
-function message_category_load($name = NULL) {
-  // Replace dashes with underscores so this can be used as menu argument
-  // loader too.
-  $types = entity_load_multiple_by_name('message_category', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
-  if (isset($name)) {
-    return isset($types[$name]) ? $types[$name] : FALSE;
-  }
-  return $types;
-}
-
-/**
- * Inserts or updates a message type category object into the database.
- *
- * @param $message
- *   The message type category object to be inserted.
- *
- * @return
- *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
- *   SAVED_UPDATED is returned depending on the operation performed.
- */
-function message_category_save($message) {
-  return entity_save('message_category', $message);
-}
-
-/**
- * Deletes an existing message type category.
- *
- * @param $message
- *   The message type category object to be deleted.
- */
-function message_category_delete($message) {
-  return entity_delete('message_category', $message);
-}
-
-/**
- * Creates a new message type.
- *
- * If a message type already exists, an exception will be thrown.
- *
- * @return MessageType
- *   Returns a new message type object.
- */
-function message_type_create($name, $values = array()) {
-  // Make sure the message type doesn't already exist, to prevent duplicate key
-  // error.
-  if (message_type_load($name)) {
-    throw new MessageException(format_string('Message type @name already exists.', array('@name' => $name)));
-  }
-
-  $values['name'] = $name;
-  $values += array(
-    'language' => \Drupal::languageManager()->getLanguage()->id,
-    'category' => 'message_type',
-  );
-  $return = entity_create('message_type', $values);
-
-  return $return;
-}
-
-/**
  * Message type loader.
  *
  * @param $name
@@ -567,59 +471,6 @@ function message_type_load($name = NULL) {
     return isset($types[$name]) ? $types[$name] : FALSE;
   }
   return $types;
-}
-
-/**
- * Inserts or updates a message object into the database.
- *
- * @param $message
- *   The message object to be inserted.
- *
- * @return
- *   Failure to write a record will return FALSE. Otherwise SAVED_NEW or
- *   SAVED_UPDATED is returned depending on the operation performed.
- */
-function message_type_save($message) {
-  return entity_save('message_type', $message);
-}
-
-/**
- * Deletes an existing message.
- *
- * @param $message
- *   The message object to be deleted.
- */
-function message_type_delete($message) {
-  return entity_delete('message_type', $message);
-}
-
-/**
- * Helper to easily create messages.
- *
- * @param $type
- *   The message type name.
- * @param $values
- *   Array with the following keys:
- *   - "arguments" - Array with arguments that should be replaced on run time in
- *     the message type.
- *   - "timestamp" - The unix timestamp of the creation time of the message. If
- *     empty the current time will be used.
- * @param $account
- *   Optional; The user object to associate the message with. If empty, the
- *   current user will be used.
- */
-function message_create($type, $values = array(), $account = NULL) {
-  global $language;
-  if (empty($account)) {
-    global $user;
-    $account = clone $user;
-  }
-  $values['type'] = $type;
-  $values['user'] = $account;
-  $values += array(
-    'language' => $language->language,
-  );
-  return entity_create('message', $values);
 }
 
 /**
@@ -642,71 +493,6 @@ function message_load($mid) {
  */
 function message_load_multiple($mids, $conditions = array()) {
   return entity_load('message', $mids, $conditions);
-}
-
-/**
- * Message save.
- *
- * @param $message_instance
- *   A message instance object.
- * @return
- *   The saved message instance object.
- */
-function message_save($message) {
-  return entity_save('message', $message);
-}
-
-/**
- * Message delete.
- *
- * @param $iid
- *   Message instance IDs array.
- */
-function message_delete_multiple($mids = array()) {
-  entity_delete_multiple('message', $mids);
-}
-
-/**
- * Access callback for the message entity.
- */
-function message_access($op, $entity, $account = NULL, $entity_type = 'message') {
-  return user_access('create messages', $account);
-}
-
-/**
- * Access callback for the message type entities.
- */
-function message_type_access($op, $entity, $account, $entity_type) {
-  return user_access('administer message types', $account);
-}
-
-/**
- * Access callback for the message type categories.
- */
-function message_category_access($op, $entity, $account, $entity_type) {
-  return user_access('administer message types', $account);
-}
-
-/**
- * Entity property info getter callback for getting arguments.
- */
-function message_property_get_argument($arguments, array $options, $name, $type, $context) {
-  return isset($arguments[$context['message_replace_char'] . $name]) ? $arguments[$context['message_replace_char'] . $name] : NULL;
-}
-
-/**
- * Entity property info setter callback for arguments.
- */
-function message_property_set_argument(&$arguments, $name, $value, $langcode, $type, $context) {
-  $arguments[$context['message_replace_char'] . $name] = $value;
-}
-
-/**
- * Entity property info getter callback for getting the final message text.
- */
-function message_property_get_text($message, array $options) {
-  $langcode = isset($options['language']) ? $options['language']->language : LANGUAGE_NONE;
-  return $message->getText($langcode);
 }
 
 /**

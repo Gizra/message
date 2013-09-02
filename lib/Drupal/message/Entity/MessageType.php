@@ -203,6 +203,18 @@ class MessageType extends EntityNG implements MessageTypeInterface {
       'type' => 'string_field',
     );
 
+    $properties['arguments'] = array(
+      'label' => t('Arguments'),
+      'description' => t('A serialized array of arguments.'),
+      'type' => 'string_field',
+    );
+
+    $properties['data'] = array(
+      'label' => t('Data'),
+      'description' => t('A serialized array of settings override.'),
+      'type' => 'string_field',
+    );
+
     return $properties;
   }
 
