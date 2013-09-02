@@ -405,8 +405,8 @@ function message_field_extra_fields() {
  * Add on every message-text field partail, indication to which view-mode
  * it is assigned to.
  */
-function message_field_attach_form($entity_type, $entity, &$form, &$form_state, $langcode) {
-  if ($entity_type != 'message_type' || empty($entity->name)) {
+function message_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, &$form, &$form_state, $langcode) {
+  if ($entity->entityType() != 'message_type' || empty($entity->name)) {
     return;
   }
 
