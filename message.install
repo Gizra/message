@@ -13,7 +13,7 @@ use Drupal\field\Field;
 function message_install() {
   // Create the field holding the message text.
   $field = array(
-    'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
+    'name' => MESSAGE_FIELD_MESSAGE_TEXT,
     'type' => 'text_long',
     'entity_type' => 'message_type',
     'cardinality' => FIELD_CARDINALITY_UNLIMITED,
