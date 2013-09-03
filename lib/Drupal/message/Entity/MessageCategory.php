@@ -8,8 +8,8 @@
 namespace Drupal\message\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Entity\EntityStorageControllerInterface;
+use Drupal\message\MessageCategoryInterface;
+use Drupal\Core\Config\Entity\ConfigStorageController;
 use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 
@@ -32,37 +32,35 @@ use Drupal\Core\Annotation\Translation;
  *   }
  * )
  */
-class MessageCategory extends ConfigEntityBase implements ConfigEntityInterface {
+class MessageCategory extends ConfigEntityBase implements MessageCategoryInterface {
 
   /**
-   * The machine name of this node type.
-   *
-   * @var string
-   *
-   * @todo Rename to $id.
-   */
-  public $type;
-
-  /**
-   * The UUID of the node type.
+   * The machine name of this message category.
    *
    * @var string
    */
-  public $uuid;
+  protected $id;
 
   /**
-   * The human-readable name of the node type.
+   * The UUID of the message category.
    *
    * @var string
    */
-  public $label;
+  protected $uuid;
 
   /**
-   * A brief description of this node type.
+   * The human-readable name of the message category.
    *
    * @var string
    */
-  public $description;
+  protected $label;
+
+  /**
+   * A brief description of this message category.
+   *
+   * @var string
+   */
+  protected $description;
 
   /**
    * {@inheritdoc}
@@ -71,4 +69,38 @@ class MessageCategory extends ConfigEntityBase implements ConfigEntityInterface 
     return $this->type;
   }
 
+  /**
+   * @param string $label
+   */
+  public function setLabel($label) {
+    $this->label = $label;
+  }
+
+  /**
+   * @return string
+   */
+  public function getLabel() {
+    return $this->label;
+  }
+
+  /**
+   * @param string $description
+   */
+  public function setDescription($description) {
+    $this->description = $description;
+  }
+
+  /**
+   * @return string
+   */
+  public function getDescription() {
+    return $this->description;
+  }
+
+  /**
+   * @return string
+   */
+  public function getUuid() {
+    return $this->uuid;
+  }
 }

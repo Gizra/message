@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \Drupal\message\Entity\MessageInterface.
+ * Contains \Drupal\message\MessageInterface.
  */
 
-namespace Drupal\message\Entity;
+namespace Drupal\message;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 

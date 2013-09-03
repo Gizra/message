@@ -5,4 +5,6 @@
  * Contains \Drupal\message\MessageException.
  */
 
-class MessageException extends Exception {}
+namespace Drupal\message;
+
+class MessageException extends \Exception {}

@@ -46,7 +46,7 @@ function message_install() {
  * Implements hook_uninstall().
  */
 function message_uninstall() {
-  Field::fieldInfo()->getField('message_text')->delete();
+  Field::fieldInfo()->getField('message_type', 'message_text')->delete();
 
   $variables = array(
     'message_delete_cron_limit',
@@ -188,10 +188,12 @@ function message_schema() {
       ),
     ),
     'primary key' => array('mid'),
+    // @todo: Update upgrade timestamp => created.
     'indexes' => array(
       'type_index' => array('type'),
-      'timestamp' => array('timestamp'),
+      'created' => array('created'),
     ),
+    // @todo: Update upgrade unique keys.
     'unique keys' => array(
       'uuid' => array('uuid'),
     ),

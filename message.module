@@ -126,8 +126,12 @@ function message_menu() {
  * Implements hook_cron().
  *
  * Fetch all message types and purge old messages.
+ *
+ * @todo: Upgrade.
  */
 function message_cron() {
+  return;
+
   // The maximal amount of messages to purge per cron run.
   $purge_limit = variable_get('message_delete_cron_limit', MESSAGE_PURGE_LIMIT);
   // Messages to be deleted.
