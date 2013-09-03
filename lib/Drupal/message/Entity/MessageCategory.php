@@ -26,7 +26,7 @@ use Drupal\Core\Annotation\Translation;
  *   config_prefix = "message.category",
  *   bundle_of = "message_type",
  *   entity_keys = {
- *     "id" = "type",
+ *     "id" = "id",
  *     "label" = "label",
  *     "uuid" = "uuid"
  *   }

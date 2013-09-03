@@ -64,7 +64,7 @@ function message_uninstall() {
 /**
  * Implements hook_schema().
  *
- * @todo: drop argument_keys on update.
+ * @todo: drop argument_keys on upgrade.
  */
 function message_schema() {
   $schema['message_type'] = array(
