@@ -14,7 +14,7 @@ use Drupal\Core\Entity\Annotation\EntityType;
 use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Language\Language;
 use Drupal\message\MessageException;
-use Drupal\message\Entity\MessageTypeInterface;
+use Drupal\message\MessageTypeInterface;
 use Drupal\field\Field;
 
 /**
