@@ -48,35 +48,35 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    *
    * @var string
    */
-  private $id;
+  protected $id;
 
   /**
    * The machine name of this message type.
    *
    * @var string
    */
-  private $name;
+  protected $name;
 
   /**
    * The UUID of the message type.
    *
    * @var string
    */
-  private $uuid;
+  protected $uuid;
 
   /**
    * The human-readable name of the message type.
    *
    * @var string
    */
-  private $label;
+  protected $label;
 
   /**
    * A brief description of this message type.
    *
    * @var string
    */
-  private $description;
+  protected $description;
 
   /**
    * Array with the arguments and their replacement value, or callacbks.
@@ -118,14 +118,14 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    *
    * @var array
    */
-  private $arguments = array();
+  protected $arguments = array();
 
   /**
    * Set the default message category of the message type.
    *
    * @var string
    */
-  private $category = NULL;
+  protected $category = NULL;
 
   /**
    * Serialized array with misc options.
@@ -152,7 +152,7 @@ class MessageType extends EntityNG implements MessageTypeInterface {
    *
    * @var array
    */
-  private $settings = array();
+  protected $settings = array();
 
   /**
    * {@inheritdoc}

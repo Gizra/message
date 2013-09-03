@@ -375,6 +375,7 @@ function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge
  * Implements hook_field_extra_fields().
  */
 function message_field_extra_fields() {
+  return;
   $return = array();
   foreach (message_type_load() as $message_type) {
 
