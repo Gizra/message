@@ -15,7 +15,7 @@ use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Language\Language;
 use Drupal\message\MessageException;
 use Drupal\field\Field;
-use Drupal\message\Entity\MessageInterface;
+use Drupal\message\MessageInterface;
 
 /**
  * Defines the Message entity class.
