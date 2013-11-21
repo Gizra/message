@@ -116,6 +116,7 @@ function message_entity_info() {
       'id' => 'id',
       'label' => 'description',
       'name' => 'category',
+      'language' => 'language',
     ),
     'exportable' => TRUE,
     'export' => array(
@@ -138,6 +139,7 @@ function message_entity_info() {
       'label' => 'description',
       'name' => 'name',
       'bundle' => 'category',
+      'language' => 'language',
     ),
     'bundles' => array(),
     'bundle keys' => array(
@@ -189,6 +191,7 @@ function message_entity_info() {
       // The message has no label.
       'label' => FALSE,
       'bundle' => 'type',
+      'language' => 'language',
     ),
     'bundles' => array(),
     'bundle keys' => array(
