@@ -11,8 +11,7 @@ use Drupal\field\Field;
  * Implements hook_install().
  */
 function message_install() {
-  // Create the field holding the message text.
-  $field = array(
+  entity_create('field_config', array(
     'name' => MESSAGE_FIELD_MESSAGE_TEXT,
     'type' => 'text_long',
     'entity_type' => 'message_type',
@@ -23,11 +22,9 @@ function message_install() {
       // Mark that this field can be rendered using Message::getText().
       'message_text' => TRUE,
     ),
-  );
+  ))->save();
 
-  entity_create('field_entity', $field)->save();
-
-  $instance = array(
+  entity_create('field_instance_config', array(
     'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
     'bundle' => 'message_type',
     'entity_type' => 'message_type',
@@ -37,9 +34,7 @@ function message_install() {
     'settings' => array(
       'text_processing' => 1,
     ),
-  );
-
-  entity_create('field_instance', $instance)->save();
+  ))->save();
 }
 
 /**

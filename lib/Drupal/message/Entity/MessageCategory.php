@@ -46,7 +46,7 @@ class MessageCategory extends ConfigEntityBase implements MessageCategoryInterfa
    *
    * @var string
    */
-  protected $uuid;
+  public $uuid;
 
   /**
    * The human-readable name of the message category.
