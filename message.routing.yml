@@ -1,6 +1,7 @@
-devel.admin_settings:
-  path: '/admin/config/development/devel'
+message.sandbox:
+  path: '/message/sandbox'
   defaults:
-    _form: '\Drupal\devel\Form\SettingsForm'
+    _content: '\Drupal\message\Controller\MessageController::page'
+    _title: 'Mesage sandbox page'
   requirements:
-    _permission: 'administer site configuration'
+    _permission: 'access administration pages'
