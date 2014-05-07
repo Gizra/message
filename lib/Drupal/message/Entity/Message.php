@@ -90,7 +90,7 @@ class Message extends ContentEntityBase {
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields['mid'] = FieldDefinition::create('integer')
-      ->setLabel(t('Node ID'))
+      ->setLabel(t('Message ID'))
       ->setDescription(t('The message ID.'))
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
@@ -121,7 +121,6 @@ class Message extends ContentEntityBase {
         'default_value' => 0,
       ))
       ->setTranslatable(TRUE);
-
 
     $fields['created'] = FieldDefinition::create('created')
       ->setLabel(t('Created'))

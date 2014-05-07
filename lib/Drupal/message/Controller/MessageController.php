@@ -19,10 +19,15 @@ class MessageController extends ControllerBase {
    * the message develoment to D8.
    */
    public function page() {
-     $type = entity_create('message_type', array('name' => 'bar'))->save();
-//     $foo = entity_create('message', array('type' => 'bar'));
-//     $foo->save();
+     // todo: try to create message type.
+//     $type = entity_create('message_type', array('bar' => 'test', 'id' => 1))->save();
 
-     entity_load('message');
+     entity_create('message', array('type' => 'bar'))->save();
+     $messages = entity_load_multiple('message');
+     foreach ($messages as $message) {
+       $id[] = $message->id() . ' ' .  $message->bundle();
+     }
+
+     return implode("<br />", $id);
   }
 }

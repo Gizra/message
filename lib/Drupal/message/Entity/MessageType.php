@@ -7,6 +7,8 @@
 
 namespace Drupal\message\Entity;
 
+use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\message\MessageException;
 use Drupal\field\Field;
@@ -41,14 +43,14 @@ class MessageType extends ConfigEntityBase {
    *
    * @var string
    */
-  protected $id;
+  public $id;
 
   /**
    * The machine name of this message type.
    *
    * @var string
    */
-  protected $name;
+  public $name;
 
   /**
    * The UUID of the message type.
@@ -62,7 +64,7 @@ class MessageType extends ConfigEntityBase {
    *
    * @var string
    */
-  protected $label;
+  public $label;
 
   /**
    * A brief description of this message type.
@@ -150,13 +152,6 @@ class MessageType extends ConfigEntityBase {
   /**
    * {@inheritdoc}
    */
-  public function id() {
-    return $this->get('id')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function uri() {
     return array(
       'path' => 'admin/structure/messages/manage/' . $this->id(),
@@ -170,71 +165,60 @@ class MessageType extends ConfigEntityBase {
   /**
    * {@inheritdoc}
    */
-  public static function baseFieldDefinitions($entity_type) {
-    // TODO: Fix this.
-    $properties['id'] = array(
-      'label' => t('Message type ID'),
-      'description' => t('The message type ID.'),
-      'type' => 'integer_field',
-      'read-only' => TRUE,
-    );
-    $properties['uuid'] = array(
-      'label' => t('UUID'),
-      'description' => t('The term UUID.'),
-      'type' => 'uuid_field',
-      'read-only' => TRUE,
-    );
-    $properties['langcode'] = array(
-      'label' => t('Language code'),
-      'description' => t('The term language code.'),
-      'type' => 'language_field',
-    );
-    $properties['name'] = array(
-      'label' => t('Name'),
-      'description' => t('The message type name.'),
-      'type' => 'string_field',
-    );
-    $properties['description'] = array(
-      'label' => t('Description'),
-      'description' => t('A description of the message type.'),
-      'type' => 'string_field',
-    );
-    $properties['category'] = array(
-      'label' => t('Catgeory'),
-      'description' => t('The message category.'),
-      'type' => 'string_field',
-    );
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+    $fields['id'] = FieldDefinition::create('integer')
+      ->setLabel(t('Message type ID'))
+      ->setDescription(t('The message type ID.'))
+      ->setReadOnly(TRUE);
 
-    $properties['arguments'] = array(
-      'label' => t('Arguments'),
-      'description' => t('A serialized array of arguments.'),
-      'type' => 'string_field',
-    );
+    $fields['uuid'] = FieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The message UUID'))
+      ->setReadOnly(TRUE);
 
-    $properties['settings'] = array(
-      'label' => t('Settings'),
-      'description' => t('A serialized array of settings override.'),
-      'type' => 'string_field',
-    );
+    $fields['langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The message language code.'))
+      ->setRevisionable(TRUE);
 
-    return $properties;
+    $fields['name'] = FieldDefinition::create('string')
+      ->setLabel(t('Name'))
+      ->setDescription(t('The message type name.'));
+
+    $fields['description'] = FieldDefinition::create('string')
+      ->setLabel(t('Description'))
+      ->setDescription(t('A description of the message type.'));
+
+    $fields['category'] = FieldDefinition::create('string')
+      ->setLabel(t('Category'))
+      ->setDescription(t('The message category.'));
+
+    $fields['arguments'] = FieldDefinition::create('string')
+      ->setLabel(t('Arguments'))
+      ->setDescription(t('A serialized array of arguments.'));
+
+    $fields['settings'] = FieldDefinition::create('string')
+      ->setLabel(t('Settings'))
+      ->setDescription(t('A serialized array of settings override.'));
+
+    return $fields;
   }
 
   /**
    * Retrieves the configured message text in a certain language.
    *
-   * @param $langcode
+   * @param string $langcode
    *   The language code of the Message text field, the text should be
    *   extracted from.
-   * @param $options
+   * @param array $options
    *   Array of options to pass to the metadata-wrapper:
    *   - 'field name': The name of the Message text field, text should be
    *     extracted from.
    *   - 'delta': Optional; If set, returns the output only from a single delta
    *     of the message-text field.
    *
-   * @return
-   *   A string with the text from the field.
+   * @throws \Drupal\message\MessageException
+   * @return string A string with the text from the field.
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $options = array()) {
     // Set default values.
