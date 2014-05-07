@@ -9,9 +9,6 @@ namespace Drupal\message\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\message\MessageCategoryInterface;
-use Drupal\Core\Config\Entity\ConfigStorageController;
-use Drupal\Core\Entity\Annotation\EntityType;
-use Drupal\Core\Annotation\Translation;
 
 /**
  * Defines the Message category configuration entity.

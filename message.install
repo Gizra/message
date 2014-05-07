@@ -11,30 +11,31 @@ use Drupal\field\Field;
  * Implements hook_install().
  */
 function message_install() {
-  entity_create('field_config', array(
-    'name' => MESSAGE_FIELD_MESSAGE_TEXT,
-    'type' => 'text_long',
-    'entity_type' => 'message_type',
-    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-    'translatable' => TRUE,
-    'locked' => TRUE,
-    'settings' => array(
-      // Mark that this field can be rendered using Message::getText().
-      'message_text' => TRUE,
-    ),
-  ))->save();
-
-  entity_create('field_instance_config', array(
-    'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
-    'bundle' => 'message_type',
-    'entity_type' => 'message_type',
-    'label' => t('Message text'),
-    'description' => t('This is the text of all messages of this type.'),
-    'required' => TRUE,
-    'settings' => array(
-      'text_processing' => 1,
-    ),
-  ))->save();
+  // todo: leave this for later.
+//  entity_create('field_config', array(
+//    'name' => MESSAGE_FIELD_MESSAGE_TEXT,
+//    'type' => 'text_long',
+//    'entity_type' => 'message_type',
+//    'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+//    'translatable' => TRUE,
+//    'locked' => TRUE,
+//    'settings' => array(
+//      // Mark that this field can be rendered using Message::getText().
+//      'message_text' => TRUE,
+//    ),
+//  ))->save();
+//
+//  entity_create('field_instance_config', array(
+//    'field_name' => MESSAGE_FIELD_MESSAGE_TEXT,
+//    'bundle' => 'message_type',
+//    'entity_type' => 'message_type',
+//    'label' => t('Message text'),
+//    'description' => t('This is the text of all messages of this type.'),
+//    'required' => TRUE,
+//    'settings' => array(
+//      'text_processing' => 1,
+//    ),
+//  ))->save();
 }
 
 /**

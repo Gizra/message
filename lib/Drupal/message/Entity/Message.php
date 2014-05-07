@@ -7,11 +7,11 @@
 
 namespace Drupal\message\Entity;
 
+use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\Entity;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\TypedData\TypedDataInterface;
-use Drupal\message\MessageInterface;
 
 /**
  * Defines the Message entity class.
@@ -36,8 +36,7 @@ use Drupal\message\MessageInterface;
  *   }
  * )
  */
-//class Message extends Entity implements MessageInterface {
-class Message extends Entity {
+class Message extends ContentEntityBase {
 
   /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
