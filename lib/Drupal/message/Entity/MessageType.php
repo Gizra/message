@@ -15,13 +15,10 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
 /**
  * Defines the Message type entity class.
  *
- * @EntityType(
+ * @ConfigEntityType(
  *   id = "message_type",
  *   label = @Translation("Message type"),
  *   module = "message",
- *   controllers = {
- *     "storage" = "Drupal\Core\Entity\DatabaseStorageControllerNG"
- *   },
  *   config_prefix = "message.type",
  *   fieldable = TRUE,
  *   bundle_of = "message",
@@ -174,6 +171,7 @@ class MessageType extends ConfigEntityBase {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions($entity_type) {
+    // TODO: Fix this.
     $properties['id'] = array(
       'label' => t('Message type ID'),
       'description' => t('The message type ID.'),
