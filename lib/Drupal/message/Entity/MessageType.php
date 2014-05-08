@@ -18,22 +18,14 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  * Defines the Message type entity class.
  *
  * @ConfigEntityType(
- *   id = "message_type",
+ *   id = "type",
  *   label = @Translation("Message type"),
- *   module = "message",
- *   config_prefix = "message.type",
- *   fieldable = TRUE,
+ *   config_prefix = "type",
  *   bundle_of = "message",
  *   entity_keys = {
- *     "id" = "id",
- *     "bundle" = "category",
- *     "label" = "label",
- *     "uuid" = "uuid"
+ *     "id" = "type",
+ *     "label" = "name"
  *   },
- *   bundle_keys = {
- *     "bundle" = "type"
- *   },
- *   base_table = "message_type"
  * )
  */
 class MessageType extends ConfigEntityBase {
@@ -43,7 +35,7 @@ class MessageType extends ConfigEntityBase {
    *
    * @var string
    */
-  public $id;
+  public $type;
 
   /**
    * The machine name of this message type.
@@ -72,6 +64,10 @@ class MessageType extends ConfigEntityBase {
    * @var string
    */
   protected $description;
+
+  public function id() {
+    return $this->type;
+  }
 
   /**
    * Array with the arguments and their replacement value, or callacbks.
@@ -148,61 +144,6 @@ class MessageType extends ConfigEntityBase {
    * @var array
    */
   protected $settings = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public function uri() {
-    return array(
-      'path' => 'admin/structure/messages/manage/' . $this->id(),
-      'options' => array(
-        'entity_type' => $this->entityType,
-        'entity' => $this,
-      ),
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['id'] = FieldDefinition::create('integer')
-      ->setLabel(t('Message type ID'))
-      ->setDescription(t('The message type ID.'))
-      ->setReadOnly(TRUE);
-
-    $fields['uuid'] = FieldDefinition::create('uuid')
-      ->setLabel(t('UUID'))
-      ->setDescription(t('The message UUID'))
-      ->setReadOnly(TRUE);
-
-    $fields['langcode'] = FieldDefinition::create('language')
-      ->setLabel(t('Language code'))
-      ->setDescription(t('The message language code.'))
-      ->setRevisionable(TRUE);
-
-    $fields['name'] = FieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The message type name.'));
-
-    $fields['description'] = FieldDefinition::create('string')
-      ->setLabel(t('Description'))
-      ->setDescription(t('A description of the message type.'));
-
-    $fields['category'] = FieldDefinition::create('string')
-      ->setLabel(t('Category'))
-      ->setDescription(t('The message category.'));
-
-    $fields['arguments'] = FieldDefinition::create('string')
-      ->setLabel(t('Arguments'))
-      ->setDescription(t('A serialized array of arguments.'));
-
-    $fields['settings'] = FieldDefinition::create('string')
-      ->setLabel(t('Settings'))
-      ->setDescription(t('A serialized array of settings override.'));
-
-    return $fields;
-  }
 
   /**
    * Retrieves the configured message text in a certain language.
