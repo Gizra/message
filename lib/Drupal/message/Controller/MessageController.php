@@ -27,9 +27,10 @@ class MessageController extends ControllerBase {
 
     entity_create('message', array('type' => 'testing', 'arguments' => array('time' => time())))->save();
     $messages = entity_load_multiple('message');
-      foreach ($messages as $message) {
-        $id[] = $message->id();
-      }
+
+    foreach ($messages as $message) {
+      $id[] = $message->id();
+    }
 
     return implode("<br />", $id);
   }
