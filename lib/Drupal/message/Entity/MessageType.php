@@ -26,6 +26,14 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "id" = "type",
  *     "label" = "label"
  *   },
+ *   controllers = {
+ *     "form" = {
+ *       "add" = "Drupal\message\MessageTypeForm",
+ *       "edit" = "Drupal\message\MessageTypeForm",
+ *       "delete" = "Drupal\message\Form\MessageTypeDeleteConfirm"
+ *     },
+ *     "list_builder" = "Drupal\message\NodeTypeListBuilder",
+ *   },
  * )
  */
 class MessageType extends ConfigEntityBase {
@@ -246,5 +254,12 @@ class MessageType extends ConfigEntityBase {
       }
       return $output;
     }
+  }
+
+  /**
+   * Check if the message is new.
+   */
+  public function isLocked() {
+    return !$this->isNew();
   }
 }

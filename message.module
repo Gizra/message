@@ -16,6 +16,29 @@ define('MESSAGE_FIELD_MESSAGE_TEXT', 'message_text');
 define('MESSAGE_PURGE_LIMIT', 100);
 
 /**
+ * Drupal 8 part. Remove this comment after finishing the porting process.
+ */
+
+
+/**
+ * Check if the message type is already exists.
+ *
+ * @param String $type
+ *  The type machine name.
+ *
+ * @return Boolean
+ *  True or false if the message type is already exists.
+ */
+function message_type_load($type = NULL) {
+  return entity_load('message', $type);
+}
+
+/**
+ * Drupal 7 part. We can, and should, take parts from here during the porting to
+ * Drupal 8.
+ */
+
+/**
  * Implementation of hook_views_api().
  */
 function message_views_api() {
@@ -191,6 +214,7 @@ function message_cron() {
  * Handles messages deletion when referenced entities are being deleted.
  */
 function message_entity_delete($entity, $entity_type) {
+  return;
   if ($entity_type == 'message') {
     return;
   }
@@ -455,27 +479,6 @@ function message_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, 
       }
     }
   }
-}
-
-/**
- * Message type loader.
- *
- * @param $name
- *   (optional) The name for this message type. If no type is given all existing
- *   types are returned.
- *
- * @return MessageType
- *   Returns a fully-loaded message type definition if a type name is passed.
- *   Else an array containing all types is returned.
- */
-function message_type_load($name = NULL) {
-  // Replace dashes with underscores so this can be used as menu argument
-  // loader too.
-  $types = entity_load_multiple('message_type', isset($name) ? array(strtr($name, array('-' => '_'))) : FALSE);
-  if (isset($name)) {
-    return isset($types[$name]) ? $types[$name] : FALSE;
-  }
-  return $types;
 }
 
 /**
