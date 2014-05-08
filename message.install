@@ -11,7 +11,11 @@ use Drupal\field\Field;
  * Implements hook_install().
  */
 function message_install() {
-  // todo: leave this for later.
+  // todo: Configurable entities are not fieldable: https://drupal.org/node/1833872.
+  // Two ways to solve this: Create an external entity or define the message
+  // type as external entity.
+  // @see: http://www.previousnext.com.au/blog/understanding-drupal-8s-config-entities.
+
 //  entity_create('field_config', array(
 //    'name' => MESSAGE_FIELD_MESSAGE_TEXT,
 //    'type' => 'text_long',
