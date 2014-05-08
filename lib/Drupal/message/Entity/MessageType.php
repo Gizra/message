@@ -18,13 +18,13 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  * Defines the Message type entity class.
  *
  * @ConfigEntityType(
- *   id = "type",
+ *   id = "message_type",
  *   label = @Translation("Message type"),
  *   config_prefix = "type",
  *   bundle_of = "message",
  *   entity_keys = {
  *     "id" = "type",
- *     "label" = "name"
+ *     "label" = "label"
  *   },
  * )
  */
@@ -144,6 +144,48 @@ class MessageType extends ConfigEntityBase {
    * @var array
    */
   protected $settings = array();
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
+    $fields['id'] = FieldDefinition::create('integer')
+      ->setLabel(t('Message type ID'))
+      ->setDescription(t('The message type ID.'))
+      ->setReadOnly(TRUE);
+
+    $fields['uuid'] = FieldDefinition::create('uuid')
+      ->setLabel(t('UUID'))
+      ->setDescription(t('The message UUID'))
+      ->setReadOnly(TRUE);
+
+    $fields['langcode'] = FieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The message language code.'))
+      ->setRevisionable(TRUE);
+
+    $fields['name'] = FieldDefinition::create('string')
+      ->setLabel(t('Name'))
+      ->setDescription(t('The message type name.'));
+
+    $fields['description'] = FieldDefinition::create('string')
+      ->setLabel(t('Description'))
+      ->setDescription(t('A description of the message type.'));
+
+    $fields['category'] = FieldDefinition::create('string')
+      ->setLabel(t('Category'))
+      ->setDescription(t('The message category.'));
+
+    $fields['arguments'] = FieldDefinition::create('string')
+      ->setLabel(t('Arguments'))
+      ->setDescription(t('A serialized array of arguments.'));
+
+    $fields['settings'] = FieldDefinition::create('string')
+      ->setLabel(t('Settings'))
+      ->setDescription(t('A serialized array of settings override.'));
+
+    return $fields;
+  }
 
   /**
    * Retrieves the configured message text in a certain language.
