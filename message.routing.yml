@@ -10,6 +10,6 @@ message.type_add:
   path: '/admin/structure/message/type/add'
   defaults:
     _entity_form: 'message_type.add'
-    _title: 'Add content type'
+    _title: 'Add message type'
   requirements:
     _permission: 'administer content types'
