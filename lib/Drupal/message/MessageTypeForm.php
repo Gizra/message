@@ -9,6 +9,15 @@ namespace Drupal\message;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\FieldItemList;
+use Drupal\Core\Field\WidgetBase;
+use Drupal\entity_reference\Plugin\Field\FieldType\ConfigurableEntityReferenceFieldItemList;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\migrate_drupal\Plugin\migrate\Process\d6\FieldInstanceWidgetSettings;
+use Drupal\migrate_drupal\Plugin\migrate\source\d6\FieldInstance;
+use Drupal\text\Plugin\Field\FieldWidget\TextareaWidget;
 
 /**
  * Form controller for node type forms.
@@ -38,6 +47,7 @@ class MessageTypeForm extends EntityForm {
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#disabled' => $type->isLocked(),
       '#machine_name' => array(
+        'exists' => '\Drupal\message\Controller\MessageController::MessageTypeExists',
         'source' => array('label'),
       ),
       '#description' => t('A unique machine-readable name for this message type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %message-add page, in which underscores will be converted into hyphens.', array(
@@ -91,7 +101,7 @@ class MessageTypeForm extends EntityForm {
       '#suffix' => '</div>',
       '#tree' => TRUE,
       '#parents' => array('message_type_fields'),
-      'text' => $this->textField($form),
+      'text' => $this->textField($form, $form_state),
     );
 
     $form['data'] = array(
@@ -130,7 +140,7 @@ class MessageTypeForm extends EntityForm {
       '#type' => 'checkbox',
       '#title' => t('Purge messages'),
       '#description' => t('When enabled, old messages will be deleted.'),
-      '#default_value' => !empty($this->entity->data['purge']['enabled']),
+//      '#default_value' => !empty($this->entity->data['purge']['enabled']),
       '#states' => $states,
     );
 
@@ -145,7 +155,7 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Messages quota'),
       '#description' => t('Maximal (approximate) amount of messages of this type.'),
       '#default_value' => !empty($this->entity->data['purge']['quota']) ? $this->entity->data['purge']['quota'] : '',
-      '#element_validate' => array('element_validate_integer_positive'),
+//      '#element_validate' => array('element_validate_integer_positive'),
       '#states' => $states,
     );
 
@@ -154,7 +164,7 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Purge messages older than'),
       '#description' => t('Maximal message age in days, for messages of this type.'),
       '#default_value' => !empty($this->entity->data['purge']['days']) ? $this->entity->data['purge']['days'] : '',
-      '#element_validate' => array('element_validate_integer_positive'),
+//      '#element_validate' => array('element_validate_integer_positive'),
       '#states' => $states,
     );
 
@@ -188,15 +198,15 @@ class MessageTypeForm extends EntityForm {
 
     // todo: When the parent method will do something remove as much code as we
     // can.
-//    $this->entity->save();
-//
-//    $params = array(
-//      '@type' => $form_state['values']['label'],
-//    );
-//
-//    drupal_set_message(t('The message type @type created successfully.', $params));
+    $this->entity->save();
 
-//    $form_state['redirect'] = 'admin/structure/message';
+    $params = array(
+      '@type' => $form_state['values']['label'],
+    );
+
+    drupal_set_message(t('The message type @type created successfully.', $params));
+
+    $form_state['redirect'] = 'admin/structure/message';
   }
 
   /**
@@ -204,10 +214,25 @@ class MessageTypeForm extends EntityForm {
    *
    * todo: add token selector, add ckeditor and convert to multiple field.
    */
-  private function textField($form) {
+  private function textField($form, $form_state) {
+
+    // try to create a field in order to use the text area widget. not sure it
+    // will work.
+//    $field = FieldDefinition::create('text')
+//      ->setName('text')
+//      ->setCardinality(FieldInstanceConfig::CARDINALITY_UNLIMITED);
+//    $form['#parents'] = array();
+//    $pluginManager = \Drupal::service('plugin.manager.field.widget');
+//    $foo = new TextareaWidget('text_textarea', $pluginManager->getDefinitions(), $field, array());
+//
+//    $bar = new ConfigurableEntityReferenceFieldItemList($field, 'message_type');
+//    $foo->form($bar, $form, $form_state);
+
+
     return array(
       '#type' => 'textarea',
       '#title' => t('Message text'),
+      '#required' => TRUE,
     );
   }
 }
