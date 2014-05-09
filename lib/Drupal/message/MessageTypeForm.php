@@ -27,7 +27,7 @@ class MessageTypeForm extends EntityForm {
     $form['name'] = array(
       '#title' => t('Name'),
       '#type' => 'textfield',
-      '#default_value' => $type->name,
+      '#default_value' => $type->id(),
       '#description' => t('The human-readable name of this message type. This text will be displayed as part of the list on the <em>Add message</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 30,

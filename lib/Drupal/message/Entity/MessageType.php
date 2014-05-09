@@ -32,7 +32,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *       "edit" = "Drupal\message\MessageTypeForm",
  *       "delete" = "Drupal\message\Form\MessageTypeDeleteConfirm"
  *     },
- *     "list_builder" = "Drupal\message\NodeTypeListBuilder",
+ *     "list_builder" = "Drupal\message\MessageTypeListBuilder",
  *   },
  * )
  */

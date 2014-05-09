@@ -6,6 +6,15 @@ message.sandbox:
   requirements:
     _permission: 'access administration pages'
 
+message.overview_types:
+  path: '/admin/structure/message'
+  defaults:
+    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    entity_type: 'message_type'
+    _title: 'Message types'
+  requirements:
+    _permission: 'administer content types'
+
 message.type_add:
   path: '/admin/structure/message/type/add'
   defaults:

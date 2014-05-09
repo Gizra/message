@@ -1,0 +1,5 @@
+message.overview_types:
+  title: 'Message types'
+  parent: system.admin_structure
+  description: 'Manage message types.'
+  route_name: message.overview_types
