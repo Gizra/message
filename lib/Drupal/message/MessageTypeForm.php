@@ -8,7 +8,6 @@
 namespace Drupal\message;
 
 use Drupal\Core\Entity\EntityForm;
-use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\EntityTypeInterface;
 
 /**
@@ -24,8 +23,8 @@ class MessageTypeForm extends EntityForm {
 
     $type = $this->entity;
 
-    $form['name'] = array(
-      '#title' => t('Name'),
+    $form['label'] = array(
+      '#title' => t('Label'),
       '#type' => 'textfield',
       '#default_value' => $type->id(),
       '#description' => t('The human-readable name of this message type. This text will be displayed as part of the list on the <em>Add message</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
@@ -39,12 +38,19 @@ class MessageTypeForm extends EntityForm {
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#disabled' => $type->isLocked(),
       '#machine_name' => array(
-        'exists' => 'message_type_load',
-        'source' => array('name'),
+        'source' => array('label'),
       ),
       '#description' => t('A unique machine-readable name for this message type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %message-add page, in which underscores will be converted into hyphens.', array(
         '%message-add' => t('Add message'),
       )),
+    );
+
+    $form['description'] = array(
+      '#title' => t('Description'),
+      '#type' => 'textfield',
+      '#default_value' => $this->entity->description,
+      '#description' => t('The human-readable description of this message type.'),
+      '#required' => TRUE,
     );
 
     // todo: check content translation.
@@ -53,6 +59,7 @@ class MessageTypeForm extends EntityForm {
       '#description' => t('The language code that will be saved with the field values. This is used to allow translation of fields.'),
     );
 
+    // todo: leave for later.
     if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
       $options = array();
       foreach (\Drupal::languageManager()->getLanguages() as $key => $value) {
@@ -79,44 +86,12 @@ class MessageTypeForm extends EntityForm {
       );
     }
 
-    return $form;
-
     $form['message_type_fields'] = array(
       '#prefix' => '<div id="message-type-wrapper">',
       '#suffix' => '</div>',
       '#tree' => TRUE,
       '#parents' => array('message_type_fields'),
-    );
-    field_attach_form('message_type', $message_type, $form['message_type_fields'], $form_state, $field_language);
-
-    $token_types = module_exists('entity_token') ? array('message') : array();
-    if (!$token_types) {
-      $form['entity_token'] = array('#markup' => '<p>' . t('Optional: Enable "Entity token" module to use Message and Message-type related tokens.') . '</p>');
-    }
-
-    if (module_exists('token')) {
-      $form['token_tree'] = array(
-        '#theme' => 'token_tree',
-        '#token_types' => $token_types + array('all'),
-      );
-
-    }
-    else {
-      $form['token_tree'] = array(
-        '#markup' => '<p>' . t("Optional: Install <a href='@token-url'>Token</a> module, to show a the list of available tokens.", array('@token-url' => 'http://drupal.org/project/token')) . '</p>',
-      );
-    }
-
-    $params = array(
-      '@url-rules' => 'http://drupal.org/project/rules',
-      '!link' => 'http://api.drupal.org/api/drupal/includes--bootstrap.inc/function/t/7',
-    );
-
-    $form['argument_keys'] = array(
-      '#title' => t('Replacement tokens'),
-      '#type' => 'textfield',
-      '#default_value' => implode(', ', (array) $message_type->argument_keys),
-      '#description' => t('Optional: For <a href="@url-rules">Rules</a> module, in order to set argument using Rules actions, a comma-separated list of replacement tokens, e.g. %title or !url, of which the message text makes use of. Each replacement token has to start with one of the special characters "@", "%" or "!". This character controls the sanitization method used, analogously to the <a href="!link">t()</a> function.', $params),
+      'text' => $this->textField($form),
     );
 
     $form['data'] = array(
@@ -130,7 +105,7 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Clear empty tokens'),
       '#type' => 'checkbox',
       '#description' => t('When this option is selected, empty tokens will be removed from display.'),
-      '#default_value' => isset($message_type->data['token options']['clear']) ? $message_type->data['token options']['clear'] : FALSE,
+      '#default_value' => isset($this->entity->data['token options']['clear']) ? $this->entity->data['token options']['clear'] : FALSE,
     );
 
     $form['data']['purge'] = array(
@@ -142,7 +117,7 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Override global settings'),
       '#type' => 'checkbox',
       '#description' => t('Override global purge settings for messages of this type.'),
-      '#default_value' => !empty($message_type->data['purge']['override']),
+      '#default_value' => !empty($this->entity->data['purge']['override']),
     );
 
     $states = array(
@@ -155,7 +130,7 @@ class MessageTypeForm extends EntityForm {
       '#type' => 'checkbox',
       '#title' => t('Purge messages'),
       '#description' => t('When enabled, old messages will be deleted.'),
-      '#default_value' => !empty($message_type->data['purge']['enabled']),
+      '#default_value' => !empty($this->entity->data['purge']['enabled']),
       '#states' => $states,
     );
 
@@ -169,7 +144,7 @@ class MessageTypeForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => t('Messages quota'),
       '#description' => t('Maximal (approximate) amount of messages of this type.'),
-      '#default_value' => !empty($message_type->data['purge']['quota']) ? $message_type->data['purge']['quota'] : '',
+      '#default_value' => !empty($this->entity->data['purge']['quota']) ? $this->entity->data['purge']['quota'] : '',
       '#element_validate' => array('element_validate_integer_positive'),
       '#states' => $states,
     );
@@ -178,28 +153,10 @@ class MessageTypeForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => t('Purge messages older than'),
       '#description' => t('Maximal message age in days, for messages of this type.'),
-      '#default_value' => !empty($message_type->data['purge']['days']) ? $message_type->data['purge']['days'] : '',
+      '#default_value' => !empty($this->entity->data['purge']['days']) ? $this->entity->data['purge']['days'] : '',
       '#element_validate' => array('element_validate_integer_positive'),
       '#states' => $states,
     );
-
-    $form['actions'] = array('#type' => 'actions');
-    $form['actions']['submit'] = array(
-      '#type' => 'submit',
-      '#value' => t('Save message type'),
-      '#weight' => 40,
-    );
-
-    if (!$message_type->hasStatus(ENTITY_IN_CODE) && $op != 'add') {
-      $form['actions']['delete'] = array(
-        '#type' => 'submit',
-        '#value' => t('Delete message type'),
-        '#weight' => 45,
-        '#limit_validation_errors' => array(),
-        '#submit' => array('message_type_form_submit_delete')
-      );
-    }
-    return $form;
 
     return $form;
   }
@@ -225,5 +182,32 @@ class MessageTypeForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, array &$form_state) {
+    // Until the parent method will do something we handle the saving by our
+    // self.
+    parent::save($form, $form_state);
+
+    // todo: When the parent method will do something remove as much code as we
+    // can.
+//    $this->entity->save();
+//
+//    $params = array(
+//      '@type' => $form_state['values']['label'],
+//    );
+//
+//    drupal_set_message(t('The message type @type created successfully.', $params));
+
+//    $form_state['redirect'] = 'admin/structure/message';
+  }
+
+  /**
+   * Return the message text element.
+   *
+   * todo: add token selector, add ckeditor and convert to multiple field.
+   */
+  private function textField($form) {
+    return array(
+      '#type' => 'textarea',
+      '#title' => t('Message text'),
+    );
   }
 }

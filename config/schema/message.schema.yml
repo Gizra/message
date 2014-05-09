@@ -22,3 +22,6 @@ message.category.*:
     text:
       type: string
       label: 'Message text'
+    data:
+      type: string
+      label: 'Data'
