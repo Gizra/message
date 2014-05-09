@@ -46,13 +46,6 @@ class MessageType extends ConfigEntityBase {
   public $type;
 
   /**
-   * The machine name of this message type.
-   *
-   * @var string
-   */
-  public $name;
-
-  /**
    * The UUID of the message type.
    *
    * @var string
@@ -71,7 +64,15 @@ class MessageType extends ConfigEntityBase {
    *
    * @var string
    */
-  protected $description;
+  public $description;
+
+  /**
+   * The serialised text of the message type.
+   *
+   * @var String
+   */
+  public $text = array();
+
 
   public function id() {
     return $this->type;
@@ -117,14 +118,14 @@ class MessageType extends ConfigEntityBase {
    *
    * @var array
    */
-  protected $arguments = array();
+  public $arguments = array();
 
   /**
    * Set the default message category of the message type.
    *
    * @var string
    */
-  protected $category = NULL;
+  public $category = NULL;
 
   /**
    * Serialized array with misc options.
@@ -151,49 +152,7 @@ class MessageType extends ConfigEntityBase {
    *
    * @var array
    */
-  protected $settings = array();
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['id'] = FieldDefinition::create('integer')
-      ->setLabel(t('Message type ID'))
-      ->setDescription(t('The message type ID.'))
-      ->setReadOnly(TRUE);
-
-    $fields['uuid'] = FieldDefinition::create('uuid')
-      ->setLabel(t('UUID'))
-      ->setDescription(t('The message UUID'))
-      ->setReadOnly(TRUE);
-
-    $fields['langcode'] = FieldDefinition::create('language')
-      ->setLabel(t('Language code'))
-      ->setDescription(t('The message language code.'))
-      ->setRevisionable(TRUE);
-
-    $fields['name'] = FieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The message type name.'));
-
-    $fields['description'] = FieldDefinition::create('string')
-      ->setLabel(t('Description'))
-      ->setDescription(t('A description of the message type.'));
-
-    $fields['category'] = FieldDefinition::create('string')
-      ->setLabel(t('Category'))
-      ->setDescription(t('The message category.'));
-
-    $fields['arguments'] = FieldDefinition::create('string')
-      ->setLabel(t('Arguments'))
-      ->setDescription(t('A serialized array of arguments.'));
-
-    $fields['settings'] = FieldDefinition::create('string')
-      ->setLabel(t('Settings'))
-      ->setDescription(t('A serialized array of settings override.'));
-
-    return $fields;
-  }
+  public $settings = array();
 
   /**
    * Retrieves the configured message text in a certain language.
@@ -212,6 +171,7 @@ class MessageType extends ConfigEntityBase {
    * @return string A string with the text from the field.
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $options = array()) {
+    return implode(" ", $this->text);
     // Set default values.
     $options += array(
       // The field name from which the text should be extracted.
@@ -258,8 +218,28 @@ class MessageType extends ConfigEntityBase {
 
   /**
    * Check if the message is new.
+   *
+   * todo: Check if message type is exported.
    */
   public function isLocked() {
     return !$this->isNew();
+  }
+
+  /**
+   * Override the save method.
+   */
+  function save() {
+    if (!empty($this->text) && !is_array($this->text)) {
+      // On Drupal 7 the text was field which instantiate on the message type.
+      // This was good since the message was an instance of the message type and
+      // the text from the message type's field was displayed to the user and
+      // the placeholders were replaced on the fly.
+      // On Drupal 8 configurable entity is not fieldable and now the text will
+      // be held in an array property and the form field will be generated as
+      // multiple. The next line ensure the text property will be array.
+      $this->text = array($this->text);
+    }
+
+    parent::save();
   }
 }

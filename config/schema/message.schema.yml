@@ -19,3 +19,6 @@ message.category.*:
     langcode:
       type: string
       label: 'Default language'
+    text:
+      type: string
+      label: 'Message text'
