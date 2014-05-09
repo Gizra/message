@@ -83,4 +83,17 @@ class MessageController extends ControllerBase {
 
     return implode("<br />", $output);
   }
+
+  /**
+   * Check if the message type is already exists.
+   *
+   * @param String $type
+   *  The type machine name.
+   *
+   * @return Boolean
+   *  True or false if the message type is already exists.
+   */
+  public static function MessageTypeExists($type) {
+    return entity_load('message_type', $type);
+  }
 }

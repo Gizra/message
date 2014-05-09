@@ -19,20 +19,6 @@ define('MESSAGE_PURGE_LIMIT', 100);
  * Drupal 8 part. Remove this comment after finishing the porting process.
  */
 
-
-/**
- * Check if the message type is already exists.
- *
- * @param String $type
- *  The type machine name.
- *
- * @return Boolean
- *  True or false if the message type is already exists.
- */
-function message_type_load($type = NULL) {
-  return entity_load('message', $type);
-}
-
 /**
  * Drupal 7 part. We can, and should, take parts from here during the porting to
  * Drupal 8.
