@@ -25,18 +25,6 @@ define('MESSAGE_PURGE_LIMIT', 100);
  */
 
 /**
- * Implementation of hook_views_api().
- */
-function message_views_api() {
-  /*
-  return array(
-    'api' => 3,
-    'path' => drupal_get_path('module', 'message') . '/includes/views',
-  );
-  */
-}
-
-/**
  * Implements hook_theme().
  */
 function message_theme() {
@@ -102,33 +90,6 @@ function message_permission() {
     'description' => t('Log new messages.'),
   );
   return $permissions;
-}
-
-/**
- * Implements hook_menu().
- */
-function message_menu() {
-  $items = array();
-
-  $items['admin/config/system/message'] = array(
-    'title' => 'Message settings',
-    'description' => 'Manage message purging upon cron.',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('message_user_admin_settings'),
-    'access arguments' => array('administer message types'),
-    'file' => 'includes/message.admin.inc',
-  );
-
-  $items['admin/config/system/message/text-copy'] = array(
-    'title' => 'Copy messages text fields',
-    'description' => 'Copy messages text fields from one language to others',
-    'page callback' => 'drupal_get_form',
-    'page arguments' => array('message_admin_text_copy'),
-    'access arguments' => array('administer message types'),
-    'file' => 'includes/message.admin.inc',
-  );
-
-  return $items;
 }
 
 /**
@@ -615,21 +576,5 @@ function message_admin_text_copy_batch($origin_lang, $dest_langs, $override, &$c
 
   if ($context['sandbox']['progress'] != $context['sandbox']['max']) {
     $context['finished'] = $context['sandbox']['progress'] / $context['sandbox']['max'];
-  }
-}
-
-/**
- * Implements hook_features_message_type_alter().
- *
- * Add field_bundle_settings variable when a message-type is exported and
- * Strongarm module exists.
- */
-function message_features_pipe_message_type_alter(&$pipe, $data, $export) {
-  if (empty($data) || !module_exists('strongarm')) {
-    return;
-  }
-
-  foreach ($data as $message_type) {
-    $pipe['variable'][] = "field_bundle_settings_message__{$message_type}";
   }
 }
