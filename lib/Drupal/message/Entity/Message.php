@@ -10,6 +10,9 @@ namespace Drupal\message\Entity;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Language\Language;
+use Drupal\message\Controller\MessageController;
+use Drupal\user\Entity\User;
 
 /**
  * Defines the Message entity class.
@@ -48,22 +51,30 @@ class Message extends ContentEntityBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Get the type of the message type.
+   *
+   * @return MessageType
    */
   public function getType() {
-    return $this->bundle();
+    return MessageController::MessageTypeLoad($this->bundle());
   }
 
   /**
-   * {@inheritdoc}
+   * Retrieve the time stamp of the message.
+   *
+   * @return Int
    */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
 
-
   /**
-   * {@inheritdoc}
+   * Setting the timestamp.
+   *
+   * @param Int $timestamp
+   *  The timestamp
+   *
+   * @return $this
    */
   public function setCreatedTime($timestamp) {
     $this->set('created', $timestamp);
@@ -71,21 +82,33 @@ class Message extends ContentEntityBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Retrieve the message owner object.
+   *
+   * @return User
+   *  The user object.
    */
   public function getAuthor() {
     return $this->get('uid')->entity;
   }
 
   /**
-   * {@inheritdoc}
+   * Retrieve the author ID.
+   *
+   * @return Int
+   *  The author ID.
    */
   public function getAuthorId() {
     return $this->get('uid')->target_id;
   }
 
   /**
-   * {@inheritdoc}
+   * Set the author ID.s
+   *
+   * @param Int $uid
+   *  The user ID.
+   *
+   * @return $this
+   *  The user object.
    */
   public function setAuthorId($uid) {
     $this->set('uid', $uid);
@@ -136,5 +159,82 @@ class Message extends ContentEntityBase {
       ->setTranslatable(TRUE);
 
     return $fields;
+  }
+
+  /**
+   * Replace arguments with their placeholders.
+   *
+   * @param $langcode
+   *   Optional; The language to get the text in. If not set the current language
+   *   will be used.
+   * @param $options
+   *   Optional; Array to be passed to MessageType::getText().
+   *
+   * @return string
+   *  The message text.
+   */
+  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $options = array()) {
+
+    if (!$message_type = $this->getType()) {
+      // Message type does not exist any more.
+      return '';
+    }
+
+    return $message_type->getText();
+
+    return;
+    $arguments = message_get_property_values($this, 'arguments');
+    $output = $message_type->getText($langcode, $options);
+
+    if (!empty($arguments)) {
+      $args = array();
+      foreach ($arguments as $key => $value) {
+        if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
+          // A replacement via callback function.
+          $value += array('pass message' => FALSE);
+          if ($value['pass message']) {
+            // Pass the message object as-well.
+            $value['callback arguments'][] = $this;
+          }
+
+          $value = call_user_func_array($value['callback'], $value['callback arguments']);
+        }
+
+        switch ($key[0]) {
+          case '@':
+            // Escaped only.
+            $args[$key] = check_plain($value);
+            break;
+
+          case '%':
+          default:
+            // Escaped and placeholder.
+            $args[$key] = drupal_placeholder($value);
+            break;
+
+          case '!':
+            // Pass-through.
+            $args[$key] = $value;
+        }
+      }
+      $output = strtr($output, $args);
+    }
+    $token_replace = message_get_property_values($this, 'data', 'token replace', TRUE);
+    if ($output && $token_replace) {
+      // Message isn't explicetly denying token replace, so process the text.
+      $context = array('message' => $this);
+
+      $token_options = message_get_property_values($this, 'data', 'token options');
+      $output = token_replace($output, $context, $token_options);
+    }
+    return $output;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function save() {
+    // todo: When the user object is not supplied set to the current user.
+    parent::save();
   }
 }
