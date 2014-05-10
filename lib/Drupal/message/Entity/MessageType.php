@@ -34,6 +34,10 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     },
  *     "list_builder" = "Drupal\message\MessageTypeListBuilder",
  *   },
+ *   links = {
+ *     "edit" = "message_type.edit",
+ *     "delete" = "message_type.delete"
+ *   }
  * )
  */
 class MessageType extends ConfigEntityBase {

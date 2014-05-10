@@ -28,6 +28,9 @@ use Drupal\Core\Field\FieldDefinition;
  *   },
  *   bundle_keys = {
  *     "bundle" = "type"
+ *   },
+ *   links = {
+ *     "admin-form" = "message.type_add"
  *   }
  * )
  */

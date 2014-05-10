@@ -42,18 +42,19 @@ class MessageTypeListBuilder extends ConfigEntityListBuilder {
     return $row + parent::buildRow($entity);
   }
 
-  public function getOperations(EntityInterface $entity) {
-    $ops = parent::getOperations($entity);
-
+  /**
+   * {@inheritdoc}
+   */
+  public function getDefaultOperations(EntityInterface $entity) {
     return array(
       'edit' => array(
-        'title' => 'foo',
-        'router_name' => 'message.type_add',
-      ),
-      'bar' => array(
-        'title' => 'foo',
-        'router_name' => 'message.type_add',
-      ),
+        'title' => t('Edit'),
+        'router_name' => 'message_type.edit',
+      ) + $entity->urlInfo('edit')->toArray(),
+      'delete' => array(
+        'title' => t('Delete'),
+        'router_name' => 'message_type.delete',
+      ) + $entity->urlInfo('delete')->toArray(),
     );
   }
 }
