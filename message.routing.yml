@@ -1,11 +1,4 @@
-message.sandbox:
-  path: '/message/sandbox'
-  defaults:
-    _content: '\Drupal\message\Controller\MessageController::page'
-    _title: 'Mesage sandbox page'
-  requirements:
-    _permission: 'access administration pages'
-
+#todo: Fix all permissions.
 message.overview_types:
   path: '/admin/structure/message'
   defaults:
