@@ -35,7 +35,7 @@ class MessageTypeForm extends EntityForm {
     $form['label'] = array(
       '#title' => t('Label'),
       '#type' => 'textfield',
-      '#default_value' => $type->id(),
+      '#default_value' => $type->label(),
       '#description' => t('The human-readable name of this message type. This text will be displayed as part of the list on the <em>Add message</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 30,
@@ -47,7 +47,7 @@ class MessageTypeForm extends EntityForm {
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#disabled' => $type->isLocked(),
       '#machine_name' => array(
-        'exists' => '\Drupal\message\Controller\MessageController::MessageTypeExists',
+        'exists' => '\Drupal\message\Controller\MessageController::MessageTypeLoad',
         'source' => array('label'),
       ),
       '#description' => t('A unique machine-readable name for this message type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %message-add page, in which underscores will be converted into hyphens.', array(
@@ -196,6 +196,9 @@ class MessageTypeForm extends EntityForm {
     // self.
     parent::save($form, $form_state);
 
+    // Saving the message text values.
+    $this->entity->text = $form_state['values']['message_type_fields']['text'];
+
     // todo: When the parent method will do something remove as much code as we
     // can.
     $this->entity->save();
@@ -233,13 +236,23 @@ class MessageTypeForm extends EntityForm {
       '#type' => 'container',
     );
 
-    foreach ($this->entity->text as $delta => $text) {
-      $element[$delta] = array(
+    if ($this->entity->text) {
+      foreach ($this->entity->text as $delta => $text) {
+        $element[$delta] = array(
+          '#type' => 'textarea',
+          '#title' => t('Message text'),
+          '#required' => TRUE,
+          '#default_value' => $text,
+        );
+      }
+    }
+    else {
+      // This is as new message. Present a single textarea.
+      $element[0] = array(
         '#type' => 'textarea',
         '#title' => t('Message text'),
         '#required' => TRUE,
-        '#default_value' => $text,
-      );
+      );;
     }
 
     return $element;

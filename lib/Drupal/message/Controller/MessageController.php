@@ -8,6 +8,7 @@
 namespace Drupal\message\Controller;
 
 use Drupal\Core\Controller\ControllerBase;
+use Drupal\message\Entity\MessageType;
 
 /**
  * Returns responses for System Info routes.
@@ -85,15 +86,14 @@ class MessageController extends ControllerBase {
   }
 
   /**
-   * Check if the message type is already exists.
+   * Loading a message type.
    *
    * @param String $type
-   *  The type machine name.
+   *  The message type.
    *
-   * @return Boolean
-   *  True or false if the message type is already exists.
+   * @return MessageType
    */
-  public static function MessageTypeExists($type) {
+  public static function MessageTypeLoad($type) {
     return entity_load('message_type', $type);
   }
 }
