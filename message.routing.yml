@@ -24,18 +24,18 @@ message.type_add:
     _permission: 'administer content types'
 
 message_type.edit:
-  path: '/admin/structure/message/type/add'
+  path: '/admin/structure/message/manage/{message_type}'
   defaults:
-    _entity_form: 'message_type.add'
-    _title: 'Add message type'
+    _entity_form: 'message_type.edit'
+    _title: 'Edit message type'
   requirements:
     _permission: 'administer content types'
 
 message_type.delete:
-  path: '/admin/structure/message/type/add'
+  path: '/admin/structure/message/delete/{message_type}'
   defaults:
-    _entity_form: 'message_type.add'
-    _title: 'Add message type'
+    _entity_form: 'message_type.delete'
+    _title: 'Delete message type'
   requirements:
     _permission: 'administer content types'
 

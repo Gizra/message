@@ -229,10 +229,19 @@ class MessageTypeForm extends EntityForm {
 //    $foo->form($bar, $form, $form_state);
 
 
-    return array(
-      '#type' => 'textarea',
-      '#title' => t('Message text'),
-      '#required' => TRUE,
+    $element = array(
+      '#type' => 'container',
     );
+
+    foreach ($this->entity->text as $delta => $text) {
+      $element[$delta] = array(
+        '#type' => 'textarea',
+        '#title' => t('Message text'),
+        '#required' => TRUE,
+        '#default_value' => $text,
+      );
+    }
+
+    return $element;
   }
 }
