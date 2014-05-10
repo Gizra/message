@@ -1,0 +1,4 @@
+message.type_add:
+  route_name: message.type_add
+  base_route: message.type_add
+  title: 'View'

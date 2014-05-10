@@ -8,10 +8,6 @@
 namespace Drupal\message;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;
-use Drupal\Core\Entity\EntityTypeInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\Core\Entity\EntityStorageInterface;
-use Drupal\Core\Routing\UrlGeneratorInterface;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Component\Utility\Xss;
 
@@ -21,39 +17,6 @@ use Drupal\Component\Utility\Xss;
  * @see \Drupal\message\Entity\MessageType
  */
 class MessageTypeListBuilder extends ConfigEntityListBuilder {
-
-  /**
-   * The url generator service.
-   *
-   * @var \Drupal\Core\Routing\UrlGeneratorInterface
-   */
-  protected $urlGenerator;
-
-  /**
-   * Constructs a messageTypeForm object.
-   *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
-   *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
-   *   The entity storage class.
-   * @param \Drupal\Core\Routing\UrlGeneratorInterface $url_generator
-   *   The url generator service.
-   */
-  public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, UrlGeneratorInterface $url_generator) {
-    parent::__construct($entity_type, $storage);
-    $this->urlGenerator = $url_generator;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function createInstance(ContainerInterface $container, EntityTypeInterface $entity_type) {
-    return new static(
-      $entity_type,
-      $container->get('entity.manager')->getStorage($entity_type->id()),
-      $container->get('url_generator')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -79,31 +42,18 @@ class MessageTypeListBuilder extends ConfigEntityListBuilder {
     return $row + parent::buildRow($entity);
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function getDefaultOperations(EntityInterface $entity) {
-    $operations = parent::getDefaultOperations($entity);
-    // Place the edit operation after the operations added by field_ui.module
-    // which have the weights 15, 20, 25.
-    if (isset($operations['edit'])) {
-      $operations['edit']['weight'] = 30;
-    }
-    return $operations;
+  public function getOperations(EntityInterface $entity) {
+    $ops = parent::getOperations($entity);
+
+    return array(
+      'edit' => array(
+        'title' => 'foo',
+        'router_name' => 'message.type_add',
+      ),
+      'bar' => array(
+        'title' => 'foo',
+        'router_name' => 'message.type_add',
+      ),
+    );
   }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function render() {
-    return 'a';
-
-    // todo: handle this later.
-    $build = parent::render();
-    $build['#empty'] = t('No content types available. <a href="@link">Add content type</a>.', array(
-      '@link' => $this->urlGenerator->generateFromPath('admin/structure/types/add'),
-    ));
-    return $build;
-  }
-
 }
