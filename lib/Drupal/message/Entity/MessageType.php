@@ -77,7 +77,19 @@ class MessageType extends ConfigEntityBase {
    */
   public $text = array();
 
+  /**
+   * Holds additional data on the entity.
+   *
+   * @var array
+   */
+  public $data;
 
+
+  /**
+   * Return the ID of the entity.
+   *
+   * @return int|null|string
+   */
   public function id() {
     return $this->type;
   }

@@ -140,8 +140,8 @@ class MessageTypeForm extends EntityForm {
       '#type' => 'checkbox',
       '#title' => t('Purge messages'),
       '#description' => t('When enabled, old messages will be deleted.'),
-//      '#default_value' => !empty($this->entity->data['purge']['enabled']),
       '#states' => $states,
+      '#default_value' => !empty($this->entity->data['purge']['enabled']) ? TRUE : FALSE,
     );
 
     $states = array(
@@ -155,7 +155,6 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Messages quota'),
       '#description' => t('Maximal (approximate) amount of messages of this type.'),
       '#default_value' => !empty($this->entity->data['purge']['quota']) ? $this->entity->data['purge']['quota'] : '',
-//      '#element_validate' => array('element_validate_integer_positive'),
       '#states' => $states,
     );
 
@@ -164,7 +163,6 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Purge messages older than'),
       '#description' => t('Maximal message age in days, for messages of this type.'),
       '#default_value' => !empty($this->entity->data['purge']['days']) ? $this->entity->data['purge']['days'] : '',
-//      '#element_validate' => array('element_validate_integer_positive'),
       '#states' => $states,
     );
 
