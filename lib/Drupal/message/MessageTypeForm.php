@@ -9,20 +9,14 @@ namespace Drupal\message;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Field\FieldItemList;
-use Drupal\Core\Field\WidgetBase;
-use Drupal\entity_reference\Plugin\Field\FieldType\ConfigurableEntityReferenceFieldItemList;
-use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldInstanceConfig;
-use Drupal\migrate_drupal\Plugin\migrate\Process\d6\FieldInstanceWidgetSettings;
-use Drupal\migrate_drupal\Plugin\migrate\source\d6\FieldInstance;
-use Drupal\text\Plugin\Field\FieldWidget\TextareaWidget;
 
 /**
  * Form controller for node type forms.
  */
 class MessageTypeForm extends EntityForm {
+
+  private $maxDelta;
 
   /**
    * {@inheritdoc}
@@ -96,13 +90,7 @@ class MessageTypeForm extends EntityForm {
       );
     }
 
-    $form['message_type_fields'] = array(
-      '#prefix' => '<div id="message-type-wrapper">',
-      '#suffix' => '</div>',
-      '#tree' => TRUE,
-      '#parents' => array('message_type_fields'),
-      'text' => $this->textField($form, $form_state),
-    );
+    $this->textField($form, $form_state);
 
     $form['data'] = array(
       // Placeholder for other module to add their settings, that should be added
@@ -187,6 +175,93 @@ class MessageTypeForm extends EntityForm {
   }
 
   /**
+   * Return the message text element.
+   *
+   * todo: add token selector, add ckeditor and convert to multiple field.
+   */
+  private function textField(&$form, &$form_state) {
+    // Creating the container.
+    $form['text'] = array(
+      '#type' => 'container',
+      '#tree' => TRUE,
+      '#theme' => 'field_multiple_value_form',
+      '#caridnality' => FieldInstanceConfig::CARDINALITY_UNLIMITED,
+      '#cardinality_multiple' => TRUE,
+      '#field_name' => 'message_text',
+      '#title' => t('Message text'),
+      '#description' => t('Please enter the message text.'),
+      '#prefix' => '<div id="message-text">',
+      '#suffix' => '</div>',
+    );
+
+    $form['add_more'] = array(
+      '#type' => 'button',
+      '#value' => t('Add another item'),
+      '#href' => '',
+      '#ajax' => array(
+        'callback' => array(get_class($this), 'addMoreAjax'),
+        'wrapper' => 'message-text',
+      ),
+    );
+
+    // Building the multiple form element; Adding first the the form existing
+    // text.
+    $start_key = 0;
+    foreach ($this->entity->text as $text) {
+      $form['text'][$start_key] = $this->singleElement($start_key, $text);
+      $start_key++;
+    }
+
+    $form_state['storage']['message_text'] = isset($form_state['storage']['message_text']) ? $form_state['storage']['message_text'] : $start_key;
+
+    if (!empty($form_state['triggering_element'])) {
+      $form_state['storage']['message_text']++;
+    }
+
+    $this->maxDelta = $start_key;
+
+    for ($delta = $start_key; $delta < $form_state['storage']['message_text']; $delta++) {
+      // For multiple fields, title and description are handled by the wrapping
+      // table.
+      $form['text'][$delta] = $this->singleElement($delta);
+    }
+  }
+
+  /**
+   * Return a single text area element.
+   */
+  private function singleElement($delta, $text = '') {
+    $element = array(
+      '#type' => 'text_format',
+      '#base_type' => 'textarea',
+      '#default_value' => $text,
+      '#rows' => 2,
+    );
+
+    $element['_weight'] = array(
+      '#type' => 'weight',
+      '#title' => t('Weight for row @number', array('@number' => $this->maxDelta + 1)),
+      '#title_display' => 'invisible',
+      // Note: this 'delta' is the FAPI #type 'weight' element's property.
+      '#delta' => $this->maxDelta,
+      '#default_value' => $delta,
+      '#weight' => 100,
+    );
+
+    return $element;
+  }
+
+  /**
+   * Ajax callback for the "Add another item" button.
+   *
+   * This returns the new page content to replace the page content made obsolete
+   * by the form submission.
+   */
+  public static function addMoreAjax(array $form, array $form_state) {
+    return $form['text'];
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function save(array $form, array &$form_state) {
@@ -195,7 +270,18 @@ class MessageTypeForm extends EntityForm {
     parent::save($form, $form_state);
 
     // Saving the message text values.
-    $this->entity->text = $form_state['values']['message_type_fields']['text'];
+    $message_text = array();
+
+    // todo: Handle weight order.
+    foreach ($form_state['values']['text'] as $key => $text) {
+      if (empty($text['value'])) {
+        continue;
+      }
+      $message_text[] = $text['value'];
+    }
+
+    // Updating the message text.
+    $this->entity->text = $message_text;
 
     // todo: When the parent method will do something remove as much code as we
     // can.
@@ -208,51 +294,5 @@ class MessageTypeForm extends EntityForm {
     drupal_set_message(t('The message type @type created successfully.', $params));
 
     $form_state['redirect'] = 'admin/structure/message';
-  }
-
-  /**
-   * Return the message text element.
-   *
-   * todo: add token selector, add ckeditor and convert to multiple field.
-   */
-  private function textField($form, $form_state) {
-
-    // try to create a field in order to use the text area widget. not sure it
-    // will work.
-//    $field = FieldDefinition::create('text')
-//      ->setName('text')
-//      ->setCardinality(FieldInstanceConfig::CARDINALITY_UNLIMITED);
-//    $form['#parents'] = array();
-//    $pluginManager = \Drupal::service('plugin.manager.field.widget');
-//    $foo = new TextareaWidget('text_textarea', $pluginManager->getDefinitions(), $field, array());
-//
-//    $bar = new ConfigurableEntityReferenceFieldItemList($field, 'message_type');
-//    $foo->form($bar, $form, $form_state);
-
-
-    $element = array(
-      '#type' => 'container',
-    );
-
-    if ($this->entity->text) {
-      foreach ($this->entity->text as $delta => $text) {
-        $element[$delta] = array(
-          '#type' => 'textarea',
-          '#title' => t('Message text'),
-          '#required' => TRUE,
-          '#default_value' => $text,
-        );
-      }
-    }
-    else {
-      // This is as new message. Present a single textarea.
-      $element[0] = array(
-        '#type' => 'textarea',
-        '#title' => t('Message text'),
-        '#required' => TRUE,
-      );;
-    }
-
-    return $element;
   }
 }
