@@ -32,3 +32,10 @@ message_type.delete:
   requirements:
     _permission: 'administer content types'
 
+message.messages:
+  path: '/admin/content/message'
+  defaults:
+    _title: 'Messaeges'
+    _entity_list: 'message'
+  requirements:
+    _permission: 'access content overview'

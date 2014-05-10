@@ -29,6 +29,10 @@ use Drupal\Core\Field\FieldDefinition;
  *   bundle_keys = {
  *     "bundle" = "type"
  *   },
+ *   controllers = {
+ *     "view_builder" = "Drupal\message\MessageViewBuilder",
+ *     "list_builder" = "Drupal\message\MessageListBuilder",
+ *   },
  *   links = {
  *     "admin-form" = "message.type_add"
  *   }
