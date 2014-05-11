@@ -220,7 +220,7 @@ class MessageTypeForm extends EntityForm {
 
     $this->maxDelta = $start_key;
 
-    for ($delta = $start_key; $delta < $form_state['storage']['message_text']; $delta++) {
+    for ($delta = $start_key; $delta <= $form_state['storage']['message_text']; $delta++) {
       // For multiple fields, title and description are handled by the wrapping
       // table.
       $form['text'][$delta] = $this->singleElement($delta);
