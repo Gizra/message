@@ -85,16 +85,15 @@ class MessageListBuilder extends EntityListBuilder {
       );
     }
 
-
-    // todo: remove after finish with the arguments part.
+//    // todo: remove after finish with the arguments part.
 //    $foo = MessageController::MessageCreate(array('type' => 'testing'))->setArguments(array(
 //      '@time' => time(),
 //      '@time_arguments' => array(
 //        'callback' => '\Drupal\message\Controller\MessageController::timeArguments',
 //        'arguments' => time(),
 //      ),
-//    ))->save();
-
+//    ));
+//    $foo->save();
 
     return $header;
   }
@@ -103,6 +102,7 @@ class MessageListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
+//    $entity->delete();
     /** @var Message $entity */
     return array(
       'changed' => $this->dateService->format($entity->getCreatedTime(), 'short'),

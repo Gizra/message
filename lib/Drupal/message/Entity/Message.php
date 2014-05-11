@@ -122,7 +122,9 @@ class Message extends ContentEntityBase {
    *  The arguments of the message.
    */
   public function getArguments() {
-    return $this->get('arguments')->getValue();
+    // Check why i need to unserialise this twice.
+    $value = $this->get('arguments')->value;
+    return unserialize(unserialize($value));
   }
 
   /**
@@ -138,7 +140,8 @@ class Message extends ContentEntityBase {
    * @return $this
    */
   public function setArguments($values) {
-    $this->set('arguments', $values);
+    // todo: See why we need to serialize the value.
+    $this->arguments = serialize($values);
     return $this;
   }
 
@@ -212,13 +215,9 @@ class Message extends ContentEntityBase {
       return '';
     }
 
-    $output = $message_type->getText();
-
-    return $output;
-    $arguments = message_get_property_values($this, 'arguments');
     $output = $message_type->getText($langcode, $options);
 
-    if (!empty($arguments)) {
+    if ($arguments = $this->getArguments()) {
       $args = array();
       foreach ($arguments as $key => $value) {
         if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
@@ -251,6 +250,9 @@ class Message extends ContentEntityBase {
       }
       $output = strtr($output, $args);
     }
+    return $output;
+
+
     $token_replace = message_get_property_values($this, 'data', 'token replace', TRUE);
     if ($output && $token_replace) {
       // Message isn't explicetly denying token replace, so process the text.
