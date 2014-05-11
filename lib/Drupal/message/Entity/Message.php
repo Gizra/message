@@ -116,6 +116,33 @@ class Message extends ContentEntityBase {
   }
 
   /**
+   * Retrieve the message arguments.
+   *
+   * @return Array
+   *  The arguments of the message.
+   */
+  public function getArguments() {
+    return $this->get('arguments')->value;
+  }
+
+  /**
+   * Set the arguments of the message.
+   *
+   * @param Array $values
+   *  Array of arguments.
+   *  @code
+   *    todo: Add here example on how to set the arguments. With/without
+   *    callbacks.
+   *  @endcode
+   *
+   * @return $this
+   */
+  public function setArguments($values) {
+    $this->set('arguments', $values);
+    return $this;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
@@ -158,6 +185,11 @@ class Message extends ContentEntityBase {
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
+
+    $fields['arguments'] = FieldDefinition::create('string')
+      ->setLabel(t('Arguments'))
+      ->setDescription(t('Holds the arguments of the message.'));
+
     return $fields;
   }
 
@@ -180,9 +212,9 @@ class Message extends ContentEntityBase {
       return '';
     }
 
-    return $message_type->getText();
+    $output = $message_type->getText();
 
-    return;
+    return $output;
     $arguments = message_get_property_values($this, 'arguments');
     $output = $message_type->getText($langcode, $options);
 
