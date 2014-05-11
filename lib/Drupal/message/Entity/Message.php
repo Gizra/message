@@ -37,7 +37,7 @@ use Drupal\user\Entity\User;
  *     "list_builder" = "Drupal\message\MessageListBuilder",
  *   },
  *   links = {
- *     "admin-form" = "message.type_add"
+ *     "admin-form" = "message_type.edit"
  *   }
  * )
  */
@@ -122,7 +122,7 @@ class Message extends ContentEntityBase {
    *  The arguments of the message.
    */
   public function getArguments() {
-    return $this->get('arguments')->value;
+    return $this->get('arguments')->getValue();
   }
 
   /**
