@@ -26,6 +26,9 @@ define('MESSAGE_PURGE_LIMIT', 100);
 
 /**
  * Implements hook_theme().
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_theme() {
   $info['message'] = array(
@@ -38,6 +41,9 @@ function message_theme() {
 
 /**
  * Implements hook_message_view_alter().
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_message_view_alter(&$build) {
   $build['#theme'] = 'message';
@@ -45,6 +51,9 @@ function message_message_view_alter(&$build) {
 
 /**
  * Process variables for message.tpl.php.
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function template_preprocess_message(&$variables) {
   $message = $variables['elements']['#entity'];
@@ -78,6 +87,9 @@ function template_preprocess_message(&$variables) {
 
 /**
  * Implements hook_permission().
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_permission() {
   $permissions = array();
@@ -98,6 +110,9 @@ function message_permission() {
  * Fetch all message types and purge old messages.
  *
  * @todo: Upgrade.
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_cron() {
   return;
@@ -159,6 +174,9 @@ function message_cron() {
  * Implements hook_entity_delete().
  *
  * Handles messages deletion when referenced entities are being deleted.
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_entity_delete($entity, $entity_type) {
   return;
@@ -293,6 +311,9 @@ function message_entity_delete($entity, $entity_type) {
  * @return array
  *   Messages of the given type(s) that should be purged according to the given
  *   settings.
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge_settings) {
   if ($purge_limit <= 0) {
@@ -344,6 +365,9 @@ function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge
 
 /**
  * Implements hook_field_extra_fields().
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_field_extra_fields() {
   return;
@@ -378,6 +402,9 @@ function message_field_extra_fields() {
  *
  * Add on every message-text field partail, indication to which view-mode
  * it is assigned to.
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, &$form, &$form_state, $langcode) {
   if ($entity->entityType() != 'message_type' || empty($entity->name)) {
@@ -435,6 +462,9 @@ function message_field_attach_form(\Drupal\Core\Entity\EntityInterface $entity, 
  *   The message ID.
  * @return Message
  *   A message object.
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_load($mid) {
   $result = entity_load('message', array($mid));
@@ -445,6 +475,9 @@ function message_load($mid) {
  * Loads multiple messages.
  *
  * @see entity_load().
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_load_multiple($mids, $conditions = array()) {
   return entity_load('message', $mids, $conditions);
@@ -471,6 +504,9 @@ function message_load_multiple($mids, $conditions = array()) {
  *
  * @return
  *   The merged values, or if no value if found and empty array.
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_get_property_values(Message $message, $name, $key = NULL, $default_value = array()) {
   $message_type = $message->getType();
@@ -506,6 +542,9 @@ function message_get_property_values(Message $message, $name, $key = NULL, $defa
  *
  * @return
  *   Array of all field names that are marked as message-text.
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_get_text_fields() {
   $message_fields = array();
@@ -527,6 +566,9 @@ function message_get_text_fields() {
  *   List of destination languages.
  * @param $override
  *   Whether to override existing values.
+ *
+ * @deprecated
+ *  We might need to remove this.
  */
 function message_admin_text_copy_batch($origin_lang, $dest_langs, $override, &$context) {
   if (empty($context['sandbox'])) {
