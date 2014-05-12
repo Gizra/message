@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Entity;
 
+use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
@@ -220,27 +221,29 @@ class Message extends ContentEntityBase {
     if ($arguments = $this->getArguments()) {
       $args = array();
       foreach ($arguments as $key => $value) {
-        if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
+        if (is_array($value) && !empty($value['callback'])) {
+
           // A replacement via callback function.
           $value += array('pass message' => FALSE);
+
           if ($value['pass message']) {
             // Pass the message object as-well.
-            $value['callback arguments'][] = $this;
+            $value['callback arguments']['message'] = $this;
           }
 
-          $value = call_user_func_array($value['callback'], $value['callback arguments']);
+          $value = call_user_func_array($value['callback'], $value['arguments']);
         }
 
         switch ($key[0]) {
           case '@':
             // Escaped only.
-            $args[$key] = check_plain($value);
+            $args[$key] = String::checkPlain($value);
             break;
 
           case '%':
           default:
             // Escaped and placeholder.
-            $args[$key] = drupal_placeholder($value);
+            $args[$key] = String::placeholder($value);
             break;
 
           case '!':
@@ -248,19 +251,12 @@ class Message extends ContentEntityBase {
             $args[$key] = $value;
         }
       }
+
       $output = strtr($output, $args);
     }
-    return $output;
 
+    $output = \Drupal::token()->replace($output, array('message' => $this), $options);
 
-    $token_replace = message_get_property_values($this, 'data', 'token replace', TRUE);
-    if ($output && $token_replace) {
-      // Message isn't explicetly denying token replace, so process the text.
-      $context = array('message' => $this);
-
-      $token_options = message_get_property_values($this, 'data', 'token options');
-      $output = token_replace($output, $context, $token_options);
-    }
     return $output;
   }
 

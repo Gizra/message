@@ -90,4 +90,11 @@ class MessageController extends ControllerBase {
   public static function MessageLoadMultiple(array $ids) {
     return entity_load('message', $ids);
   }
+
+  /**
+   * Delete after finishing with the message arguemnts.
+   */
+  public static function timeArguments($timestamp) {
+    return date('d-m-Y H:i', $timestamp);
+  }
 }

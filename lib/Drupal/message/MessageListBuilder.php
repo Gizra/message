@@ -90,7 +90,9 @@ class MessageListBuilder extends EntityListBuilder {
 //      '@time' => time(),
 //      '@time_arguments' => array(
 //        'callback' => '\Drupal\message\Controller\MessageController::timeArguments',
-//        'arguments' => time(),
+//        'arguments' => array(
+//          'time' => time(),
+//        ),
 //      ),
 //    ));
 //    $foo->save();
