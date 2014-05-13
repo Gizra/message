@@ -25,3 +25,6 @@ message.category.*:
     data:
       type: string
       label: 'Data'
+    langcode:
+      type: string
+      label: 'Default language'
