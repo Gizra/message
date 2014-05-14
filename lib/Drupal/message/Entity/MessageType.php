@@ -187,49 +187,12 @@ class MessageType extends ConfigEntityBase {
    * @return string A string with the text from the field.
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $options = array()) {
+    if ($langcode) {
+      // todo: pull the text of the translation entity.
+    }
+    
+    // Combine all the field text and return the text.
     return implode(" ", $this->text);
-    // Set default values.
-    $options += array(
-      // The field name from which the text should be extracted.
-      'field name' => MESSAGE_FIELD_MESSAGE_TEXT,
-    );
-
-    $field_name = $options['field name'];
-    $params = array('%field' => $field_name);
-    if (!$field = Field::fieldInfo()->getField('message_type', $field_name)) {
-      throw new MessageException(format_string('Field %field does not exist.', $params));
-    }
-
-    if (empty($field['settings']['message_text'])) {
-      throw new MessageException(format_string('Field %field is not a message-text.', $params));
-    }
-
-    if (empty($langcode) && \Drupal::moduleHandler()->moduleExists('locale')) {
-      // Get the langcode from the current language.
-      $language = Drupal::languageManager()->getLanguage();
-      $langcode = $language->language;
-    }
-
-    // Let the metadata wrapper deal with the language.
-    $property = $this->getTranslation($langcode)->$options['field name'];
-
-    if (isset($options['delta'])) {
-      $delta = $options['delta'];
-
-      if ($delta >= $property->count()) {
-        // Delta is bigger than the existing field, so return early, to
-        // prevent an error.
-        return;
-      }
-      return $property->get($delta)->value;
-    }
-    else {
-      $output = '';
-      foreach ($property as $item) {
-        $output .= $item->value;
-      }
-      return $output;
-    }
   }
 
   /**
