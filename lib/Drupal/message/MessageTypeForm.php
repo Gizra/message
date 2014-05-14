@@ -63,33 +63,6 @@ class MessageTypeForm extends EntityForm {
       '#description' => t('The language code that will be saved with the field values. This is used to allow translation of fields.'),
     );
 
-    // todo: leave for later.
-    if (\Drupal::moduleHandler()->moduleExists('content_translation')) {
-      $options = array();
-      foreach (\Drupal::languageManager()->getLanguages() as $key => $value) {
-        if (!empty($value->enabled)) {
-          $options[$key] = $value->name;
-        }
-      }
-      $field_language = !empty($form_state['values']['language']) ? $form_state['values']['language'] : \Drupal::languageManager()->getDefaultLanguage()->getId();
-      $form['language'] += array(
-        '#type' => 'select',
-        '#options' => $options,
-        '#required' => TRUE,
-        '#default_value' => $field_language,
-        '#ajax' => array(
-          'callback' => 'message_type_fields_ajax_callback',
-          'wrapper' => 'message-type-wrapper',
-        ),
-      );
-    }
-    else {
-      $form['language'] += array(
-        '#type' => 'item',
-        '#markup' => t('Undefined language'),
-      );
-    }
-
     $this->textField($form, $form_state);
 
     $form['data'] = array(
