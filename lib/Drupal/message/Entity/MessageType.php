@@ -19,7 +19,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *
  * @ConfigEntityType(
  *   id = "message_type",
- *   label = @Translation("Message type"),
+ *   label = "Message type",
  *   config_prefix = "type",
  *   bundle_of = "message",
  *   entity_keys = {
@@ -83,7 +83,6 @@ class MessageType extends ConfigEntityBase {
    * @var array
    */
   public $data;
-
 
   /**
    * Return the ID of the entity.
@@ -190,7 +189,7 @@ class MessageType extends ConfigEntityBase {
     if ($langcode) {
       // todo: pull the text of the translation entity.
     }
-    
+
     // Combine all the field text and return the text.
     return implode(" ", $this->text);
   }
