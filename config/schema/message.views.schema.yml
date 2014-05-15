@@ -1,0 +1,13 @@
+# Schema for the views plugins of the message module.
+
+"views.row.entity:message":
+  type: views_entity_row
+  label: 'Entity options'
+
+views.field.message:
+  type: views_field
+  label: 'Message'
+  mapping:
+    link_to_message:
+      type: boolean
+      label: 'Link this field to the original piece of content'
