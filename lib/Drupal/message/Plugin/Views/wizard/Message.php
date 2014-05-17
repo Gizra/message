@@ -52,7 +52,7 @@ class Message extends WizardPluginBase {
   );
 
   /**
-   * Overrides Drupal\views\Plugin\views\wizard\WizardPluginBase::defaultDisplayOptions().
+   * {@inheritdoc}
    */
   protected function defaultDisplayOptions() {
     $display_options = parent::defaultDisplayOptions();
@@ -83,5 +83,14 @@ class Message extends WizardPluginBase {
     $display_options['fields']['name']['link_to_taxonomy'] = 1;
 
     return $display_options;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function defaultDisplayFilters($form, $form_state) {
+    $filters = array();
+
+    return $filters;
   }
 }
