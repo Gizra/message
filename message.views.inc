@@ -47,23 +47,20 @@ function message_views_data() {
 
   // Term name field
   $data['message']['type'] = array(
-    'title' => t('Message type'),
-    'help' => t('The message type.'),
+    'title' => t('Type'),
+    'help' => t('The content type (for example, "blog entry", "forum post", "story", etc).'),
     'field' => array(
-      'id' => 'type',
+      // @see node_type
+      'id' => 'message_type',
     ),
     'sort' => array(
       'id' => 'standard',
     ),
     'filter' => array(
-      'id' => 'string',
-      'help' => t('The message type.'),
+      'id' => 'bundle',
     ),
     'argument' => array(
-      'id' => 'string',
-      'help' => t('The message type.'),
-      'many to one' => TRUE,
-      'empty field name' => t('Uncategorized'),
+      'id' => 'node_type',
     ),
   );
 
@@ -76,6 +73,42 @@ function message_views_data() {
     ),
     'sort' => array(
       'id' => 'standard',
+    ),
+  );
+
+  $data['message']['created'] = array(
+    'title' => t('Post date'),
+    'help' => t('The date the content was posted.'),
+    'field' => array(
+      'id' => 'date',
+    ),
+    'sort' => array(
+      'id' => 'date'
+    ),
+    'filter' => array(
+      'id' => 'date',
+    ),
+  );
+
+  $data['message']['uid'] = array(
+    'title' => t('Author uid'),
+    'help' => t('The user authoring the content. If you need more fields than the uid add the content: author relationship'),
+    'relationship' => array(
+      'title' => t('Content author'),
+      'help' => t('Relate content to the user who created it.'),
+      'id' => 'standard',
+      'base' => 'users',
+      'field' => 'uid',
+      'label' => t('author'),
+    ),
+    'filter' => array(
+      'id' => 'user_name',
+    ),
+    'argument' => array(
+      'id' => 'numeric',
+    ),
+    'field' => array(
+      'id' => 'user',
     ),
   );
 
