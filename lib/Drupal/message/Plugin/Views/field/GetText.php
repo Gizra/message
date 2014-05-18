@@ -11,7 +11,7 @@ use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 
 /**
- * Field handler to present a term edit link.
+ * Render the message text.
  *
  * @ingroup views_field_handlers
  *

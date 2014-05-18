@@ -92,8 +92,8 @@ function message_views_data() {
     'title' => t('Author uid'),
     'help' => t('The owner of the message. If you need more fields than the uid add the content: author relationship'),
     'relationship' => array(
-      'title' => t('Content author'),
-      'help' => t('Relate content to the user who created it.'),
+      'title' => t('Message owner'),
+      'help' => t('Relate the message to her owner'),
       'id' => 'standard',
       'base' => 'users',
       'field' => 'uid',
