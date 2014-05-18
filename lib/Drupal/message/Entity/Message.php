@@ -124,8 +124,7 @@ class Message extends ContentEntityBase {
    */
   public function getArguments() {
     // Check why i need to unserialise this twice.
-    $value = $this->get('arguments')->value;
-    return unserialize(unserialize($value));
+    return unserialize($this->get('arguments')->value);
   }
 
   /**
@@ -141,8 +140,7 @@ class Message extends ContentEntityBase {
    * @return $this
    */
   public function setArguments($values) {
-    // todo: See why we need to serialize the value.
-    $this->arguments = serialize($values);
+    $this->arguments = $values;
     return $this;
   }
 
@@ -217,8 +215,9 @@ class Message extends ContentEntityBase {
     }
 
     $output = $message_type->getText($langcode, $options);
+    $arguments = $this->getArguments();
 
-    if ($arguments = $this->getArguments()) {
+    if (is_array($arguments)) {
       $args = array();
       foreach ($arguments as $key => $value) {
         if (is_array($value) && !empty($value['callback'])) {

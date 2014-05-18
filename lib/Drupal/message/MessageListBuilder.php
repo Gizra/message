@@ -86,7 +86,8 @@ class MessageListBuilder extends EntityListBuilder {
     }
 
 //    // todo: remove after finish with the arguments part.
-//    $foo = MessageController::MessageCreate(array('type' => 'testing'))->setArguments(array(
+//    $foo = MessageController::MessageCreate(array('type' => 'testing'));
+//    $foo->setArguments(array(
 //      '@time' => time(),
 //      '@time_arguments' => array(
 //        'callback' => '\Drupal\message\Controller\MessageController::timeArguments',
@@ -95,6 +96,7 @@ class MessageListBuilder extends EntityListBuilder {
 //        ),
 //      ),
 //    ));
+//    $foo->setArguments(array('a'));
 //    $foo->save();
 
     return $header;
@@ -106,6 +108,7 @@ class MessageListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
 //    $entity->delete();
     /** @var Message $entity */
+    dpm($entity->getArguments());
     return array(
       'changed' => $this->dateService->format($entity->getCreatedTime(), 'short'),
       'text' => $entity->getText(),
