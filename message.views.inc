@@ -33,7 +33,7 @@ function message_views_data() {
       'id' => 'standard',
     ),
     'argument' => array(
-      'id' => 'message',
+      'id' => 'message_mid',
       'name field' => 'name',
       'zero is null' => TRUE,
     ),
