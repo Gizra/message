@@ -81,7 +81,7 @@ function message_views_data() {
       'id' => 'standard',
     ),
     'filter' => array(
-      'id' => 'message_type',
+      'id' => 'bundle',
     ),
     'argument' => array(
       'id' => 'message_type',
