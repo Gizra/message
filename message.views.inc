@@ -34,7 +34,7 @@ function message_views_data() {
     ),
     'argument' => array(
       'id' => 'message_mid',
-      'name field' => 'name',
+      'name field' => 'mid',
       'zero is null' => TRUE,
     ),
     'filter' => array(
@@ -82,9 +82,6 @@ function message_views_data() {
     ),
     'filter' => array(
       'id' => 'bundle',
-    ),
-    'argument' => array(
-      'id' => 'message_type',
     ),
   );
 
