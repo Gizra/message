@@ -35,8 +35,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "list_builder" = "Drupal\message\MessageTypeListBuilder",
  *   },
  *   links = {
- *     "edit" = "message_type.edit",
- *     "delete" = "message_type.delete"
+ *     "edit-form" = "message_type.edit",
+ *     "delete-form" = "message_type.delete"
  *   }
  * )
  */
