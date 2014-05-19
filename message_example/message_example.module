@@ -1,16 +1,19 @@
 <?php
 
+use \Drupal\message\Controller\MessageController;
+
 /**
  * @file
- * Message example.
+ * Message example moule.
  */
-
-include_once('message_example.features.inc');
 
 /**
  * Implements hook_node_insert().
  */
-function message_example_node_insert($node) {
+function message_example_node_insert(\Drupal\node\NodeInterface $node) {
+  $message = MessageController::MessageCreate(array('type' => 'node_created'));
+
+  return;
   // Save the message and assign it to the user realm. Since another user,
   // usually an admin might create the node, but populate the author field
   // with another user, we make sure the user is populated with the
@@ -28,7 +31,7 @@ function message_example_node_insert($node) {
 /**
  * Implements hook_comment_insert().
  */
-function message_example_comment_insert($comment) {
+function _message_example_comment_insert($comment) {
   $account = user_load($comment->uid);
   $node = node_load($comment->nid);
 
@@ -49,7 +52,7 @@ function message_example_comment_insert($comment) {
 /**
  * Implements hook_user_insert()
  */
-function message_example_user_insert(&$edit, $account, $category) {
+function _message_example_user_insert(&$edit, $account, $category) {
   $message = message_create('example_user_register', array(), $account);
   $wrapper = entity_metadata_wrapper('message', $message);
   $wrapper->field_published->set($account->status);
@@ -59,14 +62,14 @@ function message_example_user_insert(&$edit, $account, $category) {
 /**
  * Implements hook_node_update().
  */
-function message_example_node_update($node) {
+function _message_example_node_update($node) {
   message_example_update_message_status('node', $node);
 }
 
 /**
  * Implements hook_comment_update().
  */
-function message_example_comment_update($comment) {
+function _message_example_comment_update($comment) {
   message_example_update_message_status('comment', $comment);
 }
 
@@ -79,7 +82,7 @@ function message_example_comment_update($comment) {
  * @param $entity
  *   The entity object.
  */
-function message_example_update_message_status($entity_type, $entity) {
+function _message_example_update_message_status($entity_type, $entity) {
   if ($entity->status == $entity->original->status) {
     // status didn't change.
     return;

@@ -1,0 +1,20 @@
+type: example_user_register
+uuid: 840a4210-9eb2-43fc-951c-2865faf37a9f
+label: 'Example - User register'
+description: 'Working upon creation of a user.'
+text:
+  - "<p><a href=\"[message:user:url]\">@{message:user:name}</a> registered.</p>\r\n"
+data:
+  'token options':
+    clear: 0
+  purge:
+    override: 0
+    enabled: 0
+    quota: ''
+    days: ''
+arguments: {  }
+category: null
+settings: {  }
+status: true
+langcode: en
+dependencies: {  }
