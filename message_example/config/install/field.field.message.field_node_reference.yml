@@ -1,0 +1,18 @@
+id: message.field_node_reference
+uuid: c14c327b-aeaa-4b23-b208-8b0480debeef
+status: true
+langcode: en
+name: field_node_reference
+entity_type: message
+type: entity_reference
+settings:
+  target_type: node
+module: entity_reference
+locked: false
+cardinality: -1
+translatable: false
+indexes: {  }
+dependencies:
+  module:
+    - entity_reference
+    - message
