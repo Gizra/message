@@ -108,7 +108,6 @@ class MessageListBuilder extends EntityListBuilder {
   public function buildRow(EntityInterface $entity) {
 //    $entity->delete();
     /** @var Message $entity */
-    dpm($entity->getArguments());
     return array(
       'changed' => $this->dateService->format($entity->getCreatedTime(), 'short'),
       'text' => $entity->getText(),

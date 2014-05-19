@@ -51,12 +51,12 @@ class MessageTypeListBuilder extends ConfigEntityListBuilder {
         'title' => t('Edit'),
         'router_name' => 'message_type.edit',
         'weight' => 0,
-      ) + $entity->urlInfo('edit')->toArray(),
+      ) + $entity->urlInfo('edit-form')->toArray(),
       'delete' => array(
         'title' => t('Delete'),
         'router_name' => 'message_type.delete',
         'weight' => 1,
-      ) + $entity->urlInfo('delete')->toArray(),
+      ) + $entity->urlInfo('delete-form')->toArray(),
     );
   }
 }

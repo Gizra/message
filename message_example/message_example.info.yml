@@ -3,5 +3,5 @@ type: module
 description: "Example message for working with the message module."
 core: 8.x
 package: Message
-
-
+dependencies:
+ - message

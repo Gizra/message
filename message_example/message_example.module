@@ -11,8 +11,10 @@ use \Drupal\message\Controller\MessageController;
  * Implements hook_node_insert().
  */
 function message_example_node_insert(\Drupal\node\NodeInterface $node) {
-  MessageController::MessageCreate(array('type' => 'example_create_node', 'uid' => $node->get('uid')))
-  ->save();
+
+  $message = MessageController::MessageCreate(array('type' => 'example_create_node', 'uid' => $node->get('uid')));
+  $message->set('field_node_reference', $node);
+  $message->save();
 
   return;
   // Save the message and assign it to the user realm. Since another user,

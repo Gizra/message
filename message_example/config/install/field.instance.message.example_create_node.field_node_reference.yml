@@ -1,0 +1,26 @@
+id: message.example_create_comment.field_node_reference
+uuid: 38dbdff1-f37f-4f93-8c46-70d7b96ba144
+status: true
+langcode: en
+field_uuid: c14c327b-aeaa-4b23-b208-8b0480debeef
+field_name: field_node_reference
+entity_type: message
+bundle: example_create_node
+label: 'Message node reference'
+description: ''
+required: false
+default_value: {  }
+default_value_function: ''
+settings:
+  handler: default
+  handler_settings:
+    target_bundles:
+      article: article
+      page: page
+    sort:
+      field: _none
+dependencies:
+  entity:
+    - field.field.message.field_node_reference
+    - message.type.example_create_node
+field_type: entity_reference

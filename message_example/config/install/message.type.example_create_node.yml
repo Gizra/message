@@ -3,7 +3,7 @@ uuid: 6ebdb821-a3a5-4ee3-9407-7a985d3882a8
 label: 'Example - Create node'
 description: 'Working upon creating of a node.'
 text:
-  - "<p><a href=\"url]\">@{message:user:name}</a> created <a href=\"url]\">[message:field-node-ref:title]</a></p>\r\n"
+  - "<p><a href=\"url]\">@{message:user:name}</a> created <a href=\"[message:field-node-reference:url]\">[message:field-node-reference:title]</a></p>\r\n"
   - "<p>[message:field-node-ref:node-teaser]</p>\r\n"
 data:
   'token options':
