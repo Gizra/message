@@ -11,24 +11,18 @@ use \Drupal\message\Controller\MessageController;
  * Implements hook_node_insert().
  */
 function message_example_node_insert(\Drupal\node\NodeInterface $node) {
+  $entity_render = entity_view($node, 'teaser');
 
   $message = MessageController::MessageCreate(array('type' => 'example_create_node', 'uid' => $node->get('uid')));
   $message->set('field_node_reference', $node);
+  $message->setArguments(array(
+    '@node-title' => $node->label(),
+    '@node-url' => $node->url(),
+    '@user-name' => $node->getOwner()->label(),
+    '@user-url' => $node->getOwner()->url(),
+    '!node-teaser' => drupal_render($entity_render),
+  ));
   $message->save();
-
-  return;
-  // Save the message and assign it to the user realm. Since another user,
-  // usually an admin might create the node, but populate the author field
-  // with another user, we make sure the user is populated with the
-  // node's author, instead of the acting user (although in most cases it
-  // would be the same user).
-  $message = message_create('example_create_node', array('uid' => $node->uid));
-  // Save reference to the node in the node reference field, and the
-  // "publish" state (i.e. if the node is published or unpublished).
-  $wrapper = entity_metadata_wrapper('message', $message);
-  $wrapper->field_node_ref->set($node);
-  $wrapper->field_published->set($node->status);
-  $wrapper->save();
 }
 
 /**
