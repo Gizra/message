@@ -126,7 +126,7 @@ class Message extends ContentEntityBase {
    */
   public function getArguments() {
     // Check why i need to unserialise this twice.
-    return unserialize($this->get('arguments')->value);
+    return unserialize(unserialize($this->get('arguments')->value));
   }
 
   /**
@@ -142,7 +142,7 @@ class Message extends ContentEntityBase {
    * @return $this
    */
   public function setArguments($values) {
-    $this->arguments = $values;
+    $this->arguments = serialize($values);
     return $this;
   }
 
@@ -222,7 +222,7 @@ class Message extends ContentEntityBase {
     if (is_array($arguments)) {
       $args = array();
       foreach ($arguments as $key => $value) {
-        if (is_array($value) && !empty($value['callback'])) {
+        if (is_array($value) && !empty($value['callback']) && is_callable($value['callback'])) {
 
           // A replacement via callback function.
           $value += array('pass message' => FALSE);
