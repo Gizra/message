@@ -1,7 +1,10 @@
 <?php
 
-use \Drupal\message\Controller\MessageController;
-
+use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\message\Controller\MessageController;
+use Drupal\node\Entity\Node;
+use Drupal\comment\Entity\Comment;
+use Drupal\user\Entity\User;
 /**
  * @file
  * Message example module.
@@ -12,7 +15,7 @@ use \Drupal\message\Controller\MessageController;
 /**
  * Implements hook_node_insert().
  */
-function message_example_node_insert(\Drupal\node\NodeInterface $node) {
+function message_example_node_insert(Node $node) {
   $entity_render = entity_view($node, 'teaser');
 
   $message = MessageController::MessageCreate(array('type' => 'example_create_node', 'uid' => $node->get('uid')));
@@ -30,8 +33,9 @@ function message_example_node_insert(\Drupal\node\NodeInterface $node) {
 /**
  * Implements hook_comment_insert().
  */
-function message_example_comment_insert(Drupal\comment\Entity\Comment $comment) {
+function message_example_comment_insert(Comment $comment) {
   $entity_render = entity_view($comment->getCommentedEntity(), 'teaser');
+
   $message = MessageController::MessageCreate(array('type' => 'example_create_comment', 'uid' => $comment->getOwnerId()));
   $message->set('field_comment_reference', $comment);
   $message->setArguments(array(
@@ -47,41 +51,46 @@ function message_example_comment_insert(Drupal\comment\Entity\Comment $comment) 
 /**
  * Implements hook_user_insert()
  */
-function _message_example_user_insert(&$edit, $account, $category) {
-  $message = message_create('example_user_register', array(), $account);
-  $wrapper = entity_metadata_wrapper('message', $message);
-  $wrapper->field_published->set($account->status);
-  $wrapper->save();
+function message_example_user_insert(User $account) {
+  MessageController::MessageCreate(array('type' => 'example_user_register', 'uid' => $account->id()))
+    ->setArguments(array(
+      '@user-url' => $account->url(),
+      '@user-name' => $account->label(),
+    ))
+    ->save();
 }
 
 /**
  * Implements hook_node_update().
  */
-function _message_example_node_update($node) {
-  message_example_update_message_status('node', $node);
+function message_example_node_update(Node $node) {
+  message_example_update_message_status($node);
 }
 
 /**
  * Implements hook_comment_update().
  */
-function _message_example_comment_update($comment) {
-  message_example_update_message_status('comment', $comment);
+function message_example_comment_update(Comment $comment) {
+  message_example_update_message_status($comment);
 }
 
 /**
  * Update the "published" field in the message entity, when it changes in the
  * related entity.
  *
- * @param $entity_type
- *   The entity type (node or comment).
- * @param $entity
+ * @param \Drupal\Core\Entity\ContentEntityInterface $entity
  *   The entity object.
  */
-function _message_example_update_message_status($entity_type, $entity) {
+function message_example_update_message_status(ContentEntityBase $entity) {
+  dpm($entity);
+
+  return;
+
   if ($entity->status == $entity->original->status) {
     // status didn't change.
     return;
   }
+
   list($id) = entity_extract_ids($entity_type, $entity);
   $field_name = 'field_' . $entity_type . '_ref';
 
