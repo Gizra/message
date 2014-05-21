@@ -3,8 +3,8 @@ uuid: e7d49a42-8348-4379-bb08-8b7309c6f794
 label: 'Example - Create comment'
 description: 'A user created comment.'
 text:
-  - "<p><a href=\"[message:user:url]\">@{message:user:name}</a>&nbsp;<a href=\"[message:field-comment-ref:url]\">commented</a> on&nbsp;[message:field-node-ref:title]</p>\r\n"
-  - "<p>[message:field-comment-ref:comment-teaser]</p>\r\n"
+  - "<p><a href=\"@user-url\">@user-name</a>&nbsp;<a href=\"@comment-url\">commented</a> on&nbsp;@node-title</p>\r\n"
+  - "<p>!node-render</p>\r\n"
 data:
   'token options':
     clear: 0

@@ -5,6 +5,8 @@ use \Drupal\message\Controller\MessageController;
 /**
  * @file
  * Message example module.
+ *
+ * @todo: replace all the placeholders to tokens.
  */
 
 /**
@@ -28,22 +30,18 @@ function message_example_node_insert(\Drupal\node\NodeInterface $node) {
 /**
  * Implements hook_comment_insert().
  */
-function _message_example_comment_insert($comment) {
-  $account = user_load($comment->uid);
-  $node = node_load($comment->nid);
-
-  $message = message_create('example_create_comment', array(), $account);
-  // Save reference to the node in the node reference field, and the
-  // "publish" state (i.e. if the node is published or unpublished).
-  $wrapper = entity_metadata_wrapper('message', $message);
-  $wrapper->field_node_ref->set($node);
-  $wrapper->field_comment_ref->set($comment);
-
-  // The message should be published only if the node and the comment are
-  // both published.
-  $published = $node->status && $comment->status;
-  $wrapper->field_published->set($published);
-  $wrapper->save();
+function message_example_comment_insert(Drupal\comment\Entity\Comment $comment) {
+  $entity_render = entity_view($comment->getCommentedEntity(), 'teaser');
+  $message = MessageController::MessageCreate(array('type' => 'example_create_comment', 'uid' => $comment->getOwnerId()));
+  $message->set('field_comment_reference', $comment);
+  $message->setArguments(array(
+    '@user-url' => $comment->getOwner()->url(),
+    '@user-name' => $comment->getOwner()->label(),
+    '@comment-url' => $comment->url(),
+    '@node-title' => $comment->getCommentedEntity()->label(),
+    '!node-render' => drupal_render($entity_render),
+  ));
+  $message->save();
 }
 
 /**
