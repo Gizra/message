@@ -64,6 +64,10 @@ function message_example_user_insert(User $account) {
  * Implements hook_node_update().
  */
 function message_example_node_update(Node $node) {
+  if (empty($node->original)) {
+    return;
+  }
+
   message_example_update_message_status($node);
 }
 
@@ -71,6 +75,10 @@ function message_example_node_update(Node $node) {
  * Implements hook_comment_update().
  */
 function message_example_comment_update(Comment $comment) {
+  if (empty($comment->original)) {
+    return;
+  }
+
   message_example_update_message_status($comment);
 }
 
@@ -78,27 +86,28 @@ function message_example_comment_update(Comment $comment) {
  * Update the "published" field in the message entity, when it changes in the
  * related entity.
  *
- * @param \Drupal\Core\Entity\ContentEntityInterface $entity
+ * @param ContentEntityBase $entity
  *   The entity object.
  */
 function message_example_update_message_status(ContentEntityBase $entity) {
-  dpm($entity);
-
-  return;
-
-  if ($entity->status == $entity->original->status) {
-    // status didn't change.
+  if ($entity->isPublished() == $entity->original->isPublished()) {
     return;
   }
 
-  list($id) = entity_extract_ids($entity_type, $entity);
-  $field_name = 'field_' . $entity_type . '_ref';
+  $query = \Drupal::entityQuery('message');
 
-  $query = new EntityFieldQuery();
-  $result = $query
-    ->entityCondition('entity_type', 'message')
-    ->fieldCondition($field_name, 'target_id',  $id, '=')
-    ->execute();
+  // todo: Add the field name that reference to the entity type.
+
+  $results = $query->execute();
+
+  if (empty($results)) {
+    return;
+  }
+
+  return;
+
+
+  $field_name = 'field_' . $entity_type . '_ref';
 
   if (empty($result['message'])) {
     return;
