@@ -88,7 +88,7 @@ class MessageController extends ControllerBase {
    * @return Message[]
    */
   public static function MessageLoadMultiple(array $ids) {
-    return entity_load('message', $ids);
+    return entity_load_multiple('message', $ids);
   }
 
   /**

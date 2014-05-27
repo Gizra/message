@@ -96,7 +96,8 @@ function message_example_update_message_status(ContentEntityBase $entity) {
 
   $query = \Drupal::entityQuery('message');
 
-  // todo: Add the field name that reference to the entity type.
+  $field = 'field_' . $entity->getEntityType()->id() . '_reference';
+  $query->condition($field . '.target_id', $entity->id());
 
   $results = $query->execute();
 
@@ -104,14 +105,13 @@ function message_example_update_message_status(ContentEntityBase $entity) {
     return;
   }
 
-  return;
+  $messages = MessageController::MessageLoadMultiple($results);
 
-
-  $field_name = 'field_' . $entity_type . '_ref';
-
-  if (empty($result['message'])) {
-    return;
+  foreach ($messages as $message) {
+    // todo: The un comment code. We need for that published field.
   }
+
+  return;
 
   foreach (array_keys($result['message']) as $mid) {
     $wrapper = entity_metadata_wrapper('message', $mid);
