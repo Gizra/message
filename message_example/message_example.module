@@ -1,5 +1,7 @@
 <?php
-
+/**
+ * @file message_example.module.
+ */
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\message\Controller\MessageController;
 use Drupal\node\Entity\Node;
@@ -108,26 +110,7 @@ function message_example_update_message_status(ContentEntityBase $entity) {
   $messages = MessageController::MessageLoadMultiple($results);
 
   foreach ($messages as $message) {
-    // todo: The un comment code. We need for that published field.
-  }
-
-  return;
-
-  foreach (array_keys($result['message']) as $mid) {
-    $wrapper = entity_metadata_wrapper('message', $mid);
-    // If comment status changed, we still need to check the node as-well.
-    if ($entity_type == 'comment') {
-      $node = node_load($entity->nid);
-      $status = intval($entity->status && $node->status);
-    }
-    else {
-      // The entity is the node.
-      $status = $entity->status;
-    }
-    if ($wrapper->field_published->value() != $status) {
-      // Status changed, so update the message entity.
-      $wrapper->field_published->set($status);
-      $wrapper->save();
-    }
+    $message->set('field_published', $entity->isPublished());
+    $message->save();
   }
 }

@@ -1,0 +1,21 @@
+id: message.field_published
+uuid: 3f3762fd-08c8-43b3-bc00-c039433d023f
+status: true
+langcode: en
+name: field_published
+entity_type: message
+type: list_boolean
+settings:
+  allowed_values:
+    - 'Un published'
+    - Published
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+dependencies:
+  module:
+    - message
+    - options
