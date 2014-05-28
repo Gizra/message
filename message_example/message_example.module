@@ -22,6 +22,7 @@ function message_example_node_insert(Node $node) {
 
   $message = MessageController::MessageCreate(array('type' => 'example_create_node', 'uid' => $node->get('uid')));
   $message->set('field_node_reference', $node);
+  $message->set('field_published', $node->isPublished());
   $message->setArguments(array(
     '@node-title' => $node->label(),
     '@node-url' => $node->url(),
@@ -40,6 +41,7 @@ function message_example_comment_insert(Comment $comment) {
 
   $message = MessageController::MessageCreate(array('type' => 'example_create_comment', 'uid' => $comment->getOwnerId()));
   $message->set('field_comment_reference', $comment);
+  $message->set('field_published', $comment->isPublished());
   $message->setArguments(array(
     '@user-url' => $comment->getOwner()->url(),
     '@user-name' => $comment->getOwner()->label(),
