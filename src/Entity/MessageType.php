@@ -14,12 +14,15 @@ use Drupal\message\MessageException;
 use Drupal\field\Field;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 
+// todo: I18n issue: check why ConfigTranslationOverviewAccess::access denied
+// access when translating.
+
 /**
  * Defines the Message type entity class.
  *
  * @ConfigEntityType(
  *   id = "message_type",
- *   label = "Message type",
+ *   label = @Translation("Message type"),
  *   config_prefix = "type",
  *   bundle_of = "message",
  *   entity_keys = {
@@ -35,6 +38,7 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *     "list_builder" = "Drupal\message\MessageTypeListBuilder",
  *   },
  *   links = {
+ *     "add-form" = "message.type_add",
  *     "edit-form" = "message_type.edit",
  *     "delete-form" = "message_type.delete"
  *   }
