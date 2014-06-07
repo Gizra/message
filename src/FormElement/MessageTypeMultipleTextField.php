@@ -8,18 +8,36 @@ use Drupal\message\Entity\MessageType;
 class MessageTypeMultipleTextField {
 
   /**
+   * The message type we handling.
+   *
    * @var \Drupal\message\Entity\MessageType
    */
   protected $entity;
+
+  /**
+   * The name of the ajax callback.
+   *
+   * @var String
+   *  Each form holds the text elements in a different location. When
+   *  constructing this class we need to supply the name of the callback.
+   *
+   * @see MessageTypeConfigTranslationAddForm::addMoreAjax();
+   */
   protected $callback;
 
-  private $maxDelta;
+  /**
+   * The max delta of elements.
+   * @var Integer.
+   */
+  protected $maxDelta;
 
   /**
    * Constructing the element.
    *
    * @param MessageType $entity
    *  A message type.
+   * @param $callback
+   *  The name of the ajax callback.
    */
   public function __construct(MessageType $entity, $callback) {
     $this->entity = $entity;
@@ -29,7 +47,7 @@ class MessageTypeMultipleTextField {
   /**
    * Return the message text element.
    *
-   * todo: add token selector, add ckeditor and convert to multiple field.
+   * todo: add token selector.
    */
   public function textField(&$form, &$form_state) {
     // Creating the container.
@@ -108,6 +126,8 @@ class MessageTypeMultipleTextField {
    *
    * This returns the new page content to replace the page content made obsolete
    * by the form submission.
+   *
+   * todo: Move to the creation form of the
    */
   public static function addMoreAjax(array $form, array $form_state) {
     return $form['text'];
