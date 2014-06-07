@@ -11,6 +11,7 @@ class MessageTypeMultipleTextField {
    * @var \Drupal\message\Entity\MessageType
    */
   protected $entity;
+  protected $callback;
 
   private $maxDelta;
 
@@ -20,8 +21,9 @@ class MessageTypeMultipleTextField {
    * @param MessageType $entity
    *  A message type.
    */
-  public function __construct(MessageType $entity) {
+  public function __construct(MessageType $entity, $callback) {
     $this->entity = $entity;
+    $this->callback = $callback;
   }
 
   /**
@@ -29,7 +31,7 @@ class MessageTypeMultipleTextField {
    *
    * todo: add token selector, add ckeditor and convert to multiple field.
    */
-  public function textField(&$form_state) {
+  public function textField(&$form, &$form_state) {
     // Creating the container.
     $form['text'] = array(
       '#type' => 'container',
@@ -49,7 +51,7 @@ class MessageTypeMultipleTextField {
       '#value' => t('Add another item'),
       '#href' => '',
       '#ajax' => array(
-        'callback' => array(get_class($this), 'addMoreAjax'),
+        'callback' => $this->callback,
         'wrapper' => 'message-text',
       ),
     );
@@ -75,8 +77,6 @@ class MessageTypeMultipleTextField {
       // table.
       $form['text'][$delta] = $this->singleElement($delta);
     }
-
-    return $form;
   }
 
   /**

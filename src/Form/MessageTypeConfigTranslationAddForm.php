@@ -33,11 +33,8 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
     $name = reset($names);
     $translation = &$form['config_names'][$name]['text']['translation'];
 
-    $multiple = new MessageTypeMultipleTextField(MessageController::MessageTypeLoad('example_user_register'));
-
-    $translation = array(
-      'translation' => $multiple->textField($form_state),
-    );
+    $multiple = new MessageTypeMultipleTextField(MessageController::MessageTypeLoad('example_user_register'), array(get_class($this), 'addMoreAjax'));
+    $multiple->textField($translation, $form_state);
 
     $form['#title'] = $this->t('Add @language translation for %label', array(
       '%label' => $this->mapper->getTitle(),
@@ -52,5 +49,15 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
   public function submitForm(array &$form, array &$form_state) {
     parent::submitForm($form, $form_state);
     drupal_set_message($this->t('Successfully saved @language translation.', array('@language' => $this->language->name)));
+  }
+
+  /**
+   * Ajax callback for the "Add another item" button.
+   *
+   * This returns the new page content to replace the page content made obsolete
+   * by the form submission.
+   */
+  public static function addMoreAjax(array $form, array $form_state) {
+    return $form['config_names']['message.type.example_user_register']['text']['translation']['text'];
   }
 }
