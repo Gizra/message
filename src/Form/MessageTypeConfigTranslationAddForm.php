@@ -33,8 +33,9 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
     $name = reset($names);
     $translation = &$form['config_names'][$name]['text']['translation'];
 
-    // todo: Fix hard coding.
-    $multiple = new MessageTypeMultipleTextField(MessageController::MessageTypeLoad('example_user_register'), array(get_class($this), 'addMoreAjax'));
+    $configs = $form_state['config_translation_mapper']->getConfigData();
+    $config = reset($configs);
+    $multiple = new MessageTypeMultipleTextField(MessageController::MessageTypeLoad($config['type']), array(get_class($this), 'addMoreAjax'));
     $multiple->textField($translation, $form_state);
 
     $form['#title'] = $this->t('Add @language translation for %label', array(
@@ -59,7 +60,8 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
    * by the form submission.
    */
   public static function addMoreAjax(array $form, array $form_state) {
-    // todo: Fix hard coding.
-    return $form['config_names']['message.type.example_user_register']['text']['translation']['text'];
+    $configs = $form_state['config_translation_mapper']->getConfigData();
+    $config = reset($configs);
+    return $form['config_names']['message.type.' . $config['type']]['text']['translation']['text'];
   }
 }
