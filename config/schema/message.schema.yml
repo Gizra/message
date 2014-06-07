@@ -20,7 +20,7 @@ message.type.*:
       type: string
       label: 'Default language'
     text:
-      type: text
+      type: string
       label: 'Message text'
     data:
       type: string
