@@ -120,16 +120,4 @@ class MessageTypeMultipleTextField {
 
     return $element;
   }
-
-  /**
-   * Ajax callback for the "Add another item" button.
-   *
-   * This returns the new page content to replace the page content made obsolete
-   * by the form submission.
-   *
-   * todo: Move to the creation form of the
-   */
-  public static function addMoreAjax(array $form, array $form_state) {
-    return $form['text'];
-  }
 }

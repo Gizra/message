@@ -17,8 +17,6 @@ use Drupal\message\FormElement\MessageTypeMultipleTextField;
  */
 class MessageTypeForm extends EntityForm {
 
-  private $maxDelta;
-
   /**
    * {@inheritdoc}
    */
