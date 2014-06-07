@@ -8,7 +8,7 @@
 namespace Drupal\message;
 
 use Drupal\config_translation\ConfigEntityMapper;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Routing\Route;
 
 /**
  * Configuration mapper for message config entity. We need to take over the
@@ -20,9 +20,35 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
   /**
    * {@inheritdoc}
    */
-  public function populateFromRequest(Request $request) {
-    parent::populateFromRequest($request);
-    $entity = $request->attributes->get($this->entityType);
-    $this->setEntity($entity);
+  public function getEditRoute() {
+    // todo: do!
+    return new Route(
+      $this->getBaseRoute()->getPath() . '/translate/{langcode}/edit',
+      array(
+        // Left for reference. Remove when done.
+//        '_form' => '\Drupal\config_translation\Form\ConfigTranslationEditForm',
+        '_form' => '\Drupal\message\Form\MessageConfigTranslationEditForm',
+        'plugin_id' => $this->getPluginId(),
+      ),
+      array('_config_translation_form_access' => 'TRUE')
+    );
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getAddRoute() {
+    // todo: do!
+    return new Route(
+      $this->getBaseRoute()->getPath() . '/translate/{langcode}/add',
+      array(
+        // Left for reference. Remove when done.
+//        '_form' => '\Drupal\config_translation\Form\ConfigTranslationAddForm',
+        '_form' => '\Drupal\message\Form\MessageConfigTranslationAddForm',
+        'plugin_id' => $this->getPluginId(),
+      ),
+      array('_config_translation_form_access' => 'TRUE')
+    );
+  }
+
 }
