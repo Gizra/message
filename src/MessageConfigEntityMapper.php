@@ -21,13 +21,10 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
    * {@inheritdoc}
    */
   public function getEditRoute() {
-    // todo: do!
     return new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/edit',
       array(
-        // Left for reference. Remove when done.
-//        '_form' => '\Drupal\config_translation\Form\ConfigTranslationEditForm',
-        '_form' => '\Drupal\message\Form\MessageConfigTranslationEditForm',
+        '_form' => '\Drupal\message\Form\MessageTypeConfigTranslationEditForm',
         'plugin_id' => $this->getPluginId(),
       ),
       array('_config_translation_form_access' => 'TRUE')
@@ -38,13 +35,10 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
    * {@inheritdoc}
    */
   public function getAddRoute() {
-    // todo: do!
     return new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/add',
       array(
-        // Left for reference. Remove when done.
-//        '_form' => '\Drupal\config_translation\Form\ConfigTranslationAddForm',
-        '_form' => '\Drupal\message\Form\MessageConfigTranslationAddForm',
+        '_form' => '\Drupal\message\Form\MessageTypeConfigTranslationAddForm',
         'plugin_id' => $this->getPluginId(),
       ),
       array('_config_translation_form_access' => 'TRUE')
