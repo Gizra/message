@@ -19,6 +19,14 @@ define('MESSAGE_PURGE_LIMIT', 100);
  * Drupal 8 part. Remove this comment after finishing the porting process.
  */
 
+
+/**
+ * Implements hook_config_translation_info_alter().
+ */
+function message_config_translation_info_alter(&$info) {
+  $info['message_type']['class'] = '\Drupal\message\MessageConfigEntityMapper';
+}
+
 /**
  * Drupal 7 part. We can, and should, take parts from here during the porting to
  * Drupal 8.
