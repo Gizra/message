@@ -30,6 +30,9 @@ class MessageTypeConfigTranslationEditForm extends MessageTypeConfigTranslationB
       '%label' => $this->mapper->getTitle(),
       '@language' => $this->language->name,
     ));
+
+    // todo: update the text field with the updated text.
+
     return $form;
   }
 

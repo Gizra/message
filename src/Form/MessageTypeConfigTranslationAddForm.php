@@ -6,8 +6,6 @@
  */
 
 namespace Drupal\message\Form;
-use Drupal\message\Controller\MessageController;
-use Drupal\message\FormElement\MessageTypeMultipleTextField;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -39,6 +37,8 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
       '%label' => $this->mapper->getTitle(),
       '@language' => $this->language->name,
     ));
+
+    // todo: update the text field with the updated text.
     return $form;
   }
 
