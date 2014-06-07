@@ -20,8 +20,11 @@ message.type.*:
       type: string
       label: 'Default language'
     text:
-      type: string
-      label: 'Message text'
+      type: sequence
+      label: 'Default value'
+      sequence:
+        - type: string
+          label: 'Message text'
     data:
       type: string
       label: 'Data'
