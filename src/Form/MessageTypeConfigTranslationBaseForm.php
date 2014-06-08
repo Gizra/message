@@ -38,7 +38,10 @@ abstract class MessageTypeConfigTranslationBaseForm extends ConfigTranslationFor
 
     $configs = $form_state['config_translation_mapper']->getConfigData();
     $config = reset($configs);
-    $multiple = new MessageTypeMultipleTextField(MessageController::MessageTypeLoad($config['type']), array(get_class($this), 'addMoreAjax'));
+
+    $entity = MessageController::MessageTypeLoad($config['type']);
+    $form_state['#entity'] = $entity;
+    $multiple = new MessageTypeMultipleTextField($entity, array(get_class($this), 'addMoreAjax'), $langcode);
     $multiple->textField($translation, $form_state);
 
     return $form;

@@ -40,6 +40,9 @@ class MessageTypeConfigTranslationEditForm extends MessageTypeConfigTranslationB
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
+    // todo: fix this.
+    $form_state['#entity']->text[$this->language->getId()] = $form_state['values']['config_names']['message.type.testin_2']['text']['translation']['text'];
+    $form_state['#entity']->save();
     parent::submitForm($form, $form_state);
     drupal_set_message($this->t('Successfully updated @language translation.', array('@language' => $this->language->name)));
   }

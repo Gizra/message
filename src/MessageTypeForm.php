@@ -62,7 +62,7 @@ class MessageTypeForm extends EntityForm {
       '#description' => t('The language code that will be saved with the field values. This is used to allow translation of fields.'),
     );
 
-    $multiple = new MessageTypeMultipleTextField($type, array(get_class($this), 'addMoreAjax'));
+    $multiple = new MessageTypeMultipleTextField($this->entity, array(get_class($this), 'addMoreAjax'));
     $multiple->textField($form, $form_state);
 
     $form['data'] = array(
@@ -70,7 +70,6 @@ class MessageTypeForm extends EntityForm {
       // to the data column.
       '#tree' => TRUE,
     );
-
 
     $form['data']['token options']['clear'] = array(
       '#title' => t('Clear empty tokens'),
@@ -176,8 +175,10 @@ class MessageTypeForm extends EntityForm {
       $message_text[] = $text['value'];
     }
 
+
     // Updating the message text.
-    $this->entity->text = $message_text;
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $this->entity->text[$langcode] = $message_text;
 
     // todo: When the parent method will do something remove as much code as we
     // can.

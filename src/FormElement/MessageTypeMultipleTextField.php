@@ -39,9 +39,10 @@ class MessageTypeMultipleTextField {
    * @param $callback
    *  The name of the ajax callback.
    */
-  public function __construct(MessageType $entity, $callback) {
+  public function __construct(MessageType $entity, $callback, $langcode = '') {
     $this->entity = $entity;
     $this->callback = $callback;
+    $this->langcode = $langcode ? $langcode : \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 
   /**
@@ -77,7 +78,9 @@ class MessageTypeMultipleTextField {
     // Building the multiple form element; Adding first the the form existing
     // text.
     $start_key = 0;
-    foreach ($this->entity->text as $text) {
+    $Messagetext = !empty($this->entity->text[$this->langcode]) ? $this->entity->text[$this->langcode] : array();
+
+    foreach ($Messagetext as $text) {
       $form['text'][$start_key] = $this->singleElement($start_key, $text);
       $start_key++;
     }
