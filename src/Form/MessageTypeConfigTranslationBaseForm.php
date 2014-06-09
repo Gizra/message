@@ -46,4 +46,17 @@ abstract class MessageTypeConfigTranslationBaseForm extends ConfigTranslationFor
 
     return $form;
   }
+
+
+  /**
+   * Ajax callback for the "Add another item" button.
+   *
+   * This returns the new page content to replace the page content made obsolete
+   * by the form submission.
+   */
+  public static function addMoreAjax(array $form, array $form_state) {
+    $configs = $form_state['config_translation_mapper']->getConfigData();
+    $config = reset($configs);
+    return $form['config_names']['message.type.' . $config['type']]['text']['translation']['text'];
+  }
 }

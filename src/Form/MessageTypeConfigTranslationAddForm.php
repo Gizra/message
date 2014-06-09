@@ -26,6 +26,7 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
    */
   public function submitForm(array &$form, array &$form_state) {
     parent::submitForm($form, $form_state);
+
     /** @var MessageType $entity */
     $entity = $form_state['#entity'];
     $texts = $form_state['values']['config_names']['message.type.' . $entity->type]['text']['translation']['text'];
@@ -54,19 +55,6 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
       '@language' => $this->language->name,
     ));
 
-    // todo: update the text field with the updated text.
     return $form;
-  }
-
-  /**
-   * Ajax callback for the "Add another item" button.
-   *
-   * This returns the new page content to replace the page content made obsolete
-   * by the form submission.
-   */
-  public static function addMoreAjax(array $form, array $form_state) {
-    $configs = $form_state['config_translation_mapper']->getConfigData();
-    $config = reset($configs);
-    return $form['config_names']['message.type.' . $config['type']]['text']['translation']['text'];
   }
 }

@@ -26,11 +26,16 @@ class MessageTypeConfigTranslationDeleteForm extends ConfigTranslationDeleteForm
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    $names = $this->mapper->getConfigData();
-    $name = reset($names);
-    $type = MessageController::MessageTypeLoad($name['type']);
-    unset($type->text[$this->language->getId()]);
-    $type->save();
+
+    // Get the message type.
+    $configs = $this->mapper->getConfigData();
+    $config = reset($configs);
+
+    // Get the message object, remove the translation and update the message.
+    $message_type = MessageController::MessageTypeLoad($config['type']);
+    unset($message_type->text[$this->language->getId()]);
+    $message_type->save();
+
     parent::submitForm($form, $form_state);
   }
 
