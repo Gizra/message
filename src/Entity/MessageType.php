@@ -7,15 +7,8 @@
 
 namespace Drupal\message\Entity;
 
-use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
-use Drupal\message\MessageException;
-use Drupal\field\Field;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-
-// todo: I18n issue: check why ConfigTranslationOverviewAccess::access denied
-// access when translating.
 
 /**
  * Defines the Message type entity class.
@@ -136,6 +129,8 @@ class MessageType extends ConfigEntityBase {
    * @see message_get_property_values()
    *
    * @var array
+   *
+   * todo: check if this needed.
    */
   public $arguments = array();
 
@@ -181,17 +176,23 @@ class MessageType extends ConfigEntityBase {
    *   extracted from.
    * @param array $options
    *   Array of options to pass to the metadata-wrapper:
-   *   - 'field name': The name of the Message text field, text should be
-   *     extracted from.
    *   - 'delta': Optional; If set, returns the output only from a single delta
    *     of the message-text field.
    *
-   * @throws \Drupal\message\MessageException
-   * @return string A string with the text from the field.
+   * @return string
+   *   A string with the text from the field.
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $options = array()) {
-    if ($langcode) {
-      // todo: pull the text of the translation entity.
+    if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
+      // The config translation module turned on. Get the proper language.
+
+      if (!isset($this->text[$langcode])) {
+        // There is no translation in the current language. Get the text for the
+        // default language.
+        $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+      }
+
+      return implode(" ", $this->text[$langcode]);
     }
 
     // Combine all the field text and return the text.
