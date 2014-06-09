@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Form;
 
+use Drupal\message\Entity\MessageType;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -40,11 +41,24 @@ class MessageTypeConfigTranslationEditForm extends MessageTypeConfigTranslationB
    * {@inheritdoc}
    */
   public function submitForm(array &$form, array &$form_state) {
-    // todo: fix this.
-    $form_state['#entity']->text[$this->language->getId()] = $form_state['values']['config_names']['message.type.testin_2']['text']['translation']['text'];
-    $form_state['#entity']->save();
     parent::submitForm($form, $form_state);
+
+    /** @var MessageType $entity */
+    $entity = $form_state['#entity'];
+    $texts = $form_state['values']['config_names']['message.type.' . $entity->type]['text']['translation']['text'];
+
+    // todo: Handle weight order.
+    $message_text = array();
+    foreach ($texts as $text) {
+      if (empty($text['value'])) {
+        continue;
+      }
+      $message_text[] = $text['value'];
+    }
+
+    $entity->text[$form_state['config_translation_language']->id] = $message_text;
+    $entity->save();
+
     drupal_set_message($this->t('Successfully updated @language translation.', array('@language' => $this->language->name)));
   }
-
 }

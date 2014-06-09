@@ -61,7 +61,6 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Field language'),
       '#description' => t('The language code that will be saved with the field values. This is used to allow translation of fields.'),
     );
-
     $multiple = new MessageTypeMultipleTextField($this->entity, array(get_class($this), 'addMoreAjax'));
     $multiple->textField($form, $form_state);
 
@@ -168,13 +167,12 @@ class MessageTypeForm extends EntityForm {
     $message_text = array();
 
     // todo: Handle weight order.
-    foreach ($form_state['values']['text'] as $key => $text) {
+    foreach ($form_state['values']['text'] as $text) {
       if (empty($text['value'])) {
         continue;
       }
       $message_text[] = $text['value'];
     }
-
 
     // Updating the message text.
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
