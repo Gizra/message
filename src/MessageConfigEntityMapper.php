@@ -53,7 +53,7 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
     return new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/delete',
       array(
-        '_form' => '\Drupal\message\Form\MessageTypeTranslationDeleteForm',
+        '_form' => '\Drupal\message\Form\MessageTypeConfigTranslationDeleteForm',
         'plugin_id' => $this->getPluginId(),
       ),
       array('_config_translation_form_access' => 'TRUE')
