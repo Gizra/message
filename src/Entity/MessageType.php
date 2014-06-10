@@ -24,8 +24,8 @@ use Drupal\Core\Config\Entity\ConfigEntityBase;
  *   },
  *   controllers = {
  *     "form" = {
- *       "add" = "Drupal\message\MessageTypeForm",
- *       "edit" = "Drupal\message\MessageTypeForm",
+ *       "add" = "Drupal\message\Form\MessageTypeForm",
+ *       "edit" = "Drupal\message\Form\MessageTypeForm",
  *       "delete" = "Drupal\message\Form\MessageTypeDeleteConfirm"
  *     },
  *     "list_builder" = "Drupal\message\MessageTypeListBuilder",

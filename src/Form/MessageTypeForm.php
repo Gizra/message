@@ -5,11 +5,10 @@
  * Contains \Drupal\node\NodeTypeForm.
  */
 
-namespace Drupal\message;
+namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\field\Entity\FieldInstanceConfig;
 use Drupal\message\FormElement\MessageTypeMultipleTextField;
 
 /**
