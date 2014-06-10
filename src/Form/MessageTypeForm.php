@@ -9,6 +9,7 @@ namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\message\Entity\MessageType;
 use Drupal\message\FormElement\MessageTypeMultipleTextField;
 
 /**
@@ -22,6 +23,7 @@ class MessageTypeForm extends EntityForm {
   public function form(array $form, array &$form_state) {
     $form = parent::form($form, $form_state);
 
+    /** @var MessageType $type */
     $type = $this->entity;
 
     $form['label'] = array(
@@ -54,11 +56,6 @@ class MessageTypeForm extends EntityForm {
       '#description' => t('The human-readable description of this message type.'),
     );
 
-    // todo: check content translation.
-    $form['language'] = array(
-      '#title' => t('Field language'),
-      '#description' => t('The language code that will be saved with the field values. This is used to allow translation of fields.'),
-    );
     $multiple = new MessageTypeMultipleTextField($this->entity, array(get_class($this), 'addMoreAjax'));
     $multiple->textField($form, $form_state);
 

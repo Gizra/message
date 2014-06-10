@@ -182,21 +182,20 @@ class MessageType extends ConfigEntityBase {
    * @return string
    *   A string with the text from the field.
    */
-  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $options = array()) {
+  public function getText($langcode = NULL, $options = array()) {
     if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
       // The config translation module turned on. Get the proper language.
+      $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
+    }
 
-      if (!isset($this->text[$langcode])) {
-        // There is no translation in the current language. Get the text for the
-        // default language.
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
-      }
-
-      return implode(" ", $this->text[$langcode]);
+    if (!$langcode || !isset($this->text[$langcode])) {
+      // We are facing two problems: a language was not supplied or there is no
+      // translation for that language. Get the default language.
+      $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
     }
 
     // Combine all the field text and return the text.
-    return implode(" ", $this->text);
+    return implode(" ", $this->text[$langcode]);
   }
 
   /**
