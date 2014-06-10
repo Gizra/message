@@ -52,7 +52,6 @@ class MessageTypeForm extends EntityForm {
       '#type' => 'textfield',
       '#default_value' => $this->entity->description,
       '#description' => t('The human-readable description of this message type.'),
-      '#required' => TRUE,
     );
 
     // todo: check content translation.
