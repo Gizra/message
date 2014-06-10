@@ -7,7 +7,6 @@
 
 namespace Drupal\message\Entity;
 
-use Drupal\Core\Language\Language;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 
 /**

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\Message\MessageViewBuilder.
+ * Definition of Drupal\message\MessageViewBuilder.
  */
 
 namespace Drupal\message;

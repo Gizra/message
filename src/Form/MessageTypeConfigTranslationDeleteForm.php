@@ -2,13 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\config_translation\Form\ConfigTranslationDeleteForm.
+ * Contains \Drupal\message\Form\ConfigTranslationDeleteForm.
  */
 
 namespace Drupal\message\Form;
+
 use Drupal\config_translation\Form\ConfigTranslationDeleteForm;
 use Drupal\message\Controller\MessageController;
-
 
 /**
  * Builds a form to delete configuration translation.

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\NodeTypeForm.
+ * Contains \Drupal\message\MessageTypeForm.
  */
 
 namespace Drupal\message\Form;

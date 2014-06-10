@@ -7,6 +7,9 @@
 
 use \Drupal\message\MessageException;
 
+/**
+ * @deprecated
+ */
 class MessageType extends Entity {
 
   /**

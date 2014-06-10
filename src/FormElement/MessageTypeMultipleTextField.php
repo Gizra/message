@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * 
+ * Contains Drupal\message\FormElement.
+ */
 namespace Drupal\message\FormElement;
 
 use Drupal\field\Entity\FieldInstanceConfig;

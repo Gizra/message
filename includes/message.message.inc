@@ -6,6 +6,10 @@
  */
 
 
+/**
+ * Class Message
+ * @deprecated
+ */
 class Message extends Entity {
 
   /**

@@ -2,6 +2,7 @@
 /**
  * @file message_example.module.
  */
+
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\message\Controller\MessageController;
 use Drupal\node\Entity\Node;

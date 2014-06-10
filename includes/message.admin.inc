@@ -7,6 +7,8 @@
 
 /**
  * UI controller.
+ *
+ * @deprecated
  */
 class MessageTypeUIController extends EntityDefaultUIController {
 

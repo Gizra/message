@@ -5,6 +5,9 @@
  * A class used for message types category.
  */
 
+/**
+ * @deprecated
+ */
 class MessageTypeCategory extends Entity {
 
   /**
