@@ -2,7 +2,7 @@
 
 /**
  * @file
- * 
+ *
  * Contains Drupal\message\FormElement.
  */
 namespace Drupal\message\FormElement;
