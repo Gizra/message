@@ -223,4 +223,28 @@ class MessageType extends ConfigEntityBase {
 
     parent::save();
   }
+
+  /**
+   * Setting the text of the message properly.
+   *
+   * @param Array $text
+   *  The message text.
+   * @param string $langcode
+   *  Optional. The language of the text. When the config translation is on the
+   *  language will the current language if not the default will be set to the
+   *  default site language.
+   */
+  public function setText(array $text, $langcode = '') {
+    if (!$langcode) {
+      if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
+        // The config translation module turned on. Get the proper language.
+        $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
+      }
+      else {
+        $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+      }
+    }
+
+    $this->text[$langcode] = $text;
+  }
 }

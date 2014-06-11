@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Tests;
 
+use Drupal\message\Controller\MessageController;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -30,6 +31,45 @@ abstract class MessageTestBase extends WebTestBase {
 
   function setUp() {
     parent::setUp();
+  }
+
+  /**
+   * Create a message text easily.
+   *
+   * @param String $type
+   *  The machine name of the message.
+   * @param String $label
+   *  The human readable name of the message.
+   * @param String $description
+   *  The description of the message.
+   * @param array $text
+   *  The text of the message. Should be text.
+   * @param string $langcode
+   *  The langcode of the message. Optional.
+   *
+   * @return \Drupal\message\Entity\MessageType
+   *  The message type.
+   */
+  protected function createMessageType($type, $label, $description, array $text, $langcode = '') {
+    $messageType = MessageController::MessageTypeCreate($type);
+    $messageType->label = $label;
+    $messageType->description = $description;
+    $messageType->setText($text, $langcode);
+    $messageType->save();
+
+    return $messageType;
+  }
+
+  /**
+   * Load a message type easily.
+   * @param $type
+   *  The type of the message.
+   *
+   * @return \Drupal\message\Entity\MessageType
+   *  The message Object.
+   */
+  protected function loadMessageType($type) {
+    return MessageController::MessageTypeLoad($type);
   }
 
 }
