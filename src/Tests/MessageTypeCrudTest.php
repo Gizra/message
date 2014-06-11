@@ -29,7 +29,7 @@ class MessageTypeCrudTest extends WebTestBase {
    * Creating/editing/deleting/updating the message type entity and test it.
    */
   function testCrudEntityType() {
-    $this->pass('First testing ever!!!');
+    $this->fail('First testing ever!!!');
   }
 
 }
