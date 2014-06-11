@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/RoySegall/message.svg?branch=8.x-1.x)](https://travis-ci.org/RoySegall/message)
+
 Overview
 ========
 A general logging utility that can be used as activity module.
