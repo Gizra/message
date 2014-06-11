@@ -58,6 +58,6 @@ before_script:
 
 script:
   # Run the Simpletests for message.
-  - drush test-run 'message, message conditions' --uri=http://127.0.0.1:8080
+  - drush test-run 'Message' --uri=http://127.0.0.1:8080
   # Run the PHPUnit tests.
   - ./vendor/bin/phpunit ../modules/message
