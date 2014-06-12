@@ -44,9 +44,24 @@ class MessageTypeCrudTest extends MessageTestBase {
        $this->assertEqual($type->{$key}, $created_message_type->{$key}, format_string('The @label between the message we created an loaded are equal', $param));
     }
 
-    // todo: Update the message and verify the object is equal.
+    // Verifying updating action.
+    $type->label = 'New label';
+    $type->save();
 
-    // todo: Delete the message any try to load it from the DB.
+    // Reset any static cache.
+    drupal_static_reset();
+
+    $type = $this->loadMessageType('dummy_text');
+    $this->assertEqual($type->label, 'New label', 'The message was updated successfully');
+
+
+    // Delete the message any try to load it from the DB.
+    $type->delete();
+
+    // Reset any static cache.
+    drupal_static_reset();
+
+    $this->assertFalse($this->loadMessageType('dummy_text'), 'The message was not found in the DB');
   }
 
 }
