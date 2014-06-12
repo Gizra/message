@@ -3,3 +3,9 @@ message.overview_types:
   parent: system.admin_structure
   description: 'Manage message types.'
   route_name: message.overview_types
+
+message.settings:
+  title: 'Message'
+  description: 'Message settings.'
+  parent: 'system.admin_config_development'
+  route_name: message.settings

@@ -39,3 +39,13 @@ message.messages:
     _entity_list: 'message'
   requirements:
     _permission: 'access content overview'
+
+message.settings:
+  path: '/admin/config/development/message'
+  defaults:
+    _title: 'Message'
+    _description: 'Message settings'
+    _form: 'Drupal\message\Form\MessageSettingsForm'
+  requirements:
+    _permission: 'access content overview'
+
