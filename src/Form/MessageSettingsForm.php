@@ -7,13 +7,21 @@
 
 namespace Drupal\message\Form;
 
-use Drupal\Core\StreamWrapper\PublicStream;
+use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Configure file system settings for this site.
  */
 class MessageSettingsForm extends ConfigFormBase {
+
+  /**
+   * The entity manager object.
+   * @var \Drupal\Core\Entity\EntityManagerInterface
+   */
+  protected $entityManager;
 
   /**
    * {@inheritdoc}
@@ -27,6 +35,29 @@ class MessageSettingsForm extends ConfigFormBase {
    */
   public function defaultKeys() {
     return array('purge_enable', 'purge_quota', 'purge_days', 'delete_on_entity_delete');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('config.factory'),
+      $container->get('entity.manager')
+    );
+  }
+
+  /**
+   * Constructs a \Drupal\system\ConfigFormBase object.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The factory for configuration objects.
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
+   *   The entity manager object.
+   */
+  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager) {
+    $this->setConfigFactory($config_factory);
+    $this->entityManager = $entity_manager;
   }
 
   /**
@@ -73,7 +104,7 @@ class MessageSettingsForm extends ConfigFormBase {
 
 
     $options = array();
-    foreach (\Drupal::entityManager()->getDefinitions() as $entity_id => $entity) {
+    foreach ($this->entityManager->getDefinitions() as $entity_id => $entity) {
       if (!$entity->isFieldable()) {
         continue;
       }
