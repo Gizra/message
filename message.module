@@ -4,6 +4,7 @@
  * @file
  * API functions to manipulate messages.
  */
+use Drupal\field\Entity\FieldConfig;
 
 /**
  * Define the name of the message realm field.
@@ -35,9 +36,58 @@ function message_config_translation_info_alter(&$info) {
  *   The entity object for the entity that has been deleted.
  */
 function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
-  if ($entity->getEntityType() != 'message') {
+  if (($type = $entity->getEntityType()) != 'message') {
     // Why not message?
     return;
+  }
+
+  $types = \Drupal::config('message.message')->get('delete_on_entity_delete');
+
+  if (!$types || !in_array($type, $types)) {
+    return;
+  }
+
+  // List of messages to delete.
+  $deletable_mids = array();
+  // List of messages that might be deleted;
+  // Messages with references to fields with multiple cardinality will be
+  // stored in $check_mids in order to check if the entity being deleted
+  // is the last one referenced by a given field.
+  // Keyed by message ID, pointing to array of the relevant field names.
+  $check_mids = array();
+
+  $fields_ids = \Drupal::entityQuery('field_config')->execute();
+  /** @var FieldConfig[] $fields */
+  $fields = entity_load_multiple('field_config', array_keys($fields_ids));
+
+  // Search for fields in which messages referenced the deleted entity.
+  foreach ($fields as $field) {
+    if (!in_array($field->getBundles(), 'message')) {
+      // This field isn't used in any message.
+      continue;
+    }
+
+    // Only delete messages due to referenced entity or referenced taxonomy term
+    // deletion.
+    if ($field->getType() == 'entityreference') {
+      // Check if the field references entities of the given type.
+      if (!$field->getSetting('target_type') || $type != $field->getSetting('target_type')) {
+        continue;
+      }
+      // Check if the field references specific bundles. If so, check if the
+      // field references the deleted entity's bundle.
+      if ($field['settings']['handler_settings']['target_bundles'] && !in_array($bundle, $field['settings']['handler_settings']['target_bundles'])) {
+        continue;
+      }
+      // The reference column;
+      $column = 'target_id';
+    }
+    elseif ($field->getType() == 'taxonomy_term_reference' && $type == 'taxonomy_term') {
+      $column = 'tid';
+    }
+    else {
+      continue;
+    }
   }
 }
 
@@ -78,8 +128,8 @@ function _message_entity_delete($entity, $entity_type) {
       continue;
     }
 
-    // Only delete messages due to referenced entity or referenced
-    // taxonomy term deletion.
+    // Only delete messages due to referenced entity or referenced taxonomy term
+    // deletion.
     if ($field['type'] == 'entityreference') {
       // Check if the field references entities of the given type.
       if ($entity_type != $field['settings']['target_type']) {
