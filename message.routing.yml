@@ -40,8 +40,16 @@ message.messages:
   requirements:
     _permission: 'access content overview'
 
+message.main_settings:
+  path: '/admin/config/message'
+  defaults:
+    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _title: 'Message'
+  requirements:
+    _permission: 'access content overview'
+
 message.settings:
-  path: '/admin/config/development/message'
+  path: '/admin/config/message/message'
   defaults:
     _title: 'Message'
     _description: 'Message settings'
