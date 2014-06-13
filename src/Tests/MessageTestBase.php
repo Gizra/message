@@ -16,6 +16,13 @@ use Drupal\simpletest\WebTestBase;
 abstract class MessageTestBase extends WebTestBase {
 
   /**
+   * Modules to enable.
+   *
+   * @var array
+   */
+  public static $modules = array('message');
+
+  /**
    * The node access controller.
    *
    * @var \Drupal\Core\Entity\EntityAccessControllerInterface
