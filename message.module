@@ -19,7 +19,6 @@ define('MESSAGE_PURGE_LIMIT', 100);
  * Drupal 8 part. Remove this comment after finishing the porting process.
  */
 
-
 /**
  * Implements hook_config_translation_info_alter().
  */
@@ -28,153 +27,17 @@ function message_config_translation_info_alter(&$info) {
 }
 
 /**
- * Drupal 7 part. We can, and should, take parts from here during the porting to
- * Drupal 8.
+ * Implements hook_entity_delete().
+ *
+ * Handles messages deletion when referenced entities are being deleted.
+ *
+ * @param \Drupal\Core\Entity\EntityInterface $entity
+ *   The entity object for the entity that has been deleted.
  */
-
-/**
- * Implements hook_theme().
- *
- * @deprecated
- *  We might need to remove this.
- */
-function message_theme() {
-  $info['message'] = array(
-    'render element' => 'elements',
-    'template' => 'message',
-  );
-
-  return $info;
-}
-
-/**
- * Implements hook_message_view_alter().
- *
- * @deprecated
- *  We might need to remove this.
- */
-function message_message_view_alter(&$build) {
-  $build['#theme'] = 'message';
-}
-
-/**
- * Process variables for message.tpl.php.
- *
- * @deprecated
- *  We might need to remove this.
- */
-function template_preprocess_message(&$variables) {
-  $message = $variables['elements']['#entity'];
-
-  $variables['view_mode'] = $variables['elements']['#view_mode'];
-  $variables['message'] = $message;
-
-  // Helpful $content variable for templates.
-  $variables['content'] = array();
-  foreach (element_children($variables['elements']) as $key) {
-    $variables['content'][$key] = $variables['elements'][$key];
-  }
-
-  // Make the field variables available with the appropriate language.
-  field_attach_preprocess('message', $message, $variables['content'], $variables);
-  list(, , $bundle) = entity_extract_ids('message', $message);
-
-  // Gather CSS classes.
-  $variables['classes_array'][] = drupal_html_class('entity-message');
-  $variables['classes_array'][] = drupal_html_class('message-' . $bundle);
-
-  // Add suggestions.
-  $variables['theme_hook_suggestions'][] = 'message';
-  $variables['theme_hook_suggestions'][] = 'message__' . $bundle;
-  $variables['theme_hook_suggestions'][] = 'message__' . $bundle . '__' . $variables['view_mode'];
-
-  if ($id = entity_id('message', $message)) {
-    $variables['theme_hook_suggestions'][] = 'message__' . $id;
-  }
-}
-
-/**
- * Implements hook_permission().
- *
- * @deprecated
- *  We might need to remove this.
- */
-function message_permission() {
-  $permissions = array();
-  $permissions['administer message types'] = array(
-    'title' => t('Administer message types'),
-    'description' => t('Administer message types that can be used to log an event.'),
-  );
-  $permissions['create messages'] = array(
-    'title' => t('Create messages'),
-    'description' => t('Log new messages.'),
-  );
-  return $permissions;
-}
-
-/**
- * Implements hook_cron().
- *
- * Fetch all message types and purge old messages.
- *
- * @todo: Upgrade.
- *
- * @deprecated
- *  We might need to remove this.
- */
-function message_cron() {
-  return;
-
-  // The maximal amount of messages to purge per cron run.
-  $purge_limit = variable_get('message_delete_cron_limit', MESSAGE_PURGE_LIMIT);
-  // Messages to be deleted.
-  $purge_messages = array();
-  // Names of non global-purge-settings overriding message types.
-  $no_override_type_names = array();
-  // Message types that override global purge settings.
-  $override_types = array();
-
-  // Iterate all message types to distinguish between overriding and non-
-  // overriding types.
-  foreach (message_type_load() as $message_type) {
-    if (empty($message_type->data['purge']['override'])) {
-      $no_override_type_names[] = $message_type->name;
-    }
-    else {
-      // For overriding types, store the type and not its name to later extract
-      // the specific purge settings.
-      $override_types[] = $message_type;
-    }
-  }
-
-  // Gather purgeable messages of overriding types.
-  foreach ($override_types as $message_type) {
-    // Ignore message type with unchecked "Purge messages". Also make sure that
-    // purging settings are present.
-    if (empty($message_type->data['purge']) || empty($message_type->data['purge']['enabled'])) {
-      continue;
-    }
-
-    $purge_messages += message_get_purgeable_by_type($purge_limit, $message_type->name, $message_type->data['purge']);
-  }
-
-  // Gather purgeable messages of non-overriding types according to global
-  // settings.
-  if (!empty($no_override_type_names)) {
-    // Do nothing if purge isn't enabled.
-    if (variable_get('message_purge_enable', FALSE)) {
-      $purge_settings = array(
-        'quota' => variable_get('message_purge_quota', NULL),
-        'days' => variable_get('message_purge_days', NULL),
-      );
-
-      $purge_messages += message_get_purgeable_by_type($purge_limit, $no_override_type_names, $purge_settings);
-    }
-  }
-
-  // Delete all gathered messages.
-  if (!empty($purge_messages)) {
-    message_delete_multiple(array_keys($purge_messages));
+function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
+  if ($entity->getEntityType() != 'message') {
+    // Why not message?
+    return;
   }
 }
 
@@ -186,7 +49,7 @@ function message_cron() {
  * @deprecated
  *  We might need to remove this.
  */
-function message_entity_delete($entity, $entity_type) {
+function _message_entity_delete($entity, $entity_type) {
   return;
   if ($entity_type == 'message') {
     return;
@@ -302,6 +165,157 @@ function message_entity_delete($entity, $entity_type) {
 
   if ($deletable_mids) {
     message_delete_multiple($deletable_mids);
+  }
+}
+
+
+/**
+ * Drupal 7 part. We can, and should, take parts from here during the porting to
+ * Drupal 8.
+ */
+
+/**
+ * Implements hook_theme().
+ *
+ * @deprecated
+ *  We might need to remove this.
+ */
+function message_theme() {
+  $info['message'] = array(
+    'render element' => 'elements',
+    'template' => 'message',
+  );
+
+  return $info;
+}
+
+/**
+ * Implements hook_message_view_alter().
+ *
+ * @deprecated
+ *  We might need to remove this.
+ */
+function message_message_view_alter(&$build) {
+  $build['#theme'] = 'message';
+}
+
+/**
+ * Process variables for message.tpl.php.
+ *
+ * @deprecated
+ *  We might need to remove this.
+ */
+function template_preprocess_message(&$variables) {
+  $message = $variables['elements']['#entity'];
+
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  $variables['message'] = $message;
+
+  // Helpful $content variable for templates.
+  $variables['content'] = array();
+  foreach (element_children($variables['elements']) as $key) {
+  }
+
+  // Make the field variables available with the appropriate language.
+  field_attach_preprocess('message', $message, $variables['content'], $variables);
+  list(, , $bundle) = entity_extract_ids('message', $message);
+
+  // Gather CSS classes.
+  $variables['classes_array'][] = drupal_html_class('entity-message');
+  $variables['classes_array'][] = drupal_html_class('message-' . $bundle);
+
+  // Add suggestions.
+  $variables['theme_hook_suggestions'][] = 'message';
+  $variables['theme_hook_suggestions'][] = 'message__' . $bundle;
+  $variables['theme_hook_suggestions'][] = 'message__' . $bundle . '__' . $variables['view_mode'];
+
+  if ($id = entity_id('message', $message)) {
+    $variables['theme_hook_suggestions'][] = 'message__' . $id;
+  }
+}
+
+/**
+ * Implements hook_permission().
+ *
+ * @deprecated
+ *  We might need to remove this.
+ */
+function message_permission() {
+  $permissions = array();
+  $permissions['administer message types'] = array(
+    'title' => t('Administer message types'),
+    'description' => t('Administer message types that can be used to log an event.'),
+  );
+  $permissions['create messages'] = array(
+    'title' => t('Create messages'),
+    'description' => t('Log new messages.'),
+  );
+  return $permissions;
+}
+
+/**
+ * Implements hook_cron().
+ *
+ * Fetch all message types and purge old messages.
+ *
+ * @todo: Upgrade.
+ *
+ * @deprecated
+ *  We might need to remove this.
+ */
+function message_cron() {
+  return;
+
+  // The maximal amount of messages to purge per cron run.
+  $purge_limit = variable_get('message_delete_cron_limit', MESSAGE_PURGE_LIMIT);
+  // Messages to be deleted.
+  $purge_messages = array();
+  // Names of non global-purge-settings overriding message types.
+  $no_override_type_names = array();
+  // Message types that override global purge settings.
+  $override_types = array();
+
+  // Iterate all message types to distinguish between overriding and non-
+  // overriding types.
+  foreach (message_type_load() as $message_type) {
+    if (empty($message_type->data['purge']['override'])) {
+      $no_override_type_names[] = $message_type->name;
+    }
+    else {
+      // For overriding types, store the type and not its name to later extract
+      // the specific purge settings.
+      $override_types[] = $message_type;
+    }
+  }
+
+  // Gather purgeable messages of overriding types.
+  foreach ($override_types as $message_type) {
+    // Ignore message type with unchecked "Purge messages". Also make sure that
+    // purging settings are present.
+    if (empty($message_type->data['purge']) || empty($message_type->data['purge']['enabled'])) {
+      continue;
+    }
+
+    $purge_messages += message_get_purgeable_by_type($purge_limit, $message_type->name, $message_type->data['purge']);
+  }
+
+  // Gather purgeable messages of non-overriding types according to global
+  // settings.
+  if (!empty($no_override_type_names)) {
+    // Do nothing if purge isn't enabled.
+    if (variable_get('message_purge_enable', FALSE)) {
+      $purge_settings = array(
+        'quota' => variable_get('message_purge_quota', NULL),
+        'days' => variable_get('message_purge_days', NULL),
+      );
+
+      $purge_messages += message_get_purgeable_by_type($purge_limit, $no_override_type_names, $purge_settings);
+    }
+  }
+
+  // Delete all gathered messages.
+  if (!empty($purge_messages)) {
+    message_delete_multiple(array_keys($purge_messages));
   }
 }
 
