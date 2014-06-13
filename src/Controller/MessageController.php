@@ -92,6 +92,16 @@ class MessageController extends ControllerBase {
   }
 
   /**
+   * Delete multiple message.
+   *
+   * @param $ids
+   *  The messages IDs.
+   */
+  public static function MessageDeleteMultiple($ids) {
+    \Drupal::entityManager()->getStorage('message')->delete($ids);
+  }
+
+  /**
    * Delete after finishing with the message arguemnts.
    */
   public static function timeArguments($timestamp) {

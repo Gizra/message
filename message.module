@@ -5,6 +5,7 @@
  * API functions to manipulate messages.
  */
 use Drupal\field\Entity\FieldConfig;
+use Drupal\message\Controller\MessageController;
 
 /**
  * Define the name of the message realm field.
@@ -70,13 +71,14 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
     // Only delete messages due to referenced entity or referenced taxonomy term
     // deletion.
     if ($field->getType() == 'entityreference') {
+      $settings = $field->getSettings();
       // Check if the field references entities of the given type.
-      if (!$field->getSetting('target_type') || $type != $field->getSetting('target_type')) {
+      if (!$settings['target_type'] || $type != $settings['target_type']) {
         continue;
       }
       // Check if the field references specific bundles. If so, check if the
       // field references the deleted entity's bundle.
-      if ($field['settings']['handler_settings']['target_bundles'] && !in_array($bundle, $field['settings']['handler_settings']['target_bundles'])) {
+      if ($settings['handler_settings']['target_bundles'] && !in_array($entity->bundle(), $settings['handler_settings']['target_bundles'])) {
         continue;
       }
       // The reference column;
@@ -88,136 +90,65 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
     else {
       continue;
     }
-  }
-}
 
-/**
- * Implements hook_entity_delete().
- *
- * Handles messages deletion when referenced entities are being deleted.
- *
- * @deprecated
- *  We might need to remove this.
- */
-function _message_entity_delete($entity, $entity_type) {
-  return;
-  if ($entity_type == 'message') {
-    return;
-  }
-
-  $entity_types = variable_get('message_delete_on_entity_delete',  array('node', 'user', 'taxonomy_term', 'comment'));
-  if (!$entity_types || !in_array($entity_type, $entity_types)) {
-    return;
-  }
-
-  list($id, , $bundle) = entity_extract_ids($entity_type, $entity);
-
-  // List of messages to delete.
-  $deletable_mids = array();
-  // List of messages that might be deleted;
-  // Messages with references to fields with mutiple cardinality will be
-  // stored in $check_mids in order to check if the entity being deleted
-  // is the last one referenced by a given field.
-  // Keyd by message ID, pointing to array of the relevant field names.
-  $check_mids = array();
-
-  // Search for fields in which messages referenced the deleted entity.
-  foreach (field_info_fields() as $field) {
-    if (empty($field['bundles']['message'])) {
-      // This field isn't used in any message.
-      continue;
-    }
-
-    // Only delete messages due to referenced entity or referenced taxonomy term
-    // deletion.
-    if ($field['type'] == 'entityreference') {
-      // Check if the field references entities of the given type.
-      if ($entity_type != $field['settings']['target_type']) {
-        continue;
-      }
-      // Check if the field references specific bundles. If so, check if the
-      // field references the deleted entity's bundle.
-      if ($field['settings']['handler_settings']['target_bundles'] && !in_array($bundle, $field['settings']['handler_settings']['target_bundles'])) {
-        continue;
-      }
-      // The reference column;
-      $column = 'target_id';
-    }
-    elseif ($field['type'] == 'taxonomy_term_reference') {
-      if ($entity_type != 'taxonomy_term') {
-        continue;
-      }
-      $column = 'tid';
-    }
-    else {
-      continue;
-    }
-
-    // Fetch messages with fields referencing the deleted entity.
-    $query = new EntityFieldQuery();
-    $result = $query->entityCondition('entity_type', 'message')
-      ->fieldCondition($field['field_name'], $column, $id)
+    $query = \Drupal::entityQuery('message');
+    $results = $query
+      ->condition($field->getName() . '.' . $column)
       ->execute();
 
-    // Continue to next field if no such messages exist.
-    if (empty($result['message'])) {
+    if (empty($results)) {
       continue;
     }
 
-    // If the field has single cardinallity it's safe to delete the
-    // messages.
-    if ($field['cardinality'] == 1) {
-      $deletable_mids += array_keys($result['message']);
+    if ($field->getCardinality() == 1) {
+      $deletable_mids += reset($results);
     }
-    // Otherwise, store the messages IDs in $check_mids for further
-    // inspection.
     else {
-      foreach ($result['message'] as $mid => $message) {
-        // Each message ID is stored with the field it was found by, in
-        // order to handle multiple fields.
-        if (empty($check_mids[$mid])) {
-          $check_mids[$mid] = array();
+      $messages = MessageController::MessageLoadMultiple($results);
+
+      foreach ($messages as $message) {
+        if (empty($check_mids[$message->id()])) {
+          $check_mids[$message->id()] = array();
         }
-        $check_mids[$mid][] = $field['field_name'];
+        $check_mids[$message->id()][] = $field->getName();
       }
     }
   }
 
-  // Check messages with multiple cardinallity refrences; Only delete such
+  // Check messages with multiple cardinality references; Only delete such
   // messages if the entity being deleted is the last one referenced by the
   // message.
   if ($check_mids) {
-    $messages = message_load_multiple(array_keys($check_mids));
+    $messages = MessageController::MessageLoadMultiple(array_keys($check_mids));
     foreach ($messages as $message) {
-      foreach ($check_mids[$message->mid] as $field_name) {
-        $field = field_info_field($field_name);
-        $wrapper = entity_metadata_wrapper('message', $message);
-        $count = $field['cardinality'] == 1 ? 1 : $wrapper->{$field_name}->count();
+      foreach ($check_mids[$message->id()] as $field_name) {
+        /** @var FieldConfig $field */
+        $field = entity_load('field_config', $field_name);
+        $count = $field->getCardinality() == 1 ? 1 : $message->get($field->getName())->count();
 
         // The amount of entities actually referenced with this field.
         // Would have been nicer to use $count to determine the amount of
         // referenced entities, but it isn't necessary updated. So we have to
         // check each entity.
-        $refrences_count = 0;
+        $references_count = 0;
         for ($i = 0; $i < $count; $i++) {
-          if ($wrapper->$field_name->get($i)->value()) {
-            $refrences_count++;
+          if ($message->get($field_name)->get($i)->getValue()) {
+            $references_count++;
           }
         }
 
         // Check if the message references exactly one entity with this field.
-        if ($refrences_count == 1) {
-          $deletable_mids[] = $message->mid;
+        if ($references_count == 1) {
+          $deletable_mids[] = $message->id();
         }
       }
     }
   }
 
   if ($deletable_mids) {
-    message_delete_multiple($deletable_mids);
+    MessageController::MessageDeleteMultiple($deletable_mids);
   }
 }
-
 
 /**
  * Drupal 7 part. We can, and should, take parts from here during the porting to
