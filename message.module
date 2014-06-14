@@ -37,7 +37,8 @@ function message_config_translation_info_alter(&$info) {
  *   The entity object for the entity that has been deleted.
  */
 function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
-  if (($type = $entity->getEntityType()) != 'message') {
+  $type = $entity->getEntityType()->id();
+  if ($type == 'message') {
     // Why not message?
     return;
   }
@@ -63,7 +64,7 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
 
   // Search for fields in which messages referenced the deleted entity.
   foreach ($fields as $field) {
-    if (!in_array($field->getBundles(), 'message')) {
+    if (!in_array($field->getBundles(), array_keys(entity_load_multiple('message_type')))) {
       // This field isn't used in any message.
       continue;
     }

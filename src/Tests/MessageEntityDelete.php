@@ -6,8 +6,11 @@
  */
 
 namespace Drupal\message\Tests;
+
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
+use Drupal\message\Controller\MessageController;
+use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Vocabulary;
 
@@ -46,7 +49,7 @@ class MessageEntityDelete extends MessageTestBase {
     parent::setUp();
 
     // Set config.
-    $this->configSet('message_delete_on_entity_delete', array('node', 'taxonomy_term', 'user'));
+    $this->configSet('delete_on_entity_delete', array('node', 'taxonomy_term', 'user'));
 
     // Set config.
     $this->createMessageType('dummy_text', 'Dummy text', 'This is a dummy message text', array('Dummy text message type.'));
@@ -157,21 +160,18 @@ class MessageEntityDelete extends MessageTestBase {
    * Test deletion of a message after its referenced entities have been deleted.
    */
   function testReferencedEntitiesDelete() {
-    $this->pass('foo');
+    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message->set('field_nodes_ref', array(1, 2));
+    $message->save();
 
+    Node::load(2)->delete();
+
+    $this->assertTrue(MessageController::MessageLoad($message->id()), 'Message exists after deleting one of two referenced nodes.');
+
+    Node::load(1)->delete();
+
+//    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting all referenced nodes.');
     return;
-    // Test entities reference.
-    $message = message_create('mt1', array());
-    $wrapper = entity_metadata_wrapper('message', $message);
-    $wrapper->field_nodes_ref->set(array(1, 2));
-    $wrapper->save();
-    node_delete(2);
-    $message = message_load($message->mid);
-    $this->assertTrue($message, 'Message exists after deleting one of two referenced nodes.');
-    node_delete(1);
-    $message = message_load($message->mid);
-    $this->assertTrue(empty($message), 'Message deleted after deleting all referenced nodes.');
-
     // Test terms reference.
     $message = message_create('mt1', array());
     $wrapper = entity_metadata_wrapper('message', $message);
