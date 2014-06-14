@@ -8,20 +8,31 @@
 namespace Drupal\message\Tests;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
+use Drupal\node\Entity\NodeType;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Test the Message delete on entity delete functionality.
  */
 class MessageEntityDelete extends MessageTestBase {
 
-  protected $fieldName1;
+  /**
+   * @var Vocabulary
+   */
+  protected $vocabulary;
+
+
+  /**
+   * @var NodeType
+   */
+  protected $contentType;
 
   /**
    * Modules to enable.
    *
    * @var array
    */
-  public static $modules = array('taxonomy', 'entity_reference', 'message');
+  public static $modules = array('message', 'entity_reference', 'node', 'taxonomy', 'user');
 
   public static function getInfo() {
     return array(
@@ -34,132 +45,61 @@ class MessageEntityDelete extends MessageTestBase {
   function setUp() {
     parent::setUp();
 
-    $this->createMessageType('dummy_text', 'Dummy text', 'This is a dummy message text', array('Dummy text message type.'));
+    // Set config.
     $this->configSet('message_delete_on_entity_delete', array('node', 'taxonomy_term', 'user'));
 
-    $this->createTermReferenceField();
-    $this->createEntityReferenceField();
+    // Set config.
+    $this->createMessageType('dummy_text', 'Dummy text', 'This is a dummy message text', array('Dummy text message type.'));
 
-    return;
-
-    // Create a multiple-terms-reference field.
-    $field = array(
-      'translatable' => FALSE,
-      'entity_types' => array('message'),
-      'settings' => array(
-        'allowed_values' => array(
-          array(
-            'vocabulary' => 'terms',
-            'parent' => 0,
-          ),
-        ),
-      ),
-      'field_name' => 'field_terms_ref',
-      'type' => 'taxonomy_term_reference',
-      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
-    );
-    $field = field_create_field($field);
-    $instance = array(
-      'field_name' => 'field_terms_ref',
-      'bundle' => 'mt1',
-      'entity_type' => 'message',
-    );
-    field_create_instance($instance);
-
-    // Create an entity reference field.
-    $field = array(
-      'translatable' => FALSE,
-      'entity_types' => array('message'),
-      'settings' => array(
-        'handler' => 'base',
-        'target_type' => 'node',
-        'handler_settings' => array(
-          'target_bundles' => array(),
-        ),
-      ),
-      'field_name' => 'field_node_ref',
-      'type' => 'entityreference',
-    );
-    $field = field_create_field($field);
-    $instance = array(
-      'field_name' => 'field_node_ref',
-      'bundle' => 'mt1',
-      'entity_type' => 'message',
-    );
-    field_create_instance($instance);
-
-    // Create an user entity reference field.
-    $field = array(
-      'translatable' => FALSE,
-      'entity_types' => array('message'),
-      'settings' => array(
-        'handler' => 'base',
-        'target_type' => 'user',
-        'handler_settings' => array(
-          'target_bundles' => array(),
-        ),
-      ),
-      'field_name' => 'field_user_ref',
-      'type' => 'entityreference',
-    );
-    $field = field_create_field($field);
-    $instance = array(
-      'field_name' => 'field_user_ref',
-      'bundle' => 'mt1',
-      'entity_type' => 'message',
-    );
-    field_create_instance($instance);
-
-    // Create a terms vocobulary.
-    $vocabulary = new stdClass();
-    $vocabulary->name = 'Terms';
-    $vocabulary->machine_name = 'terms';
-    taxonomy_vocabulary_save($vocabulary);
-
-    $message_type = message_type_create('mt1', array());
-    $message_type->save();
-
-    // Create nodes and terms.
-    for ($i = 1; $i <= 5; $i++) {
-      $node = new stdClass();
-      $node->type = 'article';
-      node_object_prepare($node);
-      $node->title = "node $i";
-      $node->language = LANGUAGE_NONE;
-      node_save($node);
-
-      $term = new stdClass();
-      $term->name = "term $i";
-      $term->vid = 1;
-      taxonomy_term_save($term);
-    }
-  }
-
-  /**
-   * Creating a single term reference field.
-   */
-  private function createTermReferenceField() {
     // Create a vocabulary.
-    $vocabulary = entity_create('taxonomy_vocabulary', array(
+    $this->vocabulary = entity_create('taxonomy_vocabulary', array(
       'name' => $this->randomName(),
       'description' => $this->randomName(),
       'vid' => drupal_strtolower($this->randomName()),
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
     ));
-    $vocabulary->save();
+    $this->vocabulary->save();
 
+    $this->createTermReferenceField(TRUE, 'field_term_references');
+    $this->createEntityReferenceField(TRUE, 'field_nodes_ref');
+
+    $this->createTermReferenceField(FALSE, 'field_term_reference');
+    $this->createEntityReferenceField(FALSE, 'field_node_ref');
+
+    $this->contentType = $this->drupalCreateContentType();
+
+    for ($i = 0; $i <= 5; $i++) {
+      entity_create('node', array(
+        'type' => $this->contentType->id(),
+        'title' => 'Node ' . $i,
+      ))->save();
+      entity_create('taxonomy_term', array(
+        'vid' => $this->vocabulary->id(),
+        'name' => 'term ' . $i,
+      ))->save();
+    }
+  }
+
+  /**
+   * Create a term reference field.
+   *
+   * @param boolean $multiple
+   *  Determine of the field should be multiple.
+   * @param string $name
+   *  The name of the field.
+   */
+  private function createTermReferenceField($multiple, $name) {
     // Create a term reference field.
-    $this->fieldName1 = drupal_strtolower($this->randomName());
     entity_create('field_config', array(
-      'name' => 'field_term_reference',
+      'name' => $name,
       'entity_type' => 'message',
       'type' => 'taxonomy_term_reference',
-      'cardinality' => 1,
+      'cardinality' => $multiple ? FieldDefinitionInterface::CARDINALITY_UNLIMITED : 1,
       'settings' => array(
         'allowed_values' => array(
           array(
-            'vocabulary' => $vocabulary->id(),
+            'vocabulary' => $this->vocabulary->id(),
             'parent' => 0,
           ),
         ),
@@ -167,7 +107,7 @@ class MessageEntityDelete extends MessageTestBase {
     ))->save();
 
     entity_create('field_instance_config', array(
-      'field_name' => 'field_term_reference',
+      'field_name' => $name,
       'bundle' => 'dummy_text',
       'entity_type' => 'message',
     ))->save();
@@ -175,10 +115,15 @@ class MessageEntityDelete extends MessageTestBase {
 
   /**
    * Create a multiple entity reference field.
+   *
+   * @param boolean $multiple
+   *  Determine of the field should be multiple.
+   * @param string $name
+   *  The name of the field.
    */
-  private function createEntityReferenceField() {
+  private function createEntityReferenceField($multiple, $name) {
     entity_create('field_config', array(
-      'name' => 'field_nodes_ref',
+      'name' => $name,
       'entity_type' => 'message',
       'translatable' => FALSE,
       'entity_types' => array(),
@@ -186,12 +131,12 @@ class MessageEntityDelete extends MessageTestBase {
         'target_type' => 'node',
       ),
       'type' => 'entity_reference',
-      'cardinality' => FieldDefinitionInterface::CARDINALITY_UNLIMITED,
+      'cardinality' => $multiple ? FieldDefinitionInterface::CARDINALITY_UNLIMITED : 1,
     ))->save();
 
     entity_create('field_instance_config', array(
       'label' => 'Entity reference field',
-      'field_name' => 'field_nodes_ref',
+      'field_name' => $name,
       'entity_type' => 'message',
       'bundle' => 'dummy_text',
       'settings' => array(
