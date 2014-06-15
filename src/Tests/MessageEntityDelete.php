@@ -170,7 +170,7 @@ class MessageEntityDelete extends MessageTestBase {
 
     Node::load(1)->delete();
 
-//    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting all referenced nodes.');
+    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting all referenced nodes.');
     return;
     // Test terms reference.
     $message = message_create('mt1', array());

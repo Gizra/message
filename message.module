@@ -64,14 +64,14 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
 
   // Search for fields in which messages referenced the deleted entity.
   foreach ($fields as $field) {
-    if (!in_array($field->getBundles(), array_keys(entity_load_multiple('message_type')))) {
+    if ($field->get('entity_type') != 'message') {
       // This field isn't used in any message.
       continue;
     }
 
     // Only delete messages due to referenced entity or referenced taxonomy term
     // deletion.
-    if ($field->getType() == 'entityreference') {
+    if ($field->getType() == 'entity_reference') {
       $settings = $field->getSettings();
       // Check if the field references entities of the given type.
       if (!$settings['target_type'] || $type != $settings['target_type']) {
@@ -92,9 +92,10 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
       continue;
     }
 
+    // todo: check why not the entity field query not working.
     $query = \Drupal::entityQuery('message');
     $results = $query
-      ->condition($field->getName() . '.' . $column)
+      ->condition($field->getName() . '.' . $column, $entity->id())
       ->execute();
 
     if (empty($results)) {
@@ -147,7 +148,8 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
   }
 
   if ($deletable_mids) {
-    MessageController::MessageDeleteMultiple($deletable_mids);
+    $messages = MessageController::MessageLoadMultiple($deletable_mids);
+    MessageController::MessageDeleteMultiple($messages);
   }
 }
 
