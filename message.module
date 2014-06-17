@@ -71,31 +71,13 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
 
     // Only delete messages due to referenced entity or referenced taxonomy term
     // deletion.
-    if ($field->getType() == 'entity_reference') {
-      $settings = $field->getSettings();
-      // Check if the field references entities of the given type.
-      if (!$settings['target_type'] || $type != $settings['target_type']) {
-        continue;
-      }
-      // Check if the field references specific bundles. If so, check if the
-      // field references the deleted entity's bundle.
-      if ($settings['handler_settings']['target_bundles'] && !in_array($entity->bundle(), $settings['handler_settings']['target_bundles'])) {
-        continue;
-      }
-      // The reference column;
-      $column = 'target_id';
-    }
-    elseif ($field->getType() == 'taxonomy_term_reference' && $type == 'taxonomy_term') {
-      $column = 'tid';
-    }
-    else {
+    if (!in_array($field->getType(), array('entity_reference', 'taxonomy_term_reference'))) {
       continue;
     }
 
-    // todo: check why not the entity field query not working.
     $query = \Drupal::entityQuery('message');
     $results = $query
-      ->condition($field->getName() . '.' . $column, $entity->id())
+      ->condition($field->getName(), $entity->id())
       ->execute();
 
     if (empty($results)) {
@@ -124,20 +106,18 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
     $messages = MessageController::MessageLoadMultiple(array_keys($check_mids));
     foreach ($messages as $message) {
       foreach ($check_mids[$message->id()] as $field_name) {
-        /** @var FieldConfig $field */
-        $field = entity_load('field_config', $field_name);
-        $count = $field->getCardinality() == 1 ? 1 : $message->get($field->getName())->count();
-
         // The amount of entities actually referenced with this field.
         // Would have been nicer to use $count to determine the amount of
         // referenced entities, but it isn't necessary updated. So we have to
         // check each entity.
         $references_count = 0;
-        for ($i = 0; $i < $count; $i++) {
-          if ($message->get($field_name)->get($i)->getValue()) {
-            $references_count++;
-          }
-        }
+//        for ($i = 0; $i < $count; $i++) {
+//          if ($message->get($field_name)->get($i)->getValue()) {
+//            $references_count++;
+//          }
+//        }
+
+        $references_count = count($message->get($field_name)->getValue());
 
         // Check if the message references exactly one entity with this field.
         if ($references_count == 1) {
