@@ -94,7 +94,7 @@ class MessageEntityDelete extends MessageTestBase {
    */
   private function createTermReferenceField($multiple, $name) {
     // Create a term reference field.
-    entity_create('field_config', array(
+    $field = entity_create('field_config', array(
       'name' => $name,
       'entity_type' => 'message',
       'type' => 'taxonomy_term_reference',
@@ -107,10 +107,11 @@ class MessageEntityDelete extends MessageTestBase {
           ),
         ),
       ),
-    ))->save();
+    ));
+    $field->save();
 
     entity_create('field_instance_config', array(
-      'field_name' => $name,
+      'field' => $field,
       'bundle' => 'dummy_text',
       'entity_type' => 'message',
     ))->save();
