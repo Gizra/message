@@ -1,24 +1,18 @@
 # Schema for the configuration files of the message module.
 
 message.type.*:
-  type: mapping
+  type: config_entity
   label: 'Message type category'
   mapping:
     id:
       type: string
       label: 'Machine-readable name'
-    uuid:
-      type: string
-      label: 'UUID'
     label:
       type: label
       label: 'Label'
     description:
       type: text
       label: 'Description'
-    langcode:
-      type: string
-      label: 'Default language'
     text:
       type: sequence
       label: 'Default value'
