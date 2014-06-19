@@ -159,6 +159,12 @@ class MessageEntityDelete extends MessageTestBase {
 
   /**
    * Test deletion of a message after its referenced entities have been deleted.
+   *
+   * todo: This is failing due to FieldInstanceConfig::calculateDependencies()
+   * in line 351. For some reason the code
+   * $bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle);
+   * return null and then there is a PHP error in $bundle_entity->getConfigDependencyName()
+   * because $bundle_entity is NULL.
    */
   function testReferencedEntitiesDelete() {
     $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
