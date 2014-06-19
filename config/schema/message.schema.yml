@@ -4,7 +4,7 @@ message.type.*:
   type: config_entity
   label: 'Message type category'
   mapping:
-    id:
+    type:
       type: string
       label: 'Machine-readable name'
     label:
