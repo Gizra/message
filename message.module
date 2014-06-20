@@ -85,7 +85,8 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
     }
 
     if ($field->getCardinality() == 1) {
-      $deletable_mids += reset($results);
+      // todo: Bring this back when fixing.
+//      $deletable_mids += reset($results);
     }
     else {
       $messages = MessageController::MessageLoadMultiple($results);
