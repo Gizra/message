@@ -12,6 +12,7 @@ use Drupal\Core\Language\Language;
 use Drupal\message\Controller\MessageController;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
+use Drupal\taxonomy\Entity\Term;
 use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
@@ -65,10 +66,12 @@ class MessageEntityDelete extends MessageTestBase {
     $this->vocabulary->save();
 
     $this->createTermReferenceField(TRUE, 'field_term_references');
-    $this->createEntityReferenceField(TRUE, 'field_nodes_ref');
+    $this->createEntityReferenceField(TRUE, 'field_node_references');
 
     $this->createTermReferenceField(FALSE, 'field_term_reference');
-    $this->createEntityReferenceField(FALSE, 'field_node_ref');
+    $this->createEntityReferenceField(FALSE, 'field_node_reference');
+
+    $this->createEntityReferenceField(FALSE, 'field_user_reference', 'user');
 
     $this->contentType = $this->drupalCreateContentType();
 
@@ -124,33 +127,35 @@ class MessageEntityDelete extends MessageTestBase {
    *  Determine of the field should be multiple.
    * @param string $name
    *  The name of the field.
+   * @param string $target_type
+   *  The target type. Default to node.
    */
-  private function createEntityReferenceField($multiple, $name) {
-    entity_create('field_config', array(
+  private function createEntityReferenceField($multiple, $name, $target_type = 'node') {
+    $field = entity_create('field_config', array(
       'name' => $name,
       'entity_type' => 'message',
       'translatable' => FALSE,
       'entity_types' => array(),
       'settings' => array(
-        'target_type' => 'node',
+        'target_type' => $target_type,
       ),
       'type' => 'entity_reference',
       'cardinality' => $multiple ? FieldDefinitionInterface::CARDINALITY_UNLIMITED : 1,
-    ))->save();
+    ));
+
+    $field->save();
 
     entity_create('field_instance_config', array(
       'label' => 'Entity reference field',
-      'field_name' => $name,
+      'field' => $field,
       'entity_type' => 'message',
       'bundle' => 'dummy_text',
       'settings' => array(
         'handler' => 'default',
         'handler_settings' => array(
-          // Reference a single vocabulary.
           'target_bundles' => array(
-            'node',
+            $target_type,
           ),
-          // Enable auto-create.
           'auto_create' => TRUE,
         ),
       ),
@@ -159,63 +164,65 @@ class MessageEntityDelete extends MessageTestBase {
 
   /**
    * Test deletion of a message after its referenced entities have been deleted.
-   *
-   * todo: This is failing due to FieldInstanceConfig::calculateDependencies()
-   * in line 351. For some reason the code
-   * $bundle_entity = \Drupal::entityManager()->getStorage($bundle_entity_type_id)->load($this->bundle);
-   * return null and then there is a PHP error in $bundle_entity->getConfigDependencyName()
-   * because $bundle_entity is NULL.
    */
   function testReferencedEntitiesDelete() {
+    // Testing nodes reference.
     $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
-    $message->set('field_nodes_ref', array(1, 2));
+    $message->set('field_node_references', array(1, 2));
     $message->save();
 
-    Node::load(2)->delete();
-
-    $this->assertTrue(MessageController::MessageLoad($message->id()), 'Message exists after deleting one of two referenced nodes.');
-
     Node::load(1)->delete();
-
+    $this->assertTrue(MessageController::MessageLoad($message->id()), 'Message exists after deleting one of two referenced nodes.');
+    Node::load(2)->delete();
     $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting all referenced nodes.');
-    return;
+
     // Test terms reference.
-    $message = message_create('mt1', array());
-    $wrapper = entity_metadata_wrapper('message', $message);
-    $wrapper->field_terms_ref->set(array(1, 2));
-    $wrapper->save();
-    taxonomy_term_delete(2);
-    $message = message_load($message->mid);
-    $this->assertTrue($message, 'Message exists after deleting one of two referenced terms.');
-    taxonomy_term_delete(1);
-    $message = message_load($message->mid);
-    $this->assertTrue(empty($message), 'Message deleted after deleting all referenced terms.');
+    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message->set('field_term_references', array(1, 2));
+    $message->save();
 
-    $message = message_create('mt1', array());
-    $wrapper = entity_metadata_wrapper('message', $message);
-    $wrapper->field_terms_ref->set(array(3));
-    $wrapper->save();
-    taxonomy_term_delete(3);
-    $message = message_load($message->mid);
-    $this->assertTrue(empty($message), 'Message deleted after deleting single referenced term.');
+    Term::load(1)->delete();
+    $this->assertTrue(MessageController::MessageLoad($message->id()), 'Message exists after deleting one of two referenced terms.');
+    Term::load(2)->delete();
+    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting all referenced terms.');
 
-    $message = message_create('mt1', array());
-    $wrapper = entity_metadata_wrapper('message', $message);
-    $wrapper->field_terms_ref->set(array(4, 5));
-    $wrapper->field_term_ref->set(4);
-    $wrapper->save();
-    taxonomy_term_delete(4);
-    $message = message_load($message->mid);
+    return;
+
+    // Test term references.
+    $term = Term::load(3);
+    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message->set('field_term_reference', $term);
+    $message->save();
+
+    $term->delete();
+    $this->assertTrue(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced term.');
+
+    // Test node reference.
+    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message->set('field_node_reference', 3);
+    $message->save();
+
+    Node::load(3)->delete();
+    $this->assertTrue(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced node.');
+
+    // Testing when a message referenced to terms and term.
+    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message->set('field_term_references', array(4, 5));
+    $message->set('field_term_reference', 4);
+    $message->save();
+    Term::load(4)->delete();
+
+    $message = MessageController::MessageLoad($message->id());
     $this->assertTrue(empty($message), 'Message deleted after deleting single referenced term while another the message still references other term in another field.');
 
     // Test user reference.
     $account = $this->drupalCreateUser();
-    $message = message_create('mt1', array());
-    $wrapper = entity_metadata_wrapper('message', $message);
-    $wrapper->field_user_ref->set($account->uid);
-    $wrapper->save();
-    user_delete($account->uid);
-    $message = message_load($message->mid);
+    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message->set('field_user_reference', $account->id());
+    $message->save();
+
+    $account->delete();
+    $message = MessageController::MessageLoad($message->id());
     $this->assertTrue(empty($message), 'Message deleted after deleting single referenced user.');
   }
 }
