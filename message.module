@@ -85,8 +85,7 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
     }
 
     if ($field->getCardinality() == 1) {
-      // todo: Bring this back when fixing.
-//      $deletable_mids += reset($results);
+      $deletable_mids += array_keys($results);
     }
     else {
       $messages = MessageController::MessageLoadMultiple($results);
@@ -106,8 +105,6 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
       foreach ($check_mids[$message->id()] as $field_name) {
 
         // We need to check if the field is references is empty.
-        // todo: Check if the method referencedEntities exists for term
-        // reference field.
         if (count($message->get($field_name)->referencedEntities()) === 0) {
           $deletable_mids[] = $message->id();
         }

@@ -186,8 +186,6 @@ class MessageEntityDelete extends MessageTestBase {
     Term::load(2)->delete();
     $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting all referenced terms.');
 
-    return;
-
     // Test term references.
     $term = Term::load(3);
     $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
@@ -195,7 +193,7 @@ class MessageEntityDelete extends MessageTestBase {
     $message->save();
 
     $term->delete();
-    $this->assertTrue(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced term.');
+    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced term.');
 
     // Test node reference.
     $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
@@ -203,7 +201,7 @@ class MessageEntityDelete extends MessageTestBase {
     $message->save();
 
     Node::load(3)->delete();
-    $this->assertTrue(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced node.');
+    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced node.');
 
     // Testing when a message referenced to terms and term.
     $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
@@ -212,8 +210,7 @@ class MessageEntityDelete extends MessageTestBase {
     $message->save();
     Term::load(4)->delete();
 
-    $message = MessageController::MessageLoad($message->id());
-    $this->assertTrue(empty($message), 'Message deleted after deleting single referenced term while another the message still references other term in another field.');
+    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced term while another the message still references other term in another field.');
 
     // Test user reference.
     $account = $this->drupalCreateUser();
