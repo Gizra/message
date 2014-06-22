@@ -219,7 +219,6 @@ class MessageEntityDelete extends MessageTestBase {
     $message->save();
 
     $account->delete();
-    $message = MessageController::MessageLoad($message->id());
-    $this->assertTrue(empty($message), 'Message deleted after deleting single referenced user.');
+    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced user.');
   }
 }
