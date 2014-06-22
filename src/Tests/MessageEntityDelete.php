@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Tests;
 
+use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\message\Controller\MessageController;
@@ -101,7 +102,7 @@ class MessageEntityDelete extends MessageTestBase {
       'name' => $name,
       'entity_type' => 'message',
       'type' => 'taxonomy_term_reference',
-      'cardinality' => $multiple ? FieldDefinitionInterface::CARDINALITY_UNLIMITED : 1,
+      'cardinality' => $multiple ? FieldDefinition::CARDINALITY_UNLIMITED : 1,
       'settings' => array(
         'allowed_values' => array(
           array(
@@ -140,7 +141,7 @@ class MessageEntityDelete extends MessageTestBase {
         'target_type' => $target_type,
       ),
       'type' => 'entity_reference',
-      'cardinality' => $multiple ? FieldDefinitionInterface::CARDINALITY_UNLIMITED : 1,
+      'cardinality' => $multiple ? FieldDefinition::CARDINALITY_UNLIMITED : 1,
     ));
 
     $field->save();
