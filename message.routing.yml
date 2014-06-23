@@ -1,4 +1,3 @@
-#todo: Fix all permissions.
 message.overview_types:
   path: '/admin/structure/message'
   defaults:

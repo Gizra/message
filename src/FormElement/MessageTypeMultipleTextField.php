@@ -7,9 +7,12 @@
  */
 namespace Drupal\message\FormElement;
 
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\message\Entity\MessageType;
 
+/**
+ * todo: Add save method that will save the text partials correctly.
+ */
 class MessageTypeMultipleTextField {
 
   /**
@@ -43,6 +46,8 @@ class MessageTypeMultipleTextField {
    *  A message type.
    * @param $callback
    *  The name of the ajax callback.
+   * @param string $langcode
+   *  The language of the message. Used for the message translation form.
    */
   public function __construct(MessageType $entity, $callback, $langcode = '') {
     $this->entity = $entity;
@@ -52,8 +57,6 @@ class MessageTypeMultipleTextField {
 
   /**
    * Return the message text element.
-   *
-   * todo: add token selector.
    */
   public function textField(&$form, &$form_state) {
     // Creating the container.
@@ -61,7 +64,7 @@ class MessageTypeMultipleTextField {
       '#type' => 'container',
       '#tree' => TRUE,
       '#theme' => 'field_multiple_value_form',
-      '#caridnality' => FieldInstanceConfig::CARDINALITY_UNLIMITED,
+      '#caridnality' => FieldConfig::CARDINALITY_UNLIMITED,
       '#cardinality_multiple' => TRUE,
       '#field_name' => 'message_text',
       '#title' => t('Message text'),
@@ -106,6 +109,8 @@ class MessageTypeMultipleTextField {
 
   /**
    * Return a single text area element.
+   *
+   * todo: handle weights.
    */
   private function singleElement($delta, $text = '') {
     $element = array(
