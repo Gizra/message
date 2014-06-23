@@ -25,7 +25,6 @@ class MessageEntityDelete extends MessageTestBase {
    */
   protected $vocabulary;
 
-
   /**
    * @var NodeType
    */
@@ -38,6 +37,9 @@ class MessageEntityDelete extends MessageTestBase {
    */
   public static $modules = array('message', 'entity_reference', 'node', 'taxonomy', 'user');
 
+  /**
+   * {@inheritdoc}
+   */
   public static function getInfo() {
     return array(
       'name' => 'Message references',
@@ -46,6 +48,9 @@ class MessageEntityDelete extends MessageTestBase {
     );
   }
 
+  /**
+   * {@inheritdoc}
+   */
   function setUp() {
     parent::setUp();
 
@@ -53,7 +58,7 @@ class MessageEntityDelete extends MessageTestBase {
     $this->configSet('delete_on_entity_delete', array('node', 'taxonomy_term', 'user'));
 
     // Set config.
-    $this->createMessageType('dummy_text', 'Dummy text', 'This is a dummy message text', array('Dummy text message type.'));
+    $this->createMessageType('dummy_message', 'Dummy message', 'This is a dummy message text', array('Dummy message type.'));
 
     // Create a vocabulary.
     $this->vocabulary = entity_create('taxonomy_vocabulary', array(
@@ -80,6 +85,7 @@ class MessageEntityDelete extends MessageTestBase {
         'type' => $this->contentType->id(),
         'title' => 'Node ' . $i,
       ))->save();
+
       entity_create('taxonomy_term', array(
         'vid' => $this->vocabulary->id(),
         'name' => 'term ' . $i,
@@ -115,7 +121,7 @@ class MessageEntityDelete extends MessageTestBase {
 
     entity_create('field_instance_config', array(
       'field' => $field,
-      'bundle' => 'dummy_text',
+      'bundle' => 'dummy_message',
       'entity_type' => 'message',
     ))->save();
   }
@@ -149,7 +155,7 @@ class MessageEntityDelete extends MessageTestBase {
       'label' => 'Entity reference field',
       'field' => $field,
       'entity_type' => 'message',
-      'bundle' => 'dummy_text',
+      'bundle' => 'dummy_message',
       'settings' => array(
         'handler' => 'default',
         'handler_settings' => array(
@@ -167,7 +173,7 @@ class MessageEntityDelete extends MessageTestBase {
    */
   function testReferencedEntitiesDelete() {
     // Testing nodes reference.
-    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
     $message->set('field_node_references', array(1, 2));
     $message->save();
 
@@ -177,7 +183,7 @@ class MessageEntityDelete extends MessageTestBase {
     $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting all referenced nodes.');
 
     // Test terms reference.
-    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
     $message->set('field_term_references', array(1, 2));
     $message->save();
 
@@ -188,7 +194,7 @@ class MessageEntityDelete extends MessageTestBase {
 
     // Test term references.
     $term = Term::load(3);
-    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
     $message->set('field_term_reference', $term);
     $message->save();
 
@@ -196,7 +202,7 @@ class MessageEntityDelete extends MessageTestBase {
     $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced term.');
 
     // Test node reference.
-    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
     $message->set('field_node_reference', 3);
     $message->save();
 
@@ -204,7 +210,7 @@ class MessageEntityDelete extends MessageTestBase {
     $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced node.');
 
     // Testing when a message referenced to terms and term.
-    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
     $message->set('field_term_references', array(4, 5));
     $message->set('field_term_reference', 4);
     $message->save();
@@ -214,7 +220,7 @@ class MessageEntityDelete extends MessageTestBase {
 
     // Test user reference.
     $account = $this->drupalCreateUser();
-    $message = MessageController::MessageCreate(array('type' => 'dummy_text'));
+    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
     $message->set('field_user_reference', $account->id());
     $message->save();
 

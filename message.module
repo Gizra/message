@@ -4,6 +4,7 @@
  * @file
  * API functions to manipulate messages.
  */
+
 use Drupal\field\Entity\FieldConfig;
 use Drupal\message\Controller\MessageController;
 
@@ -120,6 +121,28 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
+ * Implements hook_permission().
+ *
+ * @deprecated
+ *  We might need to remove this.
+ */
+function message_permission() {
+  $permissions = array();
+
+  $permissions['administer message types'] = array(
+    'title' => t('Administer message types'),
+    'description' => t('Administer message types that can be used to log an event.'),
+  );
+
+  $permissions['overview messages'] = array(
+    'title' => t('Overview messages'),
+    'description' => t('Grant permission to view the messages in the site.'),
+  );
+
+  return $permissions;
+}
+
+/**
  * Drupal 7 part. We can, and should, take parts from here during the porting to
  * Drupal 8.
  */
@@ -182,25 +205,6 @@ function template_preprocess_message(&$variables) {
   if ($id = entity_id('message', $message)) {
     $variables['theme_hook_suggestions'][] = 'message__' . $id;
   }
-}
-
-/**
- * Implements hook_permission().
- *
- * @deprecated
- *  We might need to remove this.
- */
-function message_permission() {
-  $permissions = array();
-  $permissions['administer message types'] = array(
-    'title' => t('Administer message types'),
-    'description' => t('Administer message types that can be used to log an event.'),
-  );
-  $permissions['create messages'] = array(
-    'title' => t('Create messages'),
-    'description' => t('Log new messages.'),
-  );
-  return $permissions;
 }
 
 /**
