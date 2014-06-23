@@ -2,13 +2,12 @@
 
 /**
  * @file
- * Definition of Drupal\message\Tests\MessageTestBase.
+ * Definition of Drupal\message\Tests\MessageEntityDelete.
  */
 
 namespace Drupal\message\Tests;
 
 use Drupal\Core\Field\FieldDefinition;
-use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Language\Language;
 use Drupal\message\Controller\MessageController;
 use Drupal\node\Entity\Node;
