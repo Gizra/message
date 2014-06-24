@@ -44,8 +44,23 @@ class MessageUiTest extends MessageTestBase {
 
   public function testMessageTranslate() {
     $this->drupalLogin($this->account);
-return;
-    $edit = array('action' => 'node_make_sticky_action');
+
+    $edit = array(
+      'label' => 'Dummy message',
+      'type' => 'dummy_message',
+      'description' => 'This is a dummy text',
+      'text[0]' => 'This is a dummy message with some dummy text',
+    );
     $this->drupalPostForm('admin/structure/message/type/add', $edit, t('Save message type'));
+
+    $this->assertText('The message type Dummy message created successfully.', 'The message created successfully');
+
+    $this->drupalGet('admin/structure/message/manage/dummy_message');
+return;
+    $element = $this->xpath('//input[.="Dummy message"]');
+    $this->assertTrue($element, 'The name of the message exists on the page.');
+
+    $element = $this->xpath('//input[.="This is a dummy text"]');
+    $this->assertTrue($element, 'The description of the message exists on the page.');
   }
 }
