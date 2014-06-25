@@ -29,9 +29,6 @@ abstract class MessageTestBase extends WebTestBase {
    */
   protected $accessController;
 
-  /**
-   * {@inheritdoc}
-   */
   function setUp() {
     parent::setUp();
   }
