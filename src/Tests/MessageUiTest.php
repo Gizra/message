@@ -50,7 +50,7 @@ class MessageUiTest extends MessageTestBase {
       'label' => 'Dummy message',
       'type' => 'dummy_message',
       'description' => 'This is a dummy text',
-      'text[0]' => 'This is a dummy message with some dummy text',
+      'text[0][value]' => 'This is a dummy message with some dummy text',
     );
     $this->drupalPostForm('admin/structure/message/type/add', $edit, t('Save message type'));
 
@@ -65,9 +65,41 @@ class MessageUiTest extends MessageTestBase {
     // Check that the description element appear on the page with the right
     // value.
     $element = $this->xpath('//input[@value="This is a dummy text"]');
-    $this->assertTrue($element, 'The name of the message exists on the page.');
+    $this->assertTrue($element, 'The description of the message exists on the page.');
+
+    // Verifying the text of the message exists.
+    $element = $this->xpath('//textarea[.="This is a dummy message with some dummy text"]');
+    $this->assertTrue($element, 'The body of the message exists in the page.');
 
     // Verifying editing message.
-    // todo.
+    $edit = array(
+      'label' => 'Edited dummy message',
+      'description' => 'This is a dummy text after editing',
+      'text[0][value]' => 'This is a dummy message with some edited dummy text',
+    );
+    $this->drupalPostForm('admin/structure/message/manage/dummy_message', $edit, t('Save message type'));
+
+    $this->drupalGet('admin/structure/message/manage/dummy_message');
+
+    // Check that the label exists on the page with the right value.
+    $element = $this->xpath('//input[@value="Edited dummy message"]');
+    $this->assertTrue($element, 'The label input text exists on the page with the right text.');
+
+    // Check that the description element appear on the page with the right
+    // value.
+    $element = $this->xpath('//input[@value="This is a dummy text after editing"]');
+    $this->assertTrue($element, 'The description of the message exists on the page.');
+
+    // Verifying the text of the message exists.
+    $element = $this->xpath('//textarea[.="This is a dummy message with some edited dummy text"]');
+    $this->assertTrue($element, 'The body of the message exists in the page.');
+
+    // todo: Add languages.
+
+    // todo: Translate message.
+
+    // todo: Verify fields value after translation.
+
+    // todo: verify value of message after translation via code.
   }
 }
