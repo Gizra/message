@@ -4,3 +4,6 @@ description: "A general message logging utility."
 core: 8.x
 package: Message
 
+dependencies:
+  - ckeditor
+
