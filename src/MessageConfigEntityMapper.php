@@ -47,7 +47,7 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
    * {@inheritdoc}
    */
   public function getEditRoute() {
-    return new Route(
+    $route = new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/edit',
       array(
         '_form' => '\Drupal\message\Form\MessageTypeConfigTranslationEditForm',
@@ -55,13 +55,16 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
       ),
       array('_config_translation_form_access' => 'TRUE')
     );
+
+    $this->processRoute($route);
+    return $route;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getAddRoute() {
-    return new Route(
+    $route = new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/add',
       array(
         '_form' => '\Drupal\message\Form\MessageTypeConfigTranslationAddForm',
@@ -69,6 +72,9 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
       ),
       array('_config_translation_form_access' => 'TRUE')
     );
+
+    $this->processRoute($route);
+    return $route;
   }
 
 
@@ -76,7 +82,7 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
    * {@inheritdoc}
    */
   public function getDeleteRoute() {
-    return new Route(
+    $route = new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/delete',
       array(
         '_form' => '\Drupal\message\Form\MessageTypeConfigTranslationDeleteForm',
@@ -84,6 +90,9 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
       ),
       array('_config_translation_form_access' => 'TRUE')
     );
+
+    $this->processRoute($route);
+    return $route;
   }
 
 }

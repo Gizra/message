@@ -14,11 +14,8 @@ message.type.*:
       type: text
       label: 'Description'
     text:
-      type: sequence
-      label: 'Default value'
-      sequence:
-        - type: string
-          label: 'Message text'
+      type: string
+      label: 'Message Text'
     data:
       type: string
       label: 'Data'

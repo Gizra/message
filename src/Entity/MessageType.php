@@ -91,6 +91,15 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   }
 
   /**
+   * Overrides Entity::__construct().
+   */
+  public function ___construct(array $values, $entity_type) {
+    parent::__construct($values, $entity_type);
+    $this->text = unserialize($this->text);
+    $this->data = unserialize($this->data);
+  }
+
+  /**
    * Array with the arguments and their replacement value, or callacbks.
    *
    * The argument keys will be replaced when rendering the message, and it
@@ -222,6 +231,8 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
       $this->text = array($this->text);
     }
 
+    $this->text = serialize($this->text);
+    $this->data = serialize($this->data);
     parent::save();
   }
 

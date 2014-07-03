@@ -171,6 +171,12 @@ class MessageTypeForm extends EntityForm {
 
     // Updating the message text.
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+
+    foreach ($this->entity->text as $key => $value) {
+      if (is_int($key)) {
+        unset($this->entity->text[$key]);
+      }
+    }
     $this->entity->text[$langcode] = $message_text;
 
     // todo: When the parent method will do something remove as much code as we

@@ -50,6 +50,7 @@ class MessageTypeMultipleTextField {
    *  The language of the message. Used for the message translation form.
    */
   public function __construct(MessageType $entity, $callback, $langcode = '') {
+    $entity->text = unserialize($entity->text);
     $this->entity = $entity;
     $this->callback = $callback;
     $this->langcode = $langcode ? $langcode : \Drupal::languageManager()->getCurrentLanguage()->getId();
