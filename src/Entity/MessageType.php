@@ -72,7 +72,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *
    * @var String
    */
-  public $text = array();
+  public $text;
 
   /**
    * Holds additional data on the entity.
