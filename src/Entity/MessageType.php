@@ -95,8 +95,6 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    */
   public function ___construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
-    $this->text = unserialize($this->text);
-    $this->data = unserialize($this->data);
   }
 
   /**
@@ -192,15 +190,16 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *   A string with the text from the field.
    */
   public function getText($langcode = NULL, $options = array()) {
-    if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
+    $this->text = !is_array($this->text) ? unserialize($this->text) : $this->text;
+    if (!$langcode && \Drupal::moduleHandler()->moduleExists('config_translation')) {
       // The config translation module turned on. Get the proper language.
-      $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
+      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     }
 
     if (!$langcode || !isset($this->text[$langcode])) {
       // We are facing two problems: a language was not supplied or there is no
       // translation for that language. Get the default language.
-      $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+      $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     }
 
     // Combine all the field text and return the text.

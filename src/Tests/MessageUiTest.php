@@ -6,11 +6,13 @@
  */
 
 namespace Drupal\message\Tests;
+
 use Drupal\Core\Language\Language;
+use Drupal\message\Controller\MessageController;
 use Drupal\user\Entity\User;
 
 /**
- * Testing the CRUD functionallity for the Message type entity.
+ * Testing the CRUD functionality for the Message type entity.
  */
 class MessageUiTest extends MessageTestBase {
 
@@ -54,23 +56,15 @@ class MessageUiTest extends MessageTestBase {
       'text[0][value]' => 'This is a dummy message with some dummy text',
     );
     $this->drupalPostForm('admin/structure/message/type/add', $edit, t('Save message type'));
-
     $this->assertText('The message type Dummy message created successfully.', 'The message created successfully');
-
     $this->drupalGet('admin/structure/message/manage/dummy_message');
 
-    // Check that the label exists on the page with the right value.
-    $element = $this->xpath('//input[@value="Dummy message"]');
-    $this->assertTrue($element, 'The label input text exists on the page with the right text.');
-
-    // Check that the description element appear on the page with the right
-    // value.
-    $element = $this->xpath('//input[@value="This is a dummy text"]');
-    $this->assertTrue($element, 'The description of the message exists on the page.');
-
-    // Verifying the text of the message exists.
-    $element = $this->xpath('//textarea[.="This is a dummy message with some dummy text"]');
-    $this->assertTrue($element, 'The body of the message exists in the page.');
+    $elements = array(
+      '//input[@value="Dummy message"]' => 'The label input text exists on the page with the right text.',
+      '//input[@value="This is a dummy text"]' => 'The description of the message exists on the page.',
+      '//textarea[.="This is a dummy message with some dummy text"]' => 'The body of the message exists in the page.',
+    );
+    $this->verifyFormElements($elements);
 
     // Verifying editing message.
     $edit = array(
@@ -82,32 +76,70 @@ class MessageUiTest extends MessageTestBase {
 
     $this->drupalGet('admin/structure/message/manage/dummy_message');
 
-    // Check that the label exists on the page with the right value.
-    $element = $this->xpath('//input[@value="Edited dummy message"]');
-    $this->assertTrue($element, 'The label input text exists on the page with the right text.');
-
-    // Check that the description element appear on the page with the right
-    // value.
-    $element = $this->xpath('//input[@value="This is a dummy text after editing"]');
-    $this->assertTrue($element, 'The description of the message exists on the page.');
-
-    // Verifying the text of the message exists.
-    $element = $this->xpath('//textarea[.="This is a dummy message with some edited dummy text"]');
-    $this->assertTrue($element, 'The body of the message exists in the page.');
+    $elements = array(
+      '//input[@value="Edited dummy message"]' => 'The label input text exists on the page with the right text.',
+      '//input[@value="This is a dummy text after editing"]' => 'The description of the message exists on the page.',
+      '//textarea[.="This is a dummy message with some edited dummy text"]' => 'The body of the message exists in the page.',
+    );
+    $this->verifyFormElements($elements);
 
     // Add language.
     $language = new Language(array(
       'id' => 'he',
       'name' => 'Hebrew',
-      'default' => TRUE,
     ));
     language_save($language);
 
-    // todo: Change to post form and add text different then the original.
+    // Change to post form and add text different then the original.
+    $edit = array(
+      'config_names[message.type.dummy_message][label][translation]' => 'Translated dummy message to Hebrew',
+      'config_names[message.type.dummy_message][description][translation]' => 'This is a dummy text after translation to Hebrew',
+      'config_names[message.type.dummy_message][text][translation][text][0][value]' => 'This is a dummy message with translated text to Hebrew',
+    );
+    $this->drupalPostForm('admin/structure/message/manage/dummy_message/translate/he/add', $edit, t('Save translation'));
+
+    // Go to the edit form and verify text.
     $this->drupalGet('admin/structure/message/manage/dummy_message/translate/he/edit');
 
-    // todo: Go to the edit form and translation form and verify text.
+    $elements = array(
+      '//input[@value="Translated dummy message to Hebrew"]' => 'The text in the form translation is the expected string in Hebrew.',
+      '//textarea[.="This is a dummy text after translation to Hebrew"]' => 'The description element have the expected value in Hebrew.',
+      '//textarea[.="This is a dummy message with translated text to Hebrew"]' => 'The text element have the expected value in Hebrew.',
+    );
+    $this->verifyFormElements($elements);
 
-    // todo: Load the message via code in hebrew and english and verify the text.
+    // Load the message via code in hebrew and english and verify the text.
+    $message = MessageController::MessageTypeLoad('dummy_message');
+    $this->assertTrue($message->getText('he') == 'This is a dummy message with translated text to Hebrew', 'The text in hebrew pulled correctly.');
+    $this->assertTrue($message->getText('en') == 'This is a dummy message with some edited dummy text', 'The text in hebrew pulled correctly.');
+
+    // todo: Delete message via the UI.
+  }
+
+  /**
+   * Verifying the form elements values in easy way.
+   * @param Array $elements
+   *  Array mapped by in the next format:
+   *    XPATH_EXPRESSION => MESSAGE
+   *
+   * When all the elements are passing a pass message with the text "The
+   * expected values is in the form." When one of the Xpath expression return
+   * false the message will be display on screen.
+   */
+  private function verifyFormElements($elements) {
+    $errors = array();
+    foreach ($elements as $xpath => $message) {
+      $element = $this->xpath($xpath);
+      if (!$element) {
+        $errors[] = $message;
+      }
+    }
+
+    if (empty($errors)) {
+      $this->pass('All elements were found.');
+    }
+    else {
+      $this->fail('The next errors were found: ' . implode("", $errors));
+    }
   }
 }
