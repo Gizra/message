@@ -111,7 +111,7 @@ class MessageUiTest extends MessageTestBase {
     // Load the message via code in hebrew and english and verify the text.
     $message = MessageController::MessageTypeLoad('dummy_message');
     $this->assertTrue($message->getText('he') == 'This is a dummy message with translated text to Hebrew', 'The text in hebrew pulled correctly.');
-    $this->assertTrue($message->getText('en') == 'This is a dummy message with some edited dummy text', 'The text in hebrew pulled correctly.');
+    $this->assertTrue($message->getText('en') == 'This is a dummy message with some edited dummy text', 'The text in english pulled correctly.');
 
     // todo: Delete message via the UI.
   }
