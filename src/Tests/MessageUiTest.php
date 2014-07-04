@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\message\Tests;
+use Drupal\Core\Language\Language;
 use Drupal\user\Entity\User;
 
 /**
@@ -94,12 +95,19 @@ class MessageUiTest extends MessageTestBase {
     $element = $this->xpath('//textarea[.="This is a dummy message with some edited dummy text"]');
     $this->assertTrue($element, 'The body of the message exists in the page.');
 
-    // todo: Add languages.
+    // Add language.
+    $language = new Language(array(
+      'id' => 'he',
+      'name' => 'Hebrew',
+      'default' => TRUE,
+    ));
+    language_save($language);
 
-    // todo: Translate message.
+    // todo: Change to post form and add text different then the original.
+    $this->drupalGet('admin/structure/message/manage/dummy_message/translate/he/edit');
 
-    // todo: Verify fields value after translation.
+    // todo: Go to the edit form and translation form and verify text.
 
-    // todo: verify value of message after translation via code.
+    // todo: Load the message via code in hebrew and english and verify the text.
   }
 }
