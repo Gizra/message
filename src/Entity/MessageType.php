@@ -190,7 +190,6 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *   A string with the text from the field.
    */
   public function getText($langcode = NULL, $options = array()) {
-    $this->text = !is_array($this->text) ? unserialize($this->text) : $this->text;
     if (!$langcode && \Drupal::moduleHandler()->moduleExists('config_translation')) {
       // The config translation module turned on. Get the proper language.
       $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
@@ -230,8 +229,10 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
       $this->text = array($this->text);
     }
 
-    $this->text = serialize($this->text);
-    $this->data = serialize($this->data);
+    if (!empty($this->data) && !is_array($this->data)) {
+      $this->data = array($this->data);
+    }
+
     parent::save();
   }
 

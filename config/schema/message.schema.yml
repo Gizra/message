@@ -14,8 +14,8 @@ message.type.*:
       type: text
       label: 'Description'
     text:
-      type: string
+      type: mapping
       label: 'Message Text'
     data:
-      type: string
+      type: mapping
       label: 'Data'
