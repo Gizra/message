@@ -28,7 +28,7 @@ class MessageUiTest extends MessageTestBase {
     return array(
       'name' => 'Message UI test',
       'description' => 'Testing the UI for translating messages including the config translation.',
-      'group' => 'Message',
+      'group' => 'Message now',
     );
   }
 
