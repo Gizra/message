@@ -113,7 +113,10 @@ class MessageUiTest extends MessageTestBase {
     $this->assertTrue($message->getText('he') == 'This is a dummy message with translated text to Hebrew', 'The text in hebrew pulled correctly.');
     $this->assertTrue($message->getText('en') == 'This is a dummy message with some edited dummy text', 'The text in english pulled correctly.');
 
-    // todo: Delete message via the UI.
+    // Delete message via the UI.
+    $this->drupalPostForm('admin/structure/message/delete/dummy_message', array(), 'Delete');
+    $this->assertText(t('There is no Message type yet.'));
+    $this->assertFalse(MessageController::MessageTypeLoad('dummy_message'), 'The message deleted via the UI successfully.');
   }
 
   /**
