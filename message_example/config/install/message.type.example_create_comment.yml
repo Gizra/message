@@ -1,21 +1,9 @@
-type: example_create_comment
 uuid: e7d49a42-8348-4379-bb08-8b7309c6f794
+langcode: en
+status: true
+dependencies: {  }
+type: example_create_comment
 label: 'Example - Create comment'
 description: 'A user created comment.'
-text:
-  - "<p><a href=\"@user-url\">@user-name</a>&nbsp;<a href=\"@comment-url\">commented</a> on&nbsp;@node-title</p>\r\n"
-  - "<p>!node-render</p>\r\n"
-data:
-  'token options':
-    clear: 0
-  purge:
-    override: 0
-    enabled: 0
-    quota: ''
-    days: ''
-arguments: {  }
-category: null
-settings: {  }
-status: true
-langcode: en
-dependencies: {  }
+text: "a:1:{s:2:\"en\";a:2:{i:0;s:105:\"<p><a href='@user-url'>@user-name</a>&nbsp;<a href='@comment-url'>commented</a> on&nbsp;@node-title</p>\r\n\";i:1;s:21:\"<p>!node-render</p>\r\n\";}}"
+data: 'a:2:{s:13:"token options";a:1:{s:5:"clear";i:0;}s:5:"purge";a:4:{s:8:"override";i:0;s:7:"enabled";i:0;s:5:"quota";s:0:"";s:4:"days";s:0:"";}}'

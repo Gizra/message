@@ -1,20 +1,10 @@
-type: example_user_register
 uuid: 840a4210-9eb2-43fc-951c-2865faf37a9f
+langcode: en
+status: true
+dependencies: {  }
+type: example_user_register
 label: 'Example - User register'
 description: 'Working upon creation of a user.'
-text:
-  - "<p><a href=\"[message:user:url]\">@{message:user:name}</a> registered.</p>\r\n"
-data:
-  'token options':
-    clear: 0
-  purge:
-    override: 0
-    enabled: 0
-    quota: ''
-    days: ''
-arguments: {  }
-category: null
-settings: {  }
-status: true
-langcode: en
-dependencies: {  }
+text: "a:1:{i:0;s:74:\"<p><a href='[message:user:url]'>@{message:user:name}</a> registered.</p></p>\r\n\";}"
+data: 'a:2:{s:13:"token options";a:1:{s:5:"clear";i:0;}s:5:"purge";a:4:{s:8:"override";i:0;s:7:"enabled";i:0;s:5:"quota";s:0:"";s:4:"days";s:0:"";}}'
+

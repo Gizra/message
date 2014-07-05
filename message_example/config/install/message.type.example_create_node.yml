@@ -1,21 +1,9 @@
-type: example_create_node
 uuid: 6ebdb821-a3a5-4ee3-9407-7a985d3882a8
+langcode: en
+status: true
+dependencies: {  }
+type: example_create_node
 label: 'Example - Create node'
 description: 'Working upon creating of a node.'
-text:
-  - "<p><a href='@user-url'>@user-name</a> created <a href='@node-url'>@node-title</a></p>\r\n"
-  - "<p>!node-teaser</p>\r\n"
-data:
-  'token options':
-    clear: 0
-  purge:
-    override: 0
-    enabled: 0
-    quota: ''
-    days: ''
-arguments: {  }
-category: null
-settings: {  }
-status: true
-langcode: en
-dependencies: {  }
+text: "a:1:{s:2:\"en\";a:2:{i:0;s:87:\"<p><a href='@user-url'>@user-name</a> created <a href='@node-url'>@node-title</a></p>\r\n\";i:1;s:21:\"<p>!node-teaser</p>\r\n\";}}"
+data: 'a:2:{s:13:"token options";a:1:{s:5:"clear";i:0;}s:5:"purge";a:4:{s:8:"override";i:0;s:7:"enabled";i:0;s:5:"quota";s:0:"";s:4:"days";s:0:"";}}'
