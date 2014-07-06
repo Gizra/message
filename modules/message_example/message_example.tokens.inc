@@ -64,7 +64,7 @@ function message_example_token_info() {
 /**
  * Implements hook_tokens().
  */
-function comment_tokens($type, $tokens, array $data = array(), array $options = array()) {
+function message_example_tokens($type, $tokens, array $data = array(), array $options = array()) {
   $token_service = \Drupal::token();
 
   $url_options = array('absolute' => TRUE);
