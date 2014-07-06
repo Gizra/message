@@ -24,6 +24,8 @@ class MessageController extends ControllerBase {
    *
    * @return MessageType
    *  A message type object ready to be save.
+   *
+   * todo: Move to MessageType::create().
    */
   public static function MessageTypeCreate($type) {
     return entity_create('message_type', array('type' => $type));
@@ -36,6 +38,8 @@ class MessageController extends ControllerBase {
    *  The message type.
    *
    * @return MessageType
+   *
+   * todo: Move to MessageType::load().
    */
   public static function MessageTypeLoad($type) {
     return entity_load('message_type', $type);
@@ -49,6 +53,8 @@ class MessageController extends ControllerBase {
    *
    * @return MessageType[]
    *  Array of message types.
+   *
+   *    * todo: Move to MessageType::loadMultiple().
    */
   public static function MessageTypeLoadMultiple(array $types) {
     return entity_load_multiple('message_type', $types);
@@ -62,6 +68,8 @@ class MessageController extends ControllerBase {
    *
    * @return Message
    *  A message type object ready to be save.
+   *
+   * todo: Move to Message::create().
    */
   public static function MessageCreate($values) {
     return entity_create('message', $values);
@@ -74,6 +82,8 @@ class MessageController extends ControllerBase {
    *  The message ID.
    *
    * @return Message
+   *
+   * todo: Move to Message::load().
    */
   public static function MessageLoad($id) {
     return entity_load('message', $id);
@@ -86,6 +96,8 @@ class MessageController extends ControllerBase {
    *  The message ID.
    *
    * @return Message[]
+   *
+   * todo: Move to Message::loadMultiple().
    */
   public static function MessageLoadMultiple(array $ids) {
     return entity_load_multiple('message', $ids);
@@ -96,6 +108,8 @@ class MessageController extends ControllerBase {
    *
    * @param $ids
    *  The messages IDs.
+   *
+   * todo: Move to Message::deleteMultiple().
    */
   public static function MessageDeleteMultiple($ids) {
     \Drupal::entityManager()->getStorage('message')->delete($ids);
