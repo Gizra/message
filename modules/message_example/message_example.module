@@ -1,6 +1,7 @@
 <?php
 /**
- * @file message_example.module.
+ * @file
+ * Holds hook implementation for the Message example module.
  */
 
 use Drupal\Core\Entity\ContentEntityBase;
@@ -8,12 +9,6 @@ use Drupal\message\Controller\MessageController;
 use Drupal\node\Entity\Node;
 use Drupal\comment\Entity\Comment;
 use Drupal\user\Entity\User;
-/**
- * @file
- * Message example module.
- *
- * @todo: replace all the placeholders to tokens.
- */
 
 /**
  * Implements hook_node_insert().
@@ -69,7 +64,7 @@ function message_example_comment_update(Comment $comment) {
  * related entity.
  *
  * @param ContentEntityBase $entity
- *   The entity object.
+ *  The entity object.
  */
 function message_example_update_message_status(ContentEntityBase $entity) {
   if ($entity->isPublished() == $entity->original->isPublished()) {
