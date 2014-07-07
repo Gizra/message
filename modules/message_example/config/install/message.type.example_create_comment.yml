@@ -7,8 +7,8 @@ label: 'Example - Create comment'
 description: 'A user created comment.'
 text:
   en:
-    - "<p><a href='[user-url]'>[user-name]</a>&nbsp;<a href='[comment-url]'>commented</a> on&nbsp;[node-title]</p>\r\n"
-    - "<p>!node-render</p>\r\n"
+    - "<p><a href='[message:user-url]'>[message:user-name]</a>&nbsp;<a href='[message:comment-url]'>commented</a> on&nbsp;[message:node-title]</p>\r\n"
+    - "<p>[message:node-render]</p>\r\n"
 data:
   'token options':
     clear: 0

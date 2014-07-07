@@ -79,16 +79,27 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
 
   $replacements = array();
 
-  if ($type == 'comment' && !empty($data['comment'])) {
-    /** @var \Drupal\message\Entity\Message $comment */
+  if ($type == 'message' && !empty($data['message'])) {
+    /** @var \Drupal\message\Entity\Message $message */
     $message = $data['message'];
 
     foreach ($tokens as $name => $original) {
       switch ($name) {
         // Simple key values on the comment.
-        case 'cid':
-          $replacements[$original] = $comment->id();
+        case 'user-name':
+          $replacements[$original] = $message->getAuthor()->label();
           break;
+        case 'user-url':
+          $replacements[$original] = url('user/' . $message->getAuthor()->id());
+          break;
+        case 'node-title':
+          $replacements[$original] = $message->field_node_reference->get(0)->entity->label();
+          break;
+        case 'node-url':
+          $replacements[$original] = url('node/' . $message->field_node_reference->get(0)->entity->id());
+          break;
+        case 'node-teaser':
+          $replacements[$original] = render(entity_view($message->field_node_reference->get(0)->entity, 'teaser'));
       }
     }
   }

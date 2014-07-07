@@ -7,8 +7,8 @@ label: 'Example - Create node'
 description: 'Working upon creating of a node.'
 text:
   en:
-    - "<p><a href='[user-url]'>[user-name]</a> created <a href='[node-url]'>[node-title]</a></p>\r\n"
-    - "<p>[node-teaser]</p>\r\n"
+    - "<p><a href='[message:user-url]'>[message:user-name]</a> created <a href='[message:node-url]'>[message:node-title]</a></p>\r\n"
+    - "<p>[message:node-teaser]</p>\r\n"
 data:
   'token options':
     clear: 0
