@@ -93,17 +93,27 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           $replacements[$original] = url('user/' . $message->getAuthor()->id());
           break;
         case 'node-title':
-            if ($message->bundle() != 'example_create_comment') {
+            if ($message->bundle() == 'example_create_comment') {
+              $replacements[$original] = $message->field_comment_reference->entity->getCommentedEntity()->label();
+            }
+            else {
               $replacements[$original] = $message->field_node_reference->get(0)->entity->label();
             }
           break;
         case 'node-url':
-          if ($message->bundle() != 'example_create_comment') {
+          if ($message->bundle() == 'example_create_comment') {
+            $replacements[$original] = url('node/' . $message->field_comment_reference->entity->getCommentedEntity()->id());
+          }
+          else {
             $replacements[$original] = url('node/' . $message->field_node_reference->get(0)->entity->id());
           }
           break;
         case 'node-teaser':
-          if ($message->bundle() != 'example_create_comment') {
+          // todo switch to node-render.
+          if ($message->bundle() == 'example_create_comment') {
+            $replacements[$original] = render(entity_view($message->field_comment_reference->entity->getCommentedEntity(), 'teaser'));
+          }
+          else {
             $replacements[$original] = render(entity_view($message->field_node_reference->get(0)->entity, 'teaser'));
           }
           break;
