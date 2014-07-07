@@ -107,6 +107,9 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
             $replacements[$original] = render(entity_view($message->field_node_reference->get(0)->entity, 'teaser'));
           }
           break;
+        case 'comment-url':
+          $replacements[$original] = url('comment/' . $message->field_comment_reference->entity->id());
+          break;
       }
     }
   }
