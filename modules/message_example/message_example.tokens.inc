@@ -93,13 +93,20 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           $replacements[$original] = url('user/' . $message->getAuthor()->id());
           break;
         case 'node-title':
-          $replacements[$original] = $message->field_node_reference->get(0)->entity->label();
+            if ($message->bundle() != 'example_create_comment') {
+              $replacements[$original] = $message->field_node_reference->get(0)->entity->label();
+            }
           break;
         case 'node-url':
-          $replacements[$original] = url('node/' . $message->field_node_reference->get(0)->entity->id());
+          if ($message->bundle() != 'example_create_comment') {
+            $replacements[$original] = url('node/' . $message->field_node_reference->get(0)->entity->id());
+          }
           break;
         case 'node-teaser':
-          $replacements[$original] = render(entity_view($message->field_node_reference->get(0)->entity, 'teaser'));
+          if ($message->bundle() != 'example_create_comment') {
+            $replacements[$original] = render(entity_view($message->field_node_reference->get(0)->entity, 'teaser'));
+          }
+          break;
       }
     }
   }
