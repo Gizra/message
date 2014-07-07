@@ -266,6 +266,31 @@ class Message extends ContentEntityBase {
    */
   public function save() {
     // todo: When the user object is not supplied set to the current user.
+    $token_options = !empty($this->data['token options']) ? $this->data['token options'] : array();
+
+    $tokens = array();
+
+    // Handle hard coded arguments.
+    foreach ($this->getType()->text as $texts) {
+
+      foreach ($texts as $text) {
+
+        preg_match_all('/[@|%|\!]\{([a-z0-9:_\-]+?)\}/i', $text, $matches);
+
+        foreach ($matches[1] as $delta => $token) {
+          $output = \Drupal::token()->replace('[' . $token .  ']', array('message' => $this), $token_options);
+          if ($output != '[' . $token . ']') {
+            // Token was replaced.
+            $argument = $matches[0][$delta];
+            $tokens[$argument] = $output;
+          }
+        }
+      }
+    }
+
+    // todo: Check why the arguments not saved.
+    $this->setArguments(array_merge($tokens, $this->getArguments()));
+
     parent::save();
   }
 }

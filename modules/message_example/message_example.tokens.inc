@@ -90,7 +90,9 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           $replacements[$original] = $message->getAuthor()->label();
           break;
         case 'user-url':
-          $replacements[$original] = url('user/' . $message->getAuthor()->id());
+          if ($message->getAuthor()) {
+            $replacements[$original] = url('user/' . $message->getAuthor()->id());
+          }
           break;
         case 'node-title':
             if ($message->bundle() == 'example_create_comment') {
