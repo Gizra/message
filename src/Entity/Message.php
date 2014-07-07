@@ -126,7 +126,7 @@ class Message extends ContentEntityBase {
    */
   public function getArguments() {
     // Check why i need to unserialise this twice.
-    return unserialize(unserialize($this->get('arguments')->value));
+    return unserialize(reset($this->get('arguments')->getValue())['value']);
   }
 
   /**
