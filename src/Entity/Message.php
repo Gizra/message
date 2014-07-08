@@ -175,7 +175,8 @@ class Message extends ContentEntityBase {
    *  The arguments of the message.
    */
   public function getArguments() {
-    $value = reset($this->get('arguments')->getValue())['value'];
+    $arguments = $this->get('arguments')->getValue();
+    $value = reset($arguments)['value'];
     return !$value ? array() : unserialize($value);
   }
 
