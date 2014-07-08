@@ -125,8 +125,8 @@ class Message extends ContentEntityBase {
    *  The arguments of the message.
    */
   public function getArguments() {
-    // Check why i need to unserialise this twice.
-    return unserialize(reset($this->get('arguments')->getValue())['value']);
+    $value = reset($this->get('arguments')->getValue())['value'];
+    return !$value ? array() : unserialize($value);
   }
 
   /**
@@ -135,8 +135,13 @@ class Message extends ContentEntityBase {
    * @param Array $values
    *  Array of arguments.
    *  @code
-   *    todo: Add here example on how to set the arguments. With/without
-   *    callbacks.
+   *  $values = array(
+   *    '@name_without_callback' => 'John doe',
+   *    '@name_with_callback' => array(
+   *      'callback' => 'User::load',
+   *      'arguments' => array(1),
+   *    ),
+   *  );
    *  @endcode
    *
    * @return $this
@@ -192,7 +197,7 @@ class Message extends ContentEntityBase {
 
     $fields['arguments'] = FieldDefinition::create('string')
       ->setLabel(t('Arguments'))
-      ->setDescription(t('Holds the arguments of the message.'));
+      ->setDescription(t('Holds the arguments of the message in serialise format.'));
 
     return $fields;
   }
@@ -265,7 +270,7 @@ class Message extends ContentEntityBase {
    * {@inheritdoc}
    */
   public function save() {
-    // todo: When the user object is not supplied set to the current user.
+    // todo: Handle hard coded arguments with html.
     $token_options = !empty($this->data['token options']) ? $this->data['token options'] : array();
 
     $tokens = array();
@@ -288,9 +293,10 @@ class Message extends ContentEntityBase {
       }
     }
 
-    // todo: Check why the arguments not saved.
-    $this->setArguments(array_merge($tokens, $this->getArguments()));
+    $arguments = $this->getArguments();
+    $this->setArguments(array_merge($tokens, $arguments));
 
+    // todo: When the user object is not supplied set to the current user.
     parent::save();
   }
 }
