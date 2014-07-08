@@ -8,6 +8,7 @@
 namespace Drupal\message\Entity;
 
 use Drupal\Component\Utility\String;
+use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
@@ -45,6 +46,55 @@ use Drupal\user\Entity\User;
  * )
  */
 class Message extends ContentEntityBase {
+
+  /**
+   * @var Integer.
+   *
+   * The message ID.
+   */
+  protected $mid;
+
+  /**
+   * @var string.
+   *
+   * The UUD string.
+   */
+  protected $uuid;
+
+  /**
+   * @var MessageType
+   *
+   * The message type object.
+   */
+  protected $type;
+
+  /**
+   * @var Language
+   *
+   * The language object.
+   */
+  protected $langcode;
+
+  /**
+   * @var User
+   *
+   * The user object.
+   */
+  protected $uid;
+
+  /**
+   * @var Integer.
+   *
+   * The time stamp the message was created.
+   */
+  protected $created;
+
+  /**
+   * @var Array
+   *
+   * Holds the arguments of the message instance.
+   */
+  protected $arguments;
 
   /**
    * Implements Drupal\Core\Entity\EntityInterface::id().
