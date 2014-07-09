@@ -114,8 +114,6 @@ function message_views_data() {
  * Implements hook_views_data_alter().
  */
 function message_views_data_alter(&$data) {
-  // todo: Fix later.
-  return;
   $data['message']['message_bulk_form'] = array(
     'title' => t('Message operations bulk form'),
     'help' => t('Add a form element that lets you run operations on multiple messages.'),

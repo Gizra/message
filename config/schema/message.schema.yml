@@ -19,3 +19,7 @@ message.type.*:
     data:
       type: mapping
       label: 'Data'
+
+action.configuration.message_delete_action:
+  type: action_configuration_default
+  label: 'Delete message configuration'

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\Plugin\Action\DeleteNode.
+ * Contains \Drupal\message\Plugin\Action\DeleteMessage.
  */
 
 namespace Drupal\message\Plugin\Action;
@@ -13,15 +13,16 @@ use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Redirects to a node deletion form.
+ * Redirects to a message deletion form.
  *
  * @Action(
  *   id = "message_delete_action",
- *   label = @Translation("Delete selected messages"),
+ *   label = @Translation("Delete selected content"),
  *   type = "message",
+ *   confirm_form_path = "admin/content/message/delete"
  * )
  */
-class MessageDelete extends ActionBase  implements ContainerFactoryPluginInterface {
+class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterface {
 
   /**
    * The tempstore object.
@@ -31,7 +32,7 @@ class MessageDelete extends ActionBase  implements ContainerFactoryPluginInterfa
   protected $tempStore;
 
   /**
-   * Constructs a new DeleteNode object.
+   * Constructs a new DeleteMessage object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -45,7 +46,7 @@ class MessageDelete extends ActionBase  implements ContainerFactoryPluginInterfa
   public function __construct(array $configuration, $plugin_id, $plugin_definition, TempStoreFactory $temp_store_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
 
-    $this->tempStore = $temp_store_factory->get('node_multiple_delete_confirm');
+    $this->tempStore = $temp_store_factory->get('message_multiple_delete_confirm');
   }
 
   /**
