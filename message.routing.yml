@@ -56,3 +56,9 @@ message.settings:
   requirements:
     _permission: 'administer message types'
 
+message.multiple_delete_confirm:
+  path: '/admin/content/message/delete'
+  defaults:
+    _form: '\Drupal\message\Form\DeleteMultiple'
+  requirements:
+    _permission: 'administer message types'
