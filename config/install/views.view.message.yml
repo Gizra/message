@@ -24,7 +24,7 @@ display:
       access:
         type: perm
         options:
-          perm: 'access content'
+          perm: 'overview messages'
         provider: user
         dependencies: {  }
       cache:
