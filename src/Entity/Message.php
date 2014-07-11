@@ -365,7 +365,7 @@ class Message extends ContentEntityBase {
    * @return Message
    */
   public static function load($id) {
-    return parent::create($id);
+    return parent::load($id);
   }
 
   /**
