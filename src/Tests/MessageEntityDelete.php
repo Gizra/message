@@ -9,7 +9,7 @@ namespace Drupal\message\Tests;
 
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
-use Drupal\message\Controller\MessageController;
+use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
@@ -173,58 +173,58 @@ class MessageEntityDelete extends MessageTestBase {
    */
   function testReferencedEntitiesDelete() {
     // Testing nodes reference.
-    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
+    $message = Message::create(array('type' => 'dummy_message'));
     $message->set('field_node_references', array(1, 2));
     $message->save();
 
     Node::load(1)->delete();
-    $this->assertTrue(MessageController::MessageLoad($message->id()), 'Message exists after deleting one of two referenced nodes.');
+    $this->assertTrue(Message::load($message->id()), 'Message exists after deleting one of two referenced nodes.');
     Node::load(2)->delete();
-    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting all referenced nodes.');
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting all referenced nodes.');
 
     // Test terms reference.
-    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
+    $message = Message::create(array('type' => 'dummy_message'));
     $message->set('field_term_references', array(1, 2));
     $message->save();
 
     Term::load(1)->delete();
-    $this->assertTrue(MessageController::MessageLoad($message->id()), 'Message exists after deleting one of two referenced terms.');
+    $this->assertTrue(Message::load($message->id()), 'Message exists after deleting one of two referenced terms.');
     Term::load(2)->delete();
-    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting all referenced terms.');
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting all referenced terms.');
 
     // Test term references.
     $term = Term::load(3);
-    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
+    $message = Message::create(array('type' => 'dummy_message'));
     $message->set('field_term_reference', $term);
     $message->save();
 
     $term->delete();
-    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced term.');
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced term.');
 
     // Test node reference.
-    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
+    $message = Message::create(array('type' => 'dummy_message'));
     $message->set('field_node_reference', 3);
     $message->save();
 
     Node::load(3)->delete();
-    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced node.');
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced node.');
 
     // Testing when a message referenced to terms and term.
-    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
+    $message = Message::create(array('type' => 'dummy_message'));
     $message->set('field_term_references', array(4, 5));
     $message->set('field_term_reference', 4);
     $message->save();
     Term::load(4)->delete();
 
-    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced term while another the message still references other term in another field.');
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced term while another the message still references other term in another field.');
 
     // Test user reference.
     $account = $this->drupalCreateUser();
-    $message = MessageController::MessageCreate(array('type' => 'dummy_message'));
+    $message = Message::create(array('type' => 'dummy_message'));
     $message->set('field_user_reference', $account->id());
     $message->save();
 
     $account->delete();
-    $this->assertFalse(MessageController::MessageLoad($message->id()), 'Message deleted after deleting single referenced user.');
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced user.');
   }
 }

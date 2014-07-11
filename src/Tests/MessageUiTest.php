@@ -8,7 +8,7 @@
 namespace Drupal\message\Tests;
 
 use Drupal\Core\Language\Language;
-use Drupal\message\Controller\MessageController;
+use Drupal\message\Entity\MessageType;
 use Drupal\user\Entity\User;
 
 /**
@@ -109,14 +109,14 @@ class MessageUiTest extends MessageTestBase {
     $this->verifyFormElements($elements);
 
     // Load the message via code in hebrew and english and verify the text.
-    $message = MessageController::MessageTypeLoad('dummy_message');
+    $message = MessageType::load('dummy_message');
     $this->assertTrue($message->getText('he') == 'This is a dummy message with translated text to Hebrew', 'The text in hebrew pulled correctly.');
     $this->assertTrue($message->getText('en') == 'This is a dummy message with some edited dummy text', 'The text in english pulled correctly.');
 
     // Delete message via the UI.
     $this->drupalPostForm('admin/structure/message/delete/dummy_message', array(), 'Delete');
     $this->assertText(t('There is no Message type yet.'));
-    $this->assertFalse(MessageController::MessageTypeLoad('dummy_message'), 'The message deleted via the UI successfully.');
+    $this->assertFalse(MessageType::load('dummy_message'), 'The message deleted via the UI successfully.');
   }
 
   /**

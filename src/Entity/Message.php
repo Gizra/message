@@ -8,12 +8,10 @@
 namespace Drupal\message\Entity;
 
 use Drupal\Component\Utility\String;
-use Drupal\Component\Uuid\Uuid;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
-use Drupal\message\Controller\MessageController;
 use Drupal\user\Entity\User;
 
 /**
@@ -109,7 +107,7 @@ class Message extends ContentEntityBase {
    * @return MessageType
    */
   public function getType() {
-    return MessageController::MessageTypeLoad($this->bundle());
+    return MessageType::load($this->bundle());
   }
 
   /**
@@ -349,5 +347,43 @@ class Message extends ContentEntityBase {
 
     // todo: When the user object is not supplied set to the current user.
     parent::save();
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return Message
+   *  A message type object ready to be save.
+   */
+  public static function create(array $values = array()) {
+    return parent::create($values);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return Message
+   */
+  public static function load($id) {
+    return parent::create($id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return Message[]
+   */
+  public static function loadMultiple(array $ids = NULL) {
+    return parent::loadMultiple($ids);
+  }
+
+  /**
+   * Delete multiple message.
+   *
+   * @param $ids
+   *  The messages IDs.
+   */
+  public static function deleteMultiple($ids) {
+    \Drupal::entityManager()->getStorage('message')->delete($ids);
   }
 }

@@ -281,4 +281,34 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
 
     unset($this->text[$langcode]);
   }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return MessageType
+   *  A message type object ready to be save.
+   */
+  public static function create(array $values = array()) {
+    return parent::create($values);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return MessageType
+   */
+  public static function Load($id) {
+    return parent::load($id);
+  }
+
+  /**
+   * {@inheritdoc}
+   *
+   * @return MessageType[]
+   *  Array of message types.
+   */
+  public static function MessageTypeLoadMultiple(array $ids = NULL) {
+    parent::loadMultiple($ids);
+  }
+
 }

@@ -8,7 +8,7 @@
 namespace Drupal\message\Form;
 
 use Drupal\config_translation\Form\ConfigTranslationFormBase;
-use Drupal\message\Controller\MessageController;
+use Drupal\message\Entity\MessageType;
 use Drupal\message\FormElement\MessageTypeMultipleTextField;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -39,7 +39,7 @@ abstract class MessageTypeConfigTranslationBaseForm extends ConfigTranslationFor
     $configs = $form_state['config_translation_mapper']->getConfigData();
     $config = reset($configs);
 
-    $entity = MessageController::MessageTypeLoad($config['type']);
+    $entity = MessageType::load($config['type']);
     $form_state['#entity'] = $entity;
     $multiple = new MessageTypeMultipleTextField($entity, array(get_class($this), 'addMoreAjax'), $langcode);
     $multiple->textField($translation, $form_state);

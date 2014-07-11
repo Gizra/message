@@ -8,7 +8,7 @@
 namespace Drupal\message\Form;
 
 use Drupal\config_translation\Form\ConfigTranslationDeleteForm;
-use Drupal\message\Controller\MessageController;
+use Drupal\message\Entity\MessageType;
 
 /**
  * Builds a form to delete configuration translation.
@@ -32,7 +32,7 @@ class MessageTypeConfigTranslationDeleteForm extends ConfigTranslationDeleteForm
     $config = reset($configs);
 
     // Get the message object, remove the translation and update the message.
-    $message_type = MessageController::MessageTypeLoad($config['type']);
+    $message_type = MessageType::load($config['type']);
     unset($message_type->text[$this->language->getId()]);
     $message_type->save();
 

@@ -7,7 +7,7 @@
 
 namespace Drupal\message\Tests;
 
-use Drupal\message\Controller\MessageController;
+use Drupal\message\Entity\MessageType;
 use Drupal\simpletest\WebTestBase;
 
 /**
@@ -51,9 +51,11 @@ abstract class MessageTestBase extends WebTestBase {
    *  The message type.
    */
   protected function createMessageType($type, $label, $description, array $text, $langcode = '') {
-    $messageType = MessageController::MessageTypeCreate($type);
-    $messageType->label = $label;
-    $messageType->description = $description;
+    $messageType = MessageType::Create(array(
+      'type' => $type,
+      'label' => $label,
+      'description' => $description,
+    ));
     $messageType->setText($text, $langcode);
     $messageType->save();
 
@@ -69,7 +71,7 @@ abstract class MessageTestBase extends WebTestBase {
    *  The message Object.
    */
   protected function loadMessageType($type) {
-    return MessageController::MessageTypeLoad($type);
+    return MessageType::load($type);
   }
 
   /**
@@ -100,5 +102,4 @@ abstract class MessageTestBase extends WebTestBase {
   protected function configSet($config, $value, $storage = 'message.message') {
     \Drupal::config($storage)->set($config, $value);
   }
-
 }

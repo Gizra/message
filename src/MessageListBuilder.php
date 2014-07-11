@@ -12,7 +12,6 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityListBuilder;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\message\Controller\MessageController;
 use Drupal\message\Entity\Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -84,20 +83,6 @@ class MessageListBuilder extends EntityListBuilder {
         'class' => array(RESPONSIVE_PRIORITY_LOW),
       );
     }
-
-//    // todo: remove after finish with the arguments part.
-//    $foo = MessageController::MessageCreate(array('type' => 'testing'));
-//    $foo->setArguments(array(
-//      '@time' => time(),
-//      '@time_arguments' => array(
-//        'callback' => '\Drupal\message\Controller\MessageController::timeArguments',
-//        'arguments' => array(
-//          'time' => time(),
-//        ),
-//      ),
-//    ));
-//    $foo->setArguments(array('a'));
-//    $foo->save();
 
     return $header;
   }

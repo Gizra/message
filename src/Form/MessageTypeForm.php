@@ -41,7 +41,7 @@ class MessageTypeForm extends EntityForm {
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
       '#disabled' => $type->isLocked(),
       '#machine_name' => array(
-        'exists' => '\Drupal\message\Controller\MessageController::MessageTypeLoad',
+        'exists' => '\Drupal\message\Entity\MessageType::load',
         'source' => array('label'),
       ),
       '#description' => t('A unique machine-readable name for this message type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %message-add page, in which underscores will be converted into hyphens.', array(
