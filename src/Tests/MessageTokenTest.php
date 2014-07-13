@@ -7,10 +7,24 @@
 
 namespace Drupal\message\Tests;
 
+use Drupal\message\Entity\Message;
+use Drupal\message\Entity\MessageType;
+use Drupal\user\Entity\User;
+
 /**
  * Test the Message and tokens integration.
  */
 class MessageTokenTest extends MessageTestBase {
+
+  /**
+   * @var User
+   */
+  private $user;
+
+  /**
+   * @var MessageType
+   */
+  private $messageType;
 
   /**
    * {@inheritdoc}
@@ -28,11 +42,21 @@ class MessageTokenTest extends MessageTestBase {
    */
   function setUp() {
     parent::setUp();
+
+    $this->user = $this->drupalcreateuser();
+    $this->messageType = $this->createMessageType('dummy_message', 'Dummy message', '', array('[message:user:name]'));
   }
 
   /**
    * Test token replacement in a message type.
    */
   function testTokens() {
+
+    $message = Message::create(array('type' => $this->messageType->id()))
+      ->setAuthorId($this->user->id());
+
+    $message->save();
+
+    debug($message->getText());
   }
 }
