@@ -44,7 +44,7 @@ class MessageTokenTest extends MessageTestBase {
     parent::setUp();
 
     $this->user = $this->drupalcreateuser();
-    $this->messageType = $this->createMessageType('dummy_message', 'Dummy message', '', array('[message:user:name]'));
+    $this->messageType = $this->createMessageType('dummy_message', 'Dummy message', '', array('[message:author:name]'));
   }
 
   /**
@@ -57,6 +57,6 @@ class MessageTokenTest extends MessageTestBase {
 
     $message->save();
 
-    debug($message->getText());
+    $this->assertEqual($message->getText(), $this->user->label(), 'The message rendered the author name.');
   }
 }
