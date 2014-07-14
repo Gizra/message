@@ -30,8 +30,11 @@ function message_token_info() {
     'name' => t("message type name"),
     'description' => t("The human-readable name of the message type."),
   );
+  $message['uuid'] = array(
+    'name' => t("Message UID"),
+    'description' => t("The message UUID."),
+  );
 
-  // Chained tokens for messages.
   $message['created'] = array(
     'name' => t("Date created"),
     'type' => 'date',
@@ -64,7 +67,7 @@ function message_tokens($type, $tokens, array $data = array(), array $options = 
     foreach ($tokens as $name => $original) {
       switch ($name) {
         // Simple key values on the message.
-        case 'nid':
+        case 'mid':
           $replacements[$original] = $message->id();
           break;
 
@@ -77,10 +80,18 @@ function message_tokens($type, $tokens, array $data = array(), array $options = 
           $replacements[$original] = $sanitize ? String::checkPlain($type_name) : $type_name;
           break;
 
+        case 'uuid':
+          $replacements[$original] = $message->getUUID();
+          break;
+
         // Default values for the chained tokens handled below.
         case 'author':
           $account = $message->getAuthor() ? $message->getAuthor() : User::load(0);
           $replacements[$original] = $sanitize ? String::checkPlain($account->label()) : $account->label();
+          break;
+
+        case 'created':
+          $replacements[$original] = format_date($message->getCreatedTime(), 'medium', '', NULL);
           break;
       }
     }

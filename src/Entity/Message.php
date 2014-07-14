@@ -167,15 +167,22 @@ class Message extends ContentEntityBase {
   }
 
   /**
+   * Return the UUID.
+   *
+   * @return String.
+   */
+  public function getUUID() {
+    return $this->get('uuid')->value;
+  }
+
+  /**
    * Retrieve the message arguments.
    *
    * @return Array
    *  The arguments of the message.
    */
   public function getArguments() {
-    $arguments = $this->get('arguments')->getValue();
-    $value = reset($arguments)['value'];
-    return !$value ? array() : unserialize($value);
+    return $this->get('arguments')->first()->getValue();
   }
 
   /**
@@ -196,7 +203,7 @@ class Message extends ContentEntityBase {
    * @return $this
    */
   public function setArguments($values) {
-    $this->arguments = serialize($values);
+    $this->set('arguments', $values);
     return $this;
   }
 
@@ -243,8 +250,7 @@ class Message extends ContentEntityBase {
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
-
-    $fields['arguments'] = FieldDefinition::create('string')
+    $fields['arguments'] = FieldDefinition::create('map')
       ->setLabel(t('Arguments'))
       ->setDescription(t('Holds the arguments of the message in serialise format.'));
 

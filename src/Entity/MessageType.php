@@ -202,7 +202,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
     }
 
     // Combine all the field text and return the text.
-    return implode(" ", $this->text[$langcode]);
+    return implode("\n", $this->text[$langcode]);
   }
 
   /**
