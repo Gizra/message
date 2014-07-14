@@ -17,6 +17,8 @@ use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Test the Message delete on entity delete functionality.
+ *
+ * @group Message
  */
 class MessageEntityDelete extends MessageTestBase {
 
@@ -36,17 +38,6 @@ class MessageEntityDelete extends MessageTestBase {
    * @var array
    */
   public static $modules = array('message', 'entity_reference', 'node', 'taxonomy', 'user');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Message references',
-      'description' => 'Test the Message delete on entity delete functionality',
-      'group' => 'Message',
-    );
-  }
 
   /**
    * {@inheritdoc}

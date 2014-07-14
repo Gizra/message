@@ -13,6 +13,8 @@ use Drupal\user\Entity\User;
 
 /**
  * Testing the CRUD functionality for the Message type entity.
+ *
+ * @group Message now
  */
 class MessageUiTest extends MessageTestBase {
 
@@ -20,17 +22,6 @@ class MessageUiTest extends MessageTestBase {
    * {@inheritdoc}
    */
   public static $modules = array('language', 'config_translation', 'message');
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Message UI test',
-      'description' => 'Testing the UI for translating messages including the config translation.',
-      'group' => 'Message now',
-    );
-  }
 
   /**
    * @var User

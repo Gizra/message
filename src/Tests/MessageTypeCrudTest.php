@@ -9,19 +9,10 @@ namespace Drupal\message\Tests;
 
 /**
  * Testing the CRUD functionallity for the Message type entity.
+ *
+ * @group Message
  */
 class MessageTypeCrudTest extends MessageTestBase {
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Message type CRUD',
-      'description' => 'Testing the message type crud functionallity',
-      'group' => 'Message',
-    );
-  }
 
   /**
    * {@inheritdoc}

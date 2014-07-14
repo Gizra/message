@@ -12,6 +12,8 @@ use Drupal\user\Entity\User;
 
 /**
  * Test the Message and tokens integration.
+ *
+ * @group Message
  */
 class MessageTokenTest extends MessageTestBase {
 
@@ -19,17 +21,6 @@ class MessageTokenTest extends MessageTestBase {
    * @var User
    */
   private $user;
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Message tokens',
-      'description' => 'Test the Message and tokens integration.',
-      'group' => 'Message',
-    );
-  }
 
   /**
    * {@inheritdoc}
