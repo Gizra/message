@@ -179,6 +179,7 @@ function message_cron() {
       $override_types[] = $message_type;
     }
   }
+
   // Gather purgeable messages of overriding types.
   /** @var MessageType[] $override_types */
   foreach ($override_types as $message_type) {
@@ -227,50 +228,47 @@ function message_cron() {
  *   settings.
  */
 function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge_settings) {
-  return;
   if ($purge_limit <= 0) {
-    return;
+    return array();
   }
 
   // Messages to be deleted.
   $purge_messages = array();
 
   // Base query for both purging methods.
-  $base_query = new EntityFieldQuery();
-  $base_query->entityCondition('entity_type', 'message', '=')
-    ->propertyCondition('type', $message_type_name, is_array($message_type_name) ? 'IN' : '=')
-    // Sort descending, the get the newest first.
-    ->propertyOrderBy('timestamp', 'DESC')
-    ->propertyOrderBy('mid', 'DESC');
+  $query = \Drupal::entityQuery('message')
+    ->condition('type', $message_type_name, is_array($message_type_name) ? 'IN' : '=')
+    ->sort('created', 'DESC')
+    ->sort('mid', 'DESC');
 
   // Purge according to quota definition.
   if (!empty($purge_settings['quota'])) {
-    $quota_query = clone $base_query;
+    $quota_query = clone $query;
     $result = $quota_query
       ->range($purge_settings['quota'], $purge_limit)
       ->execute();
 
     if (!empty($result['message'])) {
-      $purge_limit -= count($result['message']);
-      $purge_messages += $result['message'];
+      $purge_limit -= count($result);
+      $purge_messages += $result;
     }
   }
 
   // Purge according to maximal age definition.
   if (!empty($purge_settings['days'])) {
-    $age_query = clone $base_query;
+    $age_query = clone $query;
     // Find messages older than current time - maximal age in days times
     // the seconds per day.
     $earlier_than = time() - $purge_settings['days'] * 86400;
-    $result = $age_query->propertyCondition('timestamp', $earlier_than, '<')
+    $result = $age_query->condition('created', $earlier_than, '<')
       ->range(0, $purge_limit)
       ->execute();
 
     if (!empty($result['message'])) {
-      $purge_limit -= count($result['message']);
-      $purge_messages += $result['message'];
+      $purge_limit -= count($result);
+      $purge_messages += $result;
     }
   }
 
-  return $purge_messages;
+  return Message::loadMultiple($purge_messages);
 }
