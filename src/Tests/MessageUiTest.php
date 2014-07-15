@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\MessageUiTest.
+ * Definition of Drupal\message\Tests\MessageUiTest.
  */
 
 namespace Drupal\message\Tests;
@@ -36,6 +36,9 @@ class MessageUiTest extends MessageTestBase {
     $this->account = $this->drupalCreateUser(array('administer message types', 'translate configuration'));
   }
 
+  /**
+   * Test the translation interface for message.
+   */
   public function testMessageTranslate() {
     $this->drupalLogin($this->account);
 

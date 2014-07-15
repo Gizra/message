@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Definition of Drupal\node\Tests\MessageTypeCrudTest.
+ * Definition of Drupal\message\Tests\MessageTypeCrudTest.
  */
 
 namespace Drupal\message\Tests;
