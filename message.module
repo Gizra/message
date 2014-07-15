@@ -189,7 +189,7 @@ function message_cron() {
       continue;
     }
 
-    $purge_messages += message_get_purgeable_by_type($purge_limit, $message_type->name, $message_type->data['purge']);
+    $purge_messages += message_get_purgeable_by_type($purge_limit, $message_type->id(), $message_type->data['purge']);
   }
 
   // Gather purgeable messages of non-overriding types according to global
