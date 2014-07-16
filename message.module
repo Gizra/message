@@ -139,19 +139,9 @@ function message_permission() {
 }
 
 /**
- * Drupal 7 part. We can, and should, take parts from here during the porting to
- * Drupal 8.
- */
-
-/**
  * Implements hook_cron().
  *
  * Fetch all message types and purge old messages.
- *
- * @todo: Upgrade.
- *
- * @deprecated
- *  We might need to remove this.
  */
 function message_cron() {
   $config = \Drupal::config('message.message');
@@ -170,7 +160,8 @@ function message_cron() {
   /** @var MessageType[] $message_types */
   $message_types = MessageType::loadMultiple();
   foreach ($message_types as $message_type) {
-    if (empty($message_type->data['purge']['override'])) {
+    $data = $message_type->getData();
+    if (empty($data['purge']['override'])) {
       $no_override_type_names[] = $message_type->id();
     }
     else {
@@ -185,11 +176,12 @@ function message_cron() {
   foreach ($override_types as $message_type) {
     // Ignore message type with unchecked "Purge messages". Also make sure that
     // purging settings are present.
-    if (empty($message_type->data['purge']) || empty($message_type->data['purge']['enabled'])) {
+    $data = $message_type->getData();
+    if (empty($data['purge']) || empty($data['purge']['enabled'])) {
       continue;
     }
 
-    $purge_messages += message_get_purgeable_by_type($purge_limit, $message_type->id(), $message_type->data['purge']);
+    $purge_messages += message_get_purgeable_by_type($purge_limit, $message_type->id(), $data['purge']);
   }
 
   // Gather purgeable messages of non-overriding types according to global
