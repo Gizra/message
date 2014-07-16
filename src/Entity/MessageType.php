@@ -148,7 +148,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    * @return array
    */
   public function getData($key = '') {
-    if ($key) {
+    if ($key && isset($this->data)) {
       return $this->data[$key];
     }
 
@@ -311,11 +311,15 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *   Array of options to pass to the metadata-wrapper:
    *   - 'delta': Optional; If set, returns the output only from a single delta
    *     of the message-text field.
+   *   - 'text': Return the property text and not the processed value.s
    *
-   * @return string
+   * @return string|array
    *   A string with the text from the field.
    */
   public function getText($langcode = NULL, $options = array()) {
+    if (isset($options['text']) && $options['text']) {
+      return $this->text;
+    }
     if (!$langcode && \Drupal::moduleHandler()->moduleExists('config_translation')) {
       // The config translation module turned on. Get the proper language.
       $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
@@ -409,7 +413,6 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   }
 
   /**
-   *
    * @return MessageType
    *  A message type object ready to be save.
    */

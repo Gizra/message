@@ -39,7 +39,7 @@ class MessageTypeCrudTest extends MessageTestBase {
          '@label' => $label,
        );
 
-       $this->assertEqual($type->{$key}, $created_message_type->{$key}, format_string('The @label between the message we created an loaded are equal', $param));
+       $this->assertEqual(call_user_func(array($type, 'get' . $key)), call_user_func(array($created_message_type, 'get' . $key)), format_string('The @label between the message we created an loaded are equal', $param));
     }
 
     // Verifying updating action.

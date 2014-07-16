@@ -102,6 +102,19 @@ class Message extends ContentEntityBase {
   }
 
   /**
+   * Set the message type.
+   *
+   * @param MessageType $type
+   *  The name of the message type. If passed a MessageType object the
+   *
+   * @return $this.
+   */
+  public function setType(Messagetype $type) {
+    $this->set('type', $type);
+    return $this;
+  }
+
+  /**
    * Get the type of the message type.
    *
    * @return MessageType
@@ -331,7 +344,7 @@ class Message extends ContentEntityBase {
     $tokens = array();
 
     // Handle hard coded arguments.
-    foreach ($this->getType()->text as $texts) {
+    foreach ($this->getType()->getText(NULL, array('text' => TRUE)) as $texts) {
 
       foreach ($texts as $text) {
 

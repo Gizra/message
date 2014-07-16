@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Tests;
 
+use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageType;
 use Drupal\user\Entity\User;
 
@@ -37,23 +38,88 @@ class MessageCron extends MessageTestBase {
 
     // Create a purgeable message type with max quota 2 and max days 0.
     $data = array(
-      'data' => array(
-        'purge' => array(
-          'override' => TRUE,
-          'enabled' => TRUE,
-          'quota' => 2,
-          'days' => 0,
-        ),
+      'purge' => array(
+        'override' => TRUE,
+        'enabled' => TRUE,
+        'quota' => 2,
+        'days' => 0,
       ),
     );
 
     /** @var MessageType $message_type */
-    $message_type = MessageType::create(array('type' => 'dummy'))
+    $message_type = MessageType::create(array('type' => 'type1'));
+    $message_type
       ->setData($data)
       ->save();
 
     // Make sure the purging data is actually saved.
-    $this->assertEqual($message_type->getData('purge'), $data['data']['purge'], t('Purge settings are stored in message type.'));
+    $this->assertEqual($message_type->getData('purge'), $data['purge'], t('Purge settings are stored in message type.'));
 
+    // Create a purgeable message type with max quota 1 and max days 2.
+    $data['purge']['quota'] = 1;
+    $data['purge']['days'] = 2;
+    $message_type = MessageType::create(array('type' => 'type2'));
+    $message_type
+      ->setData($data)
+      ->save();
+
+    // Create a non purgeable message type with max quota 1 and max days 10.
+    $data['purge']['enabled'] = FALSE;
+    $data['purge']['quota'] = 1;
+    $data['purge']['days'] = 1;
+    $message_type = MessageType::create(array('type' => 'type3'));
+    $message_type
+      ->setData($data)
+      ->save();
+
+    // Create messages.
+    for ($i = 0; $i < 4; $i++) {
+      Message::Create(array('type' => 'type1'))
+        ->setCreatedTime(time() - 3 * 86400)
+        ->setAuthorId($user->id())
+        ->save();
+    }
+
+    for ($i = 0; $i < 3; $i++) {
+      Message::Create(array('type' => 'type2'))
+        ->setCreatedTime(time() - 3 * 86400)
+        ->setAuthorId($user->id())
+        ->save();
+    }
+
+    for ($i = 0; $i < 3; $i++) {
+      Message::Create(array('type' => 'type3'))
+        ->setCreatedTime(time() - 3 * 86400)
+        ->setAuthorId($user->id())
+        ->save();
+    }
+
+    // Trigger message's hook_cron().
+    message_cron();
+
+    // Four type1 messages were created. The first two should have been
+    // deleted.
+    $this->assertEqual($this->loadMessages('type1'), array(3, 4), 'Two messages deleted due to quota definition.');
+
+    // All type2 messages should have been deleted.
+    $this->assertEqual($this->loadMessages('type2'), array(), 'Three messages deleted due to age definition.');
+
+    // type3 messages should not have been deleted
+    $this->assertEqual($this->loadMessages('type3'), array(8, 9, 10), 'Messages with disabled purging settings were not deleted.');
+  }
+
+  /**
+   * Load messages from a given type.
+   *
+   * @param $type
+   *  The entity type.
+   *
+   * @return Array
+   *  Array of message IDs.
+   */
+  private function loadMessages($type) {
+    return \Drupal::entityQuery('message')
+      ->condition('type', $type)
+      ->execute();
   }
 }
