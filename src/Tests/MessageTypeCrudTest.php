@@ -43,14 +43,14 @@ class MessageTypeCrudTest extends MessageTestBase {
     }
 
     // Verifying updating action.
-    $type->label = 'New label';
+    $type->setLabel('New label');
     $type->save();
 
     // Reset any static cache.
     drupal_static_reset();
 
     $type = $this->loadMessageType('dummy_message');
-    $this->assertEqual($type->label, 'New label', 'The message was updated successfully');
+    $this->assertEqual($type->getLabel(), 'New label', 'The message was updated successfully');
 
     // Delete the message any try to load it from the DB.
     $type->delete();
