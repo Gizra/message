@@ -32,8 +32,6 @@ class MessageTypeConfigTranslationEditForm extends MessageTypeConfigTranslationB
       '@language' => $this->language->name,
     ));
 
-    // todo: update the text field with the updated text.
-
     return $form;
   }
 
@@ -45,7 +43,7 @@ class MessageTypeConfigTranslationEditForm extends MessageTypeConfigTranslationB
 
     /** @var MessageType $entity */
     $entity = $form_state['#entity'];
-    $texts = $form_state['values']['config_names']['message.type.' . $entity->type]['text']['translation']['text'];
+    $texts = $form_state['values']['config_names']['message.type.' . $entity->getType()]['text']['translation']['text'];
 
     // todo: Handle weight order.
     $message_text = array();
@@ -55,6 +53,8 @@ class MessageTypeConfigTranslationEditForm extends MessageTypeConfigTranslationB
       }
       $message_text[] = $text['value'];
     }
+
+    $text = $entity->getText(NULL, array());
 
     $entity->text[$form_state['config_translation_language']->id] = $message_text;
     $entity->save();

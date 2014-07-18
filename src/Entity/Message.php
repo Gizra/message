@@ -338,7 +338,6 @@ class Message extends ContentEntityBase {
    * {@inheritdoc}
    */
   public function save() {
-    // todo: Handle hard coded arguments with html.
     $token_options = !empty($this->data['token options']) ? $this->data['token options'] : array();
 
     $tokens = array();
@@ -364,7 +363,6 @@ class Message extends ContentEntityBase {
     $arguments = $this->getArguments();
     $this->setArguments(array_merge($tokens, $arguments));
 
-    // todo: When the user object is not supplied set to the current user.
     parent::save();
   }
 

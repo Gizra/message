@@ -10,9 +10,6 @@ namespace Drupal\message\FormElement;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\message\Entity\MessageType;
 
-/**
- * todo: Add save method that will save the text partials correctly.
- */
 class MessageTypeMultipleTextField {
 
   /**

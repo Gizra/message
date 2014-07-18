@@ -60,20 +60,11 @@ function message_schema() {
         'default value' => NULL,
         'unsigned' => TRUE,
       ),
-      // @todo: Rename on update.
       'created' => array(
         'description' => 'The time that the message was created.',
         'type' => 'int',
         'not null' => TRUE,
         'unsigned' => TRUE,
-      ),
-      // @todo: Rename on update.
-      'langcode' => array(
-        'description' => 'The {languages}.langcode of this message.',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
       ),
     ),
     'foreign keys' => array(
@@ -87,7 +78,6 @@ function message_schema() {
       ),
     ),
     'primary key' => array('mid'),
-    // @todo: Update upgrade timestamp => created.
     'indexes' => array(
       'type_index' => array('type'),
       'created' => array('created'),

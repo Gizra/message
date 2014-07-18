@@ -1,5 +1,3 @@
-@todo: might need to be fixed after moving to D8.
-
 Message example module is intended for developers and site builders
 wanting to understand the key concepts and features of Message module.
 

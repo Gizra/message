@@ -227,7 +227,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    * Array with the arguments and their replacement value, or callacbks.
    *
    * The argument keys will be replaced when rendering the message, and it
-   * sohuld be prefixed by @, %, ! - similar to way it's done in Drupal
+   * should be prefixed by @, %, ! - similar to way it's done in Drupal
    * core's t() function.
    *
    * @code
@@ -262,8 +262,6 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    * @see message_get_property_values()
    *
    * @var array
-   *
-   * todo: check if this needed.
    */
   public $arguments = array();
 
@@ -337,8 +335,6 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
 
   /**
    * Check if the message is new.
-   *
-   * todo: Check if message type is exported.
    */
   public function isLocked() {
     return !$this->isNew();
