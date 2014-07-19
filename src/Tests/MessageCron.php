@@ -195,8 +195,6 @@ class MessageCron extends MessageTestBase {
     // Trigger message's hook_cron().
     message_cron();
 
-    debug(Message::queryByType('type1'));
-
     $this->assertEqual(count(Message::queryByType('type1')), 0, t('All type1 messages deleted.'));
     $this->assertEqual(count(Message::queryByType('type2')), 2, t('Type2 messages were not deleted due to settings override.'));
   }

@@ -189,10 +189,10 @@ function message_cron() {
   // settings.
   if (!empty($no_override_type_names)) {
     // Do nothing if purge isn't enabled.
-    if ($config->get('message_purge_enable', FALSE)) {
+    if ($config->get('purge_enable', FALSE)) {
       $purge_settings = array(
-        'quota' => $config->get('message_purge_quota', NULL),
-        'days' => $config->get('message_purge_days', NULL),
+        'quota' => $config->get('purge_quota'),
+        'days' => $config->get('purge_days'),
       );
 
       $purge_messages += message_get_purgeable_by_type($purge_limit, $no_override_type_names, $purge_settings);
@@ -201,7 +201,6 @@ function message_cron() {
 
   // Delete all gathered messages.
   if (!empty($purge_messages)) {
-    // todo: check why $purge_messages is empty.
     \Drupal::entityManager()->getStorage('message')->delete($purge_messages);
   }
 }
