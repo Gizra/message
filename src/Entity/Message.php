@@ -391,4 +391,19 @@ class Message extends ContentEntityBase {
   public static function deleteMultiple($ids) {
     \Drupal::entityManager()->getStorage('message')->delete($ids);
   }
+
+  /**
+   * Run a EFQ over messages from a given type.
+   *
+   * @param $type
+   *  The entity type.
+   *
+   * @return Array
+   *  Array of message IDs.
+   */
+  public static function queryByType($type) {
+    return \Drupal::entityQuery('message')
+      ->condition('type', $type)
+      ->execute();
+  }
 }
