@@ -152,4 +152,52 @@ class MessageCron extends MessageTestBase {
 
     $this->assertEqual(count(Message::queryByType('type2')), 8, t('Eight messages of type 2 left.'));
   }
+
+  /**
+   * Test global purge settings and overriding them.
+   */
+  function testPurgeGlobalSettings() {
+    // Set global purge settings.
+    \Drupal::config('message.message')
+      ->set('purge_enable', TRUE)
+      ->set('purge_quota', 1)
+      ->set('purge_days', 2)
+      ->save();
+
+    MessageType::create(array('type' => 'type1'))->save();
+
+    // Create an overriding type.
+    $data = array(
+      'purge' => array(
+        'override' => TRUE,
+        'enabled' => FALSE,
+        'quota' => 1,
+        'days' => 1,
+      ),
+    );
+
+    MessageType::create(array('type' => 'type2'))
+      ->setData($data)
+      ->save();
+
+    for ($i = 0; $i < 2; $i++) {
+      Message::create(array('type' => 'type1'))
+        ->setCreatedTime(time() - 3 * 86400)
+        ->setAuthorId($this->account->id())
+        ->save();
+
+      Message::create(array('type' => 'type2'))
+        ->setCreatedTime(time() - 3 * 86400)
+        ->setAuthorId($this->account->id())
+        ->save();
+    }
+
+    // Trigger message's hook_cron().
+    message_cron();
+
+    debug(Message::queryByType('type1'));
+
+    $this->assertEqual(count(Message::queryByType('type1')), 0, t('All type1 messages deleted.'));
+    $this->assertEqual(count(Message::queryByType('type2')), 2, t('Type2 messages were not deleted due to settings override.'));
+  }
 }
