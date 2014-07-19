@@ -49,7 +49,7 @@ class MessageTypeMultipleTextField {
   public function __construct(MessageType $entity, $callback, $langcode = '') {
     $this->entity = $entity;
     $this->callback = $callback;
-    $this->langcode = $langcode ? $langcode : \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $this->langcode = $langcode ? $langcode : \Drupal::languageManager()->getCurrentLanguage()->id;
   }
 
   /**
@@ -83,7 +83,8 @@ class MessageTypeMultipleTextField {
     // Building the multiple form element; Adding first the the form existing
     // text.
     $start_key = 0;
-    $MessageText = $this->entity->getText($this->langcode) ? $this->entity->getText($this->langcode) : array();
+    $MessageText = $this->entity->getText($this->langcode, array('text' => TRUE)) ? $this->entity->getText($this->langcode, array('text' => TRUE)) : array();
+    debug($MessageText);
     foreach ($MessageText as $text) {
       $form['text'][$start_key] = $this->singleElement($start_key, $text);
       $start_key++;

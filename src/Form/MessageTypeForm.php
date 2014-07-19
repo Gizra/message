@@ -53,12 +53,14 @@ class MessageTypeForm extends EntityForm {
     $form['description'] = array(
       '#title' => t('Description'),
       '#type' => 'textfield',
-      '#default_value' => $this->entity->description,
+      '#default_value' => $this->entity->getDescription(),
       '#description' => t('The human-readable description of this message type.'),
     );
 
     $multiple = new MessageTypeMultipleTextField($this->entity, array(get_class($this), 'addMoreAjax'));
     $multiple->textField($form, $form_state);
+
+    $data = $this->entity->getdata();
 
     $form['data'] = array(
       // Placeholder for other module to add their settings, that should be added
@@ -70,7 +72,7 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Clear empty tokens'),
       '#type' => 'checkbox',
       '#description' => t('When this option is selected, empty tokens will be removed from display.'),
-      '#default_value' => isset($this->entity->data['token options']['clear']) ? $this->entity->data['token options']['clear'] : FALSE,
+      '#default_value' => isset($data['token options']['clear']) ? $data['token options']['clear'] : FALSE,
     );
 
     $form['data']['purge'] = array(
@@ -82,7 +84,7 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Override global settings'),
       '#type' => 'checkbox',
       '#description' => t('Override global purge settings for messages of this type.'),
-      '#default_value' => !empty($this->entity->data['purge']['override']),
+      '#default_value' => !empty($data['purge']['override']),
     );
 
     $states = array(
@@ -96,7 +98,7 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Purge messages'),
       '#description' => t('When enabled, old messages will be deleted.'),
       '#states' => $states,
-      '#default_value' => !empty($this->entity->data['purge']['enabled']) ? TRUE : FALSE,
+      '#default_value' => !empty($data['purge']['enabled']) ? TRUE : FALSE,
     );
 
     $states = array(
@@ -109,7 +111,7 @@ class MessageTypeForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => t('Messages quota'),
       '#description' => t('Maximal (approximate) amount of messages of this type.'),
-      '#default_value' => !empty($this->entity->data['purge']['quota']) ? $this->entity->data['purge']['quota'] : '',
+      '#default_value' => !empty($data['purge']['quota']) ? $data['purge']['quota'] : '',
       '#states' => $states,
     );
 
@@ -117,7 +119,7 @@ class MessageTypeForm extends EntityForm {
       '#type' => 'textfield',
       '#title' => t('Purge messages older than'),
       '#description' => t('Maximal message age in days, for messages of this type.'),
-      '#default_value' => !empty($this->entity->data['purge']['days']) ? $this->entity->data['purge']['days'] : '',
+      '#default_value' => !empty($data['purge']['days']) ? $data['purge']['days'] : '',
       '#states' => $states,
     );
 
@@ -171,7 +173,7 @@ class MessageTypeForm extends EntityForm {
     }
 
     // Updating the message text.
-    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
 
     // todo: check if we need this or just move this to save method.
 //    foreach ($this->entity->getText() as $key => $value) {

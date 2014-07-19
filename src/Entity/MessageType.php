@@ -309,24 +309,35 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *   Array of options to pass to the metadata-wrapper:
    *   - 'delta': Optional; If set, returns the output only from a single delta
    *     of the message-text field.
-   *   - 'text': Return the property text and not the processed value.s
+   *   - 'text': Return the property text and not the processed values.
+   *      todo: change this to something else.
    *
    * @return string|array
    *   A string with the text from the field.
    */
   public function getText($langcode = NULL, $options = array()) {
     if (isset($options['text']) && $options['text']) {
+
+      if (!empty($this->text[$langcode])) {
+        return $this->text[$langcode];
+      }
+
       return $this->text;
     }
+
     if (!$langcode && \Drupal::moduleHandler()->moduleExists('config_translation')) {
       // The config translation module turned on. Get the proper language.
-      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
     }
 
     if (!$langcode || !isset($this->text[$langcode])) {
       // We are facing two problems: a language was not supplied or there is no
       // translation for that language. Get the default language.
-      $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+      $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+    }
+
+    if (!isset($this->text[$langcode])) {
+      return array();
     }
 
     // Combine all the field text and return the text.
@@ -376,10 +387,10 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
     if (!$langcode) {
       if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
         // The config translation module turned on. Get the proper language.
-        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+        $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
       }
       else {
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+        $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
       }
     }
 
@@ -405,10 +416,10 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
     if (!$langcode) {
       if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
         // The config translation module turned on. Get the proper language.
-        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+        $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
       }
       else {
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
+        $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
       }
     }
 

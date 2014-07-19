@@ -41,7 +41,7 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
     }
 
     $entity
-      ->setText($message_text, $form_state['config_translation_language']->id())
+      ->setText($message_text, $form_state['config_translation_language']->id)
       ->save();
     drupal_set_message($this->t('Successfully saved @language translation.', array('@language' => $this->language->name)));
   }
