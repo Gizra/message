@@ -29,7 +29,7 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
 
     /** @var MessageType $entity */
     $entity = $form_state['#entity'];
-    $texts = $form_state['values']['config_names']['message.type.' . $entity->type]['text']['translation']['text'];
+    $texts = $form_state['values']['config_names']['message.type.' . $entity->getType()]['text']['translation']['text'];
 
     // todo: Handle weight order.
     $message_text = array();
@@ -40,8 +40,9 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
       $message_text[] = $text['value'];
     }
 
-    $entity->text[$form_state['config_translation_language']->id] = $message_text;
-    $entity->save();
+    $entity
+      ->setText($message_text, $form_state['config_translation_language']->id())
+      ->save();
     drupal_set_message($this->t('Successfully saved @language translation.', array('@language' => $this->language->name)));
   }
 

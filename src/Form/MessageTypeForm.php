@@ -9,6 +9,7 @@ namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageType;
 use Drupal\message\FormElement\MessageTypeMultipleTextField;
 
@@ -172,12 +173,14 @@ class MessageTypeForm extends EntityForm {
     // Updating the message text.
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
-    foreach ($this->entity->text as $key => $value) {
-      if (is_int($key)) {
-        unset($this->entity->text[$key]);
-      }
-    }
-    $this->entity->text[$langcode] = $message_text;
+    // todo: check if we need this or just move this to save method.
+//    foreach ($this->entity->getText() as $key => $value) {
+//      if (is_int($key)) {
+//        unset($this->entity->text[$key]);
+//      }
+//    }
+
+    $this->entity->setText($message_text, $langcode);
 
     // todo: When the parent method will do something remove as much code as we
     // can.

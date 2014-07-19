@@ -7,7 +7,7 @@
  */
 namespace Drupal\message\FormElement;
 
-use Drupal\field\Entity\FieldConfig;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\message\Entity\MessageType;
 
 class MessageTypeMultipleTextField {
@@ -61,7 +61,7 @@ class MessageTypeMultipleTextField {
       '#type' => 'container',
       '#tree' => TRUE,
       '#theme' => 'field_multiple_value_form',
-      '#caridnality' => FieldConfig::CARDINALITY_UNLIMITED,
+      '#caridnality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       '#cardinality_multiple' => TRUE,
       '#field_name' => 'message_text',
       '#title' => t('Message text'),
@@ -83,7 +83,7 @@ class MessageTypeMultipleTextField {
     // Building the multiple form element; Adding first the the form existing
     // text.
     $start_key = 0;
-    $MessageText = !empty($this->entity->text[$this->langcode]) ? $this->entity->text[$this->langcode] : array();
+    $MessageText = $this->entity->getText($this->langcode) ? $this->entity->getText($this->langcode) : array();
     foreach ($MessageText as $text) {
       $form['text'][$start_key] = $this->singleElement($start_key, $text);
       $start_key++;

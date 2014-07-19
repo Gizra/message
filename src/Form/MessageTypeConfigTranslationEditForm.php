@@ -43,7 +43,7 @@ class MessageTypeConfigTranslationEditForm extends MessageTypeConfigTranslationB
 
     /** @var MessageType $entity */
     $entity = $form_state['#entity'];
-    $texts = $form_state['values']['config_names']['message.type.' . $entity->getType()]['text']['translation']['text'];
+    $texts = $form_state['values']['config_names']['message.type.' . $entity->gettype()]['text']['translation']['text'];
 
     // todo: Handle weight order.
     $message_text = array();
@@ -51,13 +51,13 @@ class MessageTypeConfigTranslationEditForm extends MessageTypeConfigTranslationB
       if (empty($text['value'])) {
         continue;
       }
+
       $message_text[] = $text['value'];
     }
 
-    $text = $entity->getText(NULL, array());
-
-    $entity->text[$form_state['config_translation_language']->id] = $message_text;
-    $entity->save();
+    $entity
+      ->setText($message_text, $form_state['config_translation_language']->id)
+      ->save();
 
     drupal_set_message($this->t('Successfully updated @language translation.', array('@language' => $this->language->name)));
   }

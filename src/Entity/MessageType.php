@@ -376,14 +376,21 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
     if (!$langcode) {
       if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
         // The config translation module turned on. Get the proper language.
-        $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
+        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
       }
       else {
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
       }
     }
 
-    $this->text[$langcode] = $text;
+    if ($text == NULL) {
+      unset($this->text[$langcode]);
+    }
+    else {
+      $this->text[$langcode] = $text;
+    }
+
+    return $this;
   }
 
   /**
@@ -398,10 +405,10 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
     if (!$langcode) {
       if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
         // The config translation module turned on. Get the proper language.
-        $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
+        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
       }
       else {
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
       }
     }
 
@@ -409,6 +416,8 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   }
 
   /**
+   * {@inheritdoc}
+   *
    * @return MessageType
    *  A message type object ready to be save.
    */

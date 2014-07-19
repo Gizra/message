@@ -32,9 +32,9 @@ class MessageTypeConfigTranslationDeleteForm extends ConfigTranslationDeleteForm
     $config = reset($configs);
 
     // Get the message object, remove the translation and update the message.
-    $message_type = MessageType::load($config['type']);
-    unset($message_type->text[$this->language->getId()]);
-    $message_type->save();
+    MessageType::load($config['type'])
+      ->setText(NULL, $this->language->getId())
+      ->save();
 
     parent::submitForm($form, $form_state);
   }

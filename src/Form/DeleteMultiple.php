@@ -101,7 +101,7 @@ class DeleteMultiple extends ConfirmFormBase {
 
     $form['messages'] = array(
       '#theme' => 'item_list',
-      '#items' => array_map(function ($message) {
+      '#items' => array_map(function (Message $message) {
         $params = array(
           '@id' => $message->id(),
           '@type' => $message->getType()->label(),
