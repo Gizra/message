@@ -9,6 +9,8 @@ namespace Drupal\message\Tests;
 
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
+use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
 use Drupal\node\Entity\NodeType;
@@ -94,7 +96,7 @@ class MessageEntityDelete extends MessageTestBase {
    */
   private function createTermReferenceField($multiple, $name) {
     // Create a term reference field.
-    $field = entity_create('field_config', array(
+    FieldStorageConfig::create(array(
       'name' => $name,
       'entity_type' => 'message',
       'type' => 'taxonomy_term_reference',
@@ -107,13 +109,13 @@ class MessageEntityDelete extends MessageTestBase {
           ),
         ),
       ),
-    ));
-    $field->save();
+    ))->save();
 
-    entity_create('field_instance_config', array(
-      'field' => $field,
-      'bundle' => 'dummy_message',
+    FieldInstanceConfig::create(array(
+      'field_name' => $name,
       'entity_type' => 'message',
+      'bundle' => 'dummy_message',
+      'required' => TRUE,
     ))->save();
   }
 
@@ -128,7 +130,9 @@ class MessageEntityDelete extends MessageTestBase {
    *  The target type. Default to node.
    */
   private function createEntityReferenceField($multiple, $name, $target_type = 'node') {
-    $field = entity_create('field_config', array(
+
+    // Create a term reference field.
+    FieldStorageConfig::create(array(
       'name' => $name,
       'entity_type' => 'message',
       'translatable' => FALSE,
@@ -138,13 +142,11 @@ class MessageEntityDelete extends MessageTestBase {
       ),
       'type' => 'entity_reference',
       'cardinality' => $multiple ? FieldDefinition::CARDINALITY_UNLIMITED : 1,
-    ));
+    ))->save();
 
-    $field->save();
-
-    entity_create('field_instance_config', array(
+    FieldInstanceConfig::create(array(
       'label' => 'Entity reference field',
-      'field' => $field,
+      'field_name' => $name,
       'entity_type' => 'message',
       'bundle' => 'dummy_message',
       'settings' => array(

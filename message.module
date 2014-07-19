@@ -5,7 +5,7 @@
  * API functions to manipulate messages.
  */
 
-use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageType;
 
@@ -49,15 +49,15 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
   // List of messages to delete.
   $deletable_mids = array();
   // List of messages that might be deleted;
-  // Messages with references to fields with multiple cardinality will be
-  // stored in $check_mids in order to check if the entity being deleted
-  // is the last one referenced by a given field.
+  // Messages with references to fields with multiple cardinality will be stored
+  // in $check_mids in order to check if the entity being deleted is the last
+  // one referenced by a given field.
   // Keyed by message ID, pointing to array of the relevant field names.
   $check_mids = array();
 
-  $fields_ids = \Drupal::entityQuery('field_config')->execute();
-  /** @var FieldConfig[] $fields */
-  $fields = entity_load_multiple('field_config', array_keys($fields_ids));
+  $fields_ids = \Drupal::entityQuery('field_storage_config')->execute();
+  /** @var FieldStorageConfig[] $fields */
+  $fields = entity_load_multiple('field_storage_config', array_keys($fields_ids));
 
   // Search for fields in which messages referenced the deleted entity.
   foreach ($fields as $field) {
