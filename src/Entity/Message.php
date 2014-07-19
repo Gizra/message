@@ -67,13 +67,6 @@ class Message extends ContentEntityBase {
   protected $type;
 
   /**
-   * @var Language
-   *
-   * The language object.
-   */
-  protected $langcode;
-
-  /**
    * @var User
    *
    * The user object.
@@ -241,11 +234,6 @@ class Message extends ContentEntityBase {
       ->setSetting('target_type', 'message_type')
       ->setSetting('default_value', 0)
       ->setReadOnly(TRUE);
-
-    $fields['langcode'] = FieldDefinition::create('language')
-      ->setLabel(t('Language code'))
-      ->setDescription(t('The message language code.'))
-      ->setRevisionable(TRUE);
 
     $fields['uid'] = FieldDefinition::create('entity_reference')
       ->setLabel(t('Author'))

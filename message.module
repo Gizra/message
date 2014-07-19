@@ -145,8 +145,9 @@ function message_permission() {
  */
 function message_cron() {
   $config = \Drupal::config('message.message');
+
   // The maximal amount of messages to purge per cron run.
-  $config->get('delete_cron_limit', MESSAGE_PURGE_LIMIT);
+  $purge_limit = $config->get('delete_cron_limit', MESSAGE_PURGE_LIMIT);
 
   // Messages to be deleted.
   $purge_messages = array();
@@ -241,7 +242,7 @@ function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge
       ->range($purge_settings['quota'], $purge_limit)
       ->execute();
 
-    if (!empty($result['message'])) {
+    if (!empty($result)) {
       $purge_limit -= count($result);
       $purge_messages += $result;
     }
@@ -257,7 +258,7 @@ function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge
       ->range(0, $purge_limit)
       ->execute();
 
-    if (!empty($result['message'])) {
+    if (!empty($result)) {
       $purge_limit -= count($result);
       $purge_messages += $result;
     }

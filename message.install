@@ -10,16 +10,26 @@
  */
 function message_uninstall() {
   $variables = array(
-    'message_delete_cron_limit',
-    'message_purge_enable',
-    'message_purge_quota',
-    'message_purge_days',
-    'message_delete_on_entity_delete',
+    'delete_cron_limit',
+    'purge_enable',
+    'purge_quota',
+    'purge_days',
+    'delete_on_entity_delete',
   );
 
   foreach ($variables as $variable) {
-    \Drupal::config('message')->delete($variable);
+    \Drupal::config('message.message')->delete($variable);
   }
+}
+
+/**
+ * Implements hook_install().
+ */
+function message_install() {
+  \Drupal::config('message.message')
+    ->set('delete_cron_limit', MESSAGE_PURGE_LIMIT)
+    ->set('delete_on_entity_delete', array('node', 'user', 'taxonomy_term', 'comment'))
+    ->save();
 }
 
 /**
