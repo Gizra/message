@@ -382,6 +382,8 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *  Optional. The language of the text. When the config translation is on the
    *  language will the current language if not the default will be set to the
    *  default site language.
+   *
+   * @return $this
    */
   public function setText(array $text, $langcode = '') {
     if (!$langcode) {

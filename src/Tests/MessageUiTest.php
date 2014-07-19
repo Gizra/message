@@ -3,6 +3,9 @@
 /**
  * @file
  * Definition of Drupal\message\Tests\MessageUiTest.
+ *
+ * Fail due to "htmlspecialchars() expects parameter 1 to be string, array given"
+ * on String::checkPlain().
  */
 
 namespace Drupal\message\Tests;
