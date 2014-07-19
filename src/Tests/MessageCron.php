@@ -99,17 +99,17 @@ class MessageCron extends MessageTestBase {
 
     // Four type1 messages were created. The first two should have been
     // deleted.
-    $this->assertEqual($this->loadMessages('type1'), array(3, 4), 'Two messages deleted due to quota definition.');
+    $this->assertFalse(array_diff($this->queryMessages('type1'), array(3,4)), 'Two messages deleted due to quota definition.');
 
     // All type2 messages should have been deleted.
-    $this->assertEqual($this->loadMessages('type2'), array(), 'Three messages deleted due to age definition.');
+    $this->assertEqual($this->queryMessages('type2'), array(), 'Three messages deleted due to age definition.');
 
     // type3 messages should not have been deleted
-    $this->assertEqual($this->loadMessages('type3'), array(8, 9, 10), 'Messages with disabled purging settings were not deleted.');
+    $this->assertFalse(array_diff($this->queryMessages('type3'), array(8, 9, 10)), 'Messages with disabled purging settings were not deleted.');
   }
 
   /**
-   * Load messages from a given type.
+   * Run a EFQ over messages from a given type.
    *
    * @param $type
    *  The entity type.
@@ -117,7 +117,7 @@ class MessageCron extends MessageTestBase {
    * @return Array
    *  Array of message IDs.
    */
-  private function loadMessages($type) {
+  private function queryMessages($type) {
     return \Drupal::entityQuery('message')
       ->condition('type', $type)
       ->execute();
