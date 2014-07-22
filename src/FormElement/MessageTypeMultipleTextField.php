@@ -84,8 +84,13 @@ class MessageTypeMultipleTextField {
     // text.
     $start_key = 0;
     $MessageText = $this->entity->getText($this->langcode, array('text' => TRUE)) ? $this->entity->getText($this->langcode, array('text' => TRUE)) : array();
-    debug($MessageText);
+
     foreach ($MessageText as $text) {
+
+      if (is_array($text)) {
+        continue;
+      }
+
       $form['text'][$start_key] = $this->singleElement($start_key, $text);
       $start_key++;
     }
