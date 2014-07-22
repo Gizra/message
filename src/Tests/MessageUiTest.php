@@ -17,7 +17,7 @@ use Drupal\user\Entity\User;
 /**
  * Testing the CRUD functionality for the Message type entity.
  *
- * @group Message now
+ * @group Message
  */
 class MessageUiTest extends MessageTestBase {
 
