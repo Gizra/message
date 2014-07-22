@@ -33,6 +33,18 @@ class MessageCron extends MessageTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Message cron test',
+      'description' => 'Testing the cron integration.',
+      'group' => 'Message',
+    );
+  }
+
+
+  /**
    * Testing the deletion of messages in cron according to settings.
    */
   public function testPurge() {

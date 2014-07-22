@@ -32,6 +32,18 @@ class MessageTokenTest extends MessageTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Message Token test',
+      'description' => 'Testing tokens for message.',
+      'group' => 'Message',
+    );
+  }
+
+
+  /**
    * Test token replacement in a message type.
    */
   function testTokens() {

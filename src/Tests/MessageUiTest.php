@@ -40,6 +40,17 @@ class MessageUiTest extends MessageTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Message UI test',
+      'description' => 'Testing the UI for translating messages including the config translation.',
+      'group' => 'Message now',
+    );
+  }
+
+  /**
    * Test the translation interface for message.
    */
   public function testMessageTranslate() {

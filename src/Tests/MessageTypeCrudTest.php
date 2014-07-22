@@ -22,6 +22,18 @@ class MessageTypeCrudTest extends MessageTestBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Message CRUD test',
+      'description' => 'Testing crud actions.',
+      'group' => 'Message',
+    );
+  }
+
+
+  /**
    * Creating/reading/updating/deleting the message type entity and test it.
    */
   function testCrudEntityType() {
