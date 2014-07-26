@@ -128,4 +128,11 @@ class DeleteMultiple extends ConfirmFormBase {
     }
     $form_state['redirect'] = 'admin/content/messages';
   }
+
+  /**
+   * @{inheritdoc}
+   */
+  public function getCancelUrl() {
+    return 'admin/content/messages';
+  }
 }
