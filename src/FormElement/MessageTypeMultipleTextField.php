@@ -31,12 +31,6 @@ class MessageTypeMultipleTextField {
   protected $callback;
 
   /**
-   * The max delta of elements.
-   * @var Integer.
-   */
-  protected $maxDelta;
-
-  /**
    * Constructing the element.
    *
    * @param MessageType $entity
@@ -91,7 +85,7 @@ class MessageTypeMultipleTextField {
         continue;
       }
 
-      $form['text'][$start_key] = $this->singleElement($start_key, $text);
+      $form['text'][$start_key] = $this->singleElement($start_key, $start_key, $text);
       $start_key++;
     }
 
@@ -101,34 +95,30 @@ class MessageTypeMultipleTextField {
       $form_state['storage']['message_text']++;
     }
 
-    $this->maxDelta = $start_key;
-
     for ($delta = $start_key; $delta <= $form_state['storage']['message_text']; $delta++) {
       // For multiple fields, title and description are handled by the wrapping
       // table.
-      $form['text'][$delta] = $this->singleElement($delta);
+      $form['text'][$delta] = $this->singleElement($form_state['storage']['message_text'], $delta);
     }
   }
 
   /**
    * Return a single text area element.
-   *
-   * todo: handle weights.
    */
-  private function singleElement($delta, $text = '') {
+  private function singleElement($max_delta, $delta, $text = '') {
     $element = array(
       '#type' => 'text_format',
       '#base_type' => 'textarea',
       '#default_value' => $text,
-      '#rows' => 2,
+      '#rows' => 1,
     );
 
     $element['_weight'] = array(
       '#type' => 'weight',
-      '#title' => t('Weight for row @number', array('@number' => $this->maxDelta + 1)),
+      '#title' => t('Weight for row @number', array('@number' => $max_delta + 1)),
       '#title_display' => 'invisible',
       // Note: this 'delta' is the FAPI #type 'weight' element's property.
-      '#delta' => $this->maxDelta,
+      '#delta' => $max_delta,
       '#default_value' => $delta,
       '#weight' => 100,
     );

@@ -31,7 +31,8 @@ class MessageTypeConfigTranslationAddForm extends MessageTypeConfigTranslationBa
     $entity = $form_state['#entity'];
     $texts = $form_state['values']['config_names']['message.type.' . $entity->getType()]['text']['translation']['text'];
 
-    // todo: Handle weight order.
+    usort($form_state['values']['text'], 'message_order_text_weight');
+
     $message_text = array();
     foreach ($texts as $text) {
       if (empty($text['value'])) {

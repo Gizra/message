@@ -265,3 +265,14 @@ function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge
 
   return Message::loadMultiple($purge_messages);
 }
+
+/**
+ * usort callback; Order the form elements by their weight.
+ */
+function message_order_text_weight($a, $b) {
+  if ($a['_weight'] == $b['_weight']) {
+    return 0;
+  }
+
+  return ($a['_weight'] < $b['_weight']) ? -1 : 1;
+}

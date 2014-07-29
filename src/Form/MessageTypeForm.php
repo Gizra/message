@@ -161,10 +161,11 @@ class MessageTypeForm extends EntityForm {
     // self.
     parent::save($form, $form_state);
 
+    usort($form_state['values']['text'], 'message_order_text_weight');
+
     // Saving the message text values.
     $message_text = array();
 
-    // todo: Handle weight order.
     foreach ($form_state['values']['text'] as $text) {
       if (empty($text['value'])) {
         continue;
@@ -174,13 +175,6 @@ class MessageTypeForm extends EntityForm {
 
     // Updating the message text.
     $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
-
-    // todo: check if we need this or just move this to save method.
-//    foreach ($this->entity->getText() as $key => $value) {
-//      if (is_int($key)) {
-//        unset($this->entity->text[$key]);
-//      }
-//    }
 
     $this->entity->setText($message_text, $langcode);
 
