@@ -276,3 +276,34 @@ function message_order_text_weight($a, $b) {
 
   return ($a['_weight'] < $b['_weight']) ? -1 : 1;
 }
+
+/**
+ * Implement hook_entity_extra_field_info().
+ */
+function message_entity_extra_field_info() {
+  $extra = array();
+
+  /** @var MessageType[] $bundles */
+  $bundles = MessageType::loadMultiple();
+  foreach ($bundles as $bundle) {
+
+    foreach (array_keys($bundle->getText(NULL, array('text' => TRUE))) as $delta) {
+
+      if (!is_int($delta)) {
+        // The get text holds also the translated text. Since we hold only need
+        // the number of partials we don't need to include delta of texts.
+        continue;
+      }
+
+      $params = array('%number' => $delta);
+      $extra['message'][$bundle->id()]['display']['partial_' . $delta] = array(
+        'label' => t('Partial %number', $params),
+        'description' => t('Holds the partial text at position %number', $params),
+        'weight' => 0,
+      );
+    }
+  }
+
+  return $extra;
+}
+
