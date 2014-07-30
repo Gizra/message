@@ -29,6 +29,7 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  *       "delete" = "Drupal\message\Form\MessageTypeDeleteConfirm"
  *     },
  *     "list_builder" = "Drupal\message\MessageTypeListBuilder",
+ *     "view_builder" = "Drupal\message\MessageViewBuilder",
  *   },
  *   links = {
  *     "add-form" = "message.type_add",
@@ -456,5 +457,4 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   public static function MessageTypeLoadMultiple(array $ids = NULL) {
     parent::loadMultiple($ids);
   }
-
 }
