@@ -22,14 +22,29 @@ class MessageViewBuilder extends EntityViewBuilder {
     // Load the partials in the correct language.
     $partials = $entity->getType()->getText(NULL, array('text' => TRUE));
 
+    if (!$langcode) {
+      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    }
+    else {
+      if (\Drupal::moduleHandler()->moduleExists('config_translation') && !isset($partials[$langcode])) {
+        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
+      }
+    }
+
+    $extra = '';
 
     // Get the partials the user selected for the current view mode.
     $extra_fields = entity_get_display('message', $entity->bundle(), $view_mode);
-    foreach (array_keys($extra_fields->getComponents()) as $partials) {
-      list(, $delta) = explode('_', $partials);
+    foreach (array_keys($extra_fields->getComponents()) as $extra_fields) {
+      list(, $delta) = explode('_', $extra_fields);
+
+      $extra .= $partials[$langcode][$delta];
     }
 
-    // todo: Add this to the rendered array.
-    return render($build);
+    $build = array(
+      '#markup' => $extra,
+    );
+
+    return ($build);
   }
 }
