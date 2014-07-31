@@ -9,6 +9,7 @@ namespace Drupal\message\Entity;
 
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityBase;
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\FieldDefinition;
 use Drupal\Core\Language\Language;
@@ -43,7 +44,7 @@ use Drupal\user\Entity\User;
  *   }
  * )
  */
-class Message extends ContentEntityBase {
+class Message extends ContentEntityBase implements EntityInterface {
 
   /**
    * @var Integer.
