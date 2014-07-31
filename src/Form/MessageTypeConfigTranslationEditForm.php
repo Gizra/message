@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Form;
 
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\message\Entity\MessageType;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -25,7 +26,7 @@ class MessageTypeConfigTranslationEditForm extends MessageTypeConfigTranslationB
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state, Request $request = NULL, $plugin_id = NULL, $langcode = NULL) {
+  public function buildForm(array $form, FormStateInterface $form_state, Request $request = NULL, $plugin_id = NULL, $langcode = NULL) {
     $form = parent::buildForm($form, $form_state, $request, $plugin_id, $langcode);
     $form['#title'] = $this->t('Edit @language translation for %label', array(
       '%label' => $this->mapper->getTitle(),
@@ -38,7 +39,7 @@ class MessageTypeConfigTranslationEditForm extends MessageTypeConfigTranslationB
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
     /** @var MessageType $entity */

@@ -9,6 +9,7 @@ namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\message\Entity\Message;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -93,7 +94,7 @@ class DeleteMultiple extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     $this->messages = $this->tempStoreFactory->get('message_multiple_delete_confirm')->get(\Drupal::currentUser()->id());
     if (empty($this->messages)) {
       return new RedirectResponse(url('admin/content/message', array('absolute' => TRUE)));
@@ -118,7 +119,7 @@ class DeleteMultiple extends ConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     if ($form_state['values']['confirm'] && !empty($this->messages)) {
       $this->storage->delete($this->messages);
       $this->tempStoreFactory->get('message_multiple_delete_confirm')->delete(\Drupal::currentUser()->id());

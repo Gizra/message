@@ -8,6 +8,7 @@
 namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
 
 /**
@@ -25,13 +26,6 @@ class MessageTypeDeleteConfirm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function getCancelRoute() {
-    return new Url('message.overview_types');
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function getConfirmText() {
     return t('Delete');
   }
@@ -39,19 +33,29 @@ class MessageTypeDeleteConfirm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function buildForm(array $form, array &$form_state) {
+  public function buildForm(array $form, FormStateInterface $form_state) {
     return parent::buildForm($form, $form_state);
   }
 
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, array &$form_state) {
+  public function submit(array $form, FormStateInterface $form_state) {
     $this->entity->delete();
     $t_args = array('%name' => $this->entity->label());
     drupal_set_message(t('The message type %name has been deleted.', $t_args));
     watchdog('message', 'Deleted message type %name.', $t_args, WATCHDOG_NOTICE);
 
-    $form_state['redirect_route'] = $this->getCancelRoute();
+    $form_state['redirect_route'] = $this->getCancelUrl();
+  }
+
+  /**
+   * Returns the route to go to if the user cancels the action.
+   *
+   * @return \Drupal\Core\Url
+   *   A URL object.
+   */
+  public function getCancelUrl() {
+    return new Url('message.overview_types');
   }
 }

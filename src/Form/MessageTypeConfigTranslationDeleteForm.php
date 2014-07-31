@@ -8,6 +8,7 @@
 namespace Drupal\message\Form;
 
 use Drupal\config_translation\Form\ConfigTranslationDeleteForm;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\message\Entity\MessageType;
 
 /**
@@ -25,7 +26,7 @@ class MessageTypeConfigTranslationDeleteForm extends ConfigTranslationDeleteForm
   /**
    * {@inheritdoc}
    */
-  public function submitForm(array &$form, array &$form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
 
     // Get the message type.
     $configs = $this->mapper->getConfigData();

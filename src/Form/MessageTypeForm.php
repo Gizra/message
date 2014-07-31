@@ -9,6 +9,7 @@ namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageType;
 use Drupal\message\FormElement\MessageTypeMultipleTextField;
@@ -139,7 +140,7 @@ class MessageTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function validate(array $form, array &$form_state) {
+  public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
   }
 
