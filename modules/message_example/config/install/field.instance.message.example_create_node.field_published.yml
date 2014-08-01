@@ -1,19 +1,21 @@
-id: message.example_create_node.field_published
-uuid: c88ec40d-f95f-4986-a104-042ef4873f80
-status: true
+uuid: c00abe54-177b-4b2b-9303-3daa66ed36aa
 langcode: en
-field_uuid: 3f3762fd-08c8-43b3-bc00-c039433d023f
+status: true
+dependencies:
+  entity:
+    - field.storage.message.field_published
+    - message.type.example_create_node
+id: message.example_create_node.field_published
+label: Published
 field_name: field_published
 entity_type: message
 bundle: example_create_node
-label: Published
 description: ''
 required: false
-default_value: {  }
+translatable: true
+default_value:
+  -
+    value: 0
 default_value_function: ''
 settings: {  }
-dependencies:
-  entity:
-    - field.field.message.field_published
-    - message.type.example_create_node
-field_type: list_boolean
+field_type: boolean

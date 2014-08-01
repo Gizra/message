@@ -1,19 +1,21 @@
-id: message.example_create_comment.field_published
-uuid: 7b3418e4-0185-4e36-ae28-40d807f16339
-status: true
+uuid: 5caea4ef-e72c-41d0-b900-e8f8aac361fd
 langcode: en
-field_uuid: 3f3762fd-08c8-43b3-bc00-c039433d023f
+status: true
+dependencies:
+  entity:
+    - field.storage.message.field_published
+    - message.type.example_create_comment
+id: message.example_create_comment.field_published
+label: Published
 field_name: field_published
 entity_type: message
 bundle: example_create_comment
-label: Published
 description: ''
 required: false
-default_value: {  }
+translatable: false
+default_value:
+  -
+    value: 0
 default_value_function: ''
 settings: {  }
-dependencies:
-  entity:
-    - field.field.message.field_published
-    - message.type.example_create_comment
-field_type: list_boolean
+field_type: boolean

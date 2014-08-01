@@ -1,25 +1,25 @@
-id: message.example_create_comment.field_comment_reference
-uuid: f67516b4-cef0-461e-a606-6fc42f92b5d9
-status: true
+uuid: dab57454-b7ef-4806-b900-d73af655d124
 langcode: en
-field_uuid: 8b265617-894f-4105-b948-7226083c16e4
+status: true
+dependencies:
+  entity:
+    - field.storage.message.field_comment_reference
+    - message.type.example_create_comment
+id: message.example_create_comment.field_comment_reference
+label: 'Comment reference'
 field_name: field_comment_reference
 entity_type: message
 bundle: example_create_comment
-label: 'Comment reference'
 description: ''
 required: false
+translatable: false
 default_value: {  }
 default_value_function: ''
 settings:
   handler: default
   handler_settings:
     target_bundles:
-      node__comment: node__comment
+      comment: comment
     sort:
       field: _none
-dependencies:
-  entity:
-    - field.field.message.field_comment_reference
-    - message.type.example_create_comment
 field_type: entity_reference

@@ -1,7 +1,11 @@
-id: message.field_comment_reference
-uuid: 8b265617-894f-4105-b948-7226083c16e4
-status: true
+uuid: 3817ff6a-9375-444a-8701-1e314ce02d82
 langcode: en
+status: true
+dependencies:
+  module:
+    - entity_reference
+    - message
+id: message.field_comment_reference
 name: field_comment_reference
 entity_type: message
 type: entity_reference
@@ -10,9 +14,5 @@ settings:
 module: entity_reference
 locked: false
 cardinality: 1
-translatable: false
+translatable: true
 indexes: {  }
-dependencies:
-  module:
-    - entity_reference
-    - message

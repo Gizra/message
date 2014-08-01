@@ -22,7 +22,7 @@ class MessageTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function form(array $form, array &$form_state) {
+  public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
     /** @var MessageType $type */
@@ -130,7 +130,7 @@ class MessageTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  protected function actions(array $form, array &$form_state) {
+  protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
     $actions['submit']['#value'] = t('Save message type');
     $actions['delete']['#value'] = t('Delete message type');
@@ -157,7 +157,7 @@ class MessageTypeForm extends EntityForm {
   /**
    * {@inheritdoc}
    */
-  public function save(array $form, array &$form_state) {
+  public function save(array $form, FormStateInterface $form_state) {
     // Until the parent method will do something we handle the saving by our
     // self.
     parent::save($form, $form_state);
