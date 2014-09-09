@@ -11,7 +11,7 @@ use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\user\Entity\User;
 
@@ -218,25 +218,25 @@ class Message extends ContentEntityBase implements EntityInterface {
    * {@inheritdoc}
    */
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
-    $fields['mid'] = FieldDefinition::create('integer')
+    $fields['mid'] = BaseFieldDefinition::create('integer')
       ->setLabel(t('Message ID'))
       ->setDescription(t('The message ID.'))
       ->setReadOnly(TRUE)
       ->setSetting('unsigned', TRUE);
 
-    $fields['uuid'] = FieldDefinition::create('uuid')
+    $fields['uuid'] = BaseFieldDefinition::create('uuid')
       ->setLabel(t('UUID'))
       ->setDescription(t('The message UUID'))
       ->setReadOnly(TRUE);
 
-    $fields['type'] = FieldDefinition::create('entity_reference')
+    $fields['type'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Type'))
       ->setDescription(t('The message type.'))
       ->setSetting('target_type', 'message_type')
       ->setSetting('default_value', 0)
       ->setReadOnly(TRUE);
 
-    $fields['uid'] = FieldDefinition::create('entity_reference')
+    $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Author'))
       ->setDescription(t('The user that is the message author.'))
       ->setRevisionable(TRUE)
@@ -246,13 +246,13 @@ class Message extends ContentEntityBase implements EntityInterface {
       ))
       ->setTranslatable(TRUE);
 
-    $fields['created'] = FieldDefinition::create('created')
+    $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the node was created.'))
       ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
-    $fields['arguments'] = FieldDefinition::create('map')
+    $fields['arguments'] = BaseFieldDefinition::create('map')
       ->setLabel(t('Arguments'))
       ->setDescription(t('Holds the arguments of the message in serialise format.'));
 
