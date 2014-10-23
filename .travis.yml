@@ -4,7 +4,7 @@ php:
   - 5.3
 
 mysql:
-  database: restful
+  database: drupal
   username: root
   encoding: utf8
 
@@ -26,7 +26,7 @@ before_script:
   - php -d sendmail_path=`which true` `pear config-get php_dir`/drush/drush.php --yes core-quick-drupal --profile=testing --no-server --db-url=mysql://root:@127.0.0.1/drupal --enable=simpletest message
 
   # reference and enable module in build site
-  - ln -s $(readlink -e $(cd -)) restful/drupal/sites/all/modules/message
+  - ln -s $(readlink -e $(cd -)) message/drupal/sites/all/modules/message
   - cd message/drupal
 
   # start a web server on port 8080, run in the background; wait for initialization
