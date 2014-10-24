@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Gizra/message.svg?branch=7.x-1.x)](https://travis-ci.org/Gizra/message)
+
 Overview
 ========
 A general logging utility that can be used as activity module.
