@@ -1,16 +1,16 @@
-uuid: 2216524b-641a-4bb3-8200-c8bcd0fac987
+uuid: 3817ff6a-9375-444a-8701-1e314ce02d82
 langcode: en
 status: true
 dependencies:
   module:
     - entity_reference
     - message
-id: message.field_node_reference
-name: field_node_reference
+id: message.field_comment_reference
+field_name: field_comment_reference
 entity_type: message
 type: entity_reference
 settings:
-  target_type: node
+  target_type: comment
 module: entity_reference
 locked: false
 cardinality: 1

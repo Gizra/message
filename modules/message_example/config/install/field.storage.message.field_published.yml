@@ -5,7 +5,7 @@ dependencies:
   module:
     - message
 id: message.field_published
-name: field_published
+field_name: field_published
 entity_type: message
 type: boolean
 settings:
