@@ -236,6 +236,11 @@ class Message extends ContentEntityBase implements EntityInterface {
       ->setSetting('default_value', 0)
       ->setReadOnly(TRUE);
 
+    $fields['langcode'] = BaseFieldDefinition::create('language')
+      ->setLabel(t('Language code'))
+      ->setDescription(t('The node language code.'))
+      ->setRevisionable(TRUE);
+
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Author'))
       ->setDescription(t('The user that is the message author.'))
