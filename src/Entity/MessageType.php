@@ -332,13 +332,13 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
 
     if (!$langcode && \Drupal::moduleHandler()->moduleExists('config_translation')) {
       // The config translation module turned on. Get the proper language.
-      $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
+      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
     }
 
     if (!$langcode || !isset($this->text[$langcode])) {
       // We are facing two problems: a language was not supplied or there is no
       // translation for that language. Get the default language.
-      $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+      $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
     }
 
     if (!isset($this->text[$langcode])) {
@@ -394,10 +394,10 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
     if (!$langcode) {
       if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
         // The config translation module turned on. Get the proper language.
-        $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
+        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
       }
       else {
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
       }
     }
 
@@ -423,10 +423,10 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
     if (!$langcode) {
       if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
         // The config translation module turned on. Get the proper language.
-        $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
+        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
       }
       else {
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->id;
+        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
       }
     }
 

@@ -7,9 +7,9 @@
 
 namespace Drupal\message\Tests;
 
-use Drupal\Core\Field\FieldDefinition;
+use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
-use Drupal\field\Entity\FieldInstanceConfig;
+use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
@@ -67,9 +67,9 @@ class MessageEntityDelete extends MessageTestBase {
 
     // Create a vocabulary.
     $this->vocabulary = entity_create('taxonomy_vocabulary', array(
-      'name' => $this->randomName(),
-      'description' => $this->randomName(),
-      'vid' => drupal_strtolower($this->randomName()),
+      'name' => $this->randomMachineName(),
+      'description' => $this->randomMachineName(),
+      'vid' => Unicode::strtolower($this->randomMachineName()),
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
     ));
@@ -112,7 +112,7 @@ class MessageEntityDelete extends MessageTestBase {
       'name' => $name,
       'entity_type' => 'message',
       'type' => 'taxonomy_term_reference',
-      'cardinality' => $multiple ? FieldDefinition::CARDINALITY_UNLIMITED : 1,
+      'cardinality' => $multiple ? FieldStorageConfig::CARDINALITY_UNLIMITED : 1,
       'settings' => array(
         'allowed_values' => array(
           array(
@@ -123,7 +123,7 @@ class MessageEntityDelete extends MessageTestBase {
       ),
     ))->save();
 
-    FieldInstanceConfig::create(array(
+    FieldConfig::create(array(
       'field_name' => $name,
       'entity_type' => 'message',
       'bundle' => 'dummy_message',
@@ -153,10 +153,10 @@ class MessageEntityDelete extends MessageTestBase {
         'target_type' => $target_type,
       ),
       'type' => 'entity_reference',
-      'cardinality' => $multiple ? FieldDefinition::CARDINALITY_UNLIMITED : 1,
+      'cardinality' => $multiple ? FieldStorageConfig::CARDINALITY_UNLIMITED : 1,
     ))->save();
 
-    FieldInstanceConfig::create(array(
+    FieldConfig::create(array(
       'label' => 'Entity reference field',
       'field_name' => $name,
       'entity_type' => 'message',

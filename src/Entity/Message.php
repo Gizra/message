@@ -24,6 +24,7 @@ use Drupal\user\Entity\User;
  *   bundle_label = @Translation("Message type"),
  *   module = "message",
  *   base_table = "message",
+ *   data_table = "message_field_data",
  *   translatable = TRUE,
  *   bundle_entity_type = "message_type",
  *   entity_keys = {
