@@ -25,7 +25,6 @@ use Drupal\user\Entity\User;
  *   module = "message",
  *   base_table = "message",
  *   translatable = TRUE,
- *   fieldable = TRUE,
  *   bundle_entity_type = "message_type",
  *   entity_keys = {
  *     "id" = "mid",
@@ -35,12 +34,13 @@ use Drupal\user\Entity\User;
  *   bundle_keys = {
  *     "bundle" = "type"
  *   },
- *   controllers = {
+ *   handlers = {
  *     "view_builder" = "Drupal\message\MessageViewBuilder",
  *     "list_builder" = "Drupal\message\MessageListBuilder",
  *   },
+ *   field_ui_base_route = "entity.message_type.edit_form",
  *   links = {
- *     "admin-form" = "message_type.edit"
+ *     "admin-form" = "entity.message_type.edit"
  *   }
  * )
  */
@@ -238,13 +238,11 @@ class Message extends ContentEntityBase implements EntityInterface {
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
       ->setLabel(t('Language code'))
-      ->setDescription(t('The node language code.'))
-      ->setRevisionable(TRUE);
+      ->setDescription(t('The message language code.'));
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Author'))
       ->setDescription(t('The user that is the message author.'))
-      ->setRevisionable(TRUE)
       ->setSettings(array(
         'target_type' => 'user',
         'default_value' => 0,
@@ -254,7 +252,6 @@ class Message extends ContentEntityBase implements EntityInterface {
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the node was created.'))
-      ->setRevisionable(TRUE)
       ->setTranslatable(TRUE);
 
     $fields['arguments'] = BaseFieldDefinition::create('map')
