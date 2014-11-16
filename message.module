@@ -117,28 +117,6 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
 }
 
 /**
- * Implements hook_permission().
- *
- * @deprecated
- *  We might need to remove this.
- */
-function message_permission() {
-  $permissions = array();
-
-  $permissions['administer message types'] = array(
-    'title' => t('Administer message types'),
-    'description' => t('Administer message types that can be used to log an event.'),
-  );
-
-  $permissions['overview messages'] = array(
-    'title' => t('Overview messages'),
-    'description' => t('Grant permission to view the messages in the site.'),
-  );
-
-  return $permissions;
-}
-
-/**
  * Implements hook_cron().
  *
  * Fetch all message types and purge old messages.
