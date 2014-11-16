@@ -8,6 +8,7 @@
 namespace Drupal\message\FormElement;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\message\Entity\MessageType;
 
 class MessageTypeMultipleTextField {
@@ -43,13 +44,13 @@ class MessageTypeMultipleTextField {
   public function __construct(MessageType $entity, $callback, $langcode = '') {
     $this->entity = $entity;
     $this->callback = $callback;
-    $this->langcode = $langcode ? $langcode : \Drupal::languageManager()->getCurrentLanguage()->id;
+    $this->langcode = $langcode ? $langcode : \Drupal::languageManager()->getCurrentLanguage()->getId();
   }
 
   /**
    * Return the message text element.
    */
-  public function textField(&$form, &$form_state) {
+  public function textField(&$form, FormStateInterface $form_state) {
     // Creating the container.
     $form['text'] = array(
       '#type' => 'container',
@@ -89,16 +90,18 @@ class MessageTypeMultipleTextField {
       $start_key++;
     }
 
-    $form_state['storage']['message_text'] = isset($form_state['storage']['message_text']) ? $form_state['storage']['message_text'] : $start_key;
-
-    if (!empty($form_state['triggering_element'])) {
-      $form_state['storage']['message_text']++;
+    if (!$form_state->has('message_text')) {
+      $form_state->set('message_text', $start_key);
     }
 
-    for ($delta = $start_key; $delta <= $form_state['storage']['message_text']; $delta++) {
+    if ($form_state->has('triggering_element')) {
+      $form_state->set('message_text', $form_state->get('message_text') + 1);
+    }
+
+    for ($delta = $start_key; $delta <= $form_state->get('message_text'); $delta++) {
       // For multiple fields, title and description are handled by the wrapping
       // table.
-      $form['text'][$delta] = $this->singleElement($form_state['storage']['message_text'], $delta);
+      $form['text'][$delta] = $this->singleElement($form_state->get('message_text'), $delta);
     }
   }
 

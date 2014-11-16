@@ -15,7 +15,7 @@ message.type_add:
   requirements:
     _permission: 'administer message types'
 
-message_type.edit:
+entity.message_type.edit_form:
   path: '/admin/structure/message/manage/{message_type}'
   defaults:
     _entity_form: 'message_type.edit'
@@ -23,7 +23,7 @@ message_type.edit:
   requirements:
     _permission: 'administer message types'
 
-message_type.delete:
+entity.message_type.delete_form:
   path: '/admin/structure/message/delete/{message_type}'
   defaults:
     _entity_form: 'message_type.delete'

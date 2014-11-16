@@ -9,6 +9,7 @@ namespace Drupal\message\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
 
 /**
  * Defines the Message type entity class.
@@ -22,7 +23,8 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  *     "id" = "type",
  *     "label" = "label"
  *   },
- *   controllers = {
+ *   admin_permission = "administer message types",
+ *   handlers = {
  *     "form" = {
  *       "add" = "Drupal\message\Form\MessageTypeForm",
  *       "edit" = "Drupal\message\Form\MessageTypeForm",
@@ -33,12 +35,14 @@ use Drupal\Core\Config\Entity\ConfigEntityInterface;
  *   },
  *   links = {
  *     "add-form" = "message.type_add",
- *     "edit-form" = "message_type.edit",
- *     "delete-form" = "message_type.delete"
+ *     "edit-form" = "entity.message_type.edit_form",
+ *     "delete-form" = "entity.message_type.delete_form"
  *   }
  * )
  */
 class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
+
+  use ThirdPartySettingsTrait;
 
   /**
    * The ID of this message type.

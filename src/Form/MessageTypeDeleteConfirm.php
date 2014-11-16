@@ -40,13 +40,12 @@ class MessageTypeDeleteConfirm extends EntityConfirmFormBase {
   /**
    * {@inheritdoc}
    */
-  public function submit(array $form, FormStateInterface $form_state) {
+  public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     $t_args = array('%name' => $this->entity->label());
     drupal_set_message(t('The message type %name has been deleted.', $t_args));
-    watchdog('message', 'Deleted message type %name.', $t_args, WATCHDOG_NOTICE);
-
-    $form_state['redirect_route'] = $this->getCancelUrl();
+    $this->logger('content')->notice('Deleted message type %name', $t_args);
+    $form_state->setRedirectUrl($this->getCancelUrl());
   }
 
   /**

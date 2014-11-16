@@ -20,6 +20,13 @@ use Drupal\message\FormElement\MessageTypeMultipleTextField;
 class MessageTypeForm extends EntityForm {
 
   /**
+   * The entity being used by this form.
+   *
+   * @var \Drupal\message\Entity\MessageType
+   */
+  protected $entity;
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
@@ -162,12 +169,13 @@ class MessageTypeForm extends EntityForm {
     // self.
     parent::save($form, $form_state);
 
-    usort($form_state['values']['text'], 'message_order_text_weight');
+    $values = $form_state->getValue('text');
+    usort($values, 'message_order_text_weight');
 
     // Saving the message text values.
     $message_text = array();
 
-    foreach ($form_state['values']['text'] as $text) {
+    foreach ($values as $text) {
       if (empty($text['value'])) {
         continue;
       }
@@ -175,7 +183,7 @@ class MessageTypeForm extends EntityForm {
     }
 
     // Updating the message text.
-    $langcode = \Drupal::languageManager()->getCurrentLanguage()->id;
+    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
 
     $this->entity->setText($message_text, $langcode);
 
@@ -184,11 +192,10 @@ class MessageTypeForm extends EntityForm {
     $this->entity->save();
 
     $params = array(
-      '@type' => $form_state['values']['label'],
+      '@type' => $form_state->getValue('label'),
     );
 
     drupal_set_message(t('The message type @type created successfully.', $params));
-
-    $form_state['redirect'] = 'admin/structure/message';
+    $form_state->setRedirect('message.overview_types');
   }
 }
