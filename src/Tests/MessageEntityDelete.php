@@ -109,7 +109,7 @@ class MessageEntityDelete extends MessageTestBase {
   private function createTermReferenceField($multiple, $name) {
     // Create a term reference field.
     FieldStorageConfig::create(array(
-      'name' => $name,
+      'field_name' => $name,
       'entity_type' => 'message',
       'type' => 'taxonomy_term_reference',
       'cardinality' => $multiple ? FieldStorageConfig::CARDINALITY_UNLIMITED : 1,
@@ -145,7 +145,7 @@ class MessageEntityDelete extends MessageTestBase {
 
     // Create a term reference field.
     FieldStorageConfig::create(array(
-      'name' => $name,
+      'field_name' => $name,
       'entity_type' => 'message',
       'translatable' => FALSE,
       'entity_types' => array(),
