@@ -5,7 +5,7 @@ Overview
 A general logging utility that can be used as activity module.
 
 * In message module, the arguments of a sentence can use tokens, custom
-  calblacks or be hard-coded. Making the arguments dynamic means that the
+  callbacks or be hard-coded. Making the arguments dynamic means that the
   rendering time is slower than activity, on the other hand you can use
   callback functions to render the final output (see message_example module).
 * Thanks to the dependency on the Entity API, the messages are exportable and
@@ -32,9 +32,9 @@ Tokens
   and shows a token browser in the message type creation page.
 
 * "Single use" tokens
-  The single-use tokens are similiar to the dynamic tokens, excepet they're
-  being replaced by their content as the message is created; Meaning this
-  content will not get updated if it's reference gets changed.
+  The single-use tokens are similar to the dynamic tokens, except they are
+  being replaced by their content as the message is created; meaning this
+  content will not get updated if its reference gets changed.
   E.g. "@{message:user:name}" - Will be replaced by the message author's name
   (When creating the message).
   You can use this for example when you know the user's name is not going
@@ -47,8 +47,8 @@ Tokens
   E.g. If the message was created with an argument called "@sometext", it will
   get inserted to the message text (On display time) whenever the string
   "@sometext" is encountered.
-  This method also supports custom call-back functions with optional arguments
-  stored on the message; In order to use a callback, create the message with
+  This method also supports custom callback functions with optional arguments
+  stored on the message; in order to use a callback, create the message with
   an argument such as:
   '!replaced-by-foo' => array(
     'callback' => 'foo',
@@ -59,7 +59,7 @@ Tokens
 
 Partials
 ========
-The message body has multiple cardinallity, allowing to separate html markup
+The message body has multiple cardinality, allowing to separate html markup
 from the actual message content, and also, allowing to only render a selected
 part of the message.
 The partials are reflected in the "Manage display" page of every message type,
@@ -76,7 +76,7 @@ admin/structure/messages/manage/[YOUR-MESSAGE-TYPE]/display
 
 Auto-purging
 ============
-Message supports deleteion on Cron of messages according to quota and age
+Message supports deletion on Cron of messages according to quota and age
 definition.
 
 * Global purging definition
@@ -84,7 +84,7 @@ definition.
   maximal quota or maximal message age in days.
 
 * Message type purging definition
-  Each message type my override the global purging settings. Under
+  Each message type may override the global purging settings. Under
   admin/structure/messages/manage/[YOUR-MESSAGE-TYPE], clicking the
   "Override global settings" checkbox will make the global settings ignore the
   current message type and will allow to set purging definitions for the current
