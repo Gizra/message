@@ -1,7 +1,7 @@
 message.overview_types:
   path: '/admin/structure/message'
   defaults:
-    _content: '\Drupal\Core\Entity\Controller\EntityListController::listing'
+    _controller: '\Drupal\Core\Entity\Controller\EntityListController::listing'
     entity_type: 'message_type'
     _title: 'Message types'
   requirements:
