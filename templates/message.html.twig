@@ -1,5 +1,4 @@
-<?php
-
+{#
 /**
  * @file
  * Default theme implementation for message entities.
@@ -27,8 +26,7 @@
  * @see template_preprocess_message()
  * @see template_process()
  */
-?>
-
-<div class="<?php print $classes; ?> clearfix"<?php print $attributes; ?>>
-  <?php print render($content); ?>
+#}
+<div {{ attributes }}>
+  {{ content }}
 </div>
