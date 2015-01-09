@@ -7,6 +7,8 @@
 
 namespace Drupal\message\Tests;
 
+use Drupal\user\Entity\User;
+
 /**
  * Testing the listing functionality for the Message type entity.
  *
@@ -14,19 +16,28 @@ namespace Drupal\message\Tests;
  */
 class MessageTypeListTest extends MessageTestBase {
 
-  function setUp() {
+  /**
+   * @var User
+   *
+   * The user object.
+   */
+  protected $user;
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
     parent::setUp();
     $this->user = $this->drupalCreateUser(['administer message types']);
-
   }
 
   /**
    * Listing of messages.
    */
-  function testEntityTypeList() {
+  public function testEntityTypeList() {
     $this->drupalLogin($this->user);
 
-    $test = $this->drupalGet('admin/structure/message');
+    $this->drupalGet('admin/structure/message');
     $this->assertResponse(200);
   }
 

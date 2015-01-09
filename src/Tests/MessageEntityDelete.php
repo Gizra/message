@@ -52,11 +52,10 @@ class MessageEntityDelete extends MessageTestBase {
     );
   }
 
-
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     // Set config.
@@ -101,10 +100,10 @@ class MessageEntityDelete extends MessageTestBase {
   /**
    * Create a term reference field.
    *
-   * @param boolean $multiple
-   *  Determine of the field should be multiple.
+   * @param bool $multiple
+   *   Determine of the field should be multiple.
    * @param string $name
-   *  The name of the field.
+   *   The name of the field.
    */
   private function createTermReferenceField($multiple, $name) {
     // Create a term reference field.
@@ -134,12 +133,12 @@ class MessageEntityDelete extends MessageTestBase {
   /**
    * Create a multiple entity reference field.
    *
-   * @param boolean $multiple
-   *  Determine of the field should be multiple.
+   * @param bool $multiple
+   *   Determine of the field should be multiple.
    * @param string $name
-   *  The name of the field.
+   *   The name of the field.
    * @param string $target_type
-   *  The target type. Default to node.
+   *   The target type. Default to node.
    */
   private function createEntityReferenceField($multiple, $name, $target_type = 'node') {
 
@@ -176,7 +175,7 @@ class MessageEntityDelete extends MessageTestBase {
   /**
    * Test deletion of a message after its referenced entities have been deleted.
    */
-  function testReferencedEntitiesDelete() {
+  public function testReferencedEntitiesDelete() {
     // Testing nodes reference.
     $message = Message::create(array('type' => 'dummy_message'));
     $message->set('field_node_references', array(1, 2));

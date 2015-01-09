@@ -77,7 +77,6 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
     return $route;
   }
 
-
   /**
    * {@inheritdoc}
    */

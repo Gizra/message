@@ -5,6 +5,7 @@
  *
  * Contains Drupal\message\FormElement.
  */
+
 namespace Drupal\message\FormElement;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
@@ -35,11 +36,11 @@ class MessageTypeMultipleTextField {
    * Constructing the element.
    *
    * @param MessageType $entity
-   *  A message type.
-   * @param $callback
-   *  The name of the ajax callback.
+   *   A message type.
+   * @param string $callback
+   *   The name of the ajax callback.
    * @param string $langcode
-   *  The language of the message. Used for the message translation form.
+   *   The language of the message. Used for the message translation form.
    */
   public function __construct(MessageType $entity, $callback, $langcode = '') {
     $this->entity = $entity;
@@ -50,7 +51,7 @@ class MessageTypeMultipleTextField {
   /**
    * Return the message text element.
    */
-  public function textField(&$form, FormStateInterface $form_state) {
+  public function textField(&$form, FormStateInterface $form_state, $text = array()) {
     // Creating the container.
     $form['text'] = array(
       '#type' => 'container',
@@ -69,6 +70,7 @@ class MessageTypeMultipleTextField {
       '#type' => 'button',
       '#value' => t('Add another item'),
       '#href' => '',
+      '#add_more' => TRUE,
       '#ajax' => array(
         'callback' => $this->callback,
         'wrapper' => 'message-text',
@@ -78,30 +80,34 @@ class MessageTypeMultipleTextField {
     // Building the multiple form element; Adding first the the form existing
     // text.
     $start_key = 0;
-    $MessageText = $this->entity->getText($this->langcode, array('text' => TRUE)) ? $this->entity->getText($this->langcode, array('text' => TRUE)) : array();
+    if (!$message_text = $text) {
+      $message_text = $this->entity->getText($this->langcode, array('text' => TRUE)) ? $this->entity->getText($this->langcode, array('text' => TRUE)) : array();
+    }
 
-    foreach ($MessageText as $text) {
-
-      if (is_array($text)) {
-        continue;
+    if ($message_text) {
+      foreach ($message_text as $text) {
+        $form['text'][$start_key] = $this->singleElement($start_key, $start_key, $text);
+        $start_key++;
       }
-
-      $form['text'][$start_key] = $this->singleElement($start_key, $start_key, $text);
-      $start_key++;
     }
 
-    if (!$form_state->has('message_text')) {
-      $form_state->set('message_text', $start_key);
+    // Set the current elements number.
+    if (!$form_state->get('elements')) {
+      $form_state->set('elements', $start_key);
     }
 
-    if ($form_state->has('triggering_element')) {
-      $form_state->set('message_text', $form_state->get('message_text') + 1);
+    // Get the trigger element and check if this the add another item button.
+    $trigger_element = $form_state->getTriggeringElement();
+
+    if (!empty($trigger_element['#add_more'])) {
+      // Increase the number of elements.
+      $elements = $form_state->get('elements') + 1;
+      $form_state->set('elements', $elements);
     }
 
-    for ($delta = $start_key; $delta <= $form_state->get('message_text'); $delta++) {
-      // For multiple fields, title and description are handled by the wrapping
-      // table.
-      $form['text'][$delta] = $this->singleElement($form_state->get('message_text'), $delta);
+    // Create partials from the last $start_key to the elements number.
+    for ($i = $start_key; $i <= $form_state->get('elements'); $i++) {
+      $form['text'][] = $this->singleElement($i, $start_key, '');
     }
   }
 
@@ -123,7 +129,6 @@ class MessageTypeMultipleTextField {
       // Note: this 'delta' is the FAPI #type 'weight' element's property.
       '#delta' => $max_delta,
       '#default_value' => $delta,
-      '#weight' => 100,
     );
 
     return $element;

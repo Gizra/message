@@ -10,6 +10,7 @@ namespace Drupal\message\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
+use Drupal\message\MessageException;
 
 /**
  * Defines the Message type entity class.
@@ -21,7 +22,8 @@ use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
  *   bundle_of = "message",
  *   entity_keys = {
  *     "id" = "type",
- *     "label" = "label"
+ *     "label" = "label",
+ *     "langcode" = "langcode",
  *   },
  *   admin_permission = "administer message types",
  *   handlers = {
@@ -84,7 +86,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *
    * @var array
    */
-  protected $data;
+  protected $data = array();
 
   /**
    * Overrides Entity::__construct().
@@ -286,9 +288,10 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *    purging. IF not set, the default purge settings defined in the
    *    "Message settings" will apply.
    * - 'quota': Optional; Maximal (approximate) amount of allowed messages
-   *    of the message type. IF not set, the default purge settings defined in the
-   *    "Message settings" will apply.
-   * - 'days': Optional; Maximal message age in days. IF not set, the default purge settings defined in the
+   *    of the message type. IF not set, the default purge settings defined in
+   *    the "Message settings" will apply.
+   * - 'days': Optional; Maximal message age in days. IF not set, the default
+   *    purge settings defined in the
    *    "Message settings" will apply.
    *
    * Token settings:
@@ -321,32 +324,30 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
    *   A string with the text from the field.
    */
   public function getText($langcode = NULL, $options = array()) {
+    $text = $this->text;
+
+    if ($langcode && \Drupal::moduleHandler()->moduleExists('config_translation')) {
+      $config_translation = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'message.type.' . $this->id());
+      if ($translated_text = $config_translation->get('text')) {
+        $text = $translated_text;
+      }
+    }
+
     if (isset($options['text']) && $options['text']) {
 
-      if (!empty($this->text[$langcode])) {
-        return $this->text[$langcode];
+      if (isset($options['delta'])) {
+        return $text[$options['delta']];
       }
 
-      return $this->text;
+      return $text;
     }
 
-    if (!$langcode && \Drupal::moduleHandler()->moduleExists('config_translation')) {
-      // The config translation module turned on. Get the proper language.
-      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    }
-
-    if (!$langcode || !isset($this->text[$langcode])) {
-      // We are facing two problems: a language was not supplied or there is no
-      // translation for that language. Get the default language.
-      $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-    }
-
-    if (!isset($this->text[$langcode])) {
+    if (!isset($text)) {
       return array();
     }
 
-    // Combine all the field text and return the text.
-    return implode("\n", $this->text[$langcode]);
+    // Combine all the field text and return it as a trimmed text.
+    return trim(implode("\n", $text));
   }
 
   /**
@@ -357,108 +358,13 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   }
 
   /**
-   * Override the save method.
-   */
-  function save() {
-    if (!empty($this->text) && !is_array($this->text)) {
-      // On Drupal 7 the text was field which instantiate on the message type.
-      // This was good since the message was an instance of the message type and
-      // the text from the message type's field was displayed to the user and
-      // the placeholders were replaced on the fly.
-      // On Drupal 8 configurable entity is not fieldable and now the text will
-      // be held in an array property and the form field will be generated as
-      // multiple. The next line ensure the text property will be array.
-      $this->text = array($this->text);
-    }
-
-    if (!empty($this->data) && !is_array($this->data)) {
-      $this->data = array($this->data);
-    }
-
-    parent::save();
-  }
-
-  /**
-   * Setting the text of the message properly.
-   *
-   * @param Array $text
-   *  The message text.
-   * @param string $langcode
-   *  Optional. The language of the text. When the config translation is on the
-   *  language will the current language if not the default will be set to the
-   *  default site language.
-   *
-   * @return $this
-   */
-  public function setText(array $text, $langcode = '') {
-    if (!$langcode) {
-      if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
-        // The config translation module turned on. Get the proper language.
-        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-      }
-      else {
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-      }
-    }
-
-    if ($text == NULL) {
-      unset($this->text[$langcode]);
-    }
-    else {
-      $this->text[$langcode] = $text;
-    }
-
-    return $this;
-  }
-
-  /**
-   * Removing text easily.
-   *
-   * @param string $langcode
-   *  Optional. The language of the text. When the config translation is on the
-   *  language will the current language if not the default will be set to the
-   *  default site language.
-   */
-  public function removeText($langcode = '' ) {
-    if (!$langcode) {
-      if (\Drupal::moduleHandler()->moduleExists('config_translation')) {
-        // The config translation module turned on. Get the proper language.
-        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-      }
-      else {
-        $langcode = \Drupal::languageManager()->getDefaultLanguage()->getId();
-      }
-    }
-
-    unset($this->text[$langcode]);
-  }
-
-  /**
    * {@inheritdoc}
    *
    * @return MessageType
-   *  A message type object ready to be save.
+   *   A message type object ready to be save.
    */
   public static function create(array $values = array()) {
     return parent::create($values);
   }
 
-  /**
-   * {@inheritdoc}
-   *
-   * @return MessageType
-   */
-  public static function Load($id) {
-    return parent::load($id);
-  }
-
-  /**
-   * {@inheritdoc}
-   *
-   * @return MessageType[]
-   *  Array of message types.
-   */
-  public static function MessageTypeLoadMultiple(array $ids = NULL) {
-    parent::loadMultiple($ids);
-  }
 }

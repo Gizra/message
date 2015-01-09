@@ -30,7 +30,8 @@ use Drupal\user\Entity\User;
  *   entity_keys = {
  *     "id" = "mid",
  *     "bundle" = "type",
- *     "uuid" = "uuid"
+ *     "uuid" = "uuid",
+ *     "langcode" = "langcode"
  *   },
  *   bundle_keys = {
  *     "bundle" = "type"
@@ -234,7 +235,6 @@ class Message extends ContentEntityBase implements EntityInterface {
       ->setLabel(t('Type'))
       ->setDescription(t('The message type.'))
       ->setSetting('target_type', 'message_type')
-      ->setSetting('default_value', 0)
       ->setReadOnly(TRUE);
 
     $fields['langcode'] = BaseFieldDefinition::create('language')
@@ -335,19 +335,15 @@ class Message extends ContentEntityBase implements EntityInterface {
     $tokens = array();
 
     // Handle hard coded arguments.
-    foreach ($this->getType()->getText(NULL, array('text' => TRUE)) as $texts) {
+    foreach ($this->getType()->getText(NULL, array('text' => TRUE)) as $text) {
+      preg_match_all('/[@|%|\!]\{([a-z0-9:_\-]+?)\}/i', $text, $matches);
 
-      foreach ($texts as $text) {
-
-        preg_match_all('/[@|%|\!]\{([a-z0-9:_\-]+?)\}/i', $text, $matches);
-
-        foreach ($matches[1] as $delta => $token) {
-          $output = \Drupal::token()->replace('[' . $token .  ']', array('message' => $this), $token_options);
-          if ($output != '[' . $token . ']') {
-            // Token was replaced.
-            $argument = $matches[0][$delta];
-            $tokens[$argument] = $output;
-          }
+      foreach ($matches[1] as $delta => $token) {
+        $output = \Drupal::token()->replace('[' . $token .  ']', array('message' => $this), $token_options);
+        if ($output != '[' . $token . ']') {
+          // Token was replaced.
+          $argument = $matches[0][$delta];
+          $tokens[$argument] = $output;
         }
       }
     }

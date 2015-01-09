@@ -91,7 +91,6 @@ class MessageListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-//    $entity->delete();
     /** @var Message $entity */
     return array(
       'changed' => $this->dateService->format($entity->getCreatedTime(), 'short'),
@@ -100,4 +99,5 @@ class MessageListBuilder extends EntityListBuilder {
       'author' => $entity->getAuthor()->label(),
     );
   }
+
 }

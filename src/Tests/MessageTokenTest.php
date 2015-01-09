@@ -19,13 +19,15 @@ class MessageTokenTest extends MessageTestBase {
 
   /**
    * @var User
+   *
+   * The user object.
    */
   private $user;
 
   /**
    * {@inheritdoc}
    */
-  function setUp() {
+  public function setUp() {
     parent::setUp();
 
     $this->user = $this->drupalcreateuser();
@@ -42,13 +44,12 @@ class MessageTokenTest extends MessageTestBase {
     );
   }
 
-
   /**
    * Test token replacement in a message type.
    */
-  function testTokens() {
-    $messageType = $this->createMessageType('dummy_message', 'Dummy message', '', array('[message:author:name]'));
-    $message = Message::create(array('type' => $messageType->id()))
+  public function testTokens() {
+    $message_type = $this->createMessageType('dummy_message', 'Dummy message', '', array('[message:author:name]'));
+    $message = Message::create(array('type' => $message_type->id()))
       ->setAuthorId($this->user->id());
 
     $message->save();
@@ -65,21 +66,21 @@ class MessageTokenTest extends MessageTestBase {
       'some text @{message:author} ' . $random_text,
       'some text !{message:author} ' . $random_text,
       'some text %{message:author} ' . $random_text,
-      'some text !{wrong:token} ' . $random_text
+      'some text !{wrong:token} ' . $random_text,
     );
 
     $replaced_messages = array(
       'some text ' . $this->user->label() . ' ' . $random_text,
       'some text ' . $this->user->label() . ' ' . $random_text,
       'some text <em class="placeholder">' . $this->user->label() . '</em> ' . $random_text,
-      'some text !{wrong:token} ' . $random_text
+      'some text !{wrong:token} ' . $random_text,
     );
 
     // Create the message type.
-    $messageType = $this->createMessageType('dummy_message', 'Dummy message', '', $token_messages);
+    $message_type = $this->createMessageType('dummy_message', 'Dummy message', '', $token_messages);
 
     // Assert the arguments.
-    $message = Message::create(array('type' => $messageType->id()))
+    $message = Message::create(array('type' => $message_type->id()))
       ->setAuthorId($this->user->id());
 
     $this->assertTrue($message->getArguments() == FALSE, 'No message arguments exist prior to saving the message.');

@@ -29,46 +29,49 @@ abstract class MessageTestBase extends WebTestBase {
    */
   protected $accessController;
 
-  function setUp() {
+  /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
     parent::setUp();
   }
 
   /**
    * Create a message text easily.
    *
-   * @param String $type
-   *  The machine name of the message.
-   * @param String $label
-   *  The human readable name of the message.
-   * @param String $description
-   *  The description of the message.
+   * @param string $type
+   *   The machine name of the message.
+   * @param string $label
+   *   The human readable name of the message.
+   * @param string $description
+   *   The description of the message.
    * @param array $text
-   *  The text of the message. Should be text.
+   *   The text of the message. Should be text.
    * @param string $langcode
-   *  The langcode of the message. Optional.
+   *   The langcode of the message. Optional.
    *
    * @return \Drupal\message\Entity\MessageType
    *  The message type.
    */
   protected function createMessageType($type, $label, $description, array $text, $langcode = '') {
-    $messageType = MessageType::Create(array(
+    $message_type = MessageType::Create(array(
       'type' => $type,
       'label' => $label,
       'description' => $description,
+      'text' => $text,
     ));
-    $messageType->setText($text, $langcode);
-    $messageType->save();
-
-    return $messageType;
+    $message_type->save();
+    return $message_type;
   }
 
   /**
    * Load a message type easily.
-   * @param $type
-   *  The type of the message.
+   *
+   * @param string $type
+   *   The type of the message.
    *
    * @return \Drupal\message\Entity\MessageType
-   *  The message Object.
+   *   The message Object.
    */
   protected function loadMessageType($type) {
     return MessageType::load($type);
@@ -78,14 +81,14 @@ abstract class MessageTestBase extends WebTestBase {
    * Return a config setting.
    *
    * @param string $config
-   *  The config value.
+   *   The config value.
    * @param string $storage
-   *  The storing of the configuration. Default to message.message.
+   *   The storing of the configuration. Default to message.message.
    *
    * @return mixed
-   *  The value of the config.
+   *   The value of the config.
    */
-  protected function getConfig($config, $storage = 'message.message') {
+  protected function getConfig($config, $storage = 'message.settings') {
     return \Drupal::config($storage)->get($config);
   }
 
@@ -93,13 +96,13 @@ abstract class MessageTestBase extends WebTestBase {
    * Set a config value.
    *
    * @param string $config
-   *  The config name.
+   *   The config name.
    * @param string $value
-   *  The config value.
+   *   The config value.
    * @param string $storage
-   *  The storing of the configuration. Default to message.message.
+   *   The storing of the configuration. Default to message.message.
    */
-  protected function configSet($config, $value, $storage = 'message.message') {
+  protected function configSet($config, $value, $storage = 'message.settings') {
     \Drupal::config($storage)->set($config, $value);
   }
 }

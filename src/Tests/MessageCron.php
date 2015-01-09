@@ -20,6 +20,8 @@ class MessageCron extends MessageTestBase {
 
   /**
    * @var User
+   *
+   * The user object.
    */
   protected $account;
 
@@ -42,7 +44,6 @@ class MessageCron extends MessageTestBase {
       'group' => 'Message',
     );
   }
-
 
   /**
    * Testing the deletion of messages in cron according to settings.
@@ -103,7 +104,7 @@ class MessageCron extends MessageTestBase {
       Message::Create(array('type' => 'type3'))
         ->setCreatedTime(time() - 3 * 86400)
         ->setAuthorId($this->account->id())
-        ->save();
+          ->save();
     }
 
     // Trigger message's hook_cron().
@@ -111,18 +112,21 @@ class MessageCron extends MessageTestBase {
 
     // Four type1 messages were created. The first two should have been
     // deleted.
-    $this->assertFalse(array_diff(Message::queryByType('type1'), array(3,4)), 'Two messages deleted due to quota definition.');
+    $this->assertFalse(array_diff(Message::queryByType('type1'), array(3, 4)), 'Two messages deleted due to quota definition.');
 
     // All type2 messages should have been deleted.
     $this->assertEqual(Message::queryByType('type2'), array(), 'Three messages deleted due to age definition.');
 
-    // type3 messages should not have been deleted
+    // type3 messages should not have been deleted.
     $this->assertFalse(array_diff(Message::queryByType('type3'), array(8, 9, 10)), 'Messages with disabled purging settings were not deleted.');
   }
 
-  function testPurgeRequestLimit() {
+  /**
+   * Testing the purge request limit.
+   */
+  public function testPurgeRequestLimit() {
     // Set maximal amount of messages to delete.
-    \Drupal::config('message.message')
+    \Drupal::config('message.settings')
       ->set('delete_cron_limit', 10)
       ->save();
 
@@ -168,9 +172,9 @@ class MessageCron extends MessageTestBase {
   /**
    * Test global purge settings and overriding them.
    */
-  function testPurgeGlobalSettings() {
+  public function testPurgeGlobalSettings() {
     // Set global purge settings.
-    \Drupal::config('message.message')
+    \Drupal::config('message.settings')
       ->set('purge_enable', TRUE)
       ->set('purge_quota', 1)
       ->set('purge_days', 2)

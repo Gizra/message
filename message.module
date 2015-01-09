@@ -19,13 +19,6 @@ define('MESSAGE_PURGE_LIMIT', 100);
  */
 
 /**
- * Implements hook_config_translation_info_alter().
- */
-function message_config_translation_info_alter(&$info) {
-  $info['message_type']['class'] = '\Drupal\message\MessageConfigEntityMapper';
-}
-
-/**
  * Implements hook_entity_delete().
  *
  * Handles messages deletion when referenced entities are being deleted.
@@ -40,7 +33,7 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
     return;
   }
 
-  $types = \Drupal::config('message.message')->get('delete_on_entity_delete');
+  $types = \Drupal::config('message.settings')->get('delete_on_entity_delete');
 
   if (!$types || !in_array($type, $types)) {
     return;
@@ -122,10 +115,10 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
  * Fetch all message types and purge old messages.
  */
 function message_cron() {
-  $config = \Drupal::config('message.message');
+  $config = \Drupal::config('message.settings');
 
   // The maximal amount of messages to purge per cron run.
-  $purge_limit = $config->get('delete_cron_limit', MESSAGE_PURGE_LIMIT);
+  $purge_limit = $config->get('delete_cron_limit');
 
   // Messages to be deleted.
   $purge_messages = array();
@@ -283,5 +276,12 @@ function message_entity_extra_field_info() {
   }
 
   return $extra;
+}
+
+/**
+ * Implements hook_config_translation_info_alter().
+ */
+function message_config_translation_info_alter(&$info) {
+  $info['message_type']['class'] = '\Drupal\message\MessageConfigEntityMapper';
 }
 

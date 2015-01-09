@@ -97,7 +97,7 @@ class DeleteMultiple extends ConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $this->messages = $this->tempStoreFactory->get('message_multiple_delete_confirm')->get(\Drupal::currentUser()->id());
     if (empty($this->messages)) {
-      return new RedirectResponse(url('admin/content/message', array('absolute' => TRUE)));
+      return new RedirectResponse(_url('admin/content/message', array('absolute' => TRUE)));
     }
 
     $form['messages'] = array(
@@ -124,16 +124,17 @@ class DeleteMultiple extends ConfirmFormBase {
       $this->storage->delete($this->messages);
       $this->tempStoreFactory->get('message_multiple_delete_confirm')->delete(\Drupal::currentUser()->id());
       $count = count($this->messages);
-      watchdog('content', 'Deleted @count posts.', array('@count' => $count));
+      $this->logger('message')->notice('Deleted @count posts.', array('@count' => $count));
       drupal_set_message(\Drupal::translation()->formatPlural($count, 'Deleted 1 message.', 'Deleted @count messages.'));
     }
     $form_state['redirect'] = 'admin/content/messages';
   }
 
   /**
-   * @{inheritdoc}
+   * {@inheritdoc}
    */
   public function getCancelUrl() {
     return 'admin/content/messages';
   }
+
 }

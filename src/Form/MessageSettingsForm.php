@@ -2,12 +2,14 @@
 
 /**
  * @file
+ *
  * Contains \Drupal\system\Form\FileSystemForm.
  */
 
 namespace Drupal\message\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
@@ -20,6 +22,7 @@ class MessageSettingsForm extends ConfigFormBase {
 
   /**
    * The entity manager object.
+   *
    * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
@@ -35,7 +38,12 @@ class MessageSettingsForm extends ConfigFormBase {
    * Holds the name of the keys we holds in the variable.
    */
   public function defaultKeys() {
-    return array('purge_enable', 'purge_quota', 'purge_days', 'delete_on_entity_delete');
+    return array(
+      'purge_enable',
+      'purge_quota',
+      'purge_days',
+      'delete_on_entity_delete',
+    );
   }
 
   /**
@@ -65,7 +73,7 @@ class MessageSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
-    $config = $this->config('message.message');
+    $config = $this->config('message.settings');
 
     $form['purge'] = array(
       '#type' => 'fieldset',
@@ -90,7 +98,6 @@ class MessageSettingsForm extends ConfigFormBase {
       '#title' => t('Messages quota'),
       '#description' => t('Maximal (approximate) amount of messages.'),
       '#default_value' => $config->get('purge_quota'),
-//      '#element_validate' => array('element_validate_integer_positive'),
       '#states' => $states,
     );
 
@@ -99,28 +106,15 @@ class MessageSettingsForm extends ConfigFormBase {
       '#title' => t('Purge messages older than'),
       '#description' => t('Maximal message age in days.'),
       '#default_value' => $config->get('purge_quota'),
-//      '#element_validate' => array('element_validate_integer_positive'),
       '#states' => $states,
     );
-
-
-    $options = array();
-    foreach ($this->entityManager->getDefinitions() as $entity_id => $entity) {
-      if (!$entity->isFieldable()) {
-        continue;
-      }
-
-      $options[$entity_id] = $entity->getLabel();
-    }
-
-    $entities = $config->get('delete_on_entity_delete') ? $config->get('delete_on_entity_delete') : array('node', 'user', 'taxonomy_term', 'comment');
 
     $form['delete_on_entity_delete'] = array(
       '#title' => t('Auto delete messages referencing the following entities'),
       '#type' => 'select',
       '#multiple' => TRUE,
-      '#options' => $options,
-      '#default_value' => $entities,
+      '#options' => $this->getContentEntityTypes(),
+      '#default_value' => $config->get('delete_on_entity_delete'),
       '#description' => t('Messages that reference entities of these types will be deleted when the referenced entity gets deleted.'),
     );
 
@@ -131,15 +125,30 @@ class MessageSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->config('message.message');
+    $config = $this->config('message.settings');
 
     foreach ($this->defaultKeys() as $key) {
-      $config->set($key, $form_state['values'][$key]);
+      $config->set($key, $form_state->getValue($key));
     }
 
     $config->save();
 
     parent::submitForm($form, $form_state);
+  }
+
+  /**
+   * Get content entity types keyed by id.
+   *
+   * @return array
+   */
+  protected function getContentEntityTypes() {
+    $options = array();
+    foreach ($this->entityManager->getDefinitions() as $entity_id => $entity_type) {
+      if ($entity_type instanceof ContentEntityTypeInterface) {
+        $options[$entity_type->id()] = $entity_type->getLabel();
+      }
+    }
+    return $options;
   }
 
 }

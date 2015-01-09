@@ -31,8 +31,8 @@ class Message extends WizardPluginBase {
     'link_to_user' => FALSE,
     'alter' => array(
       'alter_text' => TRUE,
-      'text' => 'message/[mid]'
-    )
+      'text' => 'message/[mid]',
+    ),
   );
 
   /**
@@ -44,7 +44,7 @@ class Message extends WizardPluginBase {
       'table' => 'message',
       'field' => 'status',
       'provider' => 'message',
-    )
+    ),
   );
 
   /**

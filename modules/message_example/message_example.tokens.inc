@@ -69,7 +69,7 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
 
   $url_options = array('absolute' => TRUE);
   if (isset($options['langcode'])) {
-    $url_options['language'] = language_load($options['langcode']);
+    $url_options['language'] = \Drupal::languageManager()->getLanguage($options['langcode']);
     $langcode = $options['langcode'];
   }
   else {
@@ -91,7 +91,7 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           break;
         case 'user-url':
           if ($message->getAuthor()) {
-            $replacements[$original] = url('user/' . $message->getAuthor()->id());
+            $replacements[$original] = _url('user/' . $message->getAuthor()->id());
           }
           break;
         case 'node-title':
@@ -104,10 +104,10 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           break;
         case 'node-url':
           if ($message->bundle() == 'example_create_comment') {
-            $replacements[$original] = url('node/' . $message->field_comment_reference->entity->getCommentedEntity()->id());
+            $replacements[$original] = _url('node/' . $message->field_comment_reference->entity->getCommentedEntity()->id());
           }
           else {
-            $replacements[$original] = url('node/' . $message->field_node_reference->get(0)->entity->id());
+            $replacements[$original] = _url('node/' . $message->field_node_reference->get(0)->entity->id());
           }
           break;
         case 'node-render':
@@ -119,7 +119,7 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           }
           break;
         case 'comment-url':
-          $replacements[$original] = url('comment/' . $message->field_comment_reference->entity->id());
+          $replacements[$original] = _url('comment/' . $message->field_comment_reference->entity->id());
           break;
       }
     }

@@ -8,13 +8,14 @@
 namespace Drupal\message\Tests;
 
 use Drupal\Core\Language\Language;
+use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\message\Entity\MessageType;
 use Drupal\user\Entity\User;
 
 /**
  * Testing the CRUD functionality for the Message type entity.
  *
- * @group _Message
+ * @group Message
  */
 class MessageUiTest extends MessageTestBase {
 
@@ -25,6 +26,8 @@ class MessageUiTest extends MessageTestBase {
 
   /**
    * @var User
+   *
+   * The user object.
    */
   protected $account;
 
@@ -89,17 +92,13 @@ class MessageUiTest extends MessageTestBase {
     $this->verifyFormElements($elements);
 
     // Add language.
-    $language = new Language(array(
-      'id' => 'he',
-      'name' => 'Hebrew',
-    ));
-    language_save($language);
+    ConfigurableLanguage::create(array('id' => 'he', 'name' => 'Hebrew'))->save();
 
     // Change to post form and add text different then the original.
     $edit = array(
-      'config_names[message.type.dummy_message][label][translation]' => 'Translated dummy message to Hebrew',
-      'config_names[message.type.dummy_message][description][translation]' => 'This is a dummy text after translation to Hebrew',
-      'config_names[message.type.dummy_message][text][translation][text][0][value]' => 'This is a dummy message with translated text to Hebrew',
+      'translation[config_names][message.type.dummy_message][label]' => 'Translated dummy message to Hebrew',
+      'translation[config_names][message.type.dummy_message][description]' => 'This is a dummy text after translation to Hebrew',
+      'text[0][value]' => 'This is a dummy message with translated text to Hebrew',
     );
     $this->drupalPostForm('admin/structure/message/manage/dummy_message/translate/he/add', $edit, t('Save translation'));
 
@@ -116,7 +115,7 @@ class MessageUiTest extends MessageTestBase {
     // Load the message via code in hebrew and english and verify the text.
     $message = MessageType::load('dummy_message');
     $this->assertTrue($message->getText('he') == 'This is a dummy message with translated text to Hebrew', 'The text in hebrew pulled correctly.');
-    $this->assertTrue($message->getText('en') == 'This is a dummy message with some edited dummy text', 'The text in english pulled correctly.');
+    $this->assertTrue($message->getText() == 'This is a dummy message with some edited dummy text', 'The text in english pulled correctly.');
 
     // Delete message via the UI.
     $this->drupalPostForm('admin/structure/message/delete/dummy_message', array(), 'Delete');
@@ -126,9 +125,10 @@ class MessageUiTest extends MessageTestBase {
 
   /**
    * Verifying the form elements values in easy way.
-   * @param Array $elements
-   *  Array mapped by in the next format:
-   *    XPATH_EXPRESSION => MESSAGE
+   *
+   * @param array $elements
+   *   Array mapped by in the next format:
+   *   XPATH_EXPRESSION => MESSAGE
    *
    * When all the elements are passing a pass message with the text "The
    * expected values is in the form." When one of the Xpath expression return

@@ -22,7 +22,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class Type extends ManyToOne {
 
   /**
-   * The role entity storage
+   * The role entity storage.
    *
    * @var \Drupal\user\RoleStorage
    */
@@ -56,7 +56,7 @@ class Type extends ManyToOne {
   /**
    * {@inheritdoc}
    */
-  public function title_query() {
+  public function titleQuery() {
     $entities = $this->roleStorage->loadMultiple($this->value);
     $titles = array();
     foreach ($entities as $entity) {

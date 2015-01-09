@@ -10,7 +10,6 @@ namespace Drupal\message\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageType;
 use Drupal\message\FormElement\MessageTypeMultipleTextField;
 
@@ -71,8 +70,8 @@ class MessageTypeForm extends EntityForm {
     $data = $this->entity->getdata();
 
     $form['data'] = array(
-      // Placeholder for other module to add their settings, that should be added
-      // to the data column.
+      // Placeholder for other module to add their settings, that should be
+      // added to the data column.
       '#tree' => TRUE,
     );
 
@@ -157,7 +156,7 @@ class MessageTypeForm extends EntityForm {
    * This returns the new page content to replace the page content made obsolete
    * by the form submission.
    */
-  public static function addMoreAjax(array $form, array $form_state) {
+  public static function addMoreAjax(array $form, FormStateInterface $form_state) {
     return $form['text'];
   }
 
@@ -165,30 +164,15 @@ class MessageTypeForm extends EntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    // Until the parent method will do something we handle the saving by our
-    // self.
-    parent::save($form, $form_state);
-
     $values = $form_state->getValue('text');
     usort($values, 'message_order_text_weight');
 
     // Saving the message text values.
-    $message_text = array();
-
-    foreach ($values as $text) {
-      if (empty($text['value'])) {
-        continue;
-      }
-      $message_text[] = $text['value'];
+    foreach ($values as $key => $value) {
+      $values[$key] = $value['value'];
     }
 
-    // Updating the message text.
-    $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-
-    $this->entity->setText($message_text, $langcode);
-
-    // todo: When the parent method will do something remove as much code as we
-    // can.
+    $this->entity->set('text', $values);
     $this->entity->save();
 
     $params = array(
@@ -197,5 +181,7 @@ class MessageTypeForm extends EntityForm {
 
     drupal_set_message(t('The message type @type created successfully.', $params));
     $form_state->setRedirect('message.overview_types');
+    return $this->entity;
   }
+
 }
