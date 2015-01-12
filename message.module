@@ -16,6 +16,79 @@ define('MESSAGE_FIELD_MESSAGE_TEXT', 'message_text');
 define('MESSAGE_PURGE_LIMIT', 100);
 
 /**
+ * Implements hook_ctools_plugin_type().
+ */
+function message_ctools_plugin_type() {
+  $plugins['message_arguments'] = array(
+    'classes' => array('class'),
+    'process' => 'message_plugin_process',
+  );
+  $plugins['message_arguments']['child plugins'] = TRUE;
+
+  return $plugins;
+}
+
+/**
+ * Add defaults values to the message_arguments plugins.
+ *
+ * Properties for the "message_arguments" plugin type:
+ * - name: Set the name based on the entity type and bundle.
+ * - description: The description of the plugin. Defaults to empty string.
+ * - options: Array of options needed for the plugin.
+ */
+function message_plugin_process(&$plugin, $info) {
+  $plugin += array(
+    'description' => '',
+    'options' => array(),
+  );
+}
+/**
+ * Include CTools plugins and get all entity message_arguments plugins.
+ *
+ * @return array
+ *   All plugins relate to entity message_arguments.
+ */
+function message_get_message_arguments_plugins() {
+  ctools_include('plugins');
+  return ctools_get_plugins('message', 'message_arguments');
+}
+
+/**
+ * Return the validation handler based on entity type and bundle.
+ *
+ * @param $bundle
+ *   The bundle name.
+ *
+ * @return EntityValidateInterface | NULL
+ *  The handler object if found, or NULL.
+ */
+function message_get_message_arguments_handler($bundle) {
+  $plugin_name = 'message__' . $bundle;
+  $plugin = message_get_message_arguments_plugin($plugin_name);
+
+  if (!$class = ctools_plugin_load_class('message', 'message_arguments', $plugin_name, 'class')) {
+    return NULL;
+  }
+
+  $handler = new $class($plugin); 
+  return $handler;
+}
+
+/**
+ * Include CTools plugins and get the specified entity message_arguments plugin.
+ *
+ * @param string $plugin_name
+ *   If provided this function only returns the selected plugin.
+ *
+ * @return array
+ *   The selected plugin for entity message_arguments.
+ */
+function message_get_message_arguments_plugin($plugin_name) {
+  ctools_include('plugins');
+  return ctools_get_plugins('message', 'message_arguments', $plugin_name);
+}
+
+/**
  * Implementation of hook_views_api().
  */
 function message_views_api() {
