@@ -56,22 +56,21 @@ function message_get_message_arguments_plugins() {
 /**
  * Return the validation handler based on entity type and bundle.
  *
- * @param $bundle
+ * @param Message $message
  *   The bundle name.
  *
- * @return EntityValidateInterface | NULL
+ * @return MessageArgumentsBase | NULL
  *  The handler object if found, or NULL.
  */
-function message_get_message_arguments_handler($bundle) {
-  $plugin_name = 'message__' . $bundle;
-  $plugin = message_get_message_arguments_plugin($plugin_name);
+function message_get_message_arguments_handler(Message $message) {
+  $plugin = message_get_message_arguments_plugin($message->bundle());
 
-  if (!$class = ctools_plugin_load_class('message', 'message_arguments', $plugin_name, 'class')) {
+  if (!$class = ctools_plugin_load_class('message', 'message_arguments', $message->bundle(), 'class')) {
     return NULL;
   }
 
-  $handler = new $class($plugin); 
-  return $handler;
+  $handler = new $class($plugin);
+  return $handler->setMessage($message);
 }
 
 /**

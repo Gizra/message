@@ -24,4 +24,3 @@ files[] = includes/views/handlers/message_handler_filter_message_type_category.i
 
 ; Message arguments classes.
 files[] = includes/MessageArgumentsBase.php
-files[] = includes/MessageArgumentsInterface.php
