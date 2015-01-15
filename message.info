@@ -4,6 +4,7 @@ description = "A general message logging utility."
 core = 7.x
 package = Message
 dependencies[] = entity
+dependencies[] = ctools
 
 ; Entity API includes
 files[] = message.info.inc

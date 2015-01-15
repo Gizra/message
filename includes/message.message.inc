@@ -157,7 +157,7 @@ class Message extends Entity {
     $arguments = message_get_property_values($this, 'arguments');
 
     $handler = message_get_message_arguments_handler($this);
-    if ($handler_arguments = $handler->getArguments()) {
+    if ($handler && $handler_arguments = $handler->getArguments()) {
       $arguments = array_merge($arguments, $handler_arguments);
     }
 
