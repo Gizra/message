@@ -21,7 +21,6 @@ define('MESSAGE_PURGE_LIMIT', 100);
 function message_ctools_plugin_type() {
   $plugins['message_arguments'] = array(
     'classes' => array('class'),
-    'process' => 'message_plugin_process',
   );
   $plugins['message_arguments']['child plugins'] = TRUE;
 
@@ -29,32 +28,7 @@ function message_ctools_plugin_type() {
 }
 
 /**
- * Add defaults values to the message_arguments plugins.
- *
- * Properties for the "message_arguments" plugin type:
- * - name: Set the name based on the entity type and bundle.
- * - description: The description of the plugin. Defaults to empty string.
- * - options: Array of options needed for the plugin.
- */
-function message_plugin_process(&$plugin, $info) {
-  $plugin += array(
-    'description' => '',
-    'options' => array(),
-  );
-}
-/**
- * Include CTools plugins and get all entity message_arguments plugins.
- *
- * @return array
- *   All plugins relate to entity message_arguments.
- */
-function message_get_message_arguments_plugins() {
-  ctools_include('plugins');
-  return ctools_get_plugins('message', 'message_arguments');
-}
-
-/**
- * Return the validation handler based on entity type and bundle.
+ * Return message arguments plugin by the message type.
  *
  * @param Message $message
  *   The bundle name.
@@ -74,15 +48,15 @@ function message_get_message_arguments_handler(Message $message) {
 }
 
 /**
- * Include CTools plugins and get the specified entity message_arguments plugin.
+ * Include CTools plugins and get the specified message arguments plugin.
  *
  * @param string $plugin_name
  *   If provided this function only returns the selected plugin.
  *
  * @return array
- *   The selected plugin for entity message_arguments.
+ *   The selected plugin for the message arguments.
  */
-function message_get_message_arguments_plugin($plugin_name) {
+function message_get_message_arguments_plugin($plugin_name = '') {
   ctools_include('plugins');
   return ctools_get_plugins('message', 'message_arguments', $plugin_name);
 }

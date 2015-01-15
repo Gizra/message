@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * Contains \MessageArgumentsBase.
+ */
+
 abstract class MessageArgumentsBase {
 
   /**
