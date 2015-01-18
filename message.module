@@ -874,6 +874,8 @@ function message_type_delete($message) {
  * @param $account
  *   Optional; The user object to associate the message with. If empty, the
  *   current user will be used.
+ *
+ * @return Message
  */
 function message_create($type, $values = array(), $account = NULL) {
   global $language;

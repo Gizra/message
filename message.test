@@ -402,19 +402,38 @@ class MessageTokens extends DrupalWebTestCase {
 
   }
 
+}
+
+/**
+ * Testing the arguments handler for messages.
+ */
+class MessageArgumentsTestCase extends DrupalWebTestCase {
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Message arguments',
+      'description' => 'Test the Message and arguments handling.',
+      'group' => 'Message',
+    );
+  }
+
+  function setUp() {
+    parent::setUp('entity_token', 'message_example');
+  }
+
   /**
    * Testing ctools message arguments plugin.
    */
   public function testCtoolsArguments() {
-    $message_type = message_type_create('testing');
+    $message = message_create('example_arguments');
+    $message->save();
 
-    $message_type->{MESSAGE_FIELD_MESSAGE_TEXT} = array(
-      LANGUAGE_NONE => array(
-        0 => array('value' => '@name %time !link', 'format' => 'plain_text'),
-      ),
-    );
-    $message_type->save();
+    $arguments = message_get_message_arguments_handler($message)->getArguments();
   }
+
 }
 
 /**
