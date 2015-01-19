@@ -23,5 +23,5 @@ files[] = includes/views/handlers/message_handler_field_message_render.inc
 files[] = includes/views/handlers/message_handler_filter_message_type.inc
 files[] = includes/views/handlers/message_handler_filter_message_type_category.inc
 
-; Message arguments classes.
+; Message arguments handlers.
 files[] = includes/MessageArgumentsBase.php

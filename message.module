@@ -34,7 +34,7 @@ function message_ctools_plugin_type() {
  *   The bundle name.
  *
  * @return MessageArgumentsBase | NULL
- *  The handler object if found, or NULL.
+ *   The handler object if found else NULL.
  */
 function message_get_message_arguments_handler(Message $message) {
   $plugin = message_get_message_arguments_plugin($message->bundle());
@@ -48,10 +48,10 @@ function message_get_message_arguments_handler(Message $message) {
 }
 
 /**
- * Include CTools plugins and get the specified message arguments plugin.
+ * Get the specified message arguments plugin.
  *
  * @param string $plugin_name
- *   If provided this function only returns the selected plugin.
+ *   Optional. If provided the function will return the desired plugin.
  *
  * @return array
  *   The selected plugin for the message arguments.
