@@ -410,6 +410,13 @@ class MessageTokens extends DrupalWebTestCase {
 class MessageArgumentsTestCase extends DrupalWebTestCase {
 
   /**
+   * @var \stdClass
+   *
+   * The user object.
+   */
+  protected $user;
+
+  /**
    * {@inheritdoc}
    */
   public static function getInfo() {
@@ -422,16 +429,29 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
 
   function setUp() {
     parent::setUp('entity_token', 'message_example');
+
+    $this->user = $this->drupalCreateUser();
   }
 
   /**
    * Testing ctools message arguments plugin.
    */
   public function testCtoolsArguments() {
-    $message = message_create('example_arguments');
+    $uri = entity_uri('user', $this->user);
+
+    $message = message_create('example_arguments', array('uid' => $this->user->uid));
     $message->save();
 
     $arguments = message_get_message_arguments_handler($message)->getArguments();
+
+    $expected_arguments = array(
+      '@name' => $this->user->name,
+      '%time' => format_date($message->timestamp),
+      '!link' => l(t('link'), $uri['path'], array('absolute' => TRUE)),
+    );
+
+    // Verify we got the correct arguments.
+    $this->assertEqual($arguments, $expected_arguments, 'The arguments plugin returned the expected values.');
   }
 
 }

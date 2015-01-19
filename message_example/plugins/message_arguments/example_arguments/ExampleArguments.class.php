@@ -22,8 +22,7 @@ class ExampleArguments extends MessageArgumentsBase {
    * @return \stdClass.
    */
   private function getAccount() {
-    global $user;
-    return user_load($user->uid);
+    return $this->getMessage()->user();
   }
 
   /**
@@ -37,7 +36,7 @@ class ExampleArguments extends MessageArgumentsBase {
    * Process the current time.
    */
   public function processTime() {
-    return format_date(time());
+    return format_date($this->getMessage()->timestamp);
   }
 
   /**
