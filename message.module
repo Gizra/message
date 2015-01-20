@@ -22,7 +22,6 @@ function message_ctools_plugin_type() {
   $plugins['message_arguments'] = array(
     'classes' => array('class'),
   );
-  $plugins['message_arguments']['child plugins'] = TRUE;
 
   return $plugins;
 }
@@ -31,7 +30,7 @@ function message_ctools_plugin_type() {
  * Return message arguments plugin by the message type.
  *
  * @param Message $message
- *   The bundle name.
+ *   The message object.
  *
  * @return MessageArgumentsBase | NULL
  *   The handler object if found else NULL.

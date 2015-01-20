@@ -37,18 +37,14 @@ abstract class MessageArgumentsBase {
    *   The arguments as and their values.
    */
   public function getArguments() {
-    $args = array();
+    $arguments = array();
     $callbacks = $this->prepare();
 
-    foreach ($callbacks as $arg => $callback) {
-      if (!is_callable($callback)) {
-        continue;
-      }
-
-      $args[$arg] = call_user_func($callback);
+    foreach ($callbacks as $argument => $callback) {
+      $arguments[$argument] = call_user_func($callback);
     }
 
-    return $args;
+    return $arguments;
   }
 
   /**
