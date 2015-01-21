@@ -437,6 +437,7 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
    * Testing ctools message arguments plugin.
    */
   public function testCtoolsArguments() {
+    debug(entity_get_info());
 //    $query = new EntityFieldQuery();
 //    $reqults = $query
 //      ->entityCondition('entity_type', 'message_type')
