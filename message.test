@@ -437,6 +437,17 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
    * Testing ctools message arguments plugin.
    */
   public function testCtoolsArguments() {
+    $query = new EntityFieldQuery();
+    $reqults = $query
+      ->entityCondition('entity_type', 'message_type')
+      ->execute();
+
+    if ($reqults['message_type']) {
+      $foo = entity_load('message_type', array_keys($reqults['message_type']));
+      debug($foo);
+    }
+
+
     $uri = entity_uri('user', $this->user);
 
     $message = message_create('example_arguments', array('uid' => $this->user->uid));
