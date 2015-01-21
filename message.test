@@ -428,7 +428,7 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('entity_token', 'message_example');
+    parent::setUp('message_example');
 
     $this->user = $this->drupalCreateUser();
   }
