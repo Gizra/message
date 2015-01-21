@@ -29,6 +29,7 @@ before_script:
   - ln -s $(readlink -e $(cd -)) message/drupal/sites/all/modules/message
   - cd message/drupal
   - drush --yes pm-enable message
+  - drush dl entity_token
 
   # start a web server on port 8080, run in the background; wait for initialization
   - drush runserver 127.0.0.1:8080 &
