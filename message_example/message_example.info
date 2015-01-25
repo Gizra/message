@@ -33,4 +33,4 @@ features[variable][] = field_bundle_settings_message__example_create_comment
 features[variable][] = field_bundle_settings_message__example_create_node
 features[variable][] = field_bundle_settings_message__example_user_register
 features[views_view][] = message_example
-mtime = 1421048270
+mtime = 1421303198

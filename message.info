@@ -15,7 +15,8 @@ files[] = includes/message.message_type.inc
 files[] = includes/message.message_type_category.inc
 
 ; Tests
-files[] = message.test
+files[] = tests/message.test
+files[] = tests/MessageArgumentsTestCase.test
 
 ; Views includes
 files[] = includes/views/message.views.inc
