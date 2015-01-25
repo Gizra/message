@@ -21,6 +21,7 @@ define('MESSAGE_PURGE_LIMIT', 100);
 function message_ctools_plugin_type() {
   $plugins['message_arguments'] = array(
     'classes' => array('class'),
+    'child plugins' => TRUE,
   );
 
   return $plugins;
