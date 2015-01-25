@@ -34,32 +34,32 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
    */
   public function testCtoolsArguments() {
     module_enable(array('message_example'));
-//    $query = new EntityFieldQuery();
-//    $reqults = $query
-//      ->entityCondition('entity_type', 'message_type')
-//      ->execute();
-//
-//    if ($reqults['message_type']) {
-//      $foo = entity_load('message_type', array_keys($reqults['message_type']));
-//      debug($foo);
-//    }
-//
-//
-//    $uri = entity_uri('user', $this->user);
-//
-//    $message = message_create('example_arguments', array('uid' => $this->user->uid));
-//    $message->save();
-//
-//    $arguments = message_get_message_arguments_handler($message)->getArguments();
-//
-//    $expected_arguments = array(
-//      '@name' => $this->user->name,
-//      '%time' => format_date($message->timestamp),
-//      '!link' => l(t('link'), $uri['path'], array('absolute' => TRUE)),
-//    );
-//
-//    // Verify we got the correct arguments.
-//    $this->assertEqual($arguments, $expected_arguments, 'The arguments plugin returned the expected values.');
+    $query = new EntityFieldQuery();
+    $reqults = $query
+      ->entityCondition('entity_type', 'message_type')
+      ->execute();
+
+    if ($reqults['message_type']) {
+      $foo = entity_load('message_type', array_keys($reqults['message_type']));
+      debug($foo);
+    }
+
+
+    $uri = entity_uri('user', $this->user);
+
+    $message = message_create('example_arguments', array('uid' => $this->user->uid));
+    $message->save();
+
+    $arguments = message_get_message_arguments_handler($message)->getArguments();
+
+    $expected_arguments = array(
+      '@name' => $this->user->name,
+      '%time' => format_date($message->timestamp),
+      '!link' => l(t('link'), $uri['path'], array('absolute' => TRUE)),
+    );
+
+    // Verify we got the correct arguments.
+    $this->assertEqual($arguments, $expected_arguments, 'The arguments plugin returned the expected values.');
   }
 
 }
