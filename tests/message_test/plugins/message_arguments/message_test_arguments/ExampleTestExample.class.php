@@ -5,7 +5,7 @@
  * Contains EntityValidatorExampleArticleValidator.
  */
 
-class ExampleArguments extends MessageArgumentsBase {
+class ExampleTestExample extends MessageArgumentsBase {
 
   /**
    * @return mixed
