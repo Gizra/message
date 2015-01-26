@@ -40,6 +40,8 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
     $message = message_create('message_test_arguments', array('uid' => $this->user->uid));
     $message->save();
 
+    debug(message_get_message_arguments_plugin());
+
     if (!$handler = message_get_message_arguments_handler($message)) {
       throw new Exception('No arguments handler was found for the Message example message type.');
     }
