@@ -57,7 +57,7 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
 //  }
 
   function setUp() {
-    parent::setUp('message');
+    parent::setUp('message', 'message_example');
   }
 
   /**
@@ -66,10 +66,10 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
   function testMessageCrud() {
     $web_user = $this->drupalCreateUser();
 
-    $message_type = message_type_create('foo', array('message_text' => array(LANGUAGE_NONE => array(array('value' => 'Example text.')))));
+    $message_type = message_type_create('example_arguments', array('message_text' => array(LANGUAGE_NONE => array(array('value' => 'Example text.')))));
     $message_type->save();
 
-    $message = message_create('foo', array(), $web_user);
+    $message = message_create('example_arguments', array(), $web_user);
     $message->save();
     $mid = $message->mid;
 
