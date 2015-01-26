@@ -23,37 +23,71 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
     );
   }
 
-  function setUp() {
-    parent::setUp('message', 'message_example');
+//  function setUp() {
+//    parent::setUp('message', 'message_example');
+//
+//    $this->user = $this->drupalCreateUser();
+//  }
 
-    $this->user = $this->drupalCreateUser();
+//  /**
+//   * Testing ctools message arguments plugin.
+//   */
+//  public function testCtoolsArguments() {
+//    $uri = entity_uri('user', $this->user);
+//
+//    message_type_create('example_arguments', array())->save();
+//
+//    $message = message_create('example_arguments', array('uid' => $this->user->uid));
+//    $message->save();
+//
+//    if (!$handler = message_get_message_arguments_handler($message)) {
+//      throw new Exception('No arguments handler was found for the Message example message type.');
+//    }
+//
+//    $arguments = $handler->getArguments();
+//
+//    $expected_arguments = array(
+//      '@name' => $this->user->name,
+//      '%time' => format_date($message->timestamp),
+//      '!link' => l(t('link'), $uri['path'], array('absolute' => TRUE)),
+//    );
+//
+//    // Verify we got the correct arguments.
+//    $this->assertEqual($arguments, $expected_arguments, 'The arguments plugin returned the expected values.');
+//  }
+
+  function setUp() {
+    parent::setUp('message');
   }
 
   /**
-   * Testing ctools message arguments plugin.
+   * Test CRUD of message entity.
    */
-  public function testCtoolsArguments() {
-    $uri = entity_uri('user', $this->user);
+  function testMessageCrud() {
+    $web_user = $this->drupalCreateUser();
 
-    message_type_create('example_arguments', array())->save();
+    $message_type = message_type_create('foo', array('message_text' => array(LANGUAGE_NONE => array(array('value' => 'Example text.')))));
+    $message_type->save();
 
-    $message = message_create('example_arguments', array('uid' => $this->user->uid));
+    $message = message_create('foo', array(), $web_user);
     $message->save();
+    $mid = $message->mid;
 
-    if (!$handler = message_get_message_arguments_handler($message)) {
-      throw new Exception('No arguments handler was found for the Message example message type.');
+    // Reload the message to see it was saved.
+    $message = message_load($mid);
+    $this->assertTrue(!empty($message->mid), t('Message was saved to the database.'));
+
+    $this->assertEqual($message->uid, $web_user->uid, 'Message has been saved for the right user.');
+    $this->assertEqual($message->getType()->message_text[LANGUAGE_NONE][0]['value'], 'Example text.', 'Message type text has been saved.');
+
+    // Make sure an exception is thrown if message type already exists.
+    try {
+      message_type_create('foo');
+      $this->fail("Creating the same message type hasn't created an exception.");
     }
-
-    $arguments = $handler->getArguments();
-
-    $expected_arguments = array(
-      '@name' => $this->user->name,
-      '%time' => format_date($message->timestamp),
-      '!link' => l(t('link'), $uri['path'], array('absolute' => TRUE)),
-    );
-
-    // Verify we got the correct arguments.
-    $this->assertEqual($arguments, $expected_arguments, 'The arguments plugin returned the expected values.');
+    catch (Exception $e) {
+      $this->pass("Exception was thrown: ". $e->getMessage());
+    }
   }
 
 }
