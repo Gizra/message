@@ -37,14 +37,14 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
     module_enable(array('message_test'));
     message_type_create('message_test_arguments', array('message_text' => array(LANGUAGE_NONE => array(array('value' => 'Example text.')))))->save();
 //
-    $message = message_create('message_test_arguments', array('uid' => $this->user->uid));
-    $message->save();
+//    $message = message_create('message_test_arguments', array('uid' => $this->user->uid));
+//    $message->save();
 
     debug(message_get_message_arguments_plugin());
 
-    if (!$handler = message_get_message_arguments_handler($message)) {
-      throw new Exception('No arguments handler was found for the Message example message type.');
-    }
+//    if (!$handler = message_get_message_arguments_handler($message)) {
+//      throw new Exception('No arguments handler was found for the Message example message type.');
+//    }
 //
 //    $arguments = $handler->getArguments();
 //
