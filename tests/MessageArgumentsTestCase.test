@@ -35,7 +35,9 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
   public function testCtoolsArguments() {
     $uri = entity_uri('user', $this->user);
     module_enable(array('message_test'));
-    $message_type = message_type_create('message_test_arguments', array('message_text' => array(LANGUAGE_NONE => array(array('value' => 'Example text.')))));
+
+    $text = '@name %time !link.';
+    $message_type = message_type_create('message_test_arguments', array('message_text' => array(LANGUAGE_NONE => array(array('value' => $text)))));
     $message_type->save();
 
     $message = message_create('message_test_arguments', array('uid' => $this->user->uid));
@@ -56,6 +58,9 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
 
     // Verify we got the correct arguments.
     $this->assertEqual($arguments, $expected_arguments, 'The arguments plugin returned the expected values.');
+
+    // Verifying we got the correct text.
+    $this->assertEqual(trim(strip_tags($message->getText())), trim(strip_tags(format_string($text, $expected_arguments))), 'The message text rendered as expected.');
   }
 
 }
