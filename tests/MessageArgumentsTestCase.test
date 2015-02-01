@@ -24,7 +24,7 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('message', 'message_test');
+    parent::setUp('message', 'message_example');
 
     $this->user = $this->drupalCreateUser();
   }
@@ -35,11 +35,11 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
   public function testCtoolsArguments() {
     $uri = entity_uri('user', $this->user);
 
-    $text = '@name %time !link.';
-    $message_type = message_type_create('message_test_arguments', array('message_text' => array(LANGUAGE_NONE => array(array('value' => $text)))));
-    $message_type->save();
+//    $text = '@name %time !link.';
+//    $message_type = message_type_create('message_test_arguments', array('message_text' => array(LANGUAGE_NONE => array(array('value' => $text)))));
+//    $message_type->save();
 
-    $message = message_create('message_test_arguments', array('uid' => $this->user->uid));
+    $message = message_create('example_arguments', array('uid' => $this->user->uid));
     $message->save();
 
 
