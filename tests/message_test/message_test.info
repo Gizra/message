@@ -1,4 +1,0 @@
-name = Message test module
-description = A module for testing
-core = 7.x
-hidden = TRUE

@@ -89,5 +89,56 @@ definition.
   "Override global settings" checkbox will make the global settings ignore the
   current message type and will allow to set purging definitions for the current
   type.
+  
+Decoupled arguments
+============
+When saving a message to the DB the reference to the arguments callbacks stored
+in the DB as well. This will be a problem when we want to change the name of the
+function.
 
+Message allows you to keep the message text with the arguments but the callbacks 
+will be handled with a CTOOLS plugin.
 
+Message example define a 'Message arguments' plugin for the 'Example arguments'
+message type.
+
+`example_arguments.inc`:
+```php
+<?php
+
+$plugin = array(
+  'label' => t('Message example create node'),
+  'description' => t('Supply arguments handler for the message example create node bundle.'),
+  'class' => 'ExampleArguments',
+);
+```
+
+The class is implemented in `ExampleArguments.class.php`:
+```php
+<?php
+
+class ExampleArguments extends MessageArgumentsBase {
+
+  /**
+   * @return mixed
+   */
+  public function prepare() {
+    return array(
+      '@name' => array($this, 'processName'),
+      '%time' => array($this, 'processTime'),
+      '!link' => array($this, 'processLink'),
+    );
+  }
+```
+
+The `prepare` method define for each argument which method should handle it and
+calculate the value:
+```php
+  /**
+   * Process the current time.
+   */
+  public function processTime() {
+    return format_date($this->getMessage()->timestamp);
+  }
+}
+```
