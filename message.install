@@ -21,13 +21,3 @@ function message_uninstall() {
     \Drupal::config('message.message')->delete($variable);
   }
 }
-
-/**
- * Implements hook_install().
- */
-function message_install() {
-  \Drupal::config('message.message')
-    ->set('delete_cron_limit', MESSAGE_PURGE_LIMIT)
-    ->set('delete_on_entity_delete', array('node', 'user', 'taxonomy_term', 'comment'))
-    ->save();
-}
