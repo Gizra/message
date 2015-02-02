@@ -40,10 +40,7 @@ use Drupal\user\Entity\User;
  *     "view_builder" = "Drupal\message\MessageViewBuilder",
  *     "list_builder" = "Drupal\message\MessageListBuilder",
  *   },
- *   field_ui_base_route = "entity.message_type.edit_form",
- *   links = {
- *     "admin-form" = "entity.message_type.edit"
- *   }
+ *   field_ui_base_route = "entity.message_type.edit_form"
  * )
  */
 class Message extends ContentEntityBase implements EntityInterface {
