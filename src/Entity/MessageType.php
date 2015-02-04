@@ -9,8 +9,6 @@ namespace Drupal\message\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
-use Drupal\message\MessageException;
 
 /**
  * Defines the Message type entity class.
@@ -43,8 +41,6 @@ use Drupal\message\MessageException;
  * )
  */
 class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
-
-  use ThirdPartySettingsTrait;
 
   /**
    * The ID of this message type.
