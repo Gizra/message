@@ -141,7 +141,11 @@ function message_entity_info() {
       'bundle' => 'category',
       'language' => 'language',
     ),
-    'bundles' => array(),
+    'bundles' => array(
+      'message_type' => array(
+        'label' => t('Message type'),
+      ),
+    ),
     'bundle keys' => array(
       'bundle' => 'category',
     ),
