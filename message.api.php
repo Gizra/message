@@ -72,7 +72,8 @@ function hook_message_view_alter(&$build) {
  * @see hook_default_message_type_alter()
  */
 function hook_default_message_type() {
-  $defaults['main'] = entity_create('message_type', array(
+  $type = 'example_create_node';
+  $defaults['main'] = message_type_create($type, array(
   ));
   return $defaults;
 }
