@@ -35,12 +35,26 @@ class MessageTypeUIController extends EntityDefaultUIController {
     field_attach_submit('message_type', $entity, $form['message_type_fields'], $form_state);
     return $entity;
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function overviewTable($conditions = array()) {
+
+    if (variable_get('message_locale_added')) {
+      $param['@url'] = url('admin/config/system/message/text-copy');
+      drupal_set_message(t('The locale module has enabled. Go to <a href="@url">Copy messages text fields</a> in order to see the text message when editing a message.', $param), 'warning');
+    }
+
+    return parent::overviewTable($conditions);
+  }
 }
 
 /**
  * Menu callback; Admin settings form.
  */
 function message_user_admin_settings($form_state) {
+
   $form = array();
 
   $form['purge'] = array(
@@ -159,6 +173,7 @@ function message_admin_text_copy($form, $form_state) {
  * Submit callback for the copy texts form.
  */
 function message_admin_text_copy_submit($form, $form_state) {
+  variable_del('message_locale_added');
   $batch = array(
     'title' => t('Copying messages texts betweem languages'),
     'operations' => array(

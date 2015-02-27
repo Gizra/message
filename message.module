@@ -984,3 +984,17 @@ function message_features_pipe_message_type_alter(&$pipe, $data, $export) {
     $pipe['variable'][] = "field_bundle_settings_message__{$message_type}";
   }
 }
+
+/**
+ *  Implements hook_modules_enabled().
+ */
+function message_modules_enabled($modules) {
+
+  if (!in_array('locale', $modules) && !variable_get('install_profile')) {
+    // The locale has not been enabled and Drupal isn't installed yet.
+    return;
+  }
+
+
+  variable_set('message_locale_added', TRUE);
+}
