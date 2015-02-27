@@ -77,14 +77,14 @@ function hook_default_message_type() {
     'argument_keys' => array(
       '!teaser',
       '!body',
-      '@string'
+      '@string',
     ),
     'message_text' => array(
       LANGUAGE_NONE => array(
         array('value' => 'Example text.'),
       ),
     ),
-    'language' => 'en'
+    'language' => 'en',
   ));
 
   return $defaults;
