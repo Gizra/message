@@ -829,6 +829,9 @@ function message_type_delete($message) {
  *     the message type.
  *   - "timestamp" - The unix timestamp of the creation time of the message. If
  *     empty the current time will be used.
+ *   - "uid" - The user->uid to associate the message with, this will overwrite
+ *     $account param, and it's useful when you don't have the full user object
+ *     loaded into memory.
  * @param $account
  *   Optional; The user object to associate the message with. If empty, the
  *   current user will be used.
