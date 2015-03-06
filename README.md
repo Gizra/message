@@ -28,7 +28,7 @@ Tokens
   by the token system as well under [message:field_node_ref].
   (For instance: [message:field_node_ref:title]).
   This relies on "Entity token" module that ships with Entity API.
-  Enabling "Token" module is also recommened, as it provides more tokens
+  Enabling "Token" module is also recommended, as it provides more tokens
   and shows a token browser in the message type creation page.
 
 * "Single use" tokens
@@ -89,5 +89,3 @@ definition.
   "Override global settings" checkbox will make the global settings ignore the
   current message type and will allow to set purging definitions for the current
   type.
-
-

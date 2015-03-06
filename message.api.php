@@ -74,7 +74,20 @@ function hook_message_view_alter(&$build) {
 function hook_default_message_type() {
   $type = 'example_create_node';
   $defaults['main'] = message_type_create($type, array(
+    'description' => 'Type description',
+    'argument_keys' => array(
+      '!teaser',
+      '!body',
+      '@string',
+    ),
+    'message_text' => array(
+      LANGUAGE_NONE => array(
+        array('value' => 'Example text.'),
+      ),
+    ),
+    'language' => 'en',
   ));
+
   return $defaults;
 }
 
