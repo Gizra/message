@@ -39,6 +39,7 @@ use Drupal\user\Entity\User;
  *   handlers = {
  *     "view_builder" = "Drupal\message\MessageViewBuilder",
  *     "list_builder" = "Drupal\message\MessageListBuilder",
+ *     "views_data" = "Drupal\message\MessageViewsData",
  *   },
  *   field_ui_base_route = "entity.message_type.edit_form"
  * )
