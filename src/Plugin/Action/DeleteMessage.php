@@ -54,7 +54,7 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('user.tempstore'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('user.private_tempstore'));
   }
 
   /**
