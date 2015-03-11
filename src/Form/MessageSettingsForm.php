@@ -35,6 +35,13 @@ class MessageSettingsForm extends ConfigFormBase {
   }
 
   /**
+   * {@inheritdoc}
+   */
+  protected function getEditableConfigNames() {
+    return array('message.message');
+  }
+
+  /**
    * Holds the name of the keys we holds in the variable.
    */
   public function defaultKeys() {

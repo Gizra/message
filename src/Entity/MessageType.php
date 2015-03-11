@@ -9,8 +9,7 @@ namespace Drupal\message\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
-use Drupal\Core\Config\Entity\ThirdPartySettingsTrait;
-use Drupal\message\MessageException;
+use Drupal\Core\Entity\EntityStorageInterface;
 
 /**
  * Defines the Message type entity class.
@@ -36,15 +35,13 @@ use Drupal\message\MessageException;
  *     "view_builder" = "Drupal\message\MessageViewBuilder",
  *   },
  *   links = {
- *     "add-form" = "message.type_add",
- *     "edit-form" = "entity.message_type.edit_form",
- *     "delete-form" = "entity.message_type.delete_form"
+ *     "add-form" = "/admin/structure/message/type/add",
+ *     "edit-form" = "/admin/structure/message/manage/{message_type}",
+ *     "delete-form" = "/admin/structure/message/delete/{message_type}"
  *   }
  * )
  */
 class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
-
-  use ThirdPartySettingsTrait;
 
   /**
    * The ID of this message type.
@@ -366,5 +363,14 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   public static function create(array $values = array()) {
     return parent::create($values);
   }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function preSave(EntityStorageInterface $storage) {
+    $this->text = array_filter($this->text);
+    parent::preSave($storage);
+  }
+
 
 }

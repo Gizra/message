@@ -9,6 +9,7 @@ namespace Drupal\message\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Session\AccountInterface;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -53,7 +54,7 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('user.tempstore'));
+    return new static($configuration, $plugin_id, $plugin_definition, $container->get('user.private_tempstore'));
   }
 
   /**
@@ -68,6 +69,14 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    */
   public function execute($object = NULL) {
     $this->executeMultiple(array($object));
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
+    /** @var \Drupal\message\MessageInterface $object */
+    return $object->access('delete', $account, $return_as_object);
   }
 
 }
