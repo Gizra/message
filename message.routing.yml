@@ -34,7 +34,7 @@ entity.message_type.delete_form:
 message.messages:
   path: '/admin/content/message'
   defaults:
-    _title: 'Messaeges'
+    _title: 'Messages'
     _entity_list: 'message'
   requirements:
     _permission: 'overview messages'
