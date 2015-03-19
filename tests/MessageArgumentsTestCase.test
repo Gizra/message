@@ -24,7 +24,7 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
   }
 
   function setUp() {
-    parent::setUp('message_example');
+    parent::setUp('message');
 
     $this->user = $this->drupalCreateUser();
   }
