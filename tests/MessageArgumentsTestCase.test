@@ -38,14 +38,7 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
 
     $web_user = $this->drupalCreateUser();
 
-    $message_type = message_type_create('foo', array('message_text' => array(LANGUAGE_NONE => array(array('value' => 'Example text.')))));
-    $message_type->save();
-
-    $message = message_create('foo', array(), $web_user);
-    $message->save();
-
-
-    $message = message_create('example_arguments', array('uid' => $this->user->uid));
+    $message = message_create('example_arguments');
     $message->save();
 
     if (!$handler = message_get_message_arguments_handler($message)) {
