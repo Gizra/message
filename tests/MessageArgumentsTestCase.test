@@ -34,9 +34,6 @@ class MessageArgumentsTestCase extends DrupalWebTestCase {
    */
   public function testCtoolsArguments() {
     $uri = entity_uri('user', $this->user);
-    debug($this->user);
-
-    $web_user = $this->drupalCreateUser();
 
     $message = message_create('example_arguments', array('uid' => $this->user->uid));
     $message->save();
