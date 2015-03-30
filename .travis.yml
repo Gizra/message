@@ -28,6 +28,11 @@ before_script:
   - drush dl
   - mv drupal-7.35 drupal
   - cd drupal-7.35/sites/all/modules/
+  - cp /home/travis/build/Gizra/message . -R
+
+  # Install Drupal
+  - drush si --db-url=mysql://root@localhost/drupal -y
+  - drusn en message_example simpletest -y
 
 
 #  # reference and enable module in build site
