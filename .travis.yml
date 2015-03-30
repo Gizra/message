@@ -10,7 +10,6 @@ mysql:
 
 before_script:
 
-  - pwd
   - export PATH="$HOME/.composer/vendor/bin:$PATH"
   - composer global require drush/drush:6.*@dev
 
@@ -33,18 +32,7 @@ before_script:
 
   # Install Drupal
   - drush si --db-url=mysql://root@localhost/drupal -y
-  - drusn en message_example simpletest -y
+  - drush en message_example simpletest -y
 
-
-#  # reference and enable module in build site
-#  - ln -s $(readlink -e $(cd -)) message/drupal/sites/all/modules/message
-#  - cd message/drupal
-#  - drush --yes pm-enable message
-#
-#  # start a web server on port 8080, run in the background; wait for initialization
-#  - drush runserver 127.0.0.1:8080 &
-#  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
-
-#script: drush test-run Message --uri=http://127.0.0.1:8080
-script: echo 'a'
+script: drush test-run Message --uri=http://127.0.0.1:8080
 
