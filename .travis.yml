@@ -28,7 +28,7 @@ before_script:
   - cd /var/www
   - drush dl
   - mv drupal-7.35 drupal
-  - cd drupal-7.35/sites/all/modules/
+  - cd drupal/sites/all/modules/
   - cp /home/travis/build/Gizra/message . -R
 
   # Install Drupal
