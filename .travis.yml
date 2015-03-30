@@ -9,30 +9,49 @@ mysql:
   encoding: utf8
 
 before_script:
-  # navigate out of module directory to prevent blown stack by recursive module lookup
-  - cd ../..
 
-  # install drush
-  - pear channel-discover pear.drush.org
-  - pear install drush/drush-5.8.0
-  - phpenv rehash
+  - export PATH="$HOME/.composer/vendor/bin:$PATH"
+  - composer global require drush/drush:6.*@dev
 
-  # install php packages required for running a web server from drush on php 5.3
-  - sudo apt-get update > /dev/null
-  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
+  # Install apache
+  - sudo apt-get update
+  - sudo apt-get install apache2
+  - sudo a2enmod actions
+  - sudo a2enmod rewrite
+  - echo "export PATH=/home/vagrant/.phpenv/bin:$PATH" | sudo tee -a /etc/apache2/envvars > /dev/null
+  - echo "$(curl -fsSL https://gist.github.com/roderik/16d751c979fdeb5a14e3/raw/74f4fec92c064c4f683fef28a6098caf0f038de7/gistfile1.txt)" | sudo tee /etc/apache2/conf.d/phpconfig > /dev/null
+  - echo "$(curl -fsSL https://gist.github.com/roderik/2eb301570ed4a1f4c33d/raw/8066fda124b6c86f69ad32a010b8c22bbaf868e8/gistfile1.txt)" | sed -e "s,PATH,`pwd`/www,g" | sudo tee /etc/apache2/sites-available/default > /dev/null
 
-  # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
-  - mysql -e 'create database drupal'
-  - php -d sendmail_path=`which true` `pear config-get php_dir`/drush/drush.php --yes core-quick-drupal --profile=testing --no-server --db-url=mysql://root:@127.0.0.1/drupal --enable=simpletest message
+  # Go to localhost.
+  - cd /var/www
+  - ls -al
+#
+#
+#  # navigate out of module directory to prevent blown stack by recursive module lookup
+#  - cd ../..
+#
+#  # install drush
+#  - pear channel-discover pear.drush.org
+#  - pear install drush/drush-5.8.0
+#  - phpenv rehash
+#
+#  # install php packages required for running a web server from drush on php 5.3
+#  - sudo apt-get update > /dev/null
+#  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
+#
+#  # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
+#  - mysql -e 'create database drupal'
+#  - php -d sendmail_path=`which true` `pear config-get php_dir`/drush/drush.php --yes core-quick-drupal --profile=testing --no-server --db-url=mysql://root:@127.0.0.1/drupal --enable=simpletest message
+#
+#  # reference and enable module in build site
+#  - ln -s $(readlink -e $(cd -)) message/drupal/sites/all/modules/message
+#  - cd message/drupal
+#  - drush --yes pm-enable message
+#
+#  # start a web server on port 8080, run in the background; wait for initialization
+#  - drush runserver 127.0.0.1:8080 &
+#  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
 
-  # reference and enable module in build site
-  - ln -s $(readlink -e $(cd -)) message/drupal/sites/all/modules/message
-  - cd message/drupal
-  - drush --yes pm-enable message
-
-  # start a web server on port 8080, run in the background; wait for initialization
-  - drush runserver 127.0.0.1:8080 &
-  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
-
-script: drush test-run Message --uri=http://127.0.0.1:8080
+#script: drush test-run Message --uri=http://127.0.0.1:8080
+script: echo 'a'
 
