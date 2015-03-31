@@ -938,6 +938,28 @@ function message_property_get_text($message, array $options) {
 }
 
 /**
+ * Entity property info getter callback for getting a list of message texts.
+ */
+function message_property_get_text_list($message, array $options) {
+  $langcode = isset($options['language']) ? $options['language']->language : LANGUAGE_NONE;
+  $message_type = $message->getType();
+  $message_type_wrapper = entity_metadata_wrapper('message_type', $message_type);
+  $property = $message_type_wrapper->language($langcode)->{MESSAGE_FIELD_MESSAGE_TEXT};
+
+  $text_list = array();
+  $text_options = array(
+    'partials' => TRUE,
+  );
+  if ($property instanceof EntityListWrapper) {
+    foreach (array_keys($property->value($options)) as $delta) {
+      $text_options['partial delta'] = $delta;
+      $text_list[$delta] = $message->getText($langcode, $text_options);
+    }
+  }
+  return $text_list;
+}
+
+/**
  * Get the values of a message property.
  *
  * The value of the message, after intersecting with the same values
