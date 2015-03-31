@@ -23,7 +23,7 @@ before_script:
   - echo "$(curl -fsSL https://gist.github.com/roderik/2eb301570ed4a1f4c33d/raw/8066fda124b6c86f69ad32a010b8c22bbaf868e8/gistfile1.txt)" | sed -e "s,PATH,`pwd`/www,g" | sudo tee /etc/apache2/sites-available/default > /dev/null
 
   # Get Drupal.
-  - chmod 777 /var/www
+  - sudo chmod 777 /var/www
   - cd /var/www
   - drush dl
   - mv drupal-7.35 drupal
