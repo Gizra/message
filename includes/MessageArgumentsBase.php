@@ -22,6 +22,7 @@ abstract class MessageArgumentsBase {
 
   /**
    * @param Message $message
+   *   The message object.
    *
    * @return MessageArgumentsBase
    */
