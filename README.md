@@ -1,9 +1,9 @@
 [![Build Status](https://travis-ci.org/Gizra/message.svg?branch=7.x-1.x)](https://travis-ci.org/Gizra/message)
 
-Overview
-========
 A general logging utility that can be used as activity module.
 
+Overview
+========
 * In message module, the arguments of a sentence can use tokens, custom
   callbacks or be hard-coded. Making the arguments dynamic means that the
   rendering time is slower than activity, on the other hand you can use
@@ -28,7 +28,7 @@ Tokens
   by the token system as well under [message:field_node_ref].
   (For instance: [message:field_node_ref:title]).
   This relies on "Entity token" module that ships with Entity API.
-  Enabling "Token" module is also recommened, as it provides more tokens
+  Enabling "Token" module is also recommended, as it provides more tokens
   and shows a token browser in the message type creation page.
 
 * "Single use" tokens
