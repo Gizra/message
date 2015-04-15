@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\message\Plugin\Action\DeleteMessage.
+ * Contains \Drupal\node\Plugin\Action\DeleteNode.
  */
 
 namespace Drupal\message\Plugin\Action;
@@ -10,17 +10,17 @@ namespace Drupal\message\Plugin\Action;
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
-use Drupal\user\TempStoreFactory;
+use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Redirects to a message deletion form.
+ * Redirects to a node deletion form.
  *
  * @Action(
  *   id = "message_delete_action",
  *   label = @Translation("Delete selected content"),
  *   type = "message",
- *   confirm_form_path = "admin/content/message/delete"
+ *   confirm_form_route_name = "message.multiple_delete_confirm"
  * )
  */
 class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterface {
@@ -28,12 +28,19 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
   /**
    * The tempstore object.
    *
-   * @var \Drupal\user\TempStore
+   * @var \Drupal\user\SharedTempStore
    */
   protected $tempStore;
 
   /**
-   * Constructs a new DeleteMessage object.
+   * The current user.
+   *
+   * @var \Drupal\Core\Session\AccountInterface
+   */
+  protected $currentUser;
+
+  /**
+   * Constructs a new DeleteNode object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -41,27 +48,36 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
+   * @param AccountInterface $current_user
+   *   Current user.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, TempStoreFactory $temp_store_factory) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition);
-
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, PrivateTempStoreFactory $temp_store_factory, AccountInterface $current_user) {
+    $this->currentUser = $current_user;
     $this->tempStore = $temp_store_factory->get('message_multiple_delete_confirm');
+
+    parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
 
   /**
    * {@inheritdoc}
    */
   public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static($configuration, $plugin_id, $plugin_definition, $container->get('user.private_tempstore'));
+    return new static(
+      $configuration,
+      $plugin_id,
+      $plugin_definition,
+      $container->get('user.private_tempstore'),
+      $container->get('current_user')
+    );
   }
 
   /**
    * {@inheritdoc}
    */
   public function executeMultiple(array $entities) {
-    $this->tempStore->set(\Drupal::currentUser()->id(), $entities);
+    $this->tempStore->set($this->currentUser->id(), $entities);
   }
 
   /**

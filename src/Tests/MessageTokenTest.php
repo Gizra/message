@@ -74,6 +74,7 @@ class MessageTokenTest extends MessageTestBase {
 
     $this->assertTrue($message->getArguments() == FALSE, 'No message arguments exist prior to saving the message.');
     $message->save();
+
     $this->assertEqual(count($message->getArguments()), 3, 'Correct number of arguments added after saving the message.');
 
     // Assert message is rendered as expected.

@@ -99,7 +99,7 @@ class MessageEntityDelete extends MessageTestBase {
     FieldStorageConfig::create(array(
       'field_name' => $name,
       'entity_type' => 'message',
-      'type' => 'taxonomy_term_reference',
+      'type' => 'entity_reference',
       'cardinality' => $multiple ? FieldStorageConfig::CARDINALITY_UNLIMITED : 1,
       'settings' => array(
         'allowed_values' => array(

@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Entity;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
@@ -189,7 +190,7 @@ class Message extends ContentEntityBase implements EntityInterface {
    *  The arguments of the message.
    */
   public function getArguments() {
-    return $this->get('arguments')->first()->getValue();
+    return $this->get('arguments')->getValue();
   }
 
   /**
@@ -280,7 +281,7 @@ class Message extends ContentEntityBase implements EntityInterface {
     }
 
     $output = $message_type->getText($langcode, $options);
-    $arguments = $this->getArguments();
+    $arguments = $this->getArguments()[0];
 
     if (is_array($arguments)) {
       $args = array();
@@ -301,13 +302,13 @@ class Message extends ContentEntityBase implements EntityInterface {
         switch ($key[0]) {
           case '@':
             // Escaped only.
-            $args[$key] = String::checkPlain($value);
+            $args[$key] = SafeMarkup::checkPlain($value);
             break;
 
           case '%':
           default:
             // Escaped and placeholder.
-            $args[$key] = String::placeholder($value);
+            $args[$key] = SafeMarkup::placeholder($value);
             break;
 
           case '!':
