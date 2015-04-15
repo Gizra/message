@@ -44,17 +44,6 @@ class MessageEntityDelete extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function getInfo() {
-    return array(
-      'name' => 'Message entity delete test',
-      'description' => 'Testing entity deletion properly.',
-      'group' => 'Message',
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setUp() {
     parent::setUp();
 

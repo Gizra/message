@@ -24,14 +24,6 @@ class MessageTypeListTest extends MessageTestBase {
   protected $user;
 
   /**
-   * {@inheritdoc}
-   */
-  public function setUp() {
-    parent::setUp();
-    $this->user = $this->drupalCreateUser(['administer message types']);
-  }
-
-  /**
    * Listing of messages.
    */
   public function testEntityTypeList() {
