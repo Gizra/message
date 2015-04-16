@@ -102,6 +102,7 @@ class MessageEntityDelete extends MessageTestBase {
       'type' => 'entity_reference',
       'cardinality' => $multiple ? FieldStorageConfig::CARDINALITY_UNLIMITED : 1,
       'settings' => array(
+        'target_type' => 'taxonomy_term',
         'allowed_values' => array(
           array(
             'vocabulary' => $this->vocabulary->id(),
