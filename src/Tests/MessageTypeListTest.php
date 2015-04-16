@@ -27,6 +27,7 @@ class MessageTypeListTest extends MessageTestBase {
    * Listing of messages.
    */
   public function testEntityTypeList() {
+    $this->user = $this->drupalCreateUser(['administer message types']);
     $this->drupalLogin($this->user);
 
     $this->drupalGet('admin/structure/message');
