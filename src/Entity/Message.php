@@ -281,7 +281,8 @@ class Message extends ContentEntityBase implements EntityInterface {
     }
 
     $output = $message_type->getText($langcode, $options);
-    $arguments = $this->getArguments()[0];
+    $arguments = $this->getArguments();
+    $arguments = reset($arguments);
 
     if (is_array($arguments)) {
       $args = array();
