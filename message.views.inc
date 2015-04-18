@@ -16,4 +16,13 @@ function message_views_data_alter(&$data) {
       'id' => 'message_bulk_form',
     ),
   );
+
+  $data['message']['get_text'] = array(
+    'title' => t('Message text'),
+    'help' => t('Get the message text'),
+    'field' => array(
+      // ID of the area handler plugin to use.
+      'id' => 'get_text',
+    ),
+  );
 }
