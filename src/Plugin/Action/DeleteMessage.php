@@ -55,7 +55,7 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, PrivateTempStoreFactory $temp_store_factory, AccountInterface $current_user) {
     $this->currentUser = $current_user;
-    $this->tempStore = $temp_store_factory->get('message_multiple_delete_confirm');
+    $this->tempStore = $temp_store_factory->get('node_multiple_delete_confirm');
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
@@ -92,7 +92,7 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
     /** @var \Drupal\message\MessageInterface $object */
-    return $object->access('delete', $account, $return_as_object);
+    return $account->hasPermission('adminster messages');
   }
 
 }

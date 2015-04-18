@@ -14,6 +14,8 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
 
 /**
@@ -45,7 +47,7 @@ use Drupal\user\Entity\User;
  *   field_ui_base_route = "entity.message_type.edit_form"
  * )
  */
-class Message extends ContentEntityBase implements EntityInterface {
+class Message extends ContentEntityBase implements MessageInterface {
 
   /**
    * @var Integer.
