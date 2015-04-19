@@ -91,7 +91,7 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           break;
         case 'user-url':
           if ($message->getAuthor()) {
-            $replacements[$original] = _url('user/' . $message->getAuthor()->id());
+            $replacements[$original] = $message->getAuthor()->url();
           }
           break;
         case 'node-title':
@@ -104,10 +104,10 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           break;
         case 'node-url':
           if ($message->bundle() == 'example_create_comment') {
-            $replacements[$original] = _url('node/' . $message->field_comment_reference->entity->getCommentedEntity()->id());
+            $replacements[$original] = $message->field_comment_reference->entity->getCommentedEntity()->url();
           }
           else {
-            $replacements[$original] = _url('node/' . $message->field_node_reference->get(0)->entity->id());
+            $replacements[$original] = $message->field_node_reference->get(0)->entity->url();
           }
           break;
         case 'node-render':
@@ -119,7 +119,7 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           }
           break;
         case 'comment-url':
-          $replacements[$original] = _url('comment/' . $message->field_comment_reference->entity->id());
+          $replacements[$original] = $message->field_comment_reference->entity->id();
           break;
       }
     }

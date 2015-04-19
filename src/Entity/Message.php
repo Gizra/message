@@ -7,12 +7,15 @@
 
 namespace Drupal\message\Entity;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Component\Utility\String;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Session\AccountInterface;
+use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
 
 /**
@@ -39,14 +42,12 @@ use Drupal\user\Entity\User;
  *   handlers = {
  *     "view_builder" = "Drupal\message\MessageViewBuilder",
  *     "list_builder" = "Drupal\message\MessageListBuilder",
+ *     "views_data" = "Drupal\message\MessageViewsData",
  *   },
- *   field_ui_base_route = "entity.message_type.edit_form",
- *   links = {
- *     "admin-form" = "entity.message_type.edit"
- *   }
+ *   field_ui_base_route = "entity.message_type.edit_form"
  * )
  */
-class Message extends ContentEntityBase implements EntityInterface {
+class Message extends ContentEntityBase implements MessageInterface {
 
   /**
    * @var Integer.
@@ -191,7 +192,7 @@ class Message extends ContentEntityBase implements EntityInterface {
    *  The arguments of the message.
    */
   public function getArguments() {
-    return $this->get('arguments')->first()->getValue();
+    return $this->get('arguments')->getValue();
   }
 
   /**
@@ -283,6 +284,7 @@ class Message extends ContentEntityBase implements EntityInterface {
 
     $output = $message_type->getText($langcode, $options);
     $arguments = $this->getArguments();
+    $arguments = reset($arguments);
 
     if (is_array($arguments)) {
       $args = array();
@@ -303,13 +305,13 @@ class Message extends ContentEntityBase implements EntityInterface {
         switch ($key[0]) {
           case '@':
             // Escaped only.
-            $args[$key] = String::checkPlain($value);
+            $args[$key] = SafeMarkup::checkPlain($value);
             break;
 
           case '%':
           default:
             // Escaped and placeholder.
-            $args[$key] = String::placeholder($value);
+            $args[$key] = SafeMarkup::placeholder($value);
             break;
 
           case '!':

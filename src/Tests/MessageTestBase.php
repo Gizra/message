@@ -25,7 +25,7 @@ abstract class MessageTestBase extends WebTestBase {
   /**
    * The node access controller.
    *
-   * @var \Drupal\Core\Entity\EntityAccessControllerInterface
+   * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface
    */
   protected $accessController;
 
@@ -103,6 +103,6 @@ abstract class MessageTestBase extends WebTestBase {
    *   The storing of the configuration. Default to message.message.
    */
   protected function configSet($config, $value, $storage = 'message.settings') {
-    \Drupal::config($storage)->set($config, $value);
+    \Drupal::configFactory()->getEditable($storage)->set($config, $value);
   }
 }

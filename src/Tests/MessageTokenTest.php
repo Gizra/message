@@ -34,17 +34,6 @@ class MessageTokenTest extends MessageTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Message Token test',
-      'description' => 'Testing tokens for message.',
-      'group' => 'Message',
-    );
-  }
-
-  /**
    * Test token replacement in a message type.
    */
   public function testTokens() {
@@ -85,7 +74,9 @@ class MessageTokenTest extends MessageTestBase {
 
     $this->assertTrue($message->getArguments() == FALSE, 'No message arguments exist prior to saving the message.');
     $message->save();
-    $this->assertEqual(count($message->getArguments()), 3, 'Correct number of arguments added after saving the message.');
+
+    $arguments = $message->getArguments();
+    $this->assertEqual(count(reset($arguments)), 3, 'Correct number of arguments added after saving the message.');
 
     // Assert message is rendered as expected.
     $this->assertEqual(implode("\n", $replaced_messages), $message->getText(), 'The text rendered as expected.');

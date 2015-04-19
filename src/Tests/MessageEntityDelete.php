@@ -44,17 +44,6 @@ class MessageEntityDelete extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
-  public static function getInfo() {
-    return array(
-      'name' => 'Message entity delete test',
-      'description' => 'Testing entity deletion properly.',
-      'group' => 'Message',
-    );
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setUp() {
     parent::setUp();
 
@@ -110,9 +99,10 @@ class MessageEntityDelete extends MessageTestBase {
     FieldStorageConfig::create(array(
       'field_name' => $name,
       'entity_type' => 'message',
-      'type' => 'taxonomy_term_reference',
+      'type' => 'entity_reference',
       'cardinality' => $multiple ? FieldStorageConfig::CARDINALITY_UNLIMITED : 1,
       'settings' => array(
+        'target_type' => 'taxonomy_term',
         'allowed_values' => array(
           array(
             'vocabulary' => $this->vocabulary->id(),

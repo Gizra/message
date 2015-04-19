@@ -10,7 +10,9 @@ namespace Drupal\message\Form;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\message\Entity\Message;
+use Drupal\user\PrivateTempStoreFactory;
 use Drupal\user\TempStoreFactory;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -19,23 +21,22 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  * Provides a message deletion confirmation form.
  */
 class DeleteMultiple extends ConfirmFormBase {
-
   /**
-   * The array of messages to delete.
+   * The array of nodes to delete.
    *
-   * @var Message[]
+   * @var array
    */
-  protected $messages = array();
+  protected $nodes = array();
 
   /**
    * The tempstore factory.
    *
-   * @var \Drupal\user\TempStoreFactory
+   * @var \Drupal\user\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
   /**
-   * The message storage.
+   * The node storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
@@ -44,12 +45,12 @@ class DeleteMultiple extends ConfirmFormBase {
   /**
    * Constructs a DeleteMultiple form object.
    *
-   * @param \Drupal\user\TempStoreFactory $temp_store_factory
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
    * @param \Drupal\Core\Entity\EntityManagerInterface $manager
    *   The entity manager.
    */
-  public function __construct(TempStoreFactory $temp_store_factory, EntityManagerInterface $manager) {
+  public function __construct(PrivateTempStoreFactory $temp_store_factory, EntityManagerInterface $manager) {
     $this->tempStoreFactory = $temp_store_factory;
     $this->storage = $manager->getStorage('message');
   }
@@ -59,7 +60,7 @@ class DeleteMultiple extends ConfirmFormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('user.tempstore'),
+      $container->get('user.private_tempstore'),
       $container->get('entity.manager')
     );
   }
@@ -97,7 +98,7 @@ class DeleteMultiple extends ConfirmFormBase {
   public function buildForm(array $form, FormStateInterface $form_state) {
     $this->messages = $this->tempStoreFactory->get('message_multiple_delete_confirm')->get(\Drupal::currentUser()->id());
     if (empty($this->messages)) {
-      return new RedirectResponse(_url('admin/content/message', array('absolute' => TRUE)));
+      return new RedirectResponse($this->getCancelUrl()->setAbsolute()->toString());
     }
 
     $form['messages'] = array(
@@ -127,14 +128,14 @@ class DeleteMultiple extends ConfirmFormBase {
       $this->logger('message')->notice('Deleted @count posts.', array('@count' => $count));
       drupal_set_message(\Drupal::translation()->formatPlural($count, 'Deleted 1 message.', 'Deleted @count messages.'));
     }
-    $form_state['redirect'] = 'admin/content/messages';
+    $form_state->setRedirect('message.messages');
   }
 
   /**
    * {@inheritdoc}
    */
   public function getCancelUrl() {
-    return 'admin/content/messages';
+    return new Url('message.messages');
   }
 
 }

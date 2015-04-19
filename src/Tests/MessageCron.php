@@ -35,17 +35,6 @@ class MessageCron extends MessageTestBase {
   }
 
   /**
-   * {@inheritdoc}
-   */
-  public static function getInfo() {
-    return array(
-      'name' => 'Message cron test',
-      'description' => 'Testing the cron integration.',
-      'group' => 'Message',
-    );
-  }
-
-  /**
    * Testing the deletion of messages in cron according to settings.
    */
   public function testPurge() {
@@ -126,7 +115,7 @@ class MessageCron extends MessageTestBase {
    */
   public function testPurgeRequestLimit() {
     // Set maximal amount of messages to delete.
-    \Drupal::config('message.settings')
+    \Drupal::configFactory()->getEditable('message.settings')
       ->set('delete_cron_limit', 10)
       ->save();
 
@@ -174,7 +163,7 @@ class MessageCron extends MessageTestBase {
    */
   public function testPurgeGlobalSettings() {
     // Set global purge settings.
-    \Drupal::config('message.settings')
+    \Drupal::configFactory()->getEditable('message.settings')
       ->set('purge_enable', TRUE)
       ->set('purge_quota', 1)
       ->set('purge_days', 2)

@@ -61,7 +61,7 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
 
     // Only delete messages due to referenced entity or referenced taxonomy term
     // deletion.
-    if (!in_array($field->getType(), array('entity_reference', 'taxonomy_term_reference'))) {
+    if ($field->getType() != 'entity_reference') {
       continue;
     }
 
