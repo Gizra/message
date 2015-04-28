@@ -4,7 +4,7 @@
  * Contains \MessageArgumentsBase.
  */
 
-abstract class MessageArgumentsBase {
+abstract class MessageArgumentsBase implements MessageArgumentInterface {
 
   /**
    * @var Message
@@ -14,17 +14,14 @@ abstract class MessageArgumentsBase {
   protected $message;
 
   /**
-   * @return Message
+   * {@inheritdoc}
    */
   public function getMessage() {
     return $this->message;
   }
 
   /**
-   * @param Message $message
-   *   The message object.
-   *
-   * @return MessageArgumentsBase
+   * {@inheritdoc}
    */
   public function setMessage(Message $message) {
     $this->message = $message;
@@ -32,14 +29,11 @@ abstract class MessageArgumentsBase {
   }
 
   /**
-   * Retrieve the arguments info.
-   *
-   * @return array
-   *   The arguments as and their values.
+   * {@inheritdoc}
    */
   public function getArguments() {
     $arguments = array();
-    $callbacks = $this->prepare();
+    $callbacks = $this->getNameArgument();
 
     foreach ($callbacks as $argument => $callback) {
       $arguments[$argument] = call_user_func($callback);
@@ -48,8 +42,4 @@ abstract class MessageArgumentsBase {
     return $arguments;
   }
 
-  /**
-   * @return mixed
-   */
-  abstract function prepare();
 }

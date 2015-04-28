@@ -10,7 +10,7 @@ class MessageExampleArguments extends MessageArgumentsBase {
   /**
    * @return mixed
    */
-  public function prepare() {
+  public function getNameArgument() {
     return array(
       '@name' => array($this, 'processName'),
       '%time' => array($this, 'processTime'),
@@ -19,7 +19,10 @@ class MessageExampleArguments extends MessageArgumentsBase {
   }
 
   /**
+   * Private function for the getting the user object.
+   *
    * @return \stdClass.
+   *   The user object.
    */
   private function getAccount() {
     return $this->getMessage()->user();

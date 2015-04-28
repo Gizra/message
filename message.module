@@ -19,7 +19,7 @@ define('MESSAGE_PURGE_LIMIT', 100);
  * Implements hook_ctools_plugin_type().
  */
 function message_ctools_plugin_type() {
-  $plugins['message_arguments'] = array(
+  $plugins['computed_arguments'] = array(
     'classes' => array('class'),
     'child plugins' => TRUE,
   );
@@ -36,10 +36,10 @@ function message_ctools_plugin_type() {
  * @return MessageArgumentsBase | NULL
  *   The handler object if found else NULL.
  */
-function message_get_message_arguments_handler(Message $message) {
-  $plugin = message_get_message_arguments_plugin($message->bundle());
+function message_get_computed_arguments_handler(Message $message) {
+  $plugin = message_get_computed_arguments_plugin($message->bundle());
 
-  if (!$class = ctools_plugin_load_class('message', 'message_arguments', $message->bundle(), 'class')) {
+  if (!$class = ctools_plugin_load_class('message', 'computed_arguments', $message->bundle(), 'class')) {
     return NULL;
   }
 
@@ -56,9 +56,9 @@ function message_get_message_arguments_handler(Message $message) {
  * @return array
  *   The selected plugin for the message arguments.
  */
-function message_get_message_arguments_plugin($plugin_name = '') {
+function message_get_computed_arguments_plugin($plugin_name = '') {
   ctools_include('plugins');
-  return ctools_get_plugins('message', 'message_arguments', $plugin_name);
+  return ctools_get_plugins('message', 'computed_arguments', $plugin_name);
 }
 
 /**

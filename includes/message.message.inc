@@ -162,7 +162,7 @@ class Message extends Entity {
     $arguments = message_get_property_values($this, 'arguments');
 
     // Check if the current message have any arguments plugin.
-    $handler = message_get_message_arguments_handler($this);
+    $handler = message_get_computed_arguments_handler($this);
     if ($handler && $handler_arguments = $handler->getArguments()) {
       $arguments = array_merge($arguments, $handler_arguments);
     }
