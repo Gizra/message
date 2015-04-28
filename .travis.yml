@@ -25,8 +25,7 @@ before_script:
   # Get Drupal.
   - sudo chmod 777 /var/www
   - cd /var/www
-  - drush dl
-  - mv drupal-7.35 drupal
+  - drush dl --drupal-project-rename=drupal
   - cd drupal/sites/all/modules/
   - cp /home/travis/build/Gizra/message . -R
 
