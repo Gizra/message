@@ -34,4 +34,3 @@ before_script:
   - drush en message_example simpletest -y
 
 script: drush test-run Message --uri=http://127.0.0.1:8080
-
