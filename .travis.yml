@@ -1,7 +1,7 @@
 language: php
 
 php:
-  - 5.4
+  - 5.3
 
 mysql:
   database: message
@@ -14,8 +14,8 @@ before_script:
   - cd ../..
 
   # install drush
-  - export PATH="$HOME/.composer/vendor/bin:$PATH"
-  - composer global require drush/drush:6.*@dev
+  - pear channel-discover pear.drush.org
+  - pear install drush/drush-5.8.0
   - phpenv rehash
 
   # install php packages required for running a web server from drush on php 5.3
