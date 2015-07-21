@@ -83,7 +83,7 @@ function message_user_admin_settings($form_state) {
     '#type' => 'textfield',
     '#title' => t('Cron limit for message purging'),
     '#description' => t('Maximal messages to be purged on each Cron run.'),
-    '#default_value' => variable_get('message_delete_cron_limit', NULL),
+    '#default_value' => variable_get('message_delete_cron_limit', MESSAGE_PURGE_LIMIT),
     '#element_validate' => array('element_validate_integer_positive'),
     '#states' => $states,
   );
