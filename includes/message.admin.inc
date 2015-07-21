@@ -79,6 +79,15 @@ function message_user_admin_settings($form_state) {
     '#states' => $states,
   );
 
+  $form['purge']['message_delete_cron_limit'] = array(
+    '#type' => 'textfield',
+    '#title' => t('Cron limit for message purging'),
+    '#description' => t('Maximal messages to be purged on each Cron run.'),
+    '#default_value' => variable_get('message_delete_cron_limit', NULL),
+    '#element_validate' => array('element_validate_integer_positive'),
+    '#states' => $states,
+  );
+
   $options = array();
   foreach (entity_get_info() as $entity_id => $entity) {
     $options[$entity_id] = $entity['label'];
