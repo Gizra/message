@@ -299,6 +299,7 @@ class Message extends ContentEntityBase implements MessageInterface {
           $value = call_user_func_array($value['callback'], $value['arguments']);
         }
 
+        // @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
         switch ($key[0]) {
           case '@':
             // Escaped only.
@@ -308,7 +309,7 @@ class Message extends ContentEntityBase implements MessageInterface {
           case '%':
           default:
             // Escaped and placeholder.
-            $args[$key] = $value;
+            $args[$key] = '<em class="placeholder">' . Html::escape($value) . '</em>';
             break;
         }
       }
