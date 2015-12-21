@@ -7,7 +7,10 @@
 
 namespace Drupal\message\Entity;
 
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Render\OutputStrategyInterface;
 use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -299,11 +302,10 @@ class Message extends ContentEntityBase implements MessageInterface {
           $value = call_user_func_array($value['callback'], $value['arguments']);
         }
 
-        // @see \Drupal\Component\Render\FormattableMarkup::placeholderFormat()
         switch ($key[0]) {
           case '@':
             // Escaped only.
-            $args[$key] = Html::escape($value);
+            $args[$key] = OutputStrategyInterface::renderFromHtml($value);
             break;
 
           case '%':
