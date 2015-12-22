@@ -38,6 +38,7 @@ before_script:
   # reference and enable travis_ci_drupal_module_example in build site
   - ln -s $(readlink -e $(cd -)) message/drupal/sites/all/modules/message
   - cd message/drupal
+  - drush dl entity ctools features views token
   - drush --yes pm-enable message message_example
 
   # start a web server on port 8080, run in the background; wait for initialization
