@@ -5,6 +5,8 @@
  * API functions to manipulate messages.
  */
 
+use Drupal\Core\Render\Element;
+use Drupal\Core\Template\Attribute;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageType;
@@ -291,9 +293,65 @@ function message_config_translation_info_alter(&$info) {
 function message_theme() {
   return array(
     'message' => array(
-      'template' => 'message',
       'render element' => 'elements',
-      'variables' => array('content' => NULL),
     ),
   );
+}
+
+/**
+ * Prepares variables for message templates.
+ *
+ * Default template: message.html.twig.
+ *
+ * @param array $variables
+ *   An associative array containing:
+ *   - elements: An array of elements to display in view mode.
+ *   - message: The message object.
+ *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
+ */
+function template_preprocess_message(&$variables) {
+  $variables['view_mode'] = $variables['elements']['#view_mode'];
+  // Provide a distinct $teaser boolean.
+  $variables['teaser'] = $variables['view_mode'] == 'teaser';
+  $variables['message'] = $variables['elements']['#message'];
+  /** @var \Drupal\message\MessageInterface $message */
+  $message = $variables['message'];
+  $variables['date'] = drupal_render($variables['elements']['created']);
+  unset($variables['elements']['created']);
+  $variables['author_name'] = drupal_render($variables['elements']['uid']);
+  unset($variables['elements']['uid']);
+
+  $variables['url'] = $message->url('canonical', array(
+    'language' => $message->language(),
+  ));
+  $variables['label'] = $variables['elements']['title'];
+  unset($variables['elements']['title']);
+  // The 'page' variable is set to TRUE in two occasions:
+  //   - The view mode is 'full' and we are on the 'message.view' route.
+  //   - The message is in preview and view mode is either 'full' or 'default'.
+  $variables['page'] = ($variables['view_mode'] == 'full' || $variables['view_mode'] == 'default');
+
+  // Helpful $content variable for templates.
+  $variables += array('content' => array());
+  foreach (Element::children($variables['elements']) as $key) {
+    $variables['content'][$key] = $variables['elements'][$key];
+  }
+}
+
+/**
+ * Implements hook_theme_suggestions_HOOK().
+ */
+function message_theme_suggestions_message(array $variables) {
+  $suggestions = array();
+  /** @var \Drupal\message\MessageInterface $message */
+  $message = $variables['elements']['#message'];
+  $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
+
+  $suggestions[] = 'message__' . $sanitized_view_mode;
+  $suggestions[] = 'message__' . $message->bundle();
+  $suggestions[] = 'message__' . $message->bundle() . '__' . $sanitized_view_mode;
+  $suggestions[] = 'message__' . $message->id();
+  $suggestions[] = 'message__' . $message->id() . '__' . $sanitized_view_mode;
+
+  return $suggestions;
 }
