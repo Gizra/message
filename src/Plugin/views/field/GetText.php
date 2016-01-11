@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Plugin\views\field;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\message\Entity\Message;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
@@ -36,7 +37,7 @@ class GetText extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    return $values->_entity->getText();
+    return new FormattableMarkup($values->_entity->getText(), []);
   }
 
 }

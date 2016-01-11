@@ -112,11 +112,14 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           break;
         case 'node-render':
           if ($message->bundle() == 'example_create_comment') {
-            $replacements[$original] = render(entity_view($message->field_comment_reference->entity->getCommentedEntity(), 'teaser'));
+            $entity = $message->field_comment_reference->entity->getCommentedEntity();
           }
           else {
-            $replacements[$original] = render(entity_view($message->field_node_reference->get(0)->entity, 'teaser'));
+            $entity = $message->field_node_reference->get(0)->entity;
           }
+
+          $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId());
+          $replacements[$original] = render($view_builder->view($entity, 'teaser'));
           break;
         case 'comment-url':
           $replacements[$original] = $message->field_comment_reference->entity->id();

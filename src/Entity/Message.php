@@ -7,14 +7,14 @@
 
 namespace Drupal\message\Entity;
 
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Component\Render\OutputStrategyInterface;
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
 
@@ -305,18 +305,14 @@ class Message extends ContentEntityBase implements MessageInterface {
         switch ($key[0]) {
           case '@':
             // Escaped only.
-            $args[$key] = SafeMarkup::checkPlain($value);
+            $args[$key] = OutputStrategyInterface::renderFromHtml($value);
             break;
 
           case '%':
           default:
             // Escaped and placeholder.
-            $args[$key] = SafeMarkup::placeholder($value);
+            $args[$key] = '<em class="placeholder">' . Html::escape($value) . '</em>';
             break;
-
-          case '!':
-            // Pass-through.
-            $args[$key] = $value;
         }
       }
 
