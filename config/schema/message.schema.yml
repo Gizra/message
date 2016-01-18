@@ -1,7 +1,7 @@
 # Schema for the configuration files of the message module.
 
 message.settings:
-  type: mapping
+  type: config_object
   label: 'Field settings'
   mapping:
     delete_cron_limit:
