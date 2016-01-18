@@ -22,11 +22,11 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  */
 class DeleteMultiple extends ConfirmFormBase {
   /**
-   * The array of nodes to delete.
+   * The array of messages to delete.
    *
    * @var array
    */
-  protected $nodes = array();
+  protected $messages = array();
 
   /**
    * The tempstore factory.
@@ -36,7 +36,7 @@ class DeleteMultiple extends ConfirmFormBase {
   protected $tempStoreFactory;
 
   /**
-   * The node storage.
+   * The message storage.
    *
    * @var \Drupal\Core\Entity\EntityStorageInterface
    */
@@ -121,7 +121,7 @@ class DeleteMultiple extends ConfirmFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    if ($form_state['values']['confirm'] && !empty($this->messages)) {
+    if ($form_state->getValue('confirm') && !empty($this->messages)) {
       $this->storage->delete($this->messages);
       $this->tempStoreFactory->get('message_multiple_delete_confirm')->delete(\Drupal::currentUser()->id());
       $count = count($this->messages);

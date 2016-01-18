@@ -5,8 +5,6 @@ dependencies:
   config:
     - field.storage.message.field_comment_reference
     - message.type.example_create_comment
-  module:
-    - entity_reference
 id: message.example_create_comment.field_comment_reference
 field_name: field_comment_reference
 entity_type: message
