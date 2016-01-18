@@ -102,14 +102,21 @@ class MessageUiTest extends MessageTestBase {
     $this->verifyFormElements($elements);
 
     // Load the message via code in hebrew and english and verify the text.
-    $message = MessageType::load('dummy_message');
-    $this->assertTrue($message->getText('he') == 'This is a dummy message with translated text to Hebrew', 'The text in hebrew pulled correctly.');
-    $this->assertTrue($message->getText() == 'This is a dummy message with some edited dummy text', 'The text in english pulled correctly.');
+    $type = 'dummy_message';
+    /* @var $message MessageType */
+    $message = MessageType::load($type);
+    if (empty($message)) {
+      $this->fail('MessageType "' . $type . '" not found.');
+    }
+    else {
+      $this->assertTrue($message->getText('he') == 'This is a dummy message with translated text to Hebrew', 'The text in hebrew pulled correctly.');
+      $this->assertTrue($message->getText() == 'This is a dummy message with some edited dummy text', 'The text in english pulled correctly.');
+    }
 
     // Delete message via the UI.
-    $this->drupalPostForm('admin/structure/message/delete/dummy_message', array(), 'Delete');
+    $this->drupalPostForm('admin/structure/message/delete/' . $type, array(), 'Delete');
     $this->assertText(t('There is no Message type yet.'));
-    $this->assertFalse(MessageType::load('dummy_message'), 'The message deleted via the UI successfully.');
+    $this->assertFalse(MessageType::load($type), 'The message deleted via the UI successfully.');
   }
 
   /**

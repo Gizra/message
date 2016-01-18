@@ -5,8 +5,6 @@ dependencies:
   config:
     - field.storage.message.field_node_reference
     - message.type.example_create_node
-  module:
-    - entity_reference
 id: message.example_create_node.field_node_reference
 field_name: field_node_reference
 entity_type: message

@@ -3,7 +3,6 @@ langcode: en
 status: true
 dependencies:
   module:
-    - entity_reference
     - message
 id: message.field_comment_reference
 field_name: field_comment_reference

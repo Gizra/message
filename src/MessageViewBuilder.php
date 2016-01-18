@@ -45,6 +45,7 @@ class MessageViewBuilder extends EntityViewBuilder {
 
     $build = array(
       '#markup' => $extra,
+      '#theme' => 'message',
     );
 
     return ($build);

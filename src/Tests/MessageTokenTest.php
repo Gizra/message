@@ -53,16 +53,14 @@ class MessageTokenTest extends MessageTestBase {
     $random_text = $this->randomString();
     $token_messages = array(
       'some text @{message:author} ' . $random_text,
-      'some text !{message:author} ' . $random_text,
       'some text %{message:author} ' . $random_text,
-      'some text !{wrong:token} ' . $random_text,
+      'some text @{wrong:token} ' . $random_text,
     );
 
     $replaced_messages = array(
       'some text ' . $this->user->label() . ' ' . $random_text,
-      'some text ' . $this->user->label() . ' ' . $random_text,
       'some text <em class="placeholder">' . $this->user->label() . '</em> ' . $random_text,
-      'some text !{wrong:token} ' . $random_text,
+      'some text @{wrong:token} ' . $random_text,
     );
 
     // Create the message type.
@@ -76,7 +74,7 @@ class MessageTokenTest extends MessageTestBase {
     $message->save();
 
     $arguments = $message->getArguments();
-    $this->assertEqual(count(reset($arguments)), 3, 'Correct number of arguments added after saving the message.');
+    $this->assertEqual(count(reset($arguments)), 2, 'Correct number of arguments added after saving the message.');
 
     // Assert message is rendered as expected.
     $this->assertEqual(implode("\n", $replaced_messages), $message->getText(), 'The text rendered as expected.');
