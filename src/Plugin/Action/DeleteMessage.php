@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\node\Plugin\Action\DeleteNode.
+ * Contains \Drupal\message\Plugin\Action\DeleteMessage.
  */
 
 namespace Drupal\message\Plugin\Action;
@@ -14,7 +14,7 @@ use Drupal\user\PrivateTempStoreFactory;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Redirects to a node deletion form.
+ * Redirects to a message deletion form.
  *
  * @Action(
  *   id = "message_delete_action",
@@ -40,7 +40,7 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
   protected $currentUser;
 
   /**
-   * Constructs a new DeleteNode object.
+   * Constructs a new DeleteMessage object.
    *
    * @param array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -55,7 +55,7 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, PrivateTempStoreFactory $temp_store_factory, AccountInterface $current_user) {
     $this->currentUser = $current_user;
-    $this->tempStore = $temp_store_factory->get('node_multiple_delete_confirm');
+    $this->tempStore = $temp_store_factory->get('message_multiple_delete_confirm');
 
     parent::__construct($configuration, $plugin_id, $plugin_definition);
   }
