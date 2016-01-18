@@ -7,10 +7,8 @@
 
 namespace Drupal\message\Entity;
 
-use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Component\Render\OutputStrategyInterface;
+use Drupal\Component\Render\PlainTextOutput;
 use Drupal\Component\Utility\Html;
-use Drupal\Component\Utility\Xss;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -305,7 +303,7 @@ class Message extends ContentEntityBase implements MessageInterface {
         switch ($key[0]) {
           case '@':
             // Escaped only.
-            $args[$key] = OutputStrategyInterface::renderFromHtml($value);
+            $args[$key] = PlainTextOutput::renderFromHtml($value);
             break;
 
           case '%':
