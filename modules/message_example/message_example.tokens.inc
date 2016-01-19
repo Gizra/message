@@ -119,7 +119,7 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
           }
 
           $view_builder = \Drupal::entityTypeManager()->getViewBuilder($entity->getEntityTypeId());
-          $replacements[$original] = render($view_builder->view($entity, 'teaser'));
+          $replacements[$original] = \Drupal::service('renderer')->render($view_builder->view($entity, 'teaser'));
           break;
         case 'comment-url':
           $replacements[$original] = $message->field_comment_reference->entity->id();
