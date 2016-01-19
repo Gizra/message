@@ -7,9 +7,9 @@
 
 namespace Drupal\message\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\message\MessageTypeInterface;
 
 /**
  * Defines the Message type entity class.
@@ -41,7 +41,7 @@ use Drupal\Core\Entity\EntityStorageInterface;
  *   }
  * )
  */
-class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
+class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface {
 
   /**
    * The ID of this message type.
