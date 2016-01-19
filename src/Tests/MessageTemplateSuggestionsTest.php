@@ -46,7 +46,7 @@ class MessageTemplateSuggestionsTest extends MessageTestBase {
     $view_mode = 'full';
 
     // Simulate theming of the message.
-    $build = \Drupal::entityManager()->getViewBuilder('message')->view($message, $view_mode);
+    $build = \Drupal::entityTypeManager()->getViewBuilder('message')->view($message, $view_mode);
 
     $variables['elements'] = $build;
     $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_message', array($variables));
