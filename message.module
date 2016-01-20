@@ -293,9 +293,7 @@ function message_config_translation_info_alter(&$info) {
 function message_theme() {
   return array(
     'message' => array(
-      'template' => 'message',
       'render element' => 'elements',
-      'variables' => array('content' => NULL),
     ),
   );
 }
@@ -327,8 +325,6 @@ function template_preprocess_message(&$variables) {
   $variables['url'] = $message->url('canonical', array(
     'language' => $message->language(),
   ));
-  $variables['label'] = $variables['elements']['title'];
-  unset($variables['elements']['title']);
   // The 'page' variable is set to TRUE in two occasions:
   //   - The view mode is 'full' and we are on the 'message.view' route.
   //   - The message is in preview and view mode is either 'full' or 'default'.
@@ -346,6 +342,7 @@ function template_preprocess_message(&$variables) {
  */
 function message_theme_suggestions_message(array $variables) {
   $suggestions = array();
+
   /** @var \Drupal\message\MessageInterface $message */
   $message = $variables['elements']['#message'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
