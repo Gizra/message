@@ -133,8 +133,8 @@ class MessageUiTest extends MessageTestBase {
     $message->save();
 
     // Simulate theming of the message.
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder($message->getEntityTypeId());
-    $output = \Drupal::service('renderer')->renderRoot($view_builder->view($message));
+    $build = \Drupal::entityTypeManager()->getViewBuilder('message')->view($message);
+    $output = \Drupal::service('renderer')->renderRoot($build);
     $this->setRawContent($output);
 
     $xpath = $this->xpath('//div');
