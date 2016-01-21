@@ -134,11 +134,11 @@ class MessageUiTest extends MessageTestBase {
 
     // Simulate theming of the message.
     $build = \Drupal::entityTypeManager()->getViewBuilder('message')->view($message);
-
-    /* @var $output \Drupal\Core\Render\Markup */
     $output = \Drupal::service('renderer')->renderRoot($build);
-
-    $this->assertTrue((strpos("<div>", $output->__toString()) !== FALSE), 'A div has been found wrapping the message text.');
+    $this->setRawContent($output);
+    $xpath = $this->xpath('//div');
+    
+    $this->assertTrue($xpath, 'A div has been found wrapping the message text.');
   }
 
   /**
