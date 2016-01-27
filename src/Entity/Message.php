@@ -14,6 +14,7 @@ use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Markup;
 use Drupal\message\MessageInterface;
+use Drupal\message\MessageTypeInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\UserInterface;
@@ -50,35 +51,35 @@ use Drupal\user\UserInterface;
 class Message extends ContentEntityBase implements MessageInterface, EntityOwnerInterface {
 
   /**
-   * @var Integer.
+   * @var int
    *
    * The message ID.
    */
   protected $mid;
 
   /**
-   * @var string.
+   * @var string
    *
-   * The UUD string.
+   * The UUID string.
    */
   protected $uuid;
 
   /**
-   * @var MessageType
+   * @var \Drupal\message\MessageTypeInterface
    *
    * The message type object.
    */
   protected $type;
 
   /**
-   * @var User
+   * @var \Drupal\user\UserInterface
    *
    * The user object.
    */
   protected $uid;
 
   /**
-   * @var Integer.
+   * @var int
    *
    * The time stamp the message was created.
    */
@@ -92,50 +93,29 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   protected $arguments;
 
   /**
-   * Implements Drupal\Core\Entity\EntityInterface::id().
+   * {@inheritdoc}
    */
-  public function id() {
-    return $this->get('mid')->value;
-  }
-
-  /**
-   * Set the message type.
-   *
-   * @param MessageType $type
-   *  The name of the message type. If passed a MessageType object the
-   *
-   * @return $this.
-   */
-  public function setType(Messagetype $type) {
+  public function setType(MessageTypeInterface $type) {
     $this->set('type', $type);
     return $this;
   }
 
   /**
-   * Get the type of the message type.
-   *
-   * @return MessageType
+   * {@inheritdoc}
    */
   public function getType() {
     return MessageType::load($this->bundle());
   }
 
   /**
-   * Retrieve the time stamp of the message.
-   *
-   * @return Int
+   * {@inheritdoc}
    */
   public function getCreatedTime() {
     return $this->get('created')->value;
   }
 
   /**
-   * Setting the timestamp.
-   *
-   * @param Int $timestamp
-   *  The timestamp
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function setCreatedTime($timestamp) {
     $this->set('created', $timestamp);
@@ -173,42 +153,23 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   }
 
   /**
-   * Return the UUID.
-   *
-   * @return string.
+   * {@inheritdoc}
    */
   public function getUUID() {
     return $this->get('uuid')->value;
   }
 
   /**
-   * Retrieve the message arguments.
-   *
-   * @return array
-   *  The arguments of the message.
+   * {@inheritdoc}
    */
   public function getArguments() {
     return $this->get('arguments')->getValue();
   }
 
   /**
-   * Set the arguments of the message.
-   *
-   * @param array $values
-   *  Array of arguments.
-   *  @code
-   *  $values = array(
-   *    '@name_without_callback' => 'John doe',
-   *    '@name_with_callback' => array(
-   *      'callback' => 'User::load',
-   *      'arguments' => array(1),
-   *    ),
-   *  );
-   *  @endcode
-   *
-   * @return $this
+   * {@inheritdoc}
    */
-  public function setArguments($values) {
+  public function setArguments(array $values) {
     $this->set('arguments', $values);
     return $this;
   }
@@ -260,18 +221,9 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   }
 
   /**
-   * Replace arguments with their placeholders.
-   *
-   * @param $langcode
-   *   Optional; The language to get the text in. If not set the current language
-   *   will be used.
-   * @param $options
-   *   Optional; Array to be passed to MessageType::getText().
-   *
-   * @return string
-   *  The message text.
+   * {@inheritdoc}
    */
-  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $options = array()) {
+  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, array $options = array()) {
 
     if (!$message_type = $this->getType()) {
       // Message type does not exist any more.
@@ -336,7 +288,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * {@inheritdoc}
    *
-   * @return Message
+   * @return \Drupal\message\MessageInterface
    *  A message type object ready to be save.
    */
   public static function create(array $values = array()) {
@@ -346,7 +298,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * {@inheritdoc}
    *
-   * @return Message
+   * @return \Drupal\message\MessageInterface
    */
   public static function load($id) {
     return parent::load($id);
@@ -355,30 +307,21 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * {@inheritdoc}
    *
-   * @return Message[]
+   * @return \Drupal\message\MessageInterface[]
    */
   public static function loadMultiple(array $ids = NULL) {
     return parent::loadMultiple($ids);
   }
 
   /**
-   * Delete multiple message.
-   *
-   * @param $ids
-   *  The messages IDs.
+   * {@inheritdoc}
    */
   public static function deleteMultiple($ids) {
     \Drupal::entityTypeManager()->getStorage('message')->delete($ids);
   }
 
   /**
-   * Run a EFQ over messages from a given type.
-   *
-   * @param $type
-   *  The entity type.
-   *
-   * @return array
-   *  Array of message IDs.
+   * {@inheritdoc}
    */
   public static function queryByType($type) {
     return \Drupal::entityQuery('message')
