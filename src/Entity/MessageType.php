@@ -87,45 +87,29 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   protected $data = array();
 
   /**
-   * Overrides Entity::__construct().
-   *
-   * @param array $values
-   * @param $entity_type
-   */
-  public function ___construct(array $values, $entity_type) {
-    parent::__construct($values, $entity_type);
-  }
-
-  /**
-   * Return the ID of the entity.
-   *
-   * @return int|null|string
+   * {@inheritdoc}
    */
   public function id() {
     return $this->type;
   }
 
   /**
-   * @param array $arguments
-   *
-   * @return $this
+   * {@inheritdoc}
    */
-  public function setArguments($arguments) {
+  public function setArguments(array $arguments) {
     $this->arguments = $arguments;
     return $this;
   }
 
   /**
-   * @return array
+   * {@inheritdoc}
    */
   public function getArguments() {
     return $this->arguments;
   }
 
   /**
-   * @param string $category
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function setCategory($category) {
     $this->category = $category;
@@ -133,40 +117,34 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   }
 
   /**
-   * @return string
+   * {@inheritdoc}
    */
   public function getCategory() {
     return $this->category;
   }
 
   /**
-   * @param array $data
-   *
-   * @return $this
+   * {@inheritdoc}
    */
-  public function setData($data) {
+  public function setData(array $data) {
     $this->data = $data;
     return $this;
   }
 
   /**
-   * @param string $key
-   *  Key from the array.
-   *
-   * @return array
+   * {@inheritdoc}
    */
   public function getData($key = '') {
     if ($key && isset($this->data)) {
       return $this->data[$key];
     }
-
+    // @todo do not return entire data set if key is passed. This could cause
+    // logic errors.
     return $this->data;
   }
 
   /**
-   * @param string $description
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function setDescription($description) {
     $this->description = $description;
@@ -174,16 +152,14 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   }
 
   /**
-   * @return string
+   * {@inheritdoc}
    */
   public function getDescription() {
     return $this->description;
   }
 
   /**
-   * @param string $label
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function setLabel($label) {
     $this->label = $label;
@@ -191,16 +167,14 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   }
 
   /**
-   * @return string
+   * {@inheritdoc}
    */
   public function getLabel() {
     return $this->label;
   }
 
   /**
-   * @param string $type
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function setType($type) {
     $this->type = $type;
@@ -208,16 +182,14 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   }
 
   /**
-   * @return string
+   * {@inheritdoc}
    */
   public function getType() {
     return $this->type;
   }
 
   /**
-   * @param string $uuid
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function setUuid($uuid) {
     $this->uuid = $uuid;
@@ -225,7 +197,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   }
 
   /**
-   * @return string
+   * {@inheritdoc}
    */
   public function getUuid() {
     return $this->uuid;
@@ -309,20 +281,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   public $settings = array();
 
   /**
-   * Retrieves the configured message text in a certain language.
-   *
-   * @param string $langcode
-   *   The language code of the Message text field, the text should be
-   *   extracted from.
-   * @param array $options
-   *   Array of options to pass to the metadata-wrapper:
-   *   - 'delta': Optional; If set, returns the output only from a single delta
-   *     of the message-text field.
-   *   - 'text': Return the property text and not the processed values.
-   *      todo: change this to something else.
-   *
-   * @return string|array
-   *   A string with the text from the field.
+   * {@inheritdoc}
    */
   public function getText($langcode = NULL, $options = array()) {
     $text = $this->text;
@@ -355,7 +314,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   }
 
   /**
-   * Check if the message is new.
+   * {@inheritdoc}
    */
   public function isLocked() {
     return !$this->isNew();
@@ -364,7 +323,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   /**
    * {@inheritdoc}
    *
-   * @return MessageType
+   * @return \Drupal\message\MessageTypeInterface
    *   A message type object ready to be save.
    */
   public static function create(array $values = array()) {
@@ -378,6 +337,5 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
     $this->text = array_filter($this->text);
     parent::preSave($storage);
   }
-
 
 }

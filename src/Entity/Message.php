@@ -15,7 +15,6 @@ use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Markup;
 use Drupal\message\MessageInterface;
 use Drupal\message\MessageTypeInterface;
-use Drupal\user\Entity\User;
 use Drupal\user\EntityOwnerInterface;
 use Drupal\user\UserInterface;
 
@@ -270,7 +269,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
       preg_match_all('/[@|%|\!]\{([a-z0-9:_\-]+?)\}/i', $text, $matches);
 
       foreach ($matches[1] as $delta => $token) {
-        $output = \Drupal::token()->replace('[' . $token .  ']', array('message' => $this), $token_options);
+        $output = \Drupal::token()->replace('[' . $token . ']', array('message' => $this), $token_options);
         if ($output != '[' . $token . ']') {
           // Token was replaced and token sanitizes.
           $argument = $matches[0][$delta];
@@ -328,4 +327,5 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
       ->condition('type', $type)
       ->execute();
   }
+
 }

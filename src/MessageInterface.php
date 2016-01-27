@@ -43,7 +43,7 @@ interface MessageInterface extends ContentEntityInterface {
    * Setting the timestamp.
    *
    * @param int $timestamp
-   *  The Unix timestamp.
+   *   The Unix timestamp.
    *
    * @return $this
    */
@@ -66,10 +66,10 @@ interface MessageInterface extends ContentEntityInterface {
   public function getAuthorId();
 
   /**
-   * Set the author ID.s
+   * Set the author ID.s.
    *
    * @param int $uid
-   *  The user ID.
+   *   The user ID.
    *
    * @return $this
    *  The message object.
@@ -96,7 +96,7 @@ interface MessageInterface extends ContentEntityInterface {
    *
    * @param array $values
    *   Array of arguments.
-   *   @code
+   * @code
    *   $values = array(
    *     '@name_without_callback' => 'John doe',
    *     '@name_with_callback' => array(
@@ -104,7 +104,7 @@ interface MessageInterface extends ContentEntityInterface {
    *       'arguments' => array(1),
    *     ),
    *   );
-   *  @endcode
+   * @endcode
    *
    * @return $this
    */
@@ -128,7 +128,7 @@ interface MessageInterface extends ContentEntityInterface {
    * Delete multiple message.
    *
    * @param array $ids
-   *  The messages IDs to delete.
+   *   The messages IDs to delete.
    */
   public static function deleteMultiple($ids);
 
@@ -142,4 +142,5 @@ interface MessageInterface extends ContentEntityInterface {
    *   Array of message IDs.
    */
   public static function queryByType($type);
+
 }
