@@ -8,9 +8,9 @@
 namespace Drupal\message\Entity;
 
 use Drupal\Core\Config\Entity\ConfigEntityBase;
-use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\message\MessageTypeInterface;
 
 /**
  * Defines the Message type entity class.
@@ -42,7 +42,7 @@ use Drupal\language\ConfigurableLanguageManagerInterface;
  *   }
  * )
  */
-class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
+class MessageType extends ConfigEntityBase implements MessageTypeInterface {
 
   /**
    * The ID of this message type.
@@ -283,7 +283,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   /**
    * {@inheritdoc}
    */
-  public function getText($langcode = NULL, $options = array()) {
+  public function getText($langcode = NULL, array $options = array()) {
     $text = $this->text;
 
     if ($langcode) {

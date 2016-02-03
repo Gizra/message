@@ -7,12 +7,13 @@
 
 namespace Drupal\message;
 
+use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 
 /**
  * Provides an interface defining a Message type entity.
  */
-interface MessageTypeInterface extends ContentEntityInterface {
+interface MessageTypeInterface extends ConfigEntityInterface {
 
   /**
    * Set the message type arguments.
