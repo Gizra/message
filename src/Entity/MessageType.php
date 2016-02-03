@@ -10,6 +10,7 @@ namespace Drupal\message\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\language\ConfigurableLanguageManagerInterface;
 
 /**
  * Defines the Message type entity class.
@@ -74,7 +75,7 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   /**
    * The serialised text of the message type.
    *
-   * @var Array
+   * @var array
    */
   protected $text = array();
 
@@ -87,6 +88,9 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
 
   /**
    * Overrides Entity::__construct().
+   *
+   * @param array $values
+   * @param $entity_type
    */
   public function ___construct(array $values, $entity_type) {
     parent::__construct($values, $entity_type);
@@ -323,10 +327,13 @@ class MessageType extends ConfigEntityBase implements ConfigEntityInterface {
   public function getText($langcode = NULL, $options = array()) {
     $text = $this->text;
 
-    if ($langcode && \Drupal::moduleHandler()->moduleExists('config_translation')) {
-      $config_translation = \Drupal::languageManager()->getLanguageConfigOverride($langcode, 'message.type.' . $this->id());
-      if ($translated_text = $config_translation->get('text')) {
-        $text = $translated_text;
+    if ($langcode) {
+      $language_manager = \Drupal::languageManager();
+      if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+        $config_translation = $language_manager->getLanguageConfigOverride($langcode, 'message.type.' . $this->id());
+        if ($translated_text = $config_translation->get('text')) {
+          $text = $translated_text;
+        }
       }
     }
 

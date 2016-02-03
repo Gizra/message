@@ -7,14 +7,11 @@
 
 namespace Drupal\message\Entity;
 
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Session\AccountInterface;
 use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
 
@@ -85,7 +82,7 @@ class Message extends ContentEntityBase implements MessageInterface {
   protected $created;
 
   /**
-   * @var Array
+   * @var array
    *
    * Holds the arguments of the message instance.
    */
@@ -179,7 +176,7 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * Return the UUID.
    *
-   * @return String.
+   * @return string.
    */
   public function getUUID() {
     return $this->get('uuid')->value;
@@ -188,7 +185,7 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * Retrieve the message arguments.
    *
-   * @return Array
+   * @return array
    *  The arguments of the message.
    */
   public function getArguments() {
@@ -198,7 +195,7 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * Set the arguments of the message.
    *
-   * @param Array $values
+   * @param array $values
    *  Array of arguments.
    *  @code
    *  $values = array(
@@ -287,7 +284,6 @@ class Message extends ContentEntityBase implements MessageInterface {
     $arguments = reset($arguments);
 
     if (is_array($arguments)) {
-      $args = array();
       foreach ($arguments as $key => $value) {
         if (is_array($value) && !empty($value['callback']) && is_callable($value['callback'])) {
 
@@ -299,28 +295,10 @@ class Message extends ContentEntityBase implements MessageInterface {
             $value['callback arguments']['message'] = $this;
           }
 
-          $value = call_user_func_array($value['callback'], $value['arguments']);
-        }
-
-        switch ($key[0]) {
-          case '@':
-            // Escaped only.
-            $args[$key] = SafeMarkup::checkPlain($value);
-            break;
-
-          case '%':
-          default:
-            // Escaped and placeholder.
-            $args[$key] = SafeMarkup::placeholder($value);
-            break;
-
-          case '!':
-            // Pass-through.
-            $args[$key] = $value;
+          $arguments[$key] = call_user_func_array($value['callback'], $value['arguments']);
         }
       }
-
-      $output = strtr($output, $args);
+      $output = strval(new FormattableMarkup($output, $arguments));
     }
 
     $output = \Drupal::token()->replace($output, array('message' => $this), $options);
@@ -391,7 +369,7 @@ class Message extends ContentEntityBase implements MessageInterface {
    *  The messages IDs.
    */
   public static function deleteMultiple($ids) {
-    \Drupal::entityManager()->getStorage('message')->delete($ids);
+    \Drupal::entityTypeManager()->getStorage('message')->delete($ids);
   }
 
   /**
@@ -400,7 +378,7 @@ class Message extends ContentEntityBase implements MessageInterface {
    * @param $type
    *  The entity type.
    *
-   * @return Array
+   * @return array
    *  Array of message IDs.
    */
   public static function queryByType($type) {
