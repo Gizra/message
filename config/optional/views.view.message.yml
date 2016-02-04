@@ -4,8 +4,9 @@ status: true
 dependencies:
   module:
     - message
+    - user
 _core:
-  default_config_hash: MNqArjdtsGmsHbXzfIvQ2MfNo0Ph93PNtU07l86udEI
+  default_config_hash: zqpFXpMdnd_tnB7TnglybyzDF-V5lUa1OKDR_CL1pNQ
 id: message
 label: Message
 module: views
@@ -22,8 +23,9 @@ display:
     position: 0
     display_options:
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'overview messages'
       cache:
         type: none
         options: {  }
@@ -529,6 +531,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user.permissions
       cacheable: false
       max-age: 0
       tags: {  }
@@ -559,6 +562,7 @@ display:
         - 'languages:language_interface'
         - url
         - url.query_args
+        - user.permissions
       cacheable: false
       max-age: 0
       tags: {  }
