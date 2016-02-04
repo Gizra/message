@@ -40,7 +40,7 @@ class MessageTemplateSuggestionsTest extends MessageTestBase {
     // Create message to be rendered.
     $message_type = $this->createMessageType($type, 'Dummy message', '', array('[message:author:name]'));
     $message = Message::create(array('type' => $message_type->id()))
-      ->setAuthorId($this->user->id());
+      ->setOwner($this->user);
 
     $message->save();
     $view_mode = 'full';

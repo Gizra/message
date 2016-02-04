@@ -39,7 +39,7 @@ class MessageTokenTest extends MessageTestBase {
   public function testTokens() {
     $message_type = $this->createMessageType('dummy_message', 'Dummy message', '', array('[message:author:name]'));
     $message = Message::create(array('type' => $message_type->id()))
-      ->setAuthorId($this->user->id());
+      ->setOwner($this->user);
 
     $message->save();
 
@@ -68,7 +68,7 @@ class MessageTokenTest extends MessageTestBase {
 
     // Assert the arguments.
     $message = Message::create(array('type' => $message_type->id()))
-      ->setAuthorId($this->user->id());
+      ->setOwner($this->user);
 
     $this->assertTrue($message->getArguments() == FALSE, 'No message arguments exist prior to saving the message.');
     $message->save();

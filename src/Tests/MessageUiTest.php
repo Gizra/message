@@ -128,7 +128,7 @@ class MessageUiTest extends MessageTestBase {
     // Create message to be rendered.
     $message_type = $this->createMessageType($type, 'Dummy message', '', array('Text to be wrapped by div.'));
     $message = Message::create(array('type' => $message_type->id()))
-      ->setAuthorId($this->account->id());
+      ->setOwner($this->account);
 
     $message->save();
 
