@@ -61,7 +61,7 @@ interface MessageInterface extends ContentEntityInterface {
    * Retrieve the author ID.
    *
    * @return int
-   *  The author ID.
+   *   The author ID.
    */
   public function getAuthorId();
 
@@ -72,7 +72,7 @@ interface MessageInterface extends ContentEntityInterface {
    *   The user ID.
    *
    * @return $this
-   *  The message object.
+   *   The message object.
    */
   public function setAuthorId($uid);
 
@@ -87,7 +87,7 @@ interface MessageInterface extends ContentEntityInterface {
    * Retrieve the message arguments.
    *
    * @return array
-   *  The arguments of the message.
+   *   The arguments of the message.
    */
   public function getArguments();
 
@@ -120,7 +120,7 @@ interface MessageInterface extends ContentEntityInterface {
    *   Optional; Array to be passed to MessageType::getText().
    *
    * @return string
-   *  The message text.
+   *   The message text.
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, array $options = array());
 
