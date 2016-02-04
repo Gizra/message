@@ -12,8 +12,11 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Markup;
 use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\EntityOwnerInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the Message entity class.
@@ -44,7 +47,7 @@ use Drupal\user\Entity\User;
  *   field_ui_base_route = "entity.message_type.edit_form"
  * )
  */
-class Message extends ContentEntityBase implements MessageInterface {
+class Message extends ContentEntityBase implements MessageInterface, EntityOwnerInterface {
 
   /**
    * @var Integer.
@@ -140,36 +143,32 @@ class Message extends ContentEntityBase implements MessageInterface {
   }
 
   /**
-   * Retrieve the message owner object.
-   *
-   * @return User
-   *  The user object.
+   * {@inheritdoc}
    */
-  public function getAuthor() {
+  public function getOwner() {
     return $this->get('uid')->entity;
   }
 
   /**
-   * Retrieve the author ID.
-   *
-   * @return Int
-   *  The author ID.
+   * {@inheritdoc}
    */
-  public function getAuthorId() {
-    return $this->get('uid')->target_id;
+  public function getOwnerId() {
+    return $this->getEntityKey('uid');
   }
 
   /**
-   * Set the author ID.s
-   *
-   * @param Int $uid
-   *  The user ID.
-   *
-   * @return $this
-   *  The user object.
+   * {@inheritdoc}
    */
-  public function setAuthorId($uid) {
+  public function setOwnerId($uid) {
     $this->set('uid', $uid);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOwner(UserInterface $account) {
+    $this->set('uid', $account->id());
     return $this;
   }
 
@@ -298,7 +297,7 @@ class Message extends ContentEntityBase implements MessageInterface {
           $arguments[$key] = call_user_func_array($value['callback'], $value['arguments']);
         }
       }
-      $output = strval(new FormattableMarkup($output, $arguments));
+      $output = new FormattableMarkup($output, $arguments);
     }
 
     $output = \Drupal::token()->replace($output, array('message' => $this), $options);
@@ -321,9 +320,9 @@ class Message extends ContentEntityBase implements MessageInterface {
       foreach ($matches[1] as $delta => $token) {
         $output = \Drupal::token()->replace('[' . $token .  ']', array('message' => $this), $token_options);
         if ($output != '[' . $token . ']') {
-          // Token was replaced.
+          // Token was replaced and token sanitizes.
           $argument = $matches[0][$delta];
-          $tokens[$argument] = $output;
+          $tokens[$argument] = Markup::create($output);
         }
       }
     }
