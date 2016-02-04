@@ -9,6 +9,7 @@ namespace Drupal\message\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\language\Entity\ConfigurableLanguage;
+use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageType;
 use Drupal\user\Entity\User;
 
@@ -117,6 +118,27 @@ class MessageUiTest extends MessageTestBase {
     $this->drupalPostForm('admin/structure/message/delete/' . $type, array(), 'Delete');
     $this->assertText(t('There is no Message type yet.'));
     $this->assertFalse(MessageType::load($type), 'The message deleted via the UI successfully.');
+  }
+
+  /*
+   * Test that message render returns message text wrapped in a div.
+   */
+  public function testMessageTextWrapper() {
+    $type = 'dummy_message';
+    // Create message to be rendered.
+    $message_type = $this->createMessageType($type, 'Dummy message', '', array('Text to be wrapped by div.'));
+    $message = Message::create(array('type' => $message_type->id()))
+      ->setAuthorId($this->account->id());
+
+    $message->save();
+
+    // Simulate theming of the message.
+    $build = \Drupal::entityTypeManager()->getViewBuilder('message')->view($message);
+    $output = \Drupal::service('renderer')->renderRoot($build);
+    $this->setRawContent($output);
+    $xpath = $this->xpath('//div');
+    
+    $this->assertTrue($xpath, 'A div has been found wrapping the message text.');
   }
 
   /**
