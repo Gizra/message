@@ -78,21 +78,21 @@ class MessageCron extends MessageTestBase {
     for ($i = 0; $i < 4; $i++) {
       Message::Create(array('type' => 'type1'))
         ->setCreatedTime(time() - 3 * 86400)
-        ->setAuthorId($this->account->id())
+        ->setOwnerId($this->account->id())
         ->save();
     }
 
     for ($i = 0; $i < 3; $i++) {
       Message::Create(array('type' => 'type2'))
         ->setCreatedTime(time() - 3 * 86400)
-        ->setAuthorId($this->account->id())
+        ->setOwnerId($this->account->id())
         ->save();
     }
 
     for ($i = 0; $i < 3; $i++) {
       Message::Create(array('type' => 'type3'))
         ->setCreatedTime(time() - 3 * 86400)
-        ->setAuthorId($this->account->id())
+        ->setOwnerId($this->account->id())
           ->save();
     }
 
@@ -140,10 +140,10 @@ class MessageCron extends MessageTestBase {
     // Create more messages than may be deleted in one request.
     for ($i = 0; $i < 10; $i++) {
       Message::Create(array('type' => 'type1'))
-        ->setAuthorId($this->account->id())
+        ->setOwnerId($this->account->id())
         ->save();
       Message::Create(array('type' => 'type2'))
-        ->setAuthorId($this->account->id())
+        ->setOwnerId($this->account->id())
         ->save();
     }
 
@@ -188,12 +188,12 @@ class MessageCron extends MessageTestBase {
     for ($i = 0; $i < 2; $i++) {
       Message::create(array('type' => 'type1'))
         ->setCreatedTime(time() - 3 * 86400)
-        ->setAuthorId($this->account->id())
+        ->setOwnerId($this->account->id())
         ->save();
 
       Message::create(array('type' => 'type2'))
         ->setCreatedTime(time() - 3 * 86400)
-        ->setAuthorId($this->account->id())
+        ->setOwnerId($this->account->id())
         ->save();
     }
 

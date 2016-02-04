@@ -59,7 +59,7 @@ function message_tokens($type, $tokens, array $data = array(), array $options = 
   $replacements = array();
 
   if ($type == 'message' && !empty($data['message'])) {
-    /** @var \Drupal\message\Entity\Message */
+    /** @var \Drupal\message\Entity\Message $message */
     $message = $data['message'];
 
     foreach ($tokens as $name => $original) {
@@ -83,7 +83,7 @@ function message_tokens($type, $tokens, array $data = array(), array $options = 
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $account = $message->getAuthor() ? $message->getAuthor() : User::load(0);
+          $account = $message->getOwner() ? $message->getOwner() : User::load(0);
           $replacements[$original] = $account->label();
           break;
 
@@ -94,7 +94,7 @@ function message_tokens($type, $tokens, array $data = array(), array $options = 
     }
 
     if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
-      $replacements += $token_service->generate('user', $author_tokens, array('user' => $message->getAuthor()), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $message->getOwner()), $options, $bubbleable_metadata);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
