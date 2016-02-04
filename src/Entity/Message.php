@@ -12,6 +12,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
+use Drupal\Core\Render\Markup;
 use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
 use Drupal\user\EntityOwnerInterface;
