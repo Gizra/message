@@ -87,11 +87,11 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
       switch ($name) {
         // Simple key values on the comment.
         case 'user-name':
-          $replacements[$original] = $message->getAuthor()->label();
+          $replacements[$original] = $message->getOwner()->label();
           break;
         case 'user-url':
-          if ($message->getAuthor()) {
-            $replacements[$original] = $message->getAuthor()->url();
+          if ($message->getOwner()) {
+            $replacements[$original] = $message->getOwner()->url();
           }
           break;
         case 'node-title':

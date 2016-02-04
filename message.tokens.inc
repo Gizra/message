@@ -5,7 +5,7 @@
  * Builds placeholder replacement tokens for message-related data.
  */
 
-use Drupal\Component\Utility\String;
+use Drupal\Core\Render\BubbleableMetadata;
 use Drupal\user\Entity\User;
 
 /**
@@ -53,15 +53,13 @@ function message_token_info() {
 /**
  * Implements hook_tokens().
  */
-function message_tokens($type, $tokens, array $data = array(), array $options = array()) {
+function message_tokens($type, $tokens, array $data = array(), array $options = array(), BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
-
-  $sanitize = !empty($options['sanitize']);
 
   $replacements = array();
 
   if ($type == 'message' && !empty($data['message'])) {
-    /** @var \Drupal\message\Entity\Message */
+    /** @var \Drupal\message\Entity\Message $message */
     $message = $data['message'];
 
     foreach ($tokens as $name => $original) {
@@ -72,12 +70,11 @@ function message_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'type':
-          $replacements[$original] = $sanitize ? String::checkPlain($message->getType()->id()) : $message->getType()->id();
+          $replacements[$original] = $message->getType()->id();
           break;
 
         case 'type-name':
-          $type_name = $message->getType()->label();
-          $replacements[$original] = $sanitize ? String::checkPlain($type_name) : $type_name;
+          $replacements[$original] = $message->getType()->label();
           break;
 
         case 'uuid':
@@ -86,8 +83,8 @@ function message_tokens($type, $tokens, array $data = array(), array $options = 
 
         // Default values for the chained tokens handled below.
         case 'author':
-          $account = $message->getAuthor() ? $message->getAuthor() : User::load(0);
-          $replacements[$original] = $sanitize ? String::checkPlain($account->label()) : $account->label();
+          $account = $message->getOwner() ? $message->getOwner() : User::load(0);
+          $replacements[$original] = $account->label();
           break;
 
         case 'created':
@@ -97,15 +94,15 @@ function message_tokens($type, $tokens, array $data = array(), array $options = 
     }
 
     if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
-      $replacements += $token_service->generate('user', $author_tokens, array('user' => $message->getAuthor()), $options);
+      $replacements += $token_service->generate('user', $author_tokens, array('user' => $message->getOwner()), $options, $bubbleable_metadata);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $created_tokens, array('date' => $message->getCreatedTime()), $options);
+      $replacements += $token_service->generate('date', $created_tokens, array('date' => $message->getCreatedTime()), $options, $bubbleable_metadata);
     }
 
     if ($changed_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
-      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $message->getChangedTime()), $options);
+      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $message->getChangedTime()), $options, $bubbleable_metadata);
     }
   }
 

@@ -7,16 +7,16 @@
 
 namespace Drupal\message\Entity;
 
-use Drupal\Component\Utility\SafeMarkup;
-use Drupal\Component\Utility\String;
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Entity\ContentEntityBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
-use Drupal\Core\Session\AccountInterface;
+use Drupal\Core\Render\Markup;
 use Drupal\message\MessageInterface;
 use Drupal\user\Entity\User;
+use Drupal\user\EntityOwnerInterface;
+use Drupal\user\UserInterface;
 
 /**
  * Defines the Message entity class.
@@ -47,7 +47,7 @@ use Drupal\user\Entity\User;
  *   field_ui_base_route = "entity.message_type.edit_form"
  * )
  */
-class Message extends ContentEntityBase implements MessageInterface {
+class Message extends ContentEntityBase implements MessageInterface, EntityOwnerInterface {
 
   /**
    * @var Integer.
@@ -85,7 +85,7 @@ class Message extends ContentEntityBase implements MessageInterface {
   protected $created;
 
   /**
-   * @var Array
+   * @var array
    *
    * Holds the arguments of the message instance.
    */
@@ -143,43 +143,39 @@ class Message extends ContentEntityBase implements MessageInterface {
   }
 
   /**
-   * Retrieve the message owner object.
-   *
-   * @return User
-   *  The user object.
+   * {@inheritdoc}
    */
-  public function getAuthor() {
+  public function getOwner() {
     return $this->get('uid')->entity;
   }
 
   /**
-   * Retrieve the author ID.
-   *
-   * @return Int
-   *  The author ID.
+   * {@inheritdoc}
    */
-  public function getAuthorId() {
-    return $this->get('uid')->target_id;
+  public function getOwnerId() {
+    return $this->getEntityKey('uid');
   }
 
   /**
-   * Set the author ID.s
-   *
-   * @param Int $uid
-   *  The user ID.
-   *
-   * @return $this
-   *  The user object.
+   * {@inheritdoc}
    */
-  public function setAuthorId($uid) {
+  public function setOwnerId($uid) {
     $this->set('uid', $uid);
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setOwner(UserInterface $account) {
+    $this->set('uid', $account->id());
     return $this;
   }
 
   /**
    * Return the UUID.
    *
-   * @return String.
+   * @return string.
    */
   public function getUUID() {
     return $this->get('uuid')->value;
@@ -188,7 +184,7 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * Retrieve the message arguments.
    *
-   * @return Array
+   * @return array
    *  The arguments of the message.
    */
   public function getArguments() {
@@ -198,7 +194,7 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * Set the arguments of the message.
    *
-   * @param Array $values
+   * @param array $values
    *  Array of arguments.
    *  @code
    *  $values = array(
@@ -287,7 +283,6 @@ class Message extends ContentEntityBase implements MessageInterface {
     $arguments = reset($arguments);
 
     if (is_array($arguments)) {
-      $args = array();
       foreach ($arguments as $key => $value) {
         if (is_array($value) && !empty($value['callback']) && is_callable($value['callback'])) {
 
@@ -299,28 +294,10 @@ class Message extends ContentEntityBase implements MessageInterface {
             $value['callback arguments']['message'] = $this;
           }
 
-          $value = call_user_func_array($value['callback'], $value['arguments']);
-        }
-
-        switch ($key[0]) {
-          case '@':
-            // Escaped only.
-            $args[$key] = SafeMarkup::checkPlain($value);
-            break;
-
-          case '%':
-          default:
-            // Escaped and placeholder.
-            $args[$key] = SafeMarkup::placeholder($value);
-            break;
-
-          case '!':
-            // Pass-through.
-            $args[$key] = $value;
+          $arguments[$key] = call_user_func_array($value['callback'], $value['arguments']);
         }
       }
-
-      $output = strtr($output, $args);
+      $output = new FormattableMarkup($output, $arguments);
     }
 
     $output = \Drupal::token()->replace($output, array('message' => $this), $options);
@@ -343,9 +320,9 @@ class Message extends ContentEntityBase implements MessageInterface {
       foreach ($matches[1] as $delta => $token) {
         $output = \Drupal::token()->replace('[' . $token .  ']', array('message' => $this), $token_options);
         if ($output != '[' . $token . ']') {
-          // Token was replaced.
+          // Token was replaced and token sanitizes.
           $argument = $matches[0][$delta];
-          $tokens[$argument] = $output;
+          $tokens[$argument] = Markup::create($output);
         }
       }
     }
@@ -391,7 +368,7 @@ class Message extends ContentEntityBase implements MessageInterface {
    *  The messages IDs.
    */
   public static function deleteMultiple($ids) {
-    \Drupal::entityManager()->getStorage('message')->delete($ids);
+    \Drupal::entityTypeManager()->getStorage('message')->delete($ids);
   }
 
   /**
@@ -400,7 +377,7 @@ class Message extends ContentEntityBase implements MessageInterface {
    * @param $type
    *  The entity type.
    *
-   * @return Array
+   * @return array
    *  Array of message IDs.
    */
   public static function queryByType($type) {
