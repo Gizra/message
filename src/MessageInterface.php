@@ -50,33 +50,6 @@ interface MessageInterface extends ContentEntityInterface {
   public function setCreatedTime($timestamp);
 
   /**
-   * Retrieve the message owner object.
-   *
-   * @return \Drupal\user\UserInterface
-   *  The user object.
-   */
-  public function getAuthor();
-
-  /**
-   * Retrieve the author ID.
-   *
-   * @return int
-   *   The author ID.
-   */
-  public function getAuthorId();
-
-  /**
-   * Set the author ID.s.
-   *
-   * @param int $uid
-   *   The user ID.
-   *
-   * @return $this
-   *   The message object.
-   */
-  public function setAuthorId($uid);
-
-  /**
    * Return the UUID.
    *
    * @return string
