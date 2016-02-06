@@ -166,10 +166,6 @@ display:
           hide_empty: false
           empty_zero: false
           hide_alter_empty: true
-          action_title: 'With selection'
-          include_exclude: include
-          selected_actions:
-            - messaege_delete_action
           entity_type: message
           plugin_id: message_bulk_form
         mid:
