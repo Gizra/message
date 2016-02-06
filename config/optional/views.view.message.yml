@@ -4,6 +4,9 @@ status: true
 dependencies:
   module:
     - message
+    - user
+_core:
+  default_config_hash: zqpFXpMdnd_tnB7TnglybyzDF-V5lUa1OKDR_CL1pNQ
 id: message
 label: Message
 module: views
@@ -20,8 +23,9 @@ display:
     position: 0
     display_options:
       access:
-        type: none
-        options: {  }
+        type: perm
+        options:
+          perm: 'overview messages'
       cache:
         type: none
         options: {  }
@@ -468,7 +472,48 @@ display:
           entity_type: message
           entity_field: created
           plugin_id: date
-      filters: {  }
+      filters:
+        type:
+          id: type
+          table: message_field_data
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: in
+          value: {  }
+          group: 1
+          exposed: true
+          expose:
+            operator_id: type_op
+            label: Type
+            description: ''
+            use_operator: false
+            operator: type_op
+            identifier: type
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+              anonymous: '0'
+              administrator: '0'
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items: {  }
+          entity_type: message
+          entity_field: type
+          plugin_id: bundle
       sorts: {  }
       title: Message
       header: {  }
@@ -484,7 +529,12 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }
   page_1:
     display_plugin: page
     id: page_1
@@ -510,4 +560,9 @@ display:
       contexts:
         - 'languages:language_content'
         - 'languages:language_interface'
+        - url
+        - url.query_args
+        - user.permissions
       cacheable: false
+      max-age: 0
+      tags: {  }

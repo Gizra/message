@@ -88,7 +88,7 @@ function message_tokens($type, $tokens, array $data = array(), array $options = 
           break;
 
         case 'created':
-          $replacements[$original] = format_date($message->getCreatedTime(), 'medium', '', NULL);
+          $replacements[$original] = \Drupal::service('date.formatter')->format($message->getCreatedTime(), 'medium', '', NULL);
           break;
       }
     }
