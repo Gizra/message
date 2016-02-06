@@ -298,7 +298,6 @@ function message_theme() {
   );
 }
 
-
 /**
  * Prepares variables for message templates.
  *
@@ -312,9 +311,11 @@ function message_theme() {
  */
 function template_preprocess_message(&$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
+
   // Provide a distinct $teaser boolean.
   $variables['teaser'] = $variables['view_mode'] == 'teaser';
   $variables['message'] = $variables['elements']['#message'];
+
   /** @var \Drupal\message\MessageInterface $message */
   $message = $variables['message'];
   $variables['date'] = drupal_render($variables['elements']['created']);
@@ -325,6 +326,7 @@ function template_preprocess_message(&$variables) {
   $variables['url'] = $message->url('canonical', array(
     'language' => $message->language(),
   ));
+
   // The 'page' variable is set to TRUE in two occasions:
   //   - The view mode is 'full' and we are on the 'message.view' route.
   //   - The message is in preview and view mode is either 'full' or 'default'.
