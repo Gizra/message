@@ -54,7 +54,7 @@ class MessageTokenTest extends KernelTestBase {
 
     $message->save();
 
-    $this->assertEquals($message->getText(), Html::escape($this->user->label()), 'The message rendered the author name.');
+    $this->assertEquals((string) $message, Html::escape($this->user->label()), 'The message rendered the author name.');
   }
 
   /**
@@ -94,7 +94,7 @@ class MessageTokenTest extends KernelTestBase {
     $this->assertEquals(count(reset($arguments)), 2, 'Correct number of arguments added after saving the message.');
 
     // Assert message is rendered as expected.
-    $this->assertEquals(implode("\n", $replaced_messages), $message->getText(), 'The text rendered as expected.');
+    $this->assertEquals($replaced_messages, $message->getText(), 'The text rendered as expected.');
   }
 
   protected function createMessageType($type, $label, $description, array $text, $langcode = '') {

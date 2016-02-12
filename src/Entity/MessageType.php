@@ -296,21 +296,12 @@ class MessageType extends ConfigEntityBase implements MessageTypeInterface {
       }
     }
 
-    if (isset($options['text']) && $options['text']) {
 
-      if (isset($options['delta'])) {
-        return $text[$options['delta']];
-      }
-
-      return $text;
+    if (isset($options['delta'])) {
+      return $text[$options['delta']];
     }
 
-    if (!isset($text)) {
-      return array();
-    }
-
-    // Combine all the field text and return it as a trimmed text.
-    return trim(implode("\n", $text));
+    return $text;
   }
 
   /**

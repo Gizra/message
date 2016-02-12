@@ -231,6 +231,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
 
     $output = $message_type->getText($langcode, $options);
     $arguments = $this->getArguments();
+    // @todo Why is only the first argument used?
     $arguments = reset($arguments);
 
     if (is_array($arguments)) {
@@ -248,10 +249,17 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
           $arguments[$key] = call_user_func_array($value['callback'], $value['arguments']);
         }
       }
-      $output = new FormattableMarkup($output, $arguments);
+
+      foreach ($output as $key => $value) {
+        $output[$key] = new FormattableMarkup($value, $arguments);
+      }
     }
 
-    $output = \Drupal::token()->replace($output, array('message' => $this), $options);
+    // @todo Re-work/simplify. We shouldn't have to loop through output twice.
+    foreach ($output as $key => $value) {
+      $output[$key] = \Drupal::token()
+        ->replace($value, array('message' => $this), $options);
+    }
 
     return $output;
   }
@@ -265,7 +273,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     $tokens = array();
 
     // Handle hard coded arguments.
-    foreach ($this->getType()->getText(NULL, array('text' => TRUE)) as $text) {
+    foreach ($this->getType()->getText() as $text) {
       preg_match_all('/[@|%|\!]\{([a-z0-9:_\-]+?)\}/i', $text, $matches);
 
       foreach ($matches[1] as $delta => $token) {
@@ -326,6 +334,13 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     return \Drupal::entityQuery('message')
       ->condition('type', $type)
       ->execute();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function __toString() {
+    return trim(implode("\n", $this->getText()));
   }
 
 }

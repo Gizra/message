@@ -116,4 +116,12 @@ interface MessageInterface extends ContentEntityInterface {
    */
   public static function queryByType($type);
 
+  /**
+   * Convert message contents to a string.
+   *
+   * @return string
+   *   The message contents.
+   */
+  public function __toString();
+
 }
