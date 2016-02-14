@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/RoySegall/message.svg?branch=8.x-1.x)](https://travis-ci.org/RoySegall/message)
+[![Build Status](https://api.travis-ci.org/Gizra/message.svg?branch=8.x-1.x)](https://travis-ci.org/Gizra/message)
 
 Overview
 ========
