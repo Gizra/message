@@ -7,7 +7,7 @@
 
 namespace Drupal\message\Entity;
 
-use Drupal\Core\Config\Entity\ConfigEntityBase;
+use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\message\MessageTypeInterface;
@@ -42,7 +42,7 @@ use Drupal\message\MessageTypeInterface;
  *   }
  * )
  */
-class MessageType extends ConfigEntityBase implements MessageTypeInterface {
+class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface {
 
   /**
    * The ID of this message type.
