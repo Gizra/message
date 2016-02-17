@@ -66,6 +66,14 @@ class MessageTypeMultipleTextField {
       '#suffix' => '</div>',
     );
 
+    if (\Drupal::moduleHandler()->moduleExists('token')) {
+      $form['token_tree'] = [
+        '#theme' => 'token_tree_link',
+        '#token_types' => 'all',
+        '#show_restricted' => TRUE,
+      ];
+    }
+
     $form['add_more'] = array(
       '#type' => 'button',
       '#value' => t('Add another item'),
