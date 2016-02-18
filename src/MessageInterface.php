@@ -84,18 +84,20 @@ interface MessageInterface extends ContentEntityInterface {
   public function setArguments(array $values);
 
   /**
+   * Set the language that should be used.
+   *
+   * @param string $language
+   *   The language to load from the message type when fetching the text.
+   */
+  public function setLanguage($language);
+
+  /**
    * Replace arguments with their placeholders.
    *
-   * @param $langcode
-   *   Optional; The language to get the text in. If not set the current language
-   *   will be used.
-   * @param $options
-   *   Optional; Array to be passed to MessageType::getText().
-   *
-   * @return string
+   * @return array
    *   The message text.
    */
-  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, array $options = array());
+  public function getText();
 
   /**
    * Delete multiple message.
