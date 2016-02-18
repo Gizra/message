@@ -10,7 +10,7 @@ namespace Drupal\Tests\message\Kernel;
 use Drupal\Component\Utility\Html;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
-use Drupal\message\Entity\MessageType;
+use Drupal\message\Tests\MessageTypeCreateTrait;
 use Drupal\user\Entity\User;
 
 /**
@@ -20,6 +20,11 @@ use Drupal\user\Entity\User;
  */
 class MessageTokenTest extends KernelTestBase {
 
+  use MessageTypeCreateTrait;
+
+  /**
+   * {@inheritdoc}
+   */
   public static $modules = ['message', 'user', 'system'];
 
   /**
@@ -55,6 +60,32 @@ class MessageTokenTest extends KernelTestBase {
     $message->save();
 
     $this->assertEquals((string) $message, Html::escape($this->user->label()), 'The message rendered the author name.');
+  }
+
+  /**
+   * Test clearing unused tokens.
+   */
+  public function testTokenClearing() {
+    // Clearing enabled.
+    $token_options = array('token options' => array('clear' => TRUE));
+    $message_type = $this->createMessageType('dummy_message', 'Dummy message', '', array('[message:author:name] [bogus:token]'), $token_options);
+    $message = Message::create(array('type' => $message_type->id()))
+      ->setOwnerId($this->user->id());
+
+    $message->save();
+
+    $this->assertEquals((string) $message, Html::escape($this->user->label()), 'The message rendered the author name and stripped unused tokens.');
+
+    // Clearing disabled.
+    $token_options = array('token options' => array('clear' => FALSE));
+    $message_type->setData($token_options);
+    $message_type->save();
+    $message = Message::create(array('type' => $message_type->id()))
+      ->setOwnerId($this->user->id());
+
+    $message->save();
+
+    $this->assertEquals((string) $message, Html::escape($this->user->label() . ' [bogus:token]'), 'The message rendered the author name and did not strip the token.');
   }
 
   /**
@@ -95,17 +126,6 @@ class MessageTokenTest extends KernelTestBase {
 
     // Assert message is rendered as expected.
     $this->assertEquals($replaced_messages, $message->getText(), 'The text rendered as expected.');
-  }
-
-  protected function createMessageType($type, $label, $description, array $text, $langcode = '') {
-    $message_type = MessageType::Create(array(
-      'type' => $type,
-      'label' => $label,
-      'description' => $description,
-      'text' => $text,
-    ));
-    $message_type->save();
-    return $message_type;
   }
 
 }

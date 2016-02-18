@@ -266,7 +266,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     // @todo Re-work/simplify. We shouldn't have to loop through output twice.
     foreach ($output as $key => $value) {
       $output[$key] = \Drupal::token()
-        ->replace($value, ['message' => $this], ['langcode' => $this->language]);
+        ->replace($value, ['message' => $this], ['langcode' => $this->language, 'clear' => $message_type->getData('token options')['clear']]);
     }
 
     return $output;
