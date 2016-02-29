@@ -169,7 +169,7 @@ display:
           action_title: 'With selection'
           include_exclude: include
           selected_actions:
-            - messaege_delete_action
+            - message_delete_action
           entity_type: message
           plugin_id: message_bulk_form
         mid:

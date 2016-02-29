@@ -1,4 +1,4 @@
-id: messaege_delete_action
+id: message_delete_action
 label: 'Delete selected messages'
 status: true
 langcode: en
