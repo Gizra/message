@@ -41,14 +41,21 @@ class MessageViewBuilder extends EntityViewBuilder {
 
     // Get the partials the user selected for the current view mode.
     $extra_fields = entity_get_display('message', $entity->bundle(), $view_mode);
-    foreach (array_keys($extra_fields->getComponents()) as $extra_fields) {
-      list(, $delta) = explode('_', $extra_fields);
-
-      $extra .= $partials[$delta];
+    foreach ($extra_fields->getComponents() as $field_name => $settings) {
+      // The partials are keyed with `partial_X`, check if that is set.
+      list(, $delta) = explode('_', $field_name);
+      if (isset($partials[$delta])) {
+        $extra .= $partials[$delta];
+      }
+      else {
+        // This is another field.
+        $display = $this->getSingleFieldDisplay($entity, $field_name, $settings);
+        $build += $display->build($entity);
+      }
     }
 
     $build['#markup'] = $extra;
 
-    return ($build);
+    return $build;
   }
 }
