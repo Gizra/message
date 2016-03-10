@@ -43,7 +43,7 @@ class MessageTokenTest extends MessageTestBase {
 
     $message->save();
 
-    $this->assertEqual($message->getText(), $this->user->label(), 'The message rendered the author name.');
+    $this->assertEqual((string) $message, $this->user->label(), 'The message rendered the author name.');
   }
 
   /**
@@ -77,6 +77,6 @@ class MessageTokenTest extends MessageTestBase {
     $this->assertEqual(count(reset($arguments)), 2, 'Correct number of arguments added after saving the message.');
 
     // Assert message is rendered as expected.
-    $this->assertEqual(implode("\n", $replaced_messages), $message->getText(), 'The text rendered as expected.');
+    $this->assertEqual(implode("\n", $replaced_messages), (string) $message, 'The text rendered as expected.');
   }
 }

@@ -135,16 +135,13 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    *   Array of options to pass to the metadata-wrapper:
    *   - 'delta': Optional; If set, returns the output only from a single delta
    *     of the message-text field.
-   *   - 'text': Return the property text and not the processed values.
    *
    * @todo: change this to something else.
    *
-   * @return string|array
-   *   A string with the text from the field.
-   *
-   * @todo Why does this return string or array?
+   * @return array
+   *   An array of the text field values.
    */
-  public function getText($langcode = NULL, array $options = array());
+  public function getText($langcode = NULL, array $options = []);
 
   /**
    * Check if the message is new.

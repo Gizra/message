@@ -15,6 +15,8 @@ use Drupal\simpletest\WebTestBase;
  */
 abstract class MessageTestBase extends WebTestBase {
 
+  use MessageTypeCreateTrait;
+
   /**
    * Modules to enable.
    *
@@ -34,34 +36,6 @@ abstract class MessageTestBase extends WebTestBase {
    */
   public function setUp() {
     parent::setUp();
-  }
-
-  /**
-   * Create a message text easily.
-   *
-   * @param string $type
-   *   The machine name of the message.
-   * @param string $label
-   *   The human readable name of the message.
-   * @param string $description
-   *   The description of the message.
-   * @param array $text
-   *   The text of the message. Should be text.
-   * @param string $langcode
-   *   The langcode of the message. Optional.
-   *
-   * @return \Drupal\message\Entity\MessageType
-   *  The message type.
-   */
-  protected function createMessageType($type, $label, $description, array $text, $langcode = '') {
-    $message_type = MessageType::Create(array(
-      'type' => $type,
-      'label' => $label,
-      'description' => $description,
-      'text' => $text,
-    ));
-    $message_type->save();
-    return $message_type;
   }
 
   /**

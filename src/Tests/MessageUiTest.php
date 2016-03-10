@@ -110,8 +110,8 @@ class MessageUiTest extends MessageTestBase {
       $this->fail('MessageType "' . $type . '" not found.');
     }
     else {
-      $this->assertTrue($message->getText('he') == 'This is a dummy message with translated text to Hebrew', 'The text in hebrew pulled correctly.');
-      $this->assertTrue($message->getText() == 'This is a dummy message with some edited dummy text', 'The text in english pulled correctly.');
+      $this->assertTrue($message->getText('he') == ['This is a dummy message with translated text to Hebrew'], 'The text in hebrew pulled correctly.');
+      $this->assertTrue($message->getText() == ['This is a dummy message with some edited dummy text'], 'The text in english pulled correctly.');
     }
 
     // Delete message via the UI.

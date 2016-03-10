@@ -10,6 +10,7 @@ namespace Drupal\message\Entity;
 use Drupal\Core\Config\Entity\ConfigEntityBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\language\ConfigurableLanguageManagerInterface;
+use Drupal\message\MessageException;
 use Drupal\message\MessageTypeInterface;
 
 /**
@@ -135,11 +136,13 @@ class MessageType extends ConfigEntityBase implements MessageTypeInterface {
    * {@inheritdoc}
    */
   public function getData($key = '') {
-    if ($key && isset($this->data)) {
+    if ($key && isset($this->data[$key])) {
       return $this->data[$key];
     }
-    // @todo do not return entire data set if key is passed. This could cause
-    // logic errors.
+    elseif ($key) {
+      throw new MessageException('Requested data key "' . $key . '" was not found.');
+    }
+
     return $this->data;
   }
 
@@ -296,21 +299,12 @@ class MessageType extends ConfigEntityBase implements MessageTypeInterface {
       }
     }
 
-    if (isset($options['text']) && $options['text']) {
 
-      if (isset($options['delta'])) {
-        return $text[$options['delta']];
-      }
-
-      return $text;
+    if (isset($options['delta'])) {
+      return $text[$options['delta']];
     }
 
-    if (!isset($text)) {
-      return array();
-    }
-
-    // Combine all the field text and return it as a trimmed text.
-    return trim(implode("\n", $text));
+    return $text;
   }
 
   /**
