@@ -171,7 +171,7 @@ display:
           selected_actions:
             - message_delete_action
           entity_type: message
-          plugin_id: message_bulk_form
+          plugin_id: bulk_form
         mid:
           id: mid
           table: message_field_data

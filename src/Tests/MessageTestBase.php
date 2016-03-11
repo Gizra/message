@@ -22,7 +22,7 @@ abstract class MessageTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('message');
+  public static $modules = array('message', 'views');
 
   /**
    * The node access controller.
