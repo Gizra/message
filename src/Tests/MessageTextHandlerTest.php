@@ -30,7 +30,7 @@ class MessageTextHandlerTest extends MessageTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->account = $this->drupalCreateUser(['administer message types']);
+    $this->account = $this->drupalCreateUser(['overview messages']);
   }
 
   /**
