@@ -37,7 +37,7 @@ class GetText extends FieldPluginBase {
    * {@inheritdoc}
    */
   public function render(ResultRow $values) {
-    return new FormattableMarkup($values->_entity->getText(), []);
+    return new FormattableMarkup(implode($values->_entity->getText(), "\n"), []);
   }
 
 }
