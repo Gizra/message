@@ -9,6 +9,7 @@ namespace Drupal\message;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Provides an interface defining a Message type entity.
@@ -141,7 +142,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * @return array
    *   An array of the text field values.
    */
-  public function getText($langcode = NULL, array $options = []);
+  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, array $options = []);
 
   /**
    * Check if the message is new.

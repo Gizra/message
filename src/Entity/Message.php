@@ -229,7 +229,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * {@inheritdoc}
    */
-  public function getText() {
+  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = FALSE) {
     /** @var $message_type */
     if (!$message_type = $this->getType()) {
       // Message type does not exist any more.
@@ -237,7 +237,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
       return [];
     }
 
-    $output = $this->processArguments($this->getArguments(), $message_type->getText($this->language));
+    $output = $this->processArguments($this->getArguments(), $message_type->getText($langcode));
 
     $token_replace = $message_type->getData('token replace');
     if (!empty($token_replace)) {
