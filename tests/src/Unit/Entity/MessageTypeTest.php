@@ -34,13 +34,13 @@ class MessageTypeTest extends UnitTestCase {
   }
 
   /**
-   * Tests getting and setting data.
+   * Tests getting and setting the Settings array.
    *
    * @covers ::setSettings
    * @covers ::getSettings
    * @covers ::getSetting
    */
-  public function testSetData() {
+  public function testSetSettings() {
     $data = [
       'one' => 'foo',
       'two' => 'bar',

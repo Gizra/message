@@ -78,7 +78,7 @@ class MessageTokenTest extends KernelTestBase {
 
     // Clearing disabled.
     $token_options = array('token options' => array('clear' => FALSE));
-    $message_type->setData($token_options);
+    $message_type->setSettings($token_options);
     $message_type->save();
     $message = Message::create(array('type' => $message_type->id()))
       ->setOwnerId($this->user->id());

@@ -151,7 +151,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    *
    * @var array
    */
-  public $settings = array();
+  public $data = array();
 
   /**
    * {@inheritdoc}
@@ -173,15 +173,15 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * {@inheritdoc}
    */
   public function getSettings() {
-    return $this->settings;
+    return $this->data;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getSetting($key, $default_value = NULL) {
-    if (isset($this->settings[$key])) {
-      return $this->settings[$key];
+    if (isset($this->data[$key])) {
+      return $this->data[$key];
     }
 
     return $default_value;
