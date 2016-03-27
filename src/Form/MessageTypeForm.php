@@ -67,66 +67,66 @@ class MessageTypeForm extends EntityForm {
     $multiple = new MessageTypeMultipleTextField($this->entity, array(get_class($this), 'addMoreAjax'));
     $multiple->textField($form, $form_state);
 
-    $data = $this->entity->getdata();
+    $settings = $this->entity->getSettings();
 
-    $form['data'] = array(
+    $form['settings'] = array(
       // Placeholder for other module to add their settings, that should be
-      // added to the data column.
+      // added to the settings column.
       '#tree' => TRUE,
     );
 
-    $form['data']['token options']['clear'] = array(
+    $form['settings']['token options']['clear'] = array(
       '#title' => t('Clear empty tokens'),
       '#type' => 'checkbox',
       '#description' => t('When this option is selected, empty tokens will be removed from display.'),
-      '#default_value' => isset($data['token options']['clear']) ? $data['token options']['clear'] : FALSE,
+      '#default_value' => isset($settings['token options']['clear']) ? $settings['token options']['clear'] : FALSE,
     );
 
-    $form['data']['purge'] = array(
+    $form['settings']['purge'] = array(
       '#type' => 'fieldset',
       '#title' => t('Purge settings'),
     );
 
-    $form['data']['purge']['override'] = array(
+    $form['settings']['purge']['override'] = array(
       '#title' => t('Override global settings'),
       '#type' => 'checkbox',
       '#description' => t('Override global purge settings for messages of this type.'),
-      '#default_value' => !empty($data['purge']['override']),
+      '#default_value' => !empty($settings['purge']['override']),
     );
 
     $states = array(
       'visible' => array(
-        ':input[name="data[purge][override]"]' => array('checked' => TRUE),
+        ':input[name="settings[purge][override]"]' => array('checked' => TRUE),
       ),
     );
 
-    $form['data']['purge']['enabled'] = array(
+    $form['settings']['purge']['enabled'] = array(
       '#type' => 'checkbox',
       '#title' => t('Purge messages'),
       '#description' => t('When enabled, old messages will be deleted.'),
       '#states' => $states,
-      '#default_value' => !empty($data['purge']['enabled']) ? TRUE : FALSE,
+      '#default_value' => !empty($settings['purge']['enabled']) ? TRUE : FALSE,
     );
 
     $states = array(
       'visible' => array(
-        ':input[name="data[purge][enabled]"]' => array('checked' => TRUE),
+        ':input[name="settings[purge][enabled]"]' => array('checked' => TRUE),
       ),
     );
 
-    $form['data']['purge']['quota'] = array(
+    $form['settings']['purge']['quota'] = array(
       '#type' => 'textfield',
       '#title' => t('Messages quota'),
       '#description' => t('Maximal (approximate) amount of messages of this type.'),
-      '#default_value' => !empty($data['purge']['quota']) ? $data['purge']['quota'] : '',
+      '#default_value' => !empty($settings['purge']['quota']) ? $settings['purge']['quota'] : '',
       '#states' => $states,
     );
 
-    $form['data']['purge']['days'] = array(
+    $form['settings']['purge']['days'] = array(
       '#type' => 'textfield',
       '#title' => t('Purge messages older than'),
       '#description' => t('Maximal message age in days, for messages of this type.'),
-      '#default_value' => !empty($data['purge']['days']) ? $data['purge']['days'] : '',
+      '#default_value' => !empty($settings['purge']['days']) ? $settings['purge']['days'] : '',
       '#states' => $states,
     );
 

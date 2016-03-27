@@ -243,10 +243,12 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
 
     $output = $this->processArguments($message_arguments, $message_type_text);
 
-    $token_replace = $message_type->getData('token replace');
+    $token_replace = $message_type->getSetting('token replace');
+    $token_options = $message_type->getSetting('token options');
     if (!empty($token_replace)) {
       // Token should be processed.
-      $output = $this->processTokens($output);
+      $output = $this->processTokens($output, !empty($token_options['clear']));
+
     }
 
     return $output;
@@ -296,16 +298,23 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * Replace placeholders with tokens.
    *
    * @param array $output
+   *   The templated text to be replaced.
+   * @param bool $clear
+   *   Determine if unused token should be cleared.
    *
    * @return array
    *   The output with placeholders replaced with the token value,
    *   if there are indeed tokens.
    */
-  protected function processTokens(array $output) {
-    // @todo Re-work/simplify. We shouldn't have to loop through output twice.
+  protected function processTokens(array $output, $clear) {
+    $values = [
+      'langcode' => $this->language,
+      'clear' => $clear,
+    ];
+
     foreach ($output as $key => $value) {
       $output[$key] = \Drupal::token()
-        ->replace($value, ['message' => $this], ['langcode' => $this->language, 'clear' => $message_type->getData('token options')['clear']]);
+        ->replace($value, ['message' => $this], $values);
     }
 
     return $output;

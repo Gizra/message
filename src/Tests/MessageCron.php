@@ -39,7 +39,7 @@ class MessageCron extends MessageTestBase {
    */
   public function testPurge() {
     // Create a purgeable message type with max quota 2 and max days 0.
-    $data = array(
+    $settings = array(
       'purge' => array(
         'override' => TRUE,
         'enabled' => TRUE,
@@ -51,27 +51,27 @@ class MessageCron extends MessageTestBase {
     /** @var MessageType $message_type */
     $message_type = MessageType::create(array('type' => 'type1'));
     $message_type
-      ->setData($data)
+      ->setSettings($settings)
       ->save();
 
     // Make sure the purging data is actually saved.
-    $this->assertEqual($message_type->getData('purge'), $data['purge'], t('Purge settings are stored in message type.'));
+    $this->assertEqual($message_type->getSetting('purge'), $settings['purge'], t('Purge settings are stored in message type.'));
 
     // Create a purgeable message type with max quota 1 and max days 2.
-    $data['purge']['quota'] = 1;
-    $data['purge']['days'] = 2;
+    $settings['purge']['quota'] = 1;
+    $settings['purge']['days'] = 2;
     $message_type = MessageType::create(array('type' => 'type2'));
     $message_type
-      ->setData($data)
+      ->setSettings($settings)
       ->save();
 
     // Create a non purgeable message type with max quota 1 and max days 10.
-    $data['purge']['enabled'] = FALSE;
-    $data['purge']['quota'] = 1;
-    $data['purge']['days'] = 1;
+    $settings['purge']['enabled'] = FALSE;
+    $settings['purge']['quota'] = 1;
+    $settings['purge']['days'] = 1;
     $message_type = MessageType::create(array('type' => 'type3'));
     $message_type
-      ->setData($data)
+      ->setSettings($settings)
       ->save();
 
     // Create messages.
@@ -130,11 +130,11 @@ class MessageCron extends MessageTestBase {
     );
 
     MessageType::create(array('type' => 'type1'))
-      ->setData($data)
+      ->setSettings($data)
       ->save();
 
     MessageType::create(array('type' => 'type2'))
-      ->setData($data)
+      ->setSettings($data)
       ->save();
 
     // Create more messages than may be deleted in one request.
@@ -182,7 +182,7 @@ class MessageCron extends MessageTestBase {
     );
 
     MessageType::create(array('type' => 'type2'))
-      ->setData($data)
+      ->setSettings($data)
       ->save();
 
     for ($i = 0; $i < 2; $i++) {
