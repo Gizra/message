@@ -41,15 +41,17 @@ class MessageTypeTest extends UnitTestCase {
    * @covers ::getSetting
    */
   public function testSetSettings() {
-    $data = [
+    $settings = [
       'one' => 'foo',
       'two' => 'bar',
     ];
 
+
+    /** @var $message_type */
     $message_type = $this->messageType;
 
-    $this->messageType->setSettings($data);
-    $this->assertArrayEquals($data, $message_type->getSettings());
+    $this->messageType->setSettings($settings);
+    $this->assertArrayEquals($settings, $message_type->getSettings());
     $this->assertEquals('foo', $message_type->getSetting('one'));
     $this->assertEquals('bar', $message_type->getSetting('two'));
   }

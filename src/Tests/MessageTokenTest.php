@@ -74,7 +74,7 @@ class MessageTokenTest extends MessageTestBase {
     $message->save();
 
     $arguments = $message->getArguments();
-    $this->assertEqual(count(reset($arguments)), 2, 'Correct number of arguments added after saving the message.');
+    $this->assertEqual(count($arguments), 2, 'Correct number of arguments added after saving the message.');
 
     // Assert message is rendered as expected.
     $this->assertEqual(implode("\n", $replaced_messages), (string) $message, 'The text is rendered as expected.');

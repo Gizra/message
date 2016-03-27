@@ -165,9 +165,11 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
 
   /**
    * {@inheritdoc}
+   *
+   * @todo: Move the settings to a 'settings' key instead of 'data' key.
    */
-  public function setSettings(array $settings) {
-    $this->settings = $settings;
+  public function setSettings(array $data) {
+    $this->data = $data;
     return $this;
   }
 

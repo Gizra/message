@@ -80,10 +80,6 @@ class MessageTokenTest extends KernelTestBase {
     $token_options = array('token options' => array('clear' => FALSE));
     $message_type->setSettings($token_options);
     $message_type->save();
-    $message = Message::create(array('type' => $message_type->id()))
-      ->setOwnerId($this->user->id());
-
-    $message->save();
 
     $this->assertEquals((string) $message, Html::escape($this->user->label() . ' [bogus:token]'), 'The message rendered the author name and did not strip the token.');
   }

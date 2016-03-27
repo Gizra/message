@@ -97,6 +97,11 @@ interface MessageTypeInterface extends ConfigEntityInterface {
 
 
   /**
+   * Set additional settings for the message type.
+   */
+  public function setSettings(array $settings);
+
+  /**
    * Return the message type settings.
    *
    * @return array
