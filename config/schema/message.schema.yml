@@ -39,7 +39,7 @@ message.type.*:
           label: 'Text'
     settings:
       type: mapping
-      label: 'Data'
+      label: 'Settings'
       mapping:
         'token options':
           type: mapping

@@ -183,8 +183,8 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * {@inheritdoc}
    */
   public function getSetting($key, $default_value = NULL) {
-    if (isset($this->data[$key])) {
-      return $this->data[$key];
+    if (isset($this->settings[$key])) {
+      return $this->settings[$key];
     }
 
     return $default_value;
@@ -249,7 +249,6 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
   public function getUuid() {
     return $this->uuid;
   }
-
 
   /**
    * {@inheritdoc}

@@ -25,7 +25,7 @@ trait MessageTypeCreateTrait {
    *   The message type description.
    * @param array $text
    *   The text array for the message type.
-   * @param array $data
+   * @param array $settings
    *   Data overrides.
    * @param string $langcode
    *   The language to use.
@@ -33,8 +33,8 @@ trait MessageTypeCreateTrait {
    * @return \Drupal\message\MessageTypeInterface
    *   A saved message type entity.
    */
-  protected function createMessageType($type, $label, $description, array $text, array $data = array(), $langcode = Language::LANGCODE_NOT_SPECIFIED) {
-    $data += array(
+  protected function createMessageType($type, $label, $description, array $text, array $settings = array(), $langcode = Language::LANGCODE_NOT_SPECIFIED) {
+    $settings += array(
       'token options' => array(
         'clear' => FALSE,
       ),
@@ -44,7 +44,7 @@ trait MessageTypeCreateTrait {
       'label' => $label,
       'description' => $description,
       'text' => $text,
-      'data' => $data,
+      'settings' => $settings,
       'langcode' => $langcode,
     ));
     $message_type->save();
