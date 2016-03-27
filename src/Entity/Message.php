@@ -243,7 +243,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
 
     $output = $this->processArguments($message_arguments, $message_type_text);
 
-    $token_replace = $message_type->getSetting('token replace');
+    $token_replace = $message_type->getSetting('token replace', TRUE);
     $token_options = $message_type->getSetting('token options');
     if (!empty($token_replace)) {
       // Token should be processed.
