@@ -307,14 +307,14 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    *   if there are indeed tokens.
    */
   protected function processTokens(array $output, $clear) {
-    $values = [
+    $options = [
       'langcode' => $this->language,
       'clear' => $clear,
     ];
 
     foreach ($output as $key => $value) {
       $output[$key] = \Drupal::token()
-        ->replace($value, ['message' => $this], $values);
+        ->replace($value, ['message' => $this], $options);
     }
 
     return $output;

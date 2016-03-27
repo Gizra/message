@@ -257,18 +257,15 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = NULL) {
     $text = $this->text;
 
-    if ($langcode != Language::LANGCODE_NOT_SPECIFIED) {
-      $language_manager = \Drupal::languageManager();
-      if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
-        $config_translation = $language_manager->getLanguageConfigOverride($langcode, 'message.type.' . $this->id());
-        $translated_text = $config_translation->get('text');
+    $language_manager = \Drupal::languageManager();
+    if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+      $config_translation = $language_manager->getLanguageConfigOverride($langcode, 'message.type.' . $this->id());
+      $translated_text = $config_translation->get('text');
 
-        // If there was no translated text, we return nothing instead of falling
-        // back to the default language.
-        $text = $translated_text ?: array();
-      }
+      // If there was no translated text, we return nothing instead of falling
+      // back to the default language.
+      $text = $translated_text ?: array();
     }
-
 
     if ($delta) {
       // Return just the delta if it exists.

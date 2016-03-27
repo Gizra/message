@@ -260,7 +260,7 @@ function message_entity_extra_field_info() {
   $bundles = MessageType::loadMultiple();
   foreach ($bundles as $bundle) {
 
-    foreach (array_keys($bundle->getText(NULL, array('text' => TRUE))) as $delta) {
+    foreach (array_keys($bundle->getText()) as $delta) {
 
       if (!is_int($delta)) {
         // The get text holds also the translated text. Since we hold only need
