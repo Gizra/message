@@ -37,7 +37,7 @@ message.type.*:
       sequence:
         - type: text
           label: 'Text'
-    data:
+    settings:
       type: mapping
       label: 'Data'
       mapping:

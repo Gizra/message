@@ -154,7 +154,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * @todo: A better name would be $settings, however we might want to keep this
    * for easier migration from Drupal 7?
    */
-  public $data = array();
+  public $settings = array();
 
   /**
    * {@inheritdoc}
@@ -165,28 +165,25 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
 
   /**
    * {@inheritdoc}
-   *
-   * @todo: Move the settings to a 'settings' key instead of 'data' key.
    */
-  public function setSettings(array $data) {
-    $this->data = $data;
+  public function setSettings(array $settings) {
+    $this->settings = $settings;
     return $this;
   }
-
 
   /**
    * {@inheritdoc}
    */
   public function getSettings() {
-    return $this->data;
+    return $this->settings;
   }
 
   /**
    * {@inheritdoc}
    */
   public function getSetting($key, $default_value = NULL) {
-    if (isset($this->data[$key])) {
-      return $this->data[$key];
+    if (isset($this->settings[$key])) {
+      return $this->settings[$key];
     }
 
     return $default_value;
