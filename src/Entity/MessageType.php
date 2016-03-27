@@ -150,6 +150,9 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * assigned to the message.
    *
    * @var array
+   *
+   * @todo: A better name would be $settings, however we might want to keep this
+   * for easier migration from Drupal 7?
    */
   public $data = array();
 
