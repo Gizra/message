@@ -34,30 +34,6 @@ class MessageTypeTest extends UnitTestCase {
   }
 
   /**
-   * Tests getting and setting arguments.
-   *
-   * @covers ::setArguments
-   * @covers ::getArguments
-   */
-  public function testSetArguments() {
-    $arguments = ['one' => 'foo', 'two' => 'bar'];
-    $this->messageType->setArguments($arguments);
-    $this->assertArrayEquals($arguments, $this->messageType->getArguments());
-  }
-
-  /**
-   * Tests getting and setting category.
-   *
-   * @covers ::setCategory
-   * @covers ::getCategory
-   */
-  public function testSetCategory() {
-    $category = 'A category';
-    $this->messageType->setCategory($category);
-    $this->assertEquals($category, $this->messageType->getCategory());
-  }
-
-  /**
    * Tests getting and setting data.
    *
    * @covers ::setData

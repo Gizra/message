@@ -16,38 +16,6 @@ use Drupal\Core\Entity\ContentEntityInterface;
 interface MessageTypeInterface extends ConfigEntityInterface {
 
   /**
-   * Set the message type arguments.
-   *
-   * @param array $arguments
-   *
-   * @return $this
-   */
-  public function setArguments(array $arguments);
-
-  /**
-   * Get the message type arguments.
-   *
-   * @return array
-   */
-  public function getArguments();
-
-  /**
-   * Set the message type category.
-   *
-   * @param string $category
-   *
-   * @return $this
-   */
-  public function setCategory($category);
-
-  /**
-   * Get the message type category.
-   *
-   * @return string
-   */
-  public function getCategory();
-
-  /**
    * Set internal data array.
    *
    * @param array $data
