@@ -140,7 +140,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
       return $this->data[$key];
     }
     elseif ($key) {
-      throw new MessageException('Requested data key "' . $key . '" was not found.');
+      throw new MessageException('Requested data key "' . check_plain($key) . '" was not found.');
     }
 
     return $this->data;

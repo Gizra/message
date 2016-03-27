@@ -230,38 +230,74 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    */
   public function getText() {
-
+    /** @var $message_type */
     if (!$message_type = $this->getType()) {
       // Message type does not exist any more.
       // @todo Throw an exception here instead?
       return [];
     }
 
-    $output = $message_type->getText($this->language);
-    $arguments = $this->getArguments();
+    $output = $this->processArguments($this->getArguments(), $message_type->getText($this->language));
 
+    $token_replace = $message_type->getData('token replace');
+    if (!empty($token_replace)) {
+      // Token should be processed.
+      $output = $this->processTokens($output);
+    }
+
+    return $output;
+  }
+
+  /**
+   * Process the message given the arguments saved with it.
+   *
+   * @param array $arguments
+   *   Array with the arguments.
+   * @param array $output
+   *   Array with the templated text saved in the message type.
+   *
+   * @return array
+   *   The templated text, with the placehodlers replaced with the actual value,
+   *   if there are indeed arguments.
+   */
+  protected function processArguments(array $arguments, array $output) {
     // Check if we have arguments saved along with the message.
-    if (!empty($arguments[0])) {
-      foreach ($arguments as $key => $value) {
-        if (is_array($value) && !empty($value['callback']) && is_callable($value['callback'])) {
+    if (empty($arguments[0])) {
+      return $output;
+    }
 
-          // A replacement via callback function.
-          $value += array('pass message' => FALSE);
+    foreach ($arguments as $key => $value) {
+      if (is_array($value) && !empty($value['callback']) && is_callable($value['callback'])) {
 
-          if ($value['pass message']) {
-            // Pass the message object as-well.
-            $value['callback arguments']['message'] = $this;
-          }
+        // A replacement via callback function.
+        $value += array('pass message' => FALSE);
 
-          $arguments[$key] = call_user_func_array($value['callback'], $value['arguments']);
+        if ($value['pass message']) {
+          // Pass the message object as-well.
+          $value['callback arguments']['message'] = $this;
         }
-      }
 
-      foreach ($output as $key => $value) {
-        $output[$key] = new FormattableMarkup($value, $arguments);
+        $arguments[$key] = call_user_func_array($value['callback'], $value['arguments']);
       }
     }
 
+    foreach ($output as $key => $value) {
+      $output[$key] = new FormattableMarkup($value, $arguments);
+    }
+
+    return $output;
+  }
+
+  /**
+   * Replace placeholders with tokens.
+   *
+   * @param array $output
+   *
+   * @return array
+   *   The output with placeholders replaced with the token value,
+   *   if there are indeed tokens.
+   */
+  protected function processTokens(array $output) {
     // @todo Re-work/simplify. We shouldn't have to loop through output twice.
     foreach ($output as $key => $value) {
       $output[$key] = \Drupal::token()
