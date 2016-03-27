@@ -239,10 +239,9 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
 
     $output = $message_type->getText($this->language);
     $arguments = $this->getArguments();
-    // @todo Why is only the first argument used?
-    $arguments = reset($arguments);
 
-    if (is_array($arguments)) {
+    // Check if we have arguments saved along with the message.
+    if (!empty($arguments[0])) {
       foreach ($arguments as $key => $value) {
         if (is_array($value) && !empty($value['callback']) && is_callable($value['callback'])) {
 
