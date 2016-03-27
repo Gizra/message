@@ -169,7 +169,10 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    */
   public function getArguments() {
-    return $this->get('arguments')->getValue();
+    $arguments = $this->get('arguments')->getValue();
+
+    // @todo: See if there is a easier way to get only the 0 key.
+    return $arguments ? $arguments[0] : array();
   }
 
   /**
@@ -268,7 +271,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    */
   protected function processArguments(array $arguments, array $output) {
     // Check if we have arguments saved along with the message.
-    if (empty($arguments[0])) {
+    if (empty($arguments)) {
       return $output;
     }
 
