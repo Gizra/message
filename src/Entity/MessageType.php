@@ -286,7 +286,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
   /**
    * {@inheritdoc}
    */
-  public function getText($langcode = NULL, array $options = array()) {
+  public function getText($langcode = NULL, $delta = NULL) {
     $text = $this->text;
 
     if ($langcode) {
@@ -300,8 +300,9 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
     }
 
 
-    if (isset($options['delta'])) {
-      return $text[$options['delta']];
+    if ($delta) {
+      // Return just the delta if it exists.
+      return !empty($text[$delta]) ?: '';
     }
 
     return $text;

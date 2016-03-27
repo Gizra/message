@@ -237,7 +237,10 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
       return [];
     }
 
-    $output = $this->processArguments($this->getArguments(), $message_type->getText($langcode));
+    $message_arguments = $this->getArguments();
+    $message_type_text = $message_type->getText($langcode, $delta);
+
+    $output = $this->processArguments($message_arguments, $message_type_text);
 
     $token_replace = $message_type->getData('token replace');
     if (!empty($token_replace)) {

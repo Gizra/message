@@ -142,7 +142,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * @return array
    *   An array of the text field values.
    */
-  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, array $options = []);
+  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = NULL);
 
   /**
    * Check if the message is new.
