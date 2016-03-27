@@ -6,19 +6,9 @@
  */
 
 use Drupal\Core\Render\Element;
-use Drupal\Core\Template\Attribute;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageType;
-
-/**
- * The maximal amount of messages to be purged upon hook_cron()
- */
-define('MESSAGE_PURGE_LIMIT', 100);
-
-/**
- * Drupal 8 part. Remove this comment after finishing the porting process.
- */
 
 /**
  * Implements hook_entity_delete().
