@@ -233,7 +233,8 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     /** @var $message_type */
     if (!$message_type = $this->getType()) {
       // Message type does not exist any more.
-      // @todo Throw an exception here instead?
+      // We don't throw an exception, to make sure we don't break sites that
+      // removed the message type, so we silently ignore.
       return [];
     }
 
