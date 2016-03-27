@@ -4,9 +4,10 @@ status: true
 dependencies:
   module:
     - message
+    - system
     - user
 _core:
-  default_config_hash: zqpFXpMdnd_tnB7TnglybyzDF-V5lUa1OKDR_CL1pNQ
+  default_config_hash: QHUfOGRaphyOPzK-tNeawSDjG0qFD41ZeQkWJm9N4PM
 id: message
 label: Message
 module: views
@@ -80,40 +81,54 @@ display:
           summary: ''
           description: ''
           columns:
+            message_bulk_form_1: message_bulk_form_1
             mid: mid
+            type: type
+            get_text: get_text
             uid: uid
             created: created
-            type: type
           info:
+            message_bulk_form_1:
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             mid:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            uid:
-              sortable: false
-              default_sort_order: asc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
-            created:
-              sortable: false
-              default_sort_order: asc
+              sortable: true
+              default_sort_order: desc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
             type:
-              sortable: false
-              default_sort_order: asc
+              sortable: true
+              default_sort_order: desc
               align: ''
               separator: ''
               empty_column: false
               responsive: ''
-          default: '-1'
+            get_text:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            uid:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+            created:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
+          default: mid
           empty_table: false
       row:
         type: fields
