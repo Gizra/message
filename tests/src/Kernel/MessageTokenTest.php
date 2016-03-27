@@ -118,7 +118,7 @@ class MessageTokenTest extends KernelTestBase {
     $this->assertNotSame($message, $original_message);
 
     $arguments = $message->getArguments();
-    $this->assertEquals(count(reset($arguments)), 2, 'Correct number of arguments added after saving the message.');
+    $this->assertEquals(count($arguments), 2, 'Correct number of arguments added after saving the message.');
 
     // Assert message is rendered as expected.
     $this->assertEquals($replaced_messages, $message->getText(), 'The text rendered as expected.');
