@@ -116,10 +116,8 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * );
    * @endcode
    *
-   * Arguments assigned to message-type can be overriden by the ones
+   * Arguments assigned to message-type can be overridden by the ones
    * assigned to the message.
-   *
-   * @see message_get_property_values()
    *
    * @var array
    */
