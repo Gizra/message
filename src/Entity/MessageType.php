@@ -97,36 +97,6 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
   /**
    * {@inheritdoc}
    */
-  public function setArguments(array $arguments) {
-    $this->arguments = $arguments;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getArguments() {
-    return $this->arguments;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setCategory($category) {
-    $this->category = $category;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getCategory() {
-    return $this->category;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
   public function setData(array $data) {
     $this->data = $data;
     return $this;
