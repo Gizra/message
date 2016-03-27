@@ -7,7 +7,7 @@ dependencies:
     - system
     - user
 _core:
-  default_config_hash: QHUfOGRaphyOPzK-tNeawSDjG0qFD41ZeQkWJm9N4PM
+  default_config_hash: GKrcfaIe9qBlUC4cSTPci6aze8glF3EohYpBrN0chic
 id: message
 label: Message
 module: views
@@ -102,13 +102,13 @@ display:
               responsive: ''
             type:
               sortable: true
-              default_sort_order: desc
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
-              responsive: ''
+              responsive: priority-medium
             get_text:
-              sortable: true
+              sortable: false
               default_sort_order: desc
               align: ''
               separator: ''
@@ -116,18 +116,18 @@ display:
               responsive: ''
             uid:
               sortable: true
-              default_sort_order: desc
+              default_sort_order: asc
               align: ''
               separator: ''
               empty_column: false
-              responsive: ''
+              responsive: priority-medium
             created:
               sortable: true
               default_sort_order: desc
               align: ''
               separator: ''
               empty_column: false
-              responsive: ''
+              responsive: priority-low
           default: mid
           empty_table: false
       row:
