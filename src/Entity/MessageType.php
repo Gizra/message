@@ -171,6 +171,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
     return $this;
   }
 
+
   /**
    * {@inheritdoc}
    */
@@ -182,8 +183,8 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * {@inheritdoc}
    */
   public function getSetting($key, $default_value = NULL) {
-    if (isset($this->settings[$key])) {
-      return $this->settings[$key];
+    if (isset($this->data[$key])) {
+      return $this->data[$key];
     }
 
     return $default_value;
@@ -258,6 +259,12 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
 
     $language_manager = \Drupal::languageManager();
     if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+
+      if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
+        // Get the default language code when not specified.
+        $langcode = $language_manager->getDefaultLanguage()->getId();
+      }
+
       $config_translation = $language_manager->getLanguageConfigOverride($langcode, 'message.type.' . $this->id());
       $translated_text = $config_translation->get('text');
 
@@ -296,6 +303,16 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    */
   public function preSave(EntityStorageInterface $storage) {
     $this->text = array_filter($this->text);
+
+    $language_manager = \Drupal::languageManager();
+
+    if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+      // Set the values for the default site language.
+      $config_translation = $language_manager->getLanguageConfigOverride($language_manager->getDefaultLanguage()->getId(), 'message.type.' . $this->id());
+      $config_translation->set('text', $this->text);
+      $config_translation->save();
+    }
+
     parent::preSave($storage);
   }
 
