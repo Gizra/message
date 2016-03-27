@@ -7,11 +7,14 @@
 
 namespace Drupal\message\Entity;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Language\Language;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\message\MessageException;
 use Drupal\message\MessageTypeInterface;
+
 
 /**
  * Defines the Message type entity class.
@@ -140,7 +143,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
       return $this->data[$key];
     }
     elseif ($key) {
-      throw new MessageException('Requested data key "' . check_plain($key) . '" was not found.');
+      throw new MessageException('Requested data key "' . SafeMarkup::checkPlain($key) . '" was not found.');
     }
 
     return $this->data;
