@@ -7,11 +7,14 @@
 
 namespace Drupal\message\Entity;
 
+use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
+use Drupal\Core\Language\Language;
 use Drupal\language\ConfigurableLanguageManagerInterface;
 use Drupal\message\MessageException;
 use Drupal\message\MessageTypeInterface;
+
 
 /**
  * Defines the Message type entity class.
@@ -81,11 +84,75 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
   protected $text = array();
 
   /**
-   * Holds additional data on the entity.
+   * Array with the arguments and their replacement value, or callacbks.
+   *
+   * The argument keys will be replaced when rendering the message, and it
+   * should be prefixed by @, %, ! - similar to way it's done in Drupal
+   * core's t() function.
+   *
+   * @code
+   *
+   * // Assuming out message-text is:
+   * // %user-name created <a href="@message-url">@message-title</a>
+   *
+   * $message_type->arguments = array(
+   *   // Hard code the argument.
+   *   '%user-name' => 'foo',
+   *
+   *   // Use a callback, and provide callbacks arguments.
+   *   // The following example will call Drupal core's url() function to
+   *   // get the most up-to-date path of message ID 1.
+   *   '@message-url' => array(
+   *      'callback' => 'url',
+   *      'callback arguments' => array('message/1'),
+   *    ),
+   *
+   *   // Use callback, but instead of passing callback argument, we will
+   *   // pass the Message entity itself.
+   *   '@message-title' => array(
+   *      'callback' => 'example_bar',
+   *      'pass message' => TRUE,
+   *    ),
+   * );
+   * @endcode
+   *
+   * Arguments assigned to message-type can be overridden by the ones
+   * assigned to the message.
    *
    * @var array
    */
-  protected $data = array();
+  public $arguments = array();
+
+  /**
+   * Serialized array with misc options.
+   *
+   * Purge settings (under $message_type->data['purge]). Note that the
+   * purge settings can be added only to the message-type.
+   * - 'enabled': TRUE or FALSE to explicitly enable or disable message
+   *    purging. IF not set, the default purge settings defined in the
+   *    "Message settings" will apply.
+   * - 'quota': Optional; Maximal (approximate) amount of allowed messages
+   *    of the message type. IF not set, the default purge settings defined in
+   *    the "Message settings" will apply.
+   * - 'days': Optional; Maximal message age in days. IF not set, the default
+   *    purge settings defined in the
+   *    "Message settings" will apply.
+   *
+   * Token settings:
+   * - 'token replace': Indicate if message's text should be passed
+   *    through token_replace(). defaults to TRUE.
+   * - 'token options': Array with options to be passed to
+   *    token_replace().
+   *
+   * Tokens settings assigned to message-type can be overriden by the ones
+   * assigned to the message.
+   *
+   * @var array
+   *
+   * @todo: A better name would be $settings, however we might want to keep this
+   * for easier migration from Drupal 7?
+   */
+  public $settings = array();
 
   /**
    * {@inheritdoc}
@@ -97,23 +164,28 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
   /**
    * {@inheritdoc}
    */
-  public function setData(array $data) {
-    $this->data = $data;
+  public function setSettings(array $settings) {
+    $this->settings = $settings;
     return $this;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getSettings() {
+    return $this->settings;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function getData($key = '') {
-    if ($key && isset($this->data[$key])) {
-      return $this->data[$key];
-    }
-    elseif ($key) {
-      throw new MessageException('Requested data key "' . $key . '" was not found.');
+  public function getSetting($key, $default_value = NULL) {
+    if (isset($this->settings[$key])) {
+      return $this->settings[$key];
     }
 
-    return $this->data;
+    return $default_value;
   }
 
   /**
@@ -177,101 +249,30 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
   }
 
   /**
-   * Array with the arguments and their replacement value, or callacbks.
-   *
-   * The argument keys will be replaced when rendering the message, and it
-   * should be prefixed by @, %, ! - similar to way it's done in Drupal
-   * core's t() function.
-   *
-   * @code
-   *
-   * // Assuming out message-text is:
-   * // %user-name created <a href="@message-url">@message-title</a>
-   *
-   * $message_type->arguments = array(
-   *   // Hard code the argument.
-   *   '%user-name' => 'foo',
-   *
-   *   // Use a callback, and provide callbacks arguments.
-   *   // The following example will call Drupal core's url() function to
-   *   // get the most up-to-date path of message ID 1.
-   *   '@message-url' => array(
-   *      'callback' => 'url',
-   *      'callback arguments' => array('message/1'),
-   *    ),
-   *
-   *   // Use callback, but instead of passing callback argument, we will
-   *   // pass the Message entity itself.
-   *   '@message-title' => array(
-   *      'callback' => 'example_bar',
-   *      'pass message' => TRUE,
-   *    ),
-   * );
-   * @endcode
-   *
-   * Arguments assigned to message-type can be overriden by the ones
-   * assigned to the message.
-   *
-   * @see message_get_property_values()
-   *
-   * @var array
-   */
-  public $arguments = array();
-
-  /**
-   * Set the default message category of the message type.
-   *
-   * @var string
-   */
-  public $category = NULL;
-
-  /**
-   * Serialized array with misc options.
-   *
-   * Purge settings (under $message_type->data['purge]). Note that the
-   * purge settings can be added only to the message-type.
-   * - 'enabled': TRUE or FALSE to explicetly enable or disable message
-   *    purging. IF not set, the default purge settings defined in the
-   *    "Message settings" will apply.
-   * - 'quota': Optional; Maximal (approximate) amount of allowed messages
-   *    of the message type. IF not set, the default purge settings defined in
-   *    the "Message settings" will apply.
-   * - 'days': Optional; Maximal message age in days. IF not set, the default
-   *    purge settings defined in the
-   *    "Message settings" will apply.
-   *
-   * Token settings:
-   * - 'token replace': Indicate if message's text should be passed
-   *    through token_replace(). defaults to TRUE.
-   * - 'token options': Array with options to be passed to
-   *    token_replace().
-   *
-   * Tokens settings assigned to message-type can be overriden by the ones
-   * assigned to the message.
-   *
-   * @var array
-   */
-  public $settings = array();
-
-  /**
    * {@inheritdoc}
    */
-  public function getText($langcode = NULL, array $options = array()) {
+  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = NULL) {
     $text = $this->text;
 
-    if ($langcode) {
-      $language_manager = \Drupal::languageManager();
-      if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
-        $config_translation = $language_manager->getLanguageConfigOverride($langcode, 'message.type.' . $this->id());
-        if ($translated_text = $config_translation->get('text')) {
-          $text = $translated_text;
-        }
+    $language_manager = \Drupal::languageManager();
+    if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+
+      if ($langcode == Language::LANGCODE_NOT_SPECIFIED) {
+        // Get the default language code when not specified.
+        $langcode = $language_manager->getDefaultLanguage()->getId();
       }
+
+      $config_translation = $language_manager->getLanguageConfigOverride($langcode, 'message.type.' . $this->id());
+      $translated_text = $config_translation->get('text');
+
+      // If there was no translated text, we return nothing instead of falling
+      // back to the default language.
+      $text = $translated_text ?: array();
     }
 
-
-    if (isset($options['delta'])) {
-      return $text[$options['delta']];
+    if ($delta) {
+      // Return just the delta if it exists.
+      return !empty($text[$delta]) ?: '';
     }
 
     return $text;
@@ -299,6 +300,16 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    */
   public function preSave(EntityStorageInterface $storage) {
     $this->text = array_filter($this->text);
+
+    $language_manager = \Drupal::languageManager();
+
+    if ($language_manager instanceof ConfigurableLanguageManagerInterface) {
+      // Set the values for the default site language.
+      $config_translation = $language_manager->getLanguageConfigOverride($language_manager->getDefaultLanguage()->getId(), 'message.type.' . $this->id());
+      $config_translation->set('text', $this->text);
+      $config_translation->save();
+    }
+
     parent::preSave($storage);
   }
 

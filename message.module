@@ -124,8 +124,8 @@ function message_cron() {
   /** @var MessageType[] $message_types */
   $message_types = MessageType::loadMultiple();
   foreach ($message_types as $message_type) {
-    $data = $message_type->getData();
-    if (empty($data['purge']['override'])) {
+    $settings = $message_type->getSetting('purge');
+    if (empty($settings['override'])) {
       $no_override_type_names[] = $message_type->id();
     }
     else {
@@ -140,12 +140,12 @@ function message_cron() {
   foreach ($override_types as $message_type) {
     // Ignore message type with unchecked "Purge messages". Also make sure that
     // purging settings are present.
-    $data = $message_type->getData();
-    if (empty($data['purge']) || empty($data['purge']['enabled'])) {
+    $settings = $message_type->getSetting('purge');
+    if (empty($settings['enabled'])) {
       continue;
     }
 
-    $purge_messages += message_get_purgeable_by_type($purge_limit, $message_type->id(), $data['purge']);
+    $purge_messages += message_get_purgeable_by_type($purge_limit, $message_type->id(), $settings);
   }
 
   // Gather purgeable messages of non-overriding types according to global
@@ -250,7 +250,7 @@ function message_entity_extra_field_info() {
   $bundles = MessageType::loadMultiple();
   foreach ($bundles as $bundle) {
 
-    foreach (array_keys($bundle->getText(NULL, array('text' => TRUE))) as $delta) {
+    foreach (array_keys($bundle->getText()) as $delta) {
 
       if (!is_int($delta)) {
         // The get text holds also the translated text. Since we hold only need

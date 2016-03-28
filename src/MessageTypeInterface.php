@@ -9,29 +9,13 @@ namespace Drupal\message;
 
 use Drupal\Core\Config\Entity\ConfigEntityInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
+use Drupal\Core\Language\Language;
 
 /**
  * Provides an interface defining a Message type entity.
  */
 interface MessageTypeInterface extends ConfigEntityInterface {
 
-  /**
-   * Set internal data array.
-   *
-   * @param array $data
-   *
-   * @return $this
-   */
-  public function setData(array $data);
-
-  /**
-   * @param string $key
-   *   (optional) Key from the array.
-   *
-   * @return array
-   *   A subset of data if `$key` is passed, otherwise the entire data array.
-   */
-  public function getData($key = '');
 
   /**
    * Set the message type description.
@@ -109,7 +93,33 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * @return array
    *   An array of the text field values.
    */
-  public function getText($langcode = NULL, array $options = []);
+  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = NULL);
+
+
+  /**
+   * Set additional settings for the message type.
+   */
+  public function setSettings(array $settings);
+
+  /**
+   * Return the message type settings.
+   *
+   * @return array
+   */
+  public function getSettings();
+
+  /**
+   * Return a single setting by key.
+   *
+   * @param $key
+   *   The key to return.
+   * @param $default_value
+   *   The default value to use in case the key is missing. Defaults to NULL.
+   *
+   * @return mixed
+   *   The value of the setting or the default value if none found.
+   */
+  public function getSetting($key, $default_value = NULL);
 
   /**
    * Check if the message is new.

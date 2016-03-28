@@ -169,7 +169,10 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    */
   public function getArguments() {
-    return $this->get('arguments')->getValue();
+    $arguments = $this->get('arguments')->getValue();
+
+    // @todo: See if there is a easier way to get only the 0 key.
+    return $arguments ? $arguments[0] : array();
   }
 
   /**
@@ -229,8 +232,8 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * {@inheritdoc}
    */
-  public function getText() {
-
+  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = FALSE) {
+    /** @var $message_type */
     if (!$message_type = $this->getType()) {
       // Message type does not exist any more.
       // We don't throw an exception, to make sure we don't break sites that
@@ -238,36 +241,83 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
       return [];
     }
 
-    $output = $message_type->getText($this->language);
-    $arguments = $this->getArguments();
-    // @todo Why is only the first argument used?
-    $arguments = reset($arguments);
+    $message_arguments = $this->getArguments();
+    $message_type_text = $message_type->getText($langcode, $delta);
 
-    if (is_array($arguments)) {
-      foreach ($arguments as $key => $value) {
-        if (is_array($value) && !empty($value['callback']) && is_callable($value['callback'])) {
+    $output = $this->processArguments($message_arguments, $message_type_text);
 
-          // A replacement via callback function.
-          $value += array('pass message' => FALSE);
+    $token_replace = $message_type->getSetting('token replace', TRUE);
+    $token_options = $message_type->getSetting('token options');
+    if (!empty($token_replace)) {
+      // Token should be processed.
+      $output = $this->processTokens($output, !empty($token_options['clear']));
 
-          if ($value['pass message']) {
-            // Pass the message object as-well.
-            $value['callback arguments']['message'] = $this;
-          }
+    }
 
-          $arguments[$key] = call_user_func_array($value['callback'], $value['arguments']);
+    return $output;
+  }
+
+  /**
+   * Process the message given the arguments saved with it.
+   *
+   * @param array $arguments
+   *   Array with the arguments.
+   * @param array $output
+   *   Array with the templated text saved in the message type.
+   *
+   * @return array
+   *   The templated text, with the placehodlers replaced with the actual value,
+   *   if there are indeed arguments.
+   */
+  protected function processArguments(array $arguments, array $output) {
+    // Check if we have arguments saved along with the message.
+    if (empty($arguments)) {
+      return $output;
+    }
+
+    foreach ($arguments as $key => $value) {
+      if (is_array($value) && !empty($value['callback']) && is_callable($value['callback'])) {
+
+        // A replacement via callback function.
+        $value += array('pass message' => FALSE);
+
+        if ($value['pass message']) {
+          // Pass the message object as-well.
+          $value['callback arguments']['message'] = $this;
         }
-      }
 
-      foreach ($output as $key => $value) {
-        $output[$key] = new FormattableMarkup($value, $arguments);
+        $arguments[$key] = call_user_func_array($value['callback'], $value['arguments']);
       }
     }
 
-    // @todo Re-work/simplify. We shouldn't have to loop through output twice.
+    foreach ($output as $key => $value) {
+      $output[$key] = new FormattableMarkup($value, $arguments);
+    }
+
+    return $output;
+  }
+
+  /**
+   * Replace placeholders with tokens.
+   *
+   * @param array $output
+   *   The templated text to be replaced.
+   * @param bool $clear
+   *   Determine if unused token should be cleared.
+   *
+   * @return array
+   *   The output with placeholders replaced with the token value,
+   *   if there are indeed tokens.
+   */
+  protected function processTokens(array $output, $clear) {
+    $options = [
+      'langcode' => $this->language,
+      'clear' => $clear,
+    ];
+
     foreach ($output as $key => $value) {
       $output[$key] = \Drupal::token()
-        ->replace($value, ['message' => $this], ['langcode' => $this->language, 'clear' => $message_type->getData('token options')['clear']]);
+        ->replace($value, ['message' => $this], $options);
     }
 
     return $output;

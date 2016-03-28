@@ -89,7 +89,7 @@ class MessageTypeMultipleTextField {
     // text.
     $start_key = 0;
     if (!$message_text = $text) {
-      $message_text = $this->entity->getText($this->langcode, array('text' => TRUE)) ? $this->entity->getText($this->langcode, array('text' => TRUE)) : array();
+      $message_text = $this->entity->getText($this->langcode) ? $this->entity->getText($this->langcode) : array();
     }
 
     if ($message_text) {

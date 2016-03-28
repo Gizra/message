@@ -94,10 +94,16 @@ interface MessageInterface extends ContentEntityInterface {
   /**
    * Replace arguments with their placeholders.
    *
+   * @param $langcode
+   *   The language code.
+   * @param NULL|int $delta
+   *   The delta of the message to return. If NULL all the message text will be
+   *   returned.
+   *
    * @return array
    *   The message text.
    */
-  public function getText();
+  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = NULL);
 
   /**
    * Delete multiple message.
