@@ -20,7 +20,7 @@ message.settings:
 
 message.type.*:
   type: config_entity
-  label: 'Message type category'
+  label: 'Message type'
   mapping:
     type:
       type: string
