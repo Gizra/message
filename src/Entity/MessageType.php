@@ -173,9 +173,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * {@inheritdoc}
    */
   public function setSetting($key, $setting) {
-    if (isset($this->settings[$key])) {
-      $this->settings[$key] = $setting;
-    }
+    $this->settings[$key] = $setting;
   }
 
   /**

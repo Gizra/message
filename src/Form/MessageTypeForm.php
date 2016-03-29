@@ -116,25 +116,25 @@ class MessageTypeForm extends EntityForm {
 
     $form['settings']['purge']['quota'] = array(
       '#type' => 'textfield',
-      '#title' => t('Messages quota'),
-      '#description' => t('Maximal (approximate) amount of messages of this type.'),
+      '#title' => $this->t('Messages quota'),
+      '#description' => $this->t('Maximal (approximate) amount of messages of this type.'),
       '#default_value' => !empty($settings['purge']['quota']) ? $settings['purge']['quota'] : '',
       '#states' => $states,
     );
 
     $form['settings']['purge']['days'] = array(
       '#type' => 'textfield',
-      '#title' => t('Purge messages older than'),
-      '#description' => t('Maximal message age in days, for messages of this type.'),
+      '#title' => $this->t('Purge messages older than'),
+      '#description' => $this->t('Maximal message age in days, for messages of this type.'),
       '#default_value' => !empty($settings['purge']['days']) ? $settings['purge']['days'] : '',
       '#states' => $states,
     );
 
     $form['settings']['token options']['token replace'] = array(
-      '#title' => t('Token replace'),
       '#type' => 'checkbox',
-      '#description' => t('When this option is selected, token processing will happen.'),
-      '#default_value' => isset($settings['token options']['token replace']) ? $settings['token options']['token replace'] : TRUE,
+      '#title' => $this->t('Token replace'),
+      '#description' => $this->t('When this option is selected, token processing will happen.'),
+      '#default_value' => !empty($settings['token options']['token replace']),
     );
 
     return $form;
