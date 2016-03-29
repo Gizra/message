@@ -130,6 +130,13 @@ class MessageTypeForm extends EntityForm {
       '#states' => $states,
     );
 
+    $form['settings']['token options']['token replace'] = array(
+      '#title' => t('Token replace'),
+      '#type' => 'checkbox',
+      '#description' => t('When this option is selected, token processing will happen.'),
+      '#default_value' => isset($settings['token options']['token replace']) ? $settings['token options']['token replace'] : TRUE,
+    );
+
     return $form;
   }
 
