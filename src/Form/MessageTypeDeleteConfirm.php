@@ -20,7 +20,7 @@ class MessageTypeDeleteConfirm extends EntityConfirmFormBase {
    * {@inheritdoc}
    */
   public function getQuestion() {
-    return t('Are you sure you want to delete the message type %type?', array('%type' => $this->entity->label()));
+    return t('Are you sure you want to delete the message type %type?', ['%type' => $this->entity->label()]);
   }
 
   /**
@@ -42,7 +42,7 @@ class MessageTypeDeleteConfirm extends EntityConfirmFormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
-    $t_args = array('%name' => $this->entity->label());
+    $t_args = ['%name' => $this->entity->label()];
     drupal_set_message(t('The message type %name has been deleted.', $t_args));
     $this->logger('content')->notice('Deleted message type %name', $t_args);
     $form_state->setRedirectUrl($this->getCancelUrl());

@@ -172,7 +172,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     $arguments = $this->get('arguments')->getValue();
 
     // @todo: See if there is a easier way to get only the 0 key.
-    return $arguments ? $arguments[0] : array();
+    return $arguments ? $arguments[0] : [];
   }
 
   /**
@@ -211,10 +211,10 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Author'))
       ->setDescription(t('The user that is the message author.'))
-      ->setSettings(array(
+      ->setSettings([
         'target_type' => 'user',
         'default_value' => 0,
-      ))
+      ])
       ->setTranslatable(TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
@@ -279,7 +279,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
       if (is_array($value) && !empty($value['callback']) && is_callable($value['callback'])) {
 
         // A replacement via callback function.
-        $value += array('pass message' => FALSE);
+        $value += ['pass message' => FALSE];
 
         if ($value['pass message']) {
           // Pass the message object as-well.
@@ -327,16 +327,16 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    */
   public function save() {
-    $token_options = !empty($this->data['token options']) ? $this->data['token options'] : array();
+    $token_options = !empty($this->data['token options']) ? $this->data['token options'] : [];
 
-    $tokens = array();
+    $tokens = [];
 
     // Handle hard coded arguments.
     foreach ($this->getType()->getText() as $text) {
       preg_match_all('/[@|%|\!]\{([a-z0-9:_\-]+?)\}/i', $text, $matches);
 
       foreach ($matches[1] as $delta => $token) {
-        $output = \Drupal::token()->replace('[' . $token . ']', array('message' => $this), $token_options);
+        $output = \Drupal::token()->replace('[' . $token . ']', ['message' => $this], $token_options);
         if ($output != '[' . $token . ']') {
           // Token was replaced and token sanitizes.
           $argument = $matches[0][$delta];
@@ -357,7 +357,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * @return \Drupal\message\MessageInterface
    *  A message type object ready to be save.
    */
-  public static function create(array $values = array()) {
+  public static function create(array $values = []) {
     return parent::create($values);
   }
 

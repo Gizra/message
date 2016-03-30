@@ -29,11 +29,11 @@
  * @see hook_entity_view()
  */
 function hook_message_view($message, $view_mode, $langcode) {
-  $message->content['my_additional_field'] = array(
+  $message->content['my_additional_field'] = [
     '#markup' => $additional_field,
     '#weight' => 10,
     '#theme' => 'mymodule_my_additional_field',
-  );
+  ];
 }
 
 /**
@@ -72,8 +72,8 @@ function hook_message_view_alter(&$build) {
  * @see hook_default_message_type_alter()
  */
 function hook_default_message_type() {
-  $defaults['main'] = entity_create('message_type', array(
-  ));
+  $defaults['main'] = entity_create('message_type', [
+  ]);
   return $defaults;
 }
 
@@ -116,8 +116,8 @@ function hook_form_message_type_form_alter(&$form, &$form_state) {
  * @see hook_default_message_category_alter()
  */
 function hook_default_message_category() {
-  $defaults['main'] = entity_create('message_category', array(
-  ));
+  $defaults['main'] = entity_create('message_category', [
+  ]);
   return $defaults;
 }
 

@@ -84,7 +84,7 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function execute($object = NULL) {
-    $this->executeMultiple(array($object));
+    $this->executeMultiple([$object]);
   }
 
   /**

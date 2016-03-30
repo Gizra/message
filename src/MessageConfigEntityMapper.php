@@ -19,16 +19,16 @@ use Symfony\Component\Routing\Route;
  * field and translate it easily. We solved it by defining a sequence field and
  * managing the partial by our self. The field is managed by the next format:
  *
- * language => array(
- *  'en' => array(
+ * language => [
+ *  'en' => [
  *    0 => 'First prtial',
  *    1 => 'Second partial',
- *  ),
- *  'fr' => array(
+ *  ],
+ *  'fr' => [
  *    0 => 'première partie',
  *    1 => 'deuxième partie',
- *  ),
- * );
+ *  ],
+ * ];
  *
  * When facing the translation we will need to extend the edit/delete/insert
  * forms and add the multiple text field element. The manging of the field will
@@ -49,11 +49,11 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
   public function getEditRoute() {
     $route = new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/edit',
-      array(
+      [
         '_form' => '\Drupal\message\Form\MessageTypeConfigTranslationEditForm',
         'plugin_id' => $this->getPluginId(),
-      ),
-      array('_config_translation_form_access' => 'TRUE')
+      ],
+      ['_config_translation_form_access' => 'TRUE']
     );
 
     $this->processRoute($route);
@@ -66,11 +66,11 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
   public function getAddRoute() {
     $route = new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/add',
-      array(
+      [
         '_form' => '\Drupal\message\Form\MessageTypeConfigTranslationAddForm',
         'plugin_id' => $this->getPluginId(),
-      ),
-      array('_config_translation_form_access' => 'TRUE')
+      ],
+      ['_config_translation_form_access' => 'TRUE']
     );
 
     $this->processRoute($route);
@@ -83,11 +83,11 @@ class MessageConfigEntityMapper extends ConfigEntityMapper {
   public function getDeleteRoute() {
     $route = new Route(
       $this->getBaseRoute()->getPath() . '/translate/{langcode}/delete',
-      array(
+      [
         '_form' => '\Drupal\message\Form\MessageTypeConfigTranslationDeleteForm',
         'plugin_id' => $this->getPluginId(),
-      ),
-      array('_config_translation_form_access' => 'TRUE')
+      ],
+      ['_config_translation_form_access' => 'TRUE']
     );
 
     $this->processRoute($route);
