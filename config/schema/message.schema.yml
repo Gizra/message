@@ -48,6 +48,9 @@ message.type.*:
             clear:
               type: boolean
               label: 'Clear empty tokens'
+            'token replace':
+              type: boolean
+              label: 'Replace tokens'
         purge:
           type: mapping
           label: 'Purge'
