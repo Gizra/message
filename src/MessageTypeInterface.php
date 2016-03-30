@@ -103,6 +103,8 @@ interface MessageTypeInterface extends ConfigEntityInterface {
 
   /**
    * Set a single setting by key.
+   *
+   * @return array
    */
   public function setSetting($key, $setting);
 

@@ -174,6 +174,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    */
   public function setSetting($key, $setting) {
     $this->settings[$key] = $setting;
+    return $this;
   }
 
   /**
