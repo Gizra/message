@@ -33,20 +33,20 @@ trait MessageTypeCreateTrait {
    * @return \Drupal\message\MessageTypeInterface
    *   A saved message type entity.
    */
-  protected function createMessageType($type, $label, $description, array $text, array $settings = array(), $langcode = Language::LANGCODE_NOT_SPECIFIED) {
-    $settings += array(
-      'token options' => array(
+  protected function createMessageType($type, $label, $description, array $text, array $settings = [], $langcode = Language::LANGCODE_NOT_SPECIFIED) {
+    $settings += [
+      'token options' => [
         'clear' => FALSE,
-      ),
-    );
-    $message_type = MessageType::Create(array(
+      ],
+    ];
+    $message_type = MessageType::Create([
       'type' => $type,
       'label' => $label,
       'description' => $description,
       'text' => $text,
       'settings' => $settings,
       'langcode' => $langcode,
-    ));
+    ]);
     $message_type->save();
 
     return $message_type;

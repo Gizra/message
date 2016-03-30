@@ -12,51 +12,51 @@ use Drupal\user\Entity\User;
  * Implements hook_token_info().
  */
 function message_token_info() {
-  $type = array(
+  $type = [
     'name' => t('messages'),
     'description' => t('Tokens related to individual content items, or "messages".'),
     'needs-data' => 'message',
-  );
+  ];
 
   // Core tokens for messages.
-  $message['mid'] = array(
+  $message['mid'] = [
     'name' => t("Message ID"),
     'description' => t('The unique ID of the message.'),
-  );
-  $message['type'] = array(
+  ];
+  $message['type'] = [
     'name' => t("Message type"),
-  );
-  $message['type-name'] = array(
+  ];
+  $message['type-name'] = [
     'name' => t("message type name"),
     'description' => t("The human-readable name of the message type."),
-  );
-  $message['uuid'] = array(
+  ];
+  $message['uuid'] = [
     'name' => t("Message UID"),
     'description' => t("The message UUID."),
-  );
+  ];
 
-  $message['created'] = array(
+  $message['created'] = [
     'name' => t("Date created"),
     'type' => 'date',
-  );
-  $message['author'] = array(
+  ];
+  $message['author'] = [
     'name' => t("Author"),
     'type' => 'user',
-  );
+  ];
 
-  return array(
-    'types' => array('message' => $type),
-    'tokens' => array('message' => $message),
-  );
+  return [
+    'types' => ['message' => $type],
+    'tokens' => ['message' => $message],
+  ];
 }
 
 /**
  * Implements hook_tokens().
  */
-function message_tokens($type, $tokens, array $data = array(), array $options = array(), BubbleableMetadata $bubbleable_metadata) {
+function message_tokens($type, $tokens, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
-  $replacements = array();
+  $replacements = [];
 
   if ($type == 'message' && !empty($data['message'])) {
     /** @var \Drupal\message\Entity\Message $message */
@@ -94,15 +94,15 @@ function message_tokens($type, $tokens, array $data = array(), array $options = 
     }
 
     if ($author_tokens = $token_service->findWithPrefix($tokens, 'author')) {
-      $replacements += $token_service->generate('user', $author_tokens, array('user' => $message->getOwner()), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('user', $author_tokens, ['user' => $message->getOwner()], $options, $bubbleable_metadata);
     }
 
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
-      $replacements += $token_service->generate('date', $created_tokens, array('date' => $message->getCreatedTime()), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('date', $created_tokens, ['date' => $message->getCreatedTime()], $options, $bubbleable_metadata);
     }
 
     if ($changed_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
-      $replacements += $token_service->generate('date', $changed_tokens, array('date' => $message->getChangedTime()), $options, $bubbleable_metadata);
+      $replacements += $token_service->generate('date', $changed_tokens, ['date' => $message->getChangedTime()], $options, $bubbleable_metadata);
     }
   }
 

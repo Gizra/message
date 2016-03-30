@@ -81,7 +81,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    *
    * @var array
    */
-  protected $text = array();
+  protected $text = [];
 
   /**
    * Array with the arguments and their replacement value, or callacbks.
@@ -95,25 +95,25 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * // Assuming out message-text is:
    * // %user-name created <a href="@message-url">@message-title</a>
    *
-   * $message_type->arguments = array(
+   * $message_type->arguments = [
    *   // Hard code the argument.
    *   '%user-name' => 'foo',
    *
    *   // Use a callback, and provide callbacks arguments.
    *   // The following example will call Drupal core's url() function to
    *   // get the most up-to-date path of message ID 1.
-   *   '@message-url' => array(
+   *   '@message-url' => [
    *      'callback' => 'url',
-   *      'callback arguments' => array('message/1'),
-   *    ),
+   *      'callback arguments' => ['message/1'],
+   *    ],
    *
    *   // Use callback, but instead of passing callback argument, we will
    *   // pass the Message entity itself.
-   *   '@message-title' => array(
+   *   '@message-title' => [
    *      'callback' => 'example_bar',
    *      'pass message' => TRUE,
-   *    ),
-   * );
+   *    ],
+   * ];
    * @endcode
    *
    * Arguments assigned to message-type can be overridden by the ones
@@ -121,7 +121,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    *
    * @var array
    */
-  public $arguments = array();
+  public $arguments = [];
 
   /**
    * Serialized array with misc options.
@@ -152,7 +152,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * @todo: A better name would be $settings, however we might want to keep this
    * for easier migration from Drupal 7?
    */
-  public $settings = array();
+  public $settings = [];
 
   /**
    * {@inheritdoc}
@@ -267,7 +267,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
 
       // If there was no translated text, we return nothing instead of falling
       // back to the default language.
-      $text = $translated_text ?: array();
+      $text = $translated_text ?: [];
     }
 
     if ($delta) {
@@ -291,7 +291,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * @return \Drupal\message\MessageTypeInterface
    *   A message type object ready to be save.
    */
-  public static function create(array $values = array()) {
+  public static function create(array $values = []) {
     return parent::create($values);
   }
 

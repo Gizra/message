@@ -61,27 +61,27 @@ class MessageListBuilder extends EntityListBuilder {
    */
   public function buildHeader() {
     // Enable language column and filter if multiple languages are added.
-    $header = array(
-      'created' => array(
+    $header = [
+      'created' => [
         'data' => $this->t('Created'),
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      ),
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
       'text' => $this->t('Text'),
-      'type' => array(
+      'type' => [
         'data' => $this->t('Type'),
-        'class' => array(RESPONSIVE_PRIORITY_MEDIUM),
-      ),
-      'author' => array(
+        'class' => [RESPONSIVE_PRIORITY_MEDIUM],
+      ],
+      'author' => [
         'data' => $this->t('Author'),
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      ),
-    );
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ],
+    ];
 
     if (\Drupal::languageManager()->isMultilingual()) {
-      $header['language_name'] = array(
+      $header['language_name'] = [
         'data' => $this->t('Language'),
-        'class' => array(RESPONSIVE_PRIORITY_LOW),
-      );
+        'class' => [RESPONSIVE_PRIORITY_LOW],
+      ];
     }
 
     return $header;
@@ -92,12 +92,12 @@ class MessageListBuilder extends EntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     /** @var Message $entity */
-    return array(
+    return [
       'changed' => $this->dateService->format($entity->getCreatedTime(), 'short'),
       'text' => $entity->getText(),
       'type' => $entity->getType()->label(),
       'author' => $entity->getOwner()->label(),
-    );
+    ];
   }
 
 }

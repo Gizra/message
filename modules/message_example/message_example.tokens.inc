@@ -14,60 +14,60 @@ use Drupal\Component\Utility\Xss;
  * We need this part until the token module will be exported to Drupal 8.
  */
 function message_example_token_info() {
-  $type = array(
+  $type = [
     'name' => t('Message example'),
     'description' => t('Tokens for the message example module.'),
     'needs-data' => 'message',
-  );
+  ];
 
   // User relate tokens.
-  $message['user-name'] = array(
+  $message['user-name'] = [
     'name' => t("Author name"),
     'description' => t("The related author name."),
-  );
+  ];
 
-  $message['user-url'] = array(
+  $message['user-url'] = [
     'name' => t("Author url"),
     'description' => t("The related author URL."),
-  );
+  ];
 
   // Comment relate tokens.
-  $message['comment-url'] = array(
+  $message['comment-url'] = [
     'name' => t("Comment url"),
     'description' => t("The comment url."),
-  );
+  ];
 
   // Node related tokens.
-  $message['node-render'] = array(
+  $message['node-render'] = [
     'name' => t("Rendered node"),
     'description' => t("The related node rendered to HTML."),
-  );
+  ];
 
-  $message['node-title'] = array(
+  $message['node-title'] = [
     'name' => t("Node title"),
     'description' => t("The related node title."),
-  );
+  ];
 
-  $message['node-url'] = array(
+  $message['node-url'] = [
     'name' => t("Node URL"),
     'description' => t("The related node URL."),
-  );
+  ];
 
-  return array(
-    'types' => array('message' => $type),
-    'tokens' => array(
+  return [
+    'types' => ['message' => $type],
+    'tokens' => [
       'message' => $message,
-    ),
-  );
+    ],
+  ];
 }
 
 /**
  * Implements hook_tokens().
  */
-function message_example_tokens($type, $tokens, array $data = array(), array $options = array()) {
+function message_example_tokens($type, $tokens, array $data = [], array $options = []) {
   $token_service = \Drupal::token();
 
-  $url_options = array('absolute' => TRUE);
+  $url_options = ['absolute' => TRUE];
   if (isset($options['langcode'])) {
     $url_options['language'] = \Drupal::languageManager()->getLanguage($options['langcode']);
     $langcode = $options['langcode'];
@@ -77,7 +77,7 @@ function message_example_tokens($type, $tokens, array $data = array(), array $op
   }
   $sanitize = !empty($options['sanitize']);
 
-  $replacements = array();
+  $replacements = [];
 
   if ($type == 'message' && !empty($data['message'])) {
     /** @var \Drupal\message\Entity\Message $message */

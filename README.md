@@ -50,10 +50,10 @@ Tokens
   This method also supports custom call-back functions with optional arguments
   stored on the message; In order to use a callback, create the message with
   an argument such as:
-  '!replaced-by-foo' => array(
+  '!replaced-by-foo' => [
     'callback' => 'foo',
-    'callback arguments' => array('x', 'z')
-  )
+    'callback arguments' => ['x', 'z']
+  ]
   That will get the string '!replaced-by-foo' in the message body to be replaced
   by the output of calling foo('x', 'z').
 

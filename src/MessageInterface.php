@@ -70,13 +70,13 @@ interface MessageInterface extends ContentEntityInterface {
    * @param array $values
    *   Array of arguments.
    * @code
-   *   $values = array(
+   *   $values = [
    *     '@name_without_callback' => 'John doe',
-   *     '@name_with_callback' => array(
+   *     '@name_with_callback' => [
    *       'callback' => 'User::load',
-   *       'arguments' => array(1),
-   *     ),
-   *   );
+   *       'arguments' => [1],
+   *     ],
+   *   ];
    * @endcode
    *
    * @return $this
