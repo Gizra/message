@@ -17,7 +17,7 @@ class MessageTypeMultipleTextField {
   /**
    * The message type we handling.
    *
-   * @var \Drupal\message\Entity\MessageType
+   * @var MessageType
    */
   protected $entity;
 

@@ -11,6 +11,7 @@ use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PrivateTempStoreFactory;
+use Drupal\user\SharedTempStore;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -28,14 +29,14 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
   /**
    * The tempstore object.
    *
-   * @var \Drupal\user\SharedTempStore
+   * @var SharedTempStore
    */
   protected $tempStore;
 
   /**
    * The current user.
    *
-   * @var \Drupal\Core\Session\AccountInterface
+   * @var AccountInterface
    */
   protected $currentUser;
 
@@ -48,7 +49,7 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
+   * @param PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
    * @param AccountInterface $current_user
    *   Current user.
@@ -91,7 +92,6 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    /** @var \Drupal\message\MessageInterface $object */
     return $account->hasPermission('adminster messages');
   }
 

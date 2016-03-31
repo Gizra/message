@@ -7,12 +7,13 @@
 namespace Drupal\Tests\message\Unit\Entity;
 
 use Drupal\message\Entity\MessageType;
+use Drupal\message\MessageTypeInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
  * Unit tests for the message type entity.
  *
- * @coversDefaultClass \Drupal\message\Entity\MessageType
+ * @coversDefaultClass MessageType
  *
  * @group Message
  */
@@ -21,7 +22,7 @@ class MessageTypeTest extends UnitTestCase {
   /**
    * A message type entity.
    *
-   * @var \Drupal\message\MessageTypeInterface
+   * @var MessageTypeInterface
    */
   protected $messageType;
 
@@ -46,7 +47,6 @@ class MessageTypeTest extends UnitTestCase {
       'two' => 'bar',
     ];
 
-    // @var $message_type
     $message_type = $this->messageType;
 
     $this->messageType->setSettings($settings);

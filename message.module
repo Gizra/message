@@ -5,6 +5,7 @@
  * API functions to manipulate messages.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
@@ -15,10 +16,10 @@ use Drupal\message\Entity\MessageType;
  *
  * Handles messages deletion when referenced entities are being deleted.
  *
- * @param \Drupal\Core\Entity\EntityInterface $entity
+ * @param EntityInterface $entity
  *   The entity object for the entity that has been deleted.
  */
-function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
+function message_entity_delete(EntityInterface $entity) {
   $type = $entity->getEntityType()->id();
   if ($type == 'message') {
     // Why not message?
@@ -306,7 +307,6 @@ function template_preprocess_message(&$variables) {
   $variables['teaser'] = $variables['view_mode'] == 'teaser';
   $variables['message'] = $variables['elements']['#message'];
 
-  /** @var \Drupal\message\MessageInterface $message */
   $message = $variables['message'];
   $variables['date'] = drupal_render($variables['elements']['created']);
   unset($variables['elements']['created']);
@@ -335,7 +335,6 @@ function template_preprocess_message(&$variables) {
 function message_theme_suggestions_message(array $variables) {
   $suggestions = [];
 
-  /** @var \Drupal\message\MessageInterface $message */
   $message = $variables['elements']['#message'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
 

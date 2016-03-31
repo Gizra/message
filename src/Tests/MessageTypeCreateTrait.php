@@ -8,6 +8,7 @@ namespace Drupal\message\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\message\Entity\MessageType;
+use Drupal\message\MessageTypeInterface;
 
 /**
  * Trait to assist message type creation for tests.
@@ -30,7 +31,7 @@ trait MessageTypeCreateTrait {
    * @param string $langcode
    *   The language to use.
    *
-   * @return \Drupal\message\MessageTypeInterface
+   * @return MessageTypeInterface
    *   A saved message type entity.
    */
   protected function createMessageType($type, $label, $description, array $text, array $settings = [], $langcode = Language::LANGCODE_NOT_SPECIFIED) {

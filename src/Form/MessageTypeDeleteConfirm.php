@@ -51,7 +51,7 @@ class MessageTypeDeleteConfirm extends EntityConfirmFormBase {
   /**
    * Returns the route to go to if the user cancels the action.
    *
-   * @return \Drupal\Core\Url
+   * @return Url
    *   A URL object.
    */
   public function getCancelUrl() {

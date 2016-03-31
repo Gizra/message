@@ -8,6 +8,7 @@
 namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -31,23 +32,23 @@ class DeleteMultiple extends ConfirmFormBase {
   /**
    * The tempstore factory.
    *
-   * @var \Drupal\user\PrivateTempStoreFactory
+   * @var PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
   /**
    * The message storage.
    *
-   * @var \Drupal\Core\Entity\EntityStorageInterface
+   * @var EntityStorageInterface
    */
   protected $manager;
 
   /**
    * Constructs a DeleteMultiple form object.
    *
-   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
+   * @param PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
-   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
+   * @param EntityManagerInterface $manager
    *   The entity manager.
    */
   public function __construct(PrivateTempStoreFactory $temp_store_factory, EntityManagerInterface $manager) {

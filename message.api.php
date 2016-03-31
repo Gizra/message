@@ -4,6 +4,7 @@
  * @file
  * Hooks provided by the Message module.
  */
+use Drupal\message\Entity\Message;
 
 /**
  * @addtogroup hooks
@@ -13,7 +14,7 @@
 /**
  * Act on a message that is being assembled before rendering.
  *
- * @param object $message
+ * @param Message $message
  *   The message entity.
  * @param string $view_mode
  *   The view mode the message is rendered in.

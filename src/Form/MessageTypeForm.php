@@ -21,7 +21,7 @@ class MessageTypeForm extends EntityForm {
   /**
    * The entity being used by this form.
    *
-   * @var \Drupal\message\Entity\MessageType
+   * @var MessageType
    */
   protected $entity;
 

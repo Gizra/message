@@ -14,7 +14,7 @@ use Drupal\Component\Utility\Xss;
 /**
  * Defines a class to build a listing of message type entities.
  *
- * @see \Drupal\message\Entity\MessageType
+ * @see MessageType
  */
 class MessageTypeListBuilder extends ConfigEntityListBuilder {
 

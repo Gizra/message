@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Tests;
 
+use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 use Drupal\message\Entity\MessageType;
 use Drupal\simpletest\WebTestBase;
 
@@ -27,7 +28,7 @@ abstract class MessageTestBase extends WebTestBase {
   /**
    * The node access controller.
    *
-   * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface
+   * @var EntityAccessControlHandlerInterface
    */
   protected $accessController;
 
@@ -44,7 +45,7 @@ abstract class MessageTestBase extends WebTestBase {
    * @param string $type
    *   The type of the message.
    *
-   * @return \Drupal\message\Entity\MessageType
+   * @return MessageType
    *   The message Object.
    */
   protected function loadMessageType($type) {

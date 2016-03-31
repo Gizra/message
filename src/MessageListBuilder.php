@@ -18,25 +18,25 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 /**
  * Defines a class to build a listing of Message entities.
  *
- * @see \Drupal\Message\Entity\Message
+ * @see Message
  */
 class MessageListBuilder extends EntityListBuilder {
 
   /**
    * The date service.
    *
-   * @var \Drupal\Core\Datetime\DateFormatter
+   * @var DateFormatter
    */
   protected $dateService;
 
   /**
    * Constructs a new NodeListBuilder object.
    *
-   * @param \Drupal\Core\Entity\EntityTypeInterface $entity_type
+   * @param EntityTypeInterface $entity_type
    *   The entity type definition.
-   * @param \Drupal\Core\Entity\EntityStorageInterface $storage
+   * @param EntityStorageInterface $storage
    *   The entity storage class.
-   * @param \Drupal\Core\Datetime\DateFormatter $date_service
+   * @param DateFormatter $date_service
    *   The date service.
    */
   public function __construct(EntityTypeInterface $entity_type, EntityStorageInterface $storage, DateFormatter $date_service) {

@@ -233,7 +233,6 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = FALSE) {
-    // @var $message_type
     if (!$message_type = $this->getType()) {
       // Message type does not exist any more.
       // We don't throw an exception, to make sure we don't break sites that
@@ -251,7 +250,6 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     if (!empty($token_replace)) {
       // Token should be processed.
       $output = $this->processTokens($output, !empty($token_options['clear']));
-
     }
 
     return $output;
