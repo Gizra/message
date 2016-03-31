@@ -147,6 +147,7 @@ class MessageSettingsForm extends ConfigFormBase {
    * Get content entity types keyed by id.
    *
    * @return array
+   *   Returns array of content entity types.
    */
   protected function getContentEntityTypes() {
     $options = [];

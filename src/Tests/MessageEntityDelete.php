@@ -25,14 +25,18 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class MessageEntityDelete extends MessageTestBase {
 
   /**
+   * Taxonomy vocabulary
+   *
    * @var Vocabulary
    */
   protected $vocabulary;
 
   /**
+   * The Node Type
+   *
    * @var NodeType
    */
-  protected $contentType;
+  protected $nodeType;
 
   /**
    * Modules to enable.
@@ -71,11 +75,11 @@ class MessageEntityDelete extends MessageTestBase {
 
     $this->createEntityReferenceField(FALSE, 'field_user_reference', 'user');
 
-    $this->contentType = $this->drupalCreateContentType();
+    $this->nodeType = $this->drupalCreateContentType();
 
     for ($i = 0; $i <= 5; $i++) {
       entity_create('node', [
-        'type' => $this->contentType->id(),
+        'type' => $this->nodeType->id(),
         'title' => 'Node ' . $i,
       ])->save();
 

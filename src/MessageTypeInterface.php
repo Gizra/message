@@ -21,8 +21,9 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * Set the message type description.
    *
    * @param string $description
+   *   Description for the message type.
    *
-   * @return $this
+   * @return MessageTypeInterface
    */
   public function setDescription($description);
 
@@ -30,6 +31,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * Get the message type description.
    *
    * @return string
+   *   Returns the message type description.
    */
   public function getDescription();
 
@@ -37,8 +39,9 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * Set the message type label.
    *
    * @param string $label
+   *   The message type label.
    *
-   * @return $this
+   * @return MessageTypeInterface
    */
   public function setLabel($label);
 
@@ -46,6 +49,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * Get the message type label.
    *
    * @return string
+   *   Returns the message type label.
    */
   public function getLabel();
 
@@ -53,8 +57,9 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * Set the message type.
    *
    * @param string $type
+   *   The message type.
    *
-   * @return $this
+   * @return MessageTypeInterface
    */
   public function setType($type);
 
@@ -62,18 +67,24 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * Get the message type.
    *
    * @return string
+   *   Returns the message type.
    */
   public function getType();
 
   /**
+   * Set the UUID.
    * @param string $uuid
+   *   The UUID.
    *
-   * @return $this
+   * @return MessageTypeInterface
    */
   public function setUuid($uuid);
 
   /**
+   * Get the UUID.
+   *
    * @return string
+   *   Returns the UUID.
    */
   public function getUuid();
 
@@ -83,18 +94,14 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * @param string $langcode
    *   The language code of the Message text field, the text should be
    *   extracted from.
-   * @param array $options
-   *   Array of options to pass to the metadata-wrapper:
-   *   - 'delta': Optional; If set, returns the output only from a single delta
-   *     of the message-text field.
-   *
-   * @todo: change this to something else.
+   * @param int $delta
+   *   Optional; Represents the partial number. If not provided - all partials
+   *   will be returned
    *
    * @return array
    *   An array of the text field values.
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = NULL);
-
 
   /**
    * Set additional settings for the message type.
@@ -105,15 +112,16 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * Return the message type settings.
    *
    * @return array
+   *   Array of the message type settings.
    */
   public function getSettings();
 
   /**
    * Return a single setting by key.
    *
-   * @param $key
+   * @param string $key
    *   The key to return.
-   * @param $default_value
+   * @param mixed $default_value
    *   The default value to use in case the key is missing. Defaults to NULL.
    *
    * @return mixed

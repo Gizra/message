@@ -95,12 +95,12 @@ function message_example_tokens($type, $tokens, array $data = [], array $options
           }
           break;
         case 'node-title':
-            if ($message->bundle() == 'example_create_comment') {
-              $replacements[$original] = $message->field_comment_reference->entity->getCommentedEntity()->label();
-            }
-            else {
-              $replacements[$original] = $message->field_node_reference->get(0)->entity->label();
-            }
+          if ($message->bundle() == 'example_create_comment') {
+            $replacements[$original] = $message->field_comment_reference->entity->getCommentedEntity()->label();
+          }
+          else {
+            $replacements[$original] = $message->field_node_reference->get(0)->entity->label();
+          }
           break;
         case 'node-url':
           if ($message->bundle() == 'example_create_comment') {

@@ -46,8 +46,7 @@ class MessageTypeTest extends UnitTestCase {
       'two' => 'bar',
     ];
 
-
-    /** @var $message_type */
+    // @var $message_type
     $message_type = $this->messageType;
 
     $this->messageType->setSettings($settings);

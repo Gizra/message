@@ -26,9 +26,9 @@ class MessageUiTest extends MessageTestBase {
   public static $modules = ['language', 'config_translation', 'message'];
 
   /**
-   * @var User
-   *
    * The user object.
+   *
+   * @var User
    */
   protected $account;
 
@@ -120,7 +120,7 @@ class MessageUiTest extends MessageTestBase {
     $this->assertFalse(MessageType::load($type), 'The message deleted via the UI successfully.');
   }
 
-  /*
+  /**
    * Test that message render returns message text wrapped in a div.
    */
   public function testMessageTextWrapper() {
@@ -137,7 +137,7 @@ class MessageUiTest extends MessageTestBase {
     $output = \Drupal::service('renderer')->renderRoot($build);
     $this->setRawContent($output);
     $xpath = $this->xpath('//div');
-    
+
     $this->assertTrue($xpath, 'A div has been found wrapping the message text.');
   }
 
@@ -152,7 +152,7 @@ class MessageUiTest extends MessageTestBase {
    * expected values is in the form." When one of the Xpath expression return
    * false the message will be display on screen.
    */
-  private function verifyFormElements($elements) {
+  private function verifyFormElements(array $elements) {
     $errors = [];
     foreach ($elements as $xpath => $message) {
       $element = $this->xpath($xpath);

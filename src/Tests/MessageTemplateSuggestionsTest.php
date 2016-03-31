@@ -17,9 +17,9 @@ use Drupal\user\Entity\User;
 class MessageTemplateSuggestionsTest extends MessageTestBase {
 
   /**
-   * @var User
-   *
    * The user object.
+   *
+   * @var User
    */
   private $user;
 
@@ -35,7 +35,7 @@ class MessageTemplateSuggestionsTest extends MessageTestBase {
   /**
    * Tests if template_preprocess_message() generates the correct suggestions.
    */
-  function testMessageThemeHookSuggestions() {
+  public function testMessageThemeHookSuggestions() {
     $type = 'dummy_message';
     // Create message to be rendered.
     $message_type = $this->createMessageType($type, 'Dummy message', '', ['[message:author:name]']);

@@ -3,7 +3,6 @@
 /**
  * @file
  * Hooks provided by the Message module.
- *
  */
 
 /**
@@ -14,11 +13,11 @@
 /**
  * Act on a message that is being assembled before rendering.
  *
- * @param $message
+ * @param object $message
  *   The message entity.
- * @param $view_mode
+ * @param string $view_mode
  *   The view mode the message is rendered in.
- * @param $langcode
+ * @param string $langcode
  *   The language code used for rendering.
  *
  * The module may add elements to $message->content prior to rendering. The
@@ -39,7 +38,7 @@ function hook_message_view($message, $view_mode, $langcode) {
 /**
  * Alter the results of entity_view() for messages.
  *
- * @param $build
+ * @param array $build
  *   A renderable array representing the message content.
  *
  * This hook is called after the content has been assembled in a structured
@@ -66,14 +65,13 @@ function hook_message_view_alter(&$build) {
 /**
  * Define default message type configurations.
  *
- * @return
+ * @return array
  *   An array of default message types, keyed by machine names.
  *
  * @see hook_default_message_type_alter()
  */
 function hook_default_message_type() {
-  $defaults['main'] = entity_create('message_type', [
-  ]);
+  $defaults['main'] = entity_create('message_type', []);
   return $defaults;
 }
 
@@ -98,9 +96,9 @@ function hook_default_message_type_alter(array &$defaults) {
  * elements to the entity, just as documented for
  * entity_form_submit_build_entity().
  *
- * @param $form
+ * @param array $form
  *   Nested array of form elements that comprise the form.
- * @param $form_state
+ * @param array $form_state
  *   A keyed array containing the current state of the form.
  */
 function hook_form_message_type_form_alter(&$form, &$form_state) {
@@ -110,14 +108,13 @@ function hook_form_message_type_form_alter(&$form, &$form_state) {
 /**
  * Define default message type category configurations.
  *
- * @return
+ * @return array
  *   An array of default message type categories, keyed by machine names.
  *
  * @see hook_default_message_category_alter()
  */
 function hook_default_message_category() {
-  $defaults['main'] = entity_create('message_category', [
-  ]);
+  $defaults['main'] = entity_create('message_category', []);
   return $defaults;
 }
 

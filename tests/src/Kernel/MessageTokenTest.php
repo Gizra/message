@@ -28,9 +28,9 @@ class MessageTokenTest extends KernelTestBase {
   public static $modules = ['message', 'user', 'system'];
 
   /**
-   * @var User
-   *
    * The user object.
+   *
+   * @var User
    */
   protected $user;
 
@@ -125,4 +125,3 @@ class MessageTokenTest extends KernelTestBase {
   }
 
 }
-
