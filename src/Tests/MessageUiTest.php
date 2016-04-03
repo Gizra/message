@@ -150,9 +150,10 @@ class MessageUiTest extends MessageTestBase {
    *
    * @param array $elements
    *   Array mapped by in the next format.
-   *   @code
-   *     [XPATH_EXPRESSION => MESSAGE]
-   *   @endcode
+   *
+   * @code
+   *   [XPATH_EXPRESSION => MESSAGE]
+   * @endcode
    */
   private function verifyFormElements(array $elements) {
     $errors = [];
