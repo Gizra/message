@@ -43,7 +43,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    *   The message type label.
    *
    * @return MessageTypeInterface
-   *   Returns the message type instance
+   *   Returns the message type instance.
    */
   public function setLabel($label);
 
@@ -62,7 +62,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    *   The message type.
    *
    * @return MessageTypeInterface
-   *   Returns the message type instance
+   *   Returns the message type instance.
    */
   public function setType($type);
 
@@ -81,7 +81,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    *   The UUID.
    *
    * @return MessageTypeInterface
-   *   Returns the message type instance
+   *   Returns the message type instance.
    */
   public function setUuid($uuid);
 

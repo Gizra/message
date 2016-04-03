@@ -149,8 +149,10 @@ class MessageUiTest extends MessageTestBase {
    * false the message will be display on screen.
    *
    * @param array $elements
-   *   Array mapped by in the next format:
-   *   XPATH_EXPRESSION => MESSAGE
+   *   Array mapped by in the next format.
+   *   @code
+   *     [XPATH_EXPRESSION => MESSAGE]
+   *   @endcode
    */
   private function verifyFormElements(array $elements) {
     $errors = [];
