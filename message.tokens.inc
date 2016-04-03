@@ -53,7 +53,7 @@ function message_token_info() {
 /**
  * Implements hook_tokens().
  */
-function message_tokens($type, $tokens, array $data = [], array $options = [], BubbleableMetadata $bubbleable_metadata) {
+function message_tokens($type, $tokens, array $data, array $options, BubbleableMetadata $bubbleable_metadata) {
   $token_service = \Drupal::token();
 
   $replacements = [];

@@ -25,14 +25,14 @@ use Drupal\taxonomy\Entity\Vocabulary;
 class MessageEntityDelete extends MessageTestBase {
 
   /**
-   * Taxonomy vocabulary
+   * Taxonomy vocabulary.
    *
    * @var Vocabulary
    */
   protected $vocabulary;
 
   /**
-   * The Node Type
+   * The Node Type.
    *
    * @var NodeType
    */

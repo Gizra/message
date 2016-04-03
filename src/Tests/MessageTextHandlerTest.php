@@ -18,9 +18,9 @@ use Drupal\user\Entity\User;
 class MessageTextHandlerTest extends MessageTestBase {
 
   /**
-   * @var User
-   *
    * The user object.
+   *
+   * @var User
    */
   protected $account;
 

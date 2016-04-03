@@ -144,13 +144,13 @@ class MessageUiTest extends MessageTestBase {
   /**
    * Verifying the form elements values in easy way.
    *
-   * @param array $elements
-   *   Array mapped by in the next format:
-   *   XPATH_EXPRESSION => MESSAGE
-   *
    * When all the elements are passing a pass message with the text "The
    * expected values is in the form." When one of the Xpath expression return
    * false the message will be display on screen.
+   *
+   * @param array $elements
+   *   Array mapped by in the next format:
+   *   XPATH_EXPRESSION => MESSAGE
    */
   private function verifyFormElements(array $elements) {
     $errors = [];

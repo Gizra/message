@@ -22,6 +22,7 @@ interface MessageInterface extends ContentEntityInterface {
    *   Message type.
    *
    * @return MessageInterface
+   *   Returns the message object.
    */
   public function setType(MessageTypeInterface $type);
 
@@ -29,6 +30,7 @@ interface MessageInterface extends ContentEntityInterface {
    * Get the type of the message type.
    *
    * @return MessageTypeInterface
+   *   Returns the message object.
    */
   public function getType();
 
@@ -47,6 +49,7 @@ interface MessageInterface extends ContentEntityInterface {
    *   The Unix timestamp.
    *
    * @return MessageInterface
+   *   Returns the message object.
    */
   public function setCreatedTime($timestamp);
 
@@ -83,6 +86,7 @@ interface MessageInterface extends ContentEntityInterface {
    * @endcode
    *
    * @return MessageInterface
+   *   Returns the message object.
    */
   public function setArguments(array $values);
 

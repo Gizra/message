@@ -24,6 +24,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    *   Description for the message type.
    *
    * @return MessageTypeInterface
+   *   Returns the message type instance.
    */
   public function setDescription($description);
 
@@ -42,6 +43,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    *   The message type label.
    *
    * @return MessageTypeInterface
+   *   Returns the message type instance
    */
   public function setLabel($label);
 
@@ -60,6 +62,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    *   The message type.
    *
    * @return MessageTypeInterface
+   *   Returns the message type instance
    */
   public function setType($type);
 
@@ -73,10 +76,12 @@ interface MessageTypeInterface extends ConfigEntityInterface {
 
   /**
    * Set the UUID.
+   *
    * @param string $uuid
    *   The UUID.
    *
    * @return MessageTypeInterface
+   *   Returns the message type instance
    */
   public function setUuid($uuid);
 
@@ -96,7 +101,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    *   extracted from.
    * @param int $delta
    *   Optional; Represents the partial number. If not provided - all partials
-   *   will be returned
+   *   will be returned.
    *
    * @return array
    *   An array of the text field values.
@@ -133,6 +138,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * Check if the message is new.
    *
    * @return bool
+   *   Returns TRUE is the message is new.
    */
   public function isLocked();
 
