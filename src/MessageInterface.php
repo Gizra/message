@@ -54,7 +54,7 @@ interface MessageInterface extends ContentEntityInterface {
    * Return the UUID.
    *
    * @return string
-   *  Return the UUID.
+   *   Return the UUID.
    */
   public function getUUID();
 
