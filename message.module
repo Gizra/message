@@ -16,7 +16,7 @@ use Drupal\message\Entity\MessageType;
  *
  * Handles messages deletion when referenced entities are being deleted.
  *
- * @param EntityInterface $entity
+ * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity that has been deleted.
  */
 function message_entity_delete(EntityInterface $entity) {
@@ -307,6 +307,7 @@ function template_preprocess_message(&$variables) {
   $variables['teaser'] = $variables['view_mode'] == 'teaser';
   $variables['message'] = $variables['elements']['#message'];
 
+  /** @var \Drupal\message\MessageInterface $message */
   $message = $variables['message'];
   $variables['date'] = drupal_render($variables['elements']['created']);
   unset($variables['elements']['created']);
@@ -335,6 +336,7 @@ function template_preprocess_message(&$variables) {
 function message_theme_suggestions_message(array $variables) {
   $suggestions = [];
 
+  /** @var \Drupal\message\MessageInterface $message */
   $message = $variables['elements']['#message'];
   $sanitized_view_mode = strtr($variables['elements']['#view_mode'], '.', '_');
 

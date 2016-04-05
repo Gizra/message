@@ -29,14 +29,14 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
   /**
    * The tempstore object.
    *
-   * @var SharedTempStore
+   * @var  \Drupal\user\SharedTempStore
    */
   protected $tempStore;
 
   /**
    * The current user.
    *
-   * @var AccountInterface
+   * @var \Drupal\Core\Session\AccountInterface
    */
   protected $currentUser;
 
@@ -49,9 +49,9 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
-   * @param AccountInterface $current_user
+   * @param \Drupal\Core\Session\AccountInterface $current_user
    *   Current user.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, PrivateTempStoreFactory $temp_store_factory, AccountInterface $current_user) {

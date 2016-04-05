@@ -32,7 +32,7 @@ class MessageViewBuilder extends EntityViewBuilder {
     }
 
     // Load the partials in the correct language.
-    /* @var $entity Message */
+    /* @var \Drupal\message\Entity\Message $entity  */
     if ($langcode) {
       $entity->setLanguage($langcode);
     }

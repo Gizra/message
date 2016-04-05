@@ -28,7 +28,7 @@ abstract class MessageTestBase extends WebTestBase {
   /**
    * The node access controller.
    *
-   * @var EntityAccessControlHandlerInterface
+   * @var \Drupal\Core\Entity\EntityAccessControlHandlerInterface
    */
   protected $accessController;
 
@@ -45,7 +45,7 @@ abstract class MessageTestBase extends WebTestBase {
    * @param string $type
    *   The type of the message.
    *
-   * @return MessageType
+   * @return \Drupal\message\Entity\MessageType
    *   The message Object.
    */
   protected function loadMessageType($type) {

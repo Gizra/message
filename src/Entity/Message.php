@@ -66,14 +66,14 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * The message type object.
    *
-   * @var MessageTypeInterface
+   * @var \Drupal\message\MessageTypeInterface
    */
   protected $type;
 
   /**
    * The user object.
    *
-   * @var UserInterface
+   * @var \Drupal\user\UserInterface
    */
   protected $uid;
 
@@ -352,7 +352,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * {@inheritdoc}
    *
-   * @return MessageInterface
+   * @return \Drupal\message\MessageInterface
    *   A message entity ready to be save.
    */
   public static function create(array $values = []) {
@@ -362,7 +362,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * {@inheritdoc}
    *
-   * @return MessageInterface
+   * @return \Drupal\message\MessageInterface
    *   A requested message entity.
    */
   public static function load($id) {
@@ -372,7 +372,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * {@inheritdoc}
    *
-   * @return MessageInterface[]
+   * @return \Drupal\message\MessageInterface[]
    *   Array of requested message entities.
    */
   public static function loadMultiple(array $ids = NULL) {

@@ -23,7 +23,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * @param string $description
    *   Description for the message type.
    *
-   * @return MessageTypeInterface
+   * @return \Drupal\message\MessageTypeInterface
    *   Returns the message type instance.
    */
   public function setDescription($description);
@@ -42,7 +42,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * @param string $label
    *   The message type label.
    *
-   * @return MessageTypeInterface
+   * @return \Drupal\message\MessageTypeInterface
    *   Returns the message type instance.
    */
   public function setLabel($label);
@@ -61,7 +61,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * @param string $type
    *   The message type.
    *
-   * @return MessageTypeInterface
+   * @return \Drupal\message\MessageTypeInterface
    *   Returns the message type instance.
    */
   public function setType($type);
@@ -80,7 +80,7 @@ interface MessageTypeInterface extends ConfigEntityInterface {
    * @param string $uuid
    *   The UUID.
    *
-   * @return MessageTypeInterface
+   * @return \Drupal\message\MessageTypeInterface
    *   Returns the message type instance.
    */
   public function setUuid($uuid);

@@ -32,23 +32,23 @@ class DeleteMultiple extends ConfirmFormBase {
   /**
    * The tempstore factory.
    *
-   * @var PrivateTempStoreFactory
+   * @var \Drupal\user\PrivateTempStoreFactory
    */
   protected $tempStoreFactory;
 
   /**
    * The message storage.
    *
-   * @var EntityStorageInterface
+   * @var \Drupal\Core\Entity\EntityStorageInterface
    */
   protected $manager;
 
   /**
    * Constructs a DeleteMultiple form object.
    *
-   * @param PrivateTempStoreFactory $temp_store_factory
+   * @param \Drupal\user\PrivateTempStoreFactory $temp_store_factory
    *   The tempstore factory.
-   * @param EntityManagerInterface $manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $manager
    *   The entity manager.
    */
   public function __construct(PrivateTempStoreFactory $temp_store_factory, EntityManagerInterface $manager) {

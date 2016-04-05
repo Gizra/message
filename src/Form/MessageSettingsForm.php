@@ -23,7 +23,7 @@ class MessageSettingsForm extends ConfigFormBase {
   /**
    * The entity manager object.
    *
-   * @var EntityManagerInterface
+   * @var \Drupal\Core\Entity\EntityManagerInterface
    */
   protected $entityManager;
 
@@ -64,11 +64,11 @@ class MessageSettingsForm extends ConfigFormBase {
   }
 
   /**
-   * Constructs a ConfigFormBase object.
+   * Constructs a \Drupal\system\ConfigFormBase object.
    *
-   * @param ConfigFactoryInterface $config_factory
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @param EntityManagerInterface $entity_manager
+   * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager object.
    */
   public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager) {

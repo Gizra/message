@@ -31,7 +31,7 @@ trait MessageTypeCreateTrait {
    * @param string $langcode
    *   The language to use.
    *
-   * @return MessageTypeInterface
+   * @return \Drupal\message\MessageTypeInterface
    *   A saved message type entity.
    */
   protected function createMessageType($type, $label, $description, array $text, array $settings = [], $langcode = Language::LANGCODE_NOT_SPECIFIED) {

@@ -22,7 +22,7 @@ class MessageTypeTest extends UnitTestCase {
   /**
    * A message type entity.
    *
-   * @var MessageTypeInterface
+   * @var \Drupal\message\MessageTypeInterface
    */
   protected $messageType;
 

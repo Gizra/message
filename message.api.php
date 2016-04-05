@@ -19,7 +19,7 @@ use Drupal\message\Entity\Message;
  * structure of $message->content is a renderable array as expected by
  * drupal_render().
  *
- * @param Message $message
+ * @param \Drupal\message\Entity\Message $message
  *   The message entity.
  * @param string $view_mode
  *   The view mode the message is rendered in.

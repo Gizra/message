@@ -287,7 +287,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
   /**
    * {@inheritdoc}
    *
-   * @return MessageTypeInterface
+   * @return \Drupal\message\MessageTypeInterface
    *   A message type object ready to be save.
    */
   public static function create(array $values = []) {

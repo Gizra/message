@@ -21,7 +21,7 @@ interface MessageInterface extends ContentEntityInterface {
    * @param MessageTypeInterface $type
    *   Message type.
    *
-   * @return MessageInterface
+   * @return \Drupal\message\MessageInterface
    *   Returns the message object.
    */
   public function setType(MessageTypeInterface $type);
@@ -29,7 +29,7 @@ interface MessageInterface extends ContentEntityInterface {
   /**
    * Get the type of the message type.
    *
-   * @return MessageTypeInterface
+   * @return \Drupal\message\MessageTypeInterface
    *   Returns the message object.
    */
   public function getType();
@@ -48,7 +48,7 @@ interface MessageInterface extends ContentEntityInterface {
    * @param int $timestamp
    *   The Unix timestamp.
    *
-   * @return MessageInterface
+   * @return \Drupal\message\MessageInterface
    *   Returns the message object.
    */
   public function setCreatedTime($timestamp);
@@ -85,7 +85,7 @@ interface MessageInterface extends ContentEntityInterface {
    *   ];
    * @endcode
    *
-   * @return MessageInterface
+   * @return \Drupal\message\MessageInterface
    *   Returns the message object.
    */
   public function setArguments(array $values);
