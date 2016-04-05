@@ -181,9 +181,7 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
    * {@inheritdoc}
    */
   public function getSettings() {
-    return $this->settings + [
-
-    ];
+    return $this->settings;
   }
 
   /**
