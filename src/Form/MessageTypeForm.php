@@ -134,7 +134,6 @@ class MessageTypeForm extends EntityForm {
       '#type' => 'checkbox',
       '#title' => t('Token replace'),
       '#description' => t('When this option is selected, token processing will happen.'),
-//      '#default_value' => !empty($settings['token options']['token replace']),
       '#default_value' => isset($settings['token options']['token replace']) ? !empty($settings['token options']['token replace']) : TRUE,
     );
 
