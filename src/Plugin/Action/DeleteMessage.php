@@ -29,7 +29,7 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
   /**
    * The tempstore object.
    *
-   * @var  \Drupal\user\SharedTempStore
+   * @var \Drupal\user\SharedTempStore
    */
   protected $tempStore;
 
