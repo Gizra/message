@@ -18,7 +18,7 @@ class Days extends MessagePurgeBase {
   /**
    * {@inheritdoc}
    */
-  public function process() {
+  public function fetch() {
   }
 
 }

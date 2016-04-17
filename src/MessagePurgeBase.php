@@ -5,10 +5,11 @@ namespace Drupal\message;
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
-use Drupal\Core\Queue\QueueFactory;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\message\Entity\Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -26,14 +27,15 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
   protected $entityTypeManager;
 
   /**
-   * The queue factory.
+   * The entity query object for Message items.
    *
-   * @var \Drupal\Core\Queue\QueueFactory
+   * @var \Drupal\Core\Entity\Query\QueryInterface
    */
-  protected $queueFactory;
+  protected $messageQuery;
+
 
   /**
-   * Constructs an OgDeleteOrphansBase object.
+   * Constructs a MessagePurgeBase object.
    *
    * @var array $configuration
    *   A configuration array containing information about the plugin instance.
@@ -43,13 +45,11 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
-   * @param \Drupal\Core\Queue\QueueFactory $queue_factory
-   *   The queue factory.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueueFactory $queue_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
-    $this->queueFactory = $queue_factory;
+    $this->$messageQuery = $message_query;
   }
 
   /**
@@ -61,64 +61,33 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('queue')
+      $container->get('entity.query')->get('message')
     );
   }
+
 
   /**
    * {@inheritdoc}
    */
-  public function register(EntityInterface $entity) {
-    foreach ($this->query($entity) as $entity_type => $orphans) {
-      foreach ($orphans as $orphan) {
-        $this->getQueue()->createItem([
-          'type' => $entity_type,
-          'id'=> $orphan,
-        ]);
-      }
-    }
+  public function process(array $ids) {
+    $messages = Message::loadMultiple($ids);
+    $this->entityTypeManager->getStorage('message')->delete($messages);
   }
 
   /**
-   * Queries the registered group entity for orphaned members to delete.
+   * Get a base query.
    *
-   * @param \Drupal\Core\Entity\EntityInterface $entity
-   *   The group entity that is the basis for the query.
+   * @param array $bundles
+   *   Array with the message type that need to be queried.
    *
-   * @return array
-   *   An associative array, keyed by group content entity type, each item an
-   *   array of group content entity IDs to delete.
+   * @return QueryInterface
+   *   The query object.
    */
-  protected function query(EntityInterface $entity) {
-    return Og::getGroupContentIds($entity);
-  }
-
-  /**
-   * Deletes an orphaned group content entity if it is fully orphaned.
-   *
-   * @param string $entity_type
-   *   The group content entity type.
-   * @param string $entity_id
-   *   The group content entity ID.
-   */
-  protected function deleteOrphan($entity_type, $entity_id) {
-    $entity = $this->entityTypeManager->getStorage($entity_type)->load($entity_id);
-    // Only delete content that is fully orphaned, i.e. it is no longer
-    // associated with any groups.
-    $group_count = Og::getGroupCount($entity);
-    if ($group_count == 0) {
-      $entity->delete();
-    }
-  }
-
-  /**
-   * Returns the queue of orphans to delete.
-   *
-   * @return \Drupal\Core\Queue\QueueInterface
-   *   The queue.
-   */
-  protected function getQueue() {
-    return $this->queueFactory->get('og_orphaned_group_content', TRUE);
+  protected function baseQuery(array $bundles) {
+    return $this->messageQuery
+      ->condition('type', $bundles, 'IN')
+      ->sort('created', 'DESC')
+      ->sort('mid', 'DESC');
   }
 
   /**
