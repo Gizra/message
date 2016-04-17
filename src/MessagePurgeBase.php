@@ -45,6 +45,8 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    *   The plugin implementation definition.
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Entity\Query\QueryInterface $message_query
+   *   The entity query object for message items.
    */
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
