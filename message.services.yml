@@ -1,0 +1,4 @@
+services:
+  plugin.manager.message.purge:
+    class: Drupal\message\MessagePurgePluginManager
+    parent: default_plugin_manager

@@ -3,6 +3,7 @@
 namespace Drupal\message;
 
 use Drupal\Component\Plugin\PluginBase;
+use Drupal\Core\Config\Config;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -34,6 +35,14 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
 
 
   /**
+   * The settings config.
+   *
+   * @var \Drupal\Core\Config\Config
+   */
+  protected $settingsConfig;
+
+
+  /**
    * Constructs a MessagePurgeBase object.
    *
    * @var array $configuration
@@ -46,11 +55,14 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    *   The entity type manager.
    * @param \Drupal\Core\Entity\Query\QueryInterface $message_query
    *   The entity query object for message items.
+   * @param \Drupal\Core\Config\Config $settings_config
+   *   The settings config.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query, Config $settings_config) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
     $this->$messageQuery = $message_query;
+    $this->settingsConfig = $settings_config;
   }
 
   /**
@@ -62,7 +74,8 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('entity.query')->get('message')
+      $container->get('entity.query')->get('message'),
+      $container->get('config.factory')->get('message.settings')
     );
   }
 
