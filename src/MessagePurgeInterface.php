@@ -2,21 +2,10 @@
 
 namespace Drupal\message;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Form\FormStateInterface;
 
 /**
- * Interface for OgDeleteOrphans plugins.
- *
- * Depending on the needs of a project there are different ways to deal with
- * orphaned memberships and content after a group entity is deleted. This
- * plugin type allows to register a group entity for having its orphans deleted,
- * to customize the query that will gather the orphans, and to start the
- * deletion process.
- *
- * It is up to the implementing plugin to deal with the specifics. A long
- * running batch process will need to store the list of orphans somewhere, and
- * will be responsible for running the deletion to the end.
+ * Interface for MessagePurge plugins.
  */
 interface MessagePurgeInterface {
 

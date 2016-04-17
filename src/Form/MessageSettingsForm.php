@@ -100,18 +100,19 @@ class MessageSettingsForm extends ConfigFormBase {
       ],
     ];
 
+    /** @var \Drupal\message\MessagePurgeInterface $plugin */
+    foreach (array_keys(\Drupal::service('plugin.manager.message.purge')->getDefinitions()) as $plugin_id) {
+      $plugin = \Drupal::service('plugin.manager.message.purge')->createInstance($plugin_id);
+      $element = $plugin->configurationForm($form, $form_state);
+      $element['#states'] = $states;
+
+      $form['purge'][$plugin_id] = $element;
+    }
+
     $form['purge']['purge_quota'] = [
       '#type' => 'textfield',
       '#title' => t('Messages quota'),
       '#description' => t('Maximal (approximate) amount of messages.'),
-      '#default_value' => $config->get('purge_quota'),
-      '#states' => $states,
-    ];
-
-    $form['purge']['purge_days'] = [
-      '#type' => 'textfield',
-      '#title' => t('Purge messages older than'),
-      '#description' => t('Maximal message age in days.'),
       '#default_value' => $config->get('purge_quota'),
       '#states' => $states,
     ];

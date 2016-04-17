@@ -61,7 +61,7 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
   public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query, Config $settings_config) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
-    $this->$messageQuery = $message_query;
+    $this->messageQuery = $message_query;
     $this->settingsConfig = $settings_config;
   }
 
