@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\og;
+namespace Drupal\message;
 
 use Drupal\Component\Plugin\PluginBase;
 use Drupal\Core\Entity\EntityInterface;
