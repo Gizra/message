@@ -15,18 +15,11 @@ namespace Drupal\message\Tests;
 class MessageTypeCrudTest extends MessageTestBase {
 
   /**
-   * {@inheritdoc}
-   */
-  function setUp() {
-    parent::setUp();
-  }
-
-  /**
    * Creating/reading/updating/deleting the message type entity and test it.
    */
-  function testCrudEntityType() {
+  public function testCrudEntityType() {
     // Create the message type.
-    $created_message_type = $this->createMessageType('dummy_message', 'Dummy test', 'This is a dummy message with a dummy message', array('Dummy message'));
+    $created_message_type = $this->createMessageType('dummy_message', 'Dummy test', 'This is a dummy message with a dummy message', ['Dummy message']);
 
     // Reset any static cache.
     drupal_static_reset();
@@ -34,12 +27,12 @@ class MessageTypeCrudTest extends MessageTestBase {
     // Load the message and verify the message type structure.
     $type = $this->loadMessageType('dummy_message');
 
-    foreach (array('type' => 'Type', 'label' => 'Label', 'description' => 'Description', 'text' => 'Text') as $key => $label) {
-       $param = array(
-         '@label' => $label,
-       );
+    foreach (['type' => 'Type', 'label' => 'Label', 'description' => 'Description', 'text' => 'Text'] as $key => $label) {
+      $param = [
+        '@label' => $label,
+      ];
 
-       $this->assertEqual(call_user_func(array($type, 'get' . $key)), call_user_func(array($created_message_type, 'get' . $key)), format_string('The @label between the message we created an loaded are equal', $param));
+      $this->assertEqual(call_user_func([$type, 'get' . $key]), call_user_func([$created_message_type, 'get' . $key]), format_string('The @label between the message we created an loaded are equal', $param));
     }
 
     // Verifying updating action.

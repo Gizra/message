@@ -5,6 +5,7 @@
  * API functions to manipulate messages.
  */
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
@@ -18,7 +19,7 @@ use Drupal\message\Entity\MessageType;
  * @param \Drupal\Core\Entity\EntityInterface $entity
  *   The entity object for the entity that has been deleted.
  */
-function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
+function message_entity_delete(EntityInterface $entity) {
   $type = $entity->getEntityType()->id();
   if ($type == 'message') {
     // Why not message?
@@ -32,13 +33,13 @@ function message_entity_delete(Drupal\Core\Entity\EntityInterface $entity) {
   }
 
   // List of messages to delete.
-  $deletable_mids = array();
+  $deletable_mids = [];
   // List of messages that might be deleted;
   // Messages with references to fields with multiple cardinality will be stored
   // in $check_mids in order to check if the entity being deleted is the last
   // one referenced by a given field.
   // Keyed by message ID, pointing to array of the relevant field names.
-  $check_mids = array();
+  $check_mids = [];
 
   $fields_ids = \Drupal::entityQuery('field_storage_config')->execute();
   /** @var FieldStorageConfig[] $fields */
@@ -113,11 +114,11 @@ function message_cron() {
   $purge_limit = $config->get('delete_cron_limit');
 
   // Messages to be deleted.
-  $purge_messages = array();
+  $purge_messages = [];
   // Names of non global-purge-settings overriding message types.
-  $no_override_type_names = array();
+  $no_override_type_names = [];
   // Message types that override global purge settings.
-  $override_types = array();
+  $override_types = [];
 
   // Iterate all message types to distinguish between overriding and non-
   // overriding types.
@@ -153,10 +154,10 @@ function message_cron() {
   if (!empty($no_override_type_names)) {
     // Do nothing if purge isn't enabled.
     if ($config->get('purge_enable', FALSE)) {
-      $purge_settings = array(
+      $purge_settings = [
         'quota' => $config->get('purge_quota'),
         'days' => $config->get('purge_days'),
-      );
+      ];
 
       $purge_messages += message_get_purgeable_by_type($purge_limit, $no_override_type_names, $purge_settings);
     }
@@ -185,11 +186,11 @@ function message_cron() {
  */
 function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge_settings) {
   if ($purge_limit <= 0) {
-    return array();
+    return [];
   }
 
   // Messages to be deleted.
-  $purge_messages = array();
+  $purge_messages = [];
 
   // Base query for both purging methods.
   $query = \Drupal::entityQuery('message')
@@ -244,7 +245,7 @@ function message_order_text_weight($a, $b) {
  * Implement hook_entity_extra_field_info().
  */
 function message_entity_extra_field_info() {
-  $extra = array();
+  $extra = [];
 
   /** @var MessageType[] $bundles */
   $bundles = MessageType::loadMultiple();
@@ -258,12 +259,12 @@ function message_entity_extra_field_info() {
         continue;
       }
 
-      $params = array('%number' => $delta);
-      $extra['message'][$bundle->id()]['display']['partial_' . $delta] = array(
+      $params = ['%number' => $delta];
+      $extra['message'][$bundle->id()]['display']['partial_' . $delta] = [
         'label' => t('Partial %number', $params),
         'description' => t('Holds the partial text at position %number', $params),
         'weight' => 0,
-      );
+      ];
     }
   }
 
@@ -281,11 +282,11 @@ function message_config_translation_info_alter(&$info) {
  * Implements hook_theme().
  */
 function message_theme() {
-  return array(
-    'message' => array(
+  return [
+    'message' => [
       'render element' => 'elements',
-    ),
-  );
+    ],
+  ];
 }
 
 /**
@@ -313,9 +314,9 @@ function template_preprocess_message(&$variables) {
   $variables['author_name'] = drupal_render($variables['elements']['uid']);
   unset($variables['elements']['uid']);
 
-  $variables['url'] = $message->url('canonical', array(
+  $variables['url'] = $message->url('canonical', [
     'language' => $message->language(),
-  ));
+  ]);
 
   // The 'page' variable is set to TRUE in two occasions:
   //   - The view mode is 'full' and we are on the 'message.view' route.
@@ -323,7 +324,7 @@ function template_preprocess_message(&$variables) {
   $variables['page'] = ($variables['view_mode'] == 'full' || $variables['view_mode'] == 'default');
 
   // Helpful $content variable for templates.
-  $variables += array('content' => array());
+  $variables += ['content' => []];
   foreach (Element::children($variables['elements']) as $key) {
     $variables['content'][$key] = $variables['elements'][$key];
   }
@@ -333,7 +334,7 @@ function template_preprocess_message(&$variables) {
  * Implements hook_theme_suggestions_HOOK().
  */
 function message_theme_suggestions_message(array $variables) {
-  $suggestions = array();
+  $suggestions = [];
 
   /** @var \Drupal\message\MessageInterface $message */
   $message = $variables['elements']['#message'];

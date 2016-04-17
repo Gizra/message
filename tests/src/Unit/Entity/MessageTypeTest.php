@@ -7,6 +7,7 @@
 namespace Drupal\Tests\message\Unit\Entity;
 
 use Drupal\message\Entity\MessageType;
+use Drupal\message\MessageTypeInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -30,7 +31,7 @@ class MessageTypeTest extends UnitTestCase {
    */
   public function setUp() {
     parent::setUp();
-    $this->messageType = new MessageType([], 'message_type');
+    $this->messageType = new \Drupal\message\Entity\MessageType([], 'message_type');
   }
 
   /**
@@ -46,14 +47,10 @@ class MessageTypeTest extends UnitTestCase {
       'two' => 'bar',
     ];
 
-
-    /** @var $message_type */
-    $message_type = $this->messageType;
-
     $this->messageType->setSettings($settings);
-    $this->assertArrayEquals($settings, $message_type->getSettings());
-    $this->assertEquals('foo', $message_type->getSetting('one'));
-    $this->assertEquals('bar', $message_type->getSetting('two'));
+    $this->assertArrayEquals($settings, $this->messageType->getSettings());
+    $this->assertEquals($this->messageType->getSetting('one'), $this->messageType->getSetting('one'));
+    $this->assertEquals('bar', $this->messageType->getSetting('two'));
   }
 
   /**
@@ -64,6 +61,7 @@ class MessageTypeTest extends UnitTestCase {
    */
   public function testSetDescription() {
     $description = 'A description';
+
     $this->messageType->setDescription($description);
     $this->assertEquals($description, $this->messageType->getDescription());
   }

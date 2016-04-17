@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Tests;
 
+use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 use Drupal\message\Entity\MessageType;
 use Drupal\simpletest\WebTestBase;
 
@@ -22,7 +23,7 @@ abstract class MessageTestBase extends WebTestBase {
    *
    * @var array
    */
-  public static $modules = array('message', 'views');
+  public static $modules = ['message', 'views'];
 
   /**
    * The node access controller.

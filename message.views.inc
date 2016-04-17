@@ -9,12 +9,12 @@
  * Implements hook_views_data_alter().
  */
 function message_views_data_alter(&$data) {
-  $data['message']['get_text'] = array(
+  $data['message']['get_text'] = [
     'title' => t('Message text'),
     'help' => t('Get the message text'),
-    'field' => array(
+    'field' => [
       // ID of the area handler plugin to use.
       'id' => 'get_text',
-    ),
-  );
+    ],
+  ];
 }

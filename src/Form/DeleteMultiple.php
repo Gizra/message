@@ -8,6 +8,7 @@
 namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
@@ -26,7 +27,7 @@ class DeleteMultiple extends ConfirmFormBase {
    *
    * @var array
    */
-  protected $messages = array();
+  protected $messages = [];
 
   /**
    * The tempstore factory.
@@ -101,16 +102,16 @@ class DeleteMultiple extends ConfirmFormBase {
       return new RedirectResponse($this->getCancelUrl()->setAbsolute()->toString());
     }
 
-    $form['messages'] = array(
+    $form['messages'] = [
       '#theme' => 'item_list',
       '#items' => array_map(function (Message $message) {
-        $params = array(
+        $params = [
           '@id' => $message->id(),
           '@type' => $message->getType()->label(),
-        );
+        ];
         return t('Delete message ID @id fo type @type', $params);
       }, $this->messages),
-    );
+    ];
     $form = parent::buildForm($form, $form_state);
 
     $form['actions']['cancel']['#href'] = $this->getCancelRoute();
@@ -125,7 +126,7 @@ class DeleteMultiple extends ConfirmFormBase {
       $this->storage->delete($this->messages);
       $this->tempStoreFactory->get('message_multiple_delete_confirm')->delete(\Drupal::currentUser()->id());
       $count = count($this->messages);
-      $this->logger('message')->notice('Deleted @count posts.', array('@count' => $count));
+      $this->logger('message')->notice('Deleted @count posts.', ['@count' => $count]);
       drupal_set_message(\Drupal::translation()->formatPlural($count, 'Deleted 1 message.', 'Deleted @count messages.'));
     }
     $form_state->setRedirect('message.messages');

@@ -28,9 +28,9 @@ class MessageTokenTest extends KernelTestBase {
   public static $modules = ['message', 'user', 'system'];
 
   /**
-   * @var User
-   *
    * The user object.
+   *
+   * @var User
    */
   protected $user;
 
@@ -53,8 +53,8 @@ class MessageTokenTest extends KernelTestBase {
    * Test token replacement in a message type.
    */
   public function testTokens() {
-    $message_type = $this->createMessageType('dummy_message', 'Dummy message', '', array('[message:author:name]'));
-    $message = Message::create(array('type' => $message_type->id()))
+    $message_type = $this->createMessageType('dummy_message', 'Dummy message', '', ['[message:author:name]']);
+    $message = Message::create(['type' => $message_type->id()])
       ->setOwnerId($this->user->id());
 
     $message->save();
@@ -67,9 +67,9 @@ class MessageTokenTest extends KernelTestBase {
    */
   public function testTokenClearing() {
     // Clearing enabled.
-    $token_options = array('token options' => array('clear' => TRUE));
-    $message_type = $this->createMessageType('dummy_message', 'Dummy message', '', array('[message:author:name] [bogus:token]'), $token_options);
-    $message = Message::create(array('type' => $message_type->id()))
+    $token_options = ['token options' => ['clear' => TRUE]];
+    $message_type = $this->createMessageType('dummy_message', 'Dummy message', '', ['[message:author:name] [bogus:token]'], $token_options);
+    $message = Message::create(['type' => $message_type->id()])
       ->setOwnerId($this->user->id());
 
     $message->save();
@@ -77,7 +77,7 @@ class MessageTokenTest extends KernelTestBase {
     $this->assertEquals((string) $message, Html::escape($this->user->label()), 'The message rendered the author name and stripped unused tokens.');
 
     // Clearing disabled.
-    $token_options = array('token options' => array('clear' => FALSE));
+    $token_options = ['token options' => ['clear' => FALSE]];
     $message_type->setSettings($token_options);
     $message_type->save();
 
@@ -89,17 +89,17 @@ class MessageTokenTest extends KernelTestBase {
    */
   public function testHardCodedTokens() {
     $random_text = $this->randomString();
-    $token_messages = array(
+    $token_messages = [
       'some text @{message:author} ' . $random_text,
       'some text %{message:author} ' . $random_text,
       'some text @{wrong:token} ' . $random_text,
-    );
+    ];
 
-    $replaced_messages = array(
+    $replaced_messages = [
       'some text ' . Html::escape($this->user->label()) . ' ' . $random_text,
       'some text <em class="placeholder">' . Html::escape($this->user->label()) . '</em> ' . $random_text,
       'some text @{wrong:token} ' . $random_text,
-    );
+    ];
 
     // Create the message type.
     $message_type = $this->createMessageType('dummy_message', 'Dummy message', '', $token_messages);
@@ -125,4 +125,3 @@ class MessageTokenTest extends KernelTestBase {
   }
 
 }
-

@@ -17,9 +17,9 @@ use Drupal\user\Entity\User;
 class MessageTemplateSuggestionsTest extends MessageTestBase {
 
   /**
-   * @var User
-   *
    * The user object.
+   *
+   * @var User
    */
   private $user;
 
@@ -35,11 +35,11 @@ class MessageTemplateSuggestionsTest extends MessageTestBase {
   /**
    * Tests if template_preprocess_message() generates the correct suggestions.
    */
-  function testMessageThemeHookSuggestions() {
+  public function testMessageThemeHookSuggestions() {
     $type = 'dummy_message';
     // Create message to be rendered.
-    $message_type = $this->createMessageType($type, 'Dummy message', '', array('[message:author:name]'));
-    $message = Message::create(array('type' => $message_type->id()))
+    $message_type = $this->createMessageType($type, 'Dummy message', '', ['[message:author:name]']);
+    $message = Message::create(['type' => $message_type->id()])
       ->setOwner($this->user);
 
     $message->save();
@@ -49,9 +49,9 @@ class MessageTemplateSuggestionsTest extends MessageTestBase {
     $build = \Drupal::entityTypeManager()->getViewBuilder('message')->view($message, $view_mode);
 
     $variables['elements'] = $build;
-    $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_message', array($variables));
+    $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_message', [$variables]);
 
-    $this->assertEqual($suggestions, array('message__full', 'message__' . $type, 'message__' . $type . '__full', 'message__' . $message->id(), 'message__' . $message->id() . '__full'), 'Found expected message suggestions.');
+    $this->assertEqual($suggestions, ['message__full', 'message__' . $type, 'message__' . $type . '__full', 'message__' . $message->id(), 'message__' . $message->id() . '__full'], 'Found expected message suggestions.');
   }
 
 }

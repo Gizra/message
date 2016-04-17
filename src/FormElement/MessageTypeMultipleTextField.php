@@ -51,9 +51,9 @@ class MessageTypeMultipleTextField {
   /**
    * Return the message text element.
    */
-  public function textField(&$form, FormStateInterface $form_state, $text = array()) {
+  public function textField(&$form, FormStateInterface $form_state, $text = []) {
     // Creating the container.
-    $form['text'] = array(
+    $form['text'] = [
       '#type' => 'container',
       '#tree' => TRUE,
       '#theme' => 'field_multiple_value_form',
@@ -64,7 +64,7 @@ class MessageTypeMultipleTextField {
       '#description' => t('Please enter the message text.'),
       '#prefix' => '<div id="message-text">',
       '#suffix' => '</div>',
-    );
+    ];
 
     if (\Drupal::moduleHandler()->moduleExists('token')) {
       $form['token_tree'] = [
@@ -74,22 +74,22 @@ class MessageTypeMultipleTextField {
       ];
     }
 
-    $form['add_more'] = array(
+    $form['add_more'] = [
       '#type' => 'button',
       '#value' => t('Add another item'),
       '#href' => '',
       '#add_more' => TRUE,
-      '#ajax' => array(
+      '#ajax' => [
         'callback' => $this->callback,
         'wrapper' => 'message-text',
-      ),
-    );
+      ],
+    ];
 
     // Building the multiple form element; Adding first the the form existing
     // text.
     $start_key = 0;
     if (!$message_text = $text) {
-      $message_text = $this->entity->getText($this->langcode) ? $this->entity->getText($this->langcode) : array();
+      $message_text = $this->entity->getText($this->langcode) ? $this->entity->getText($this->langcode) : [];
     }
 
     if ($message_text) {
@@ -123,21 +123,21 @@ class MessageTypeMultipleTextField {
    * Return a single text area element.
    */
   private function singleElement($max_delta, $delta, $text = '') {
-    $element = array(
+    $element = [
       '#type' => 'text_format',
       '#base_type' => 'textarea',
       '#default_value' => $text,
       '#rows' => 1,
-    );
+    ];
 
-    $element['_weight'] = array(
+    $element['_weight'] = [
       '#type' => 'weight',
-      '#title' => t('Weight for row @number', array('@number' => $max_delta + 1)),
+      '#title' => t('Weight for row @number', ['@number' => $max_delta + 1]),
       '#title_display' => 'invisible',
       // Note: this 'delta' is the FAPI #type 'weight' element's property.
       '#delta' => $max_delta,
       '#default_value' => $delta,
-    );
+    ];
 
     return $element;
   }

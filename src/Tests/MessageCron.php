@@ -12,16 +12,16 @@ use Drupal\message\Entity\MessageType;
 use Drupal\user\Entity\User;
 
 /**
- * Test message purging upon cron
+ * Test message purging upon cron.
  *
  * @group Message
  */
 class MessageCron extends MessageTestBase {
 
   /**
-   * @var User
-   *
    * The user object.
+   *
+   * @var User
    */
   protected $account;
 
@@ -39,17 +39,17 @@ class MessageCron extends MessageTestBase {
    */
   public function testPurge() {
     // Create a purgeable message type with max quota 2 and max days 0.
-    $settings = array(
-      'purge' => array(
+    $settings = [
+      'purge' => [
         'override' => TRUE,
         'enabled' => TRUE,
         'quota' => 2,
         'days' => 0,
-      ),
-    );
+      ],
+    ];
 
     /** @var MessageType $message_type */
-    $message_type = MessageType::create(array('type' => 'type1'));
+    $message_type = MessageType::create(['type' => 'type1']);
     $message_type
       ->setSettings($settings)
       ->save();
@@ -60,7 +60,7 @@ class MessageCron extends MessageTestBase {
     // Create a purgeable message type with max quota 1 and max days 2.
     $settings['purge']['quota'] = 1;
     $settings['purge']['days'] = 2;
-    $message_type = MessageType::create(array('type' => 'type2'));
+    $message_type = MessageType::create(['type' => 'type2']);
     $message_type
       ->setSettings($settings)
       ->save();
@@ -69,28 +69,28 @@ class MessageCron extends MessageTestBase {
     $settings['purge']['enabled'] = FALSE;
     $settings['purge']['quota'] = 1;
     $settings['purge']['days'] = 1;
-    $message_type = MessageType::create(array('type' => 'type3'));
+    $message_type = MessageType::create(['type' => 'type3']);
     $message_type
       ->setSettings($settings)
       ->save();
 
     // Create messages.
     for ($i = 0; $i < 4; $i++) {
-      Message::Create(array('type' => 'type1'))
+      Message::Create(['type' => 'type1'])
         ->setCreatedTime(time() - 3 * 86400)
         ->setOwnerId($this->account->id())
         ->save();
     }
 
     for ($i = 0; $i < 3; $i++) {
-      Message::Create(array('type' => 'type2'))
+      Message::Create(['type' => 'type2'])
         ->setCreatedTime(time() - 3 * 86400)
         ->setOwnerId($this->account->id())
         ->save();
     }
 
     for ($i = 0; $i < 3; $i++) {
-      Message::Create(array('type' => 'type3'))
+      Message::Create(['type' => 'type3'])
         ->setCreatedTime(time() - 3 * 86400)
         ->setOwnerId($this->account->id())
           ->save();
@@ -101,13 +101,13 @@ class MessageCron extends MessageTestBase {
 
     // Four type1 messages were created. The first two should have been
     // deleted.
-    $this->assertFalse(array_diff(Message::queryByType('type1'), array(3, 4)), 'Two messages deleted due to quota definition.');
+    $this->assertFalse(array_diff(Message::queryByType('type1'), [3, 4]), 'Two messages deleted due to quota definition.');
 
     // All type2 messages should have been deleted.
-    $this->assertEqual(Message::queryByType('type2'), array(), 'Three messages deleted due to age definition.');
+    $this->assertEqual(Message::queryByType('type2'), [], 'Three messages deleted due to age definition.');
 
     // type3 messages should not have been deleted.
-    $this->assertFalse(array_diff(Message::queryByType('type3'), array(8, 9, 10)), 'Messages with disabled purging settings were not deleted.');
+    $this->assertFalse(array_diff(Message::queryByType('type3'), [8, 9, 10]), 'Messages with disabled purging settings were not deleted.');
   }
 
   /**
@@ -120,29 +120,29 @@ class MessageCron extends MessageTestBase {
       ->save();
 
     // Create a purgeable message type with max quota 2 and max days 0.
-    $data = array(
-      'purge' => array(
+    $data = [
+      'purge' => [
         'override' => TRUE,
         'enabled' => TRUE,
         'quota' => 2,
         'days' => 0,
-      ),
-    );
+      ],
+    ];
 
-    MessageType::create(array('type' => 'type1'))
+    MessageType::create(['type' => 'type1'])
       ->setSettings($data)
       ->save();
 
-    MessageType::create(array('type' => 'type2'))
+    MessageType::create(['type' => 'type2'])
       ->setSettings($data)
       ->save();
 
     // Create more messages than may be deleted in one request.
     for ($i = 0; $i < 10; $i++) {
-      Message::Create(array('type' => 'type1'))
+      Message::Create(['type' => 'type1'])
         ->setOwnerId($this->account->id())
         ->save();
-      Message::Create(array('type' => 'type2'))
+      Message::Create(['type' => 'type2'])
         ->setOwnerId($this->account->id())
         ->save();
     }
@@ -169,29 +169,29 @@ class MessageCron extends MessageTestBase {
       ->set('purge_days', 2)
       ->save();
 
-    MessageType::create(array('type' => 'type1'))->save();
+    MessageType::create(['type' => 'type1'])->save();
 
     // Create an overriding type.
-    $data = array(
-      'purge' => array(
+    $data = [
+      'purge' => [
         'override' => TRUE,
         'enabled' => FALSE,
         'quota' => 1,
         'days' => 1,
-      ),
-    );
+      ],
+    ];
 
-    MessageType::create(array('type' => 'type2'))
+    MessageType::create(['type' => 'type2'])
       ->setSettings($data)
       ->save();
 
     for ($i = 0; $i < 2; $i++) {
-      Message::create(array('type' => 'type1'))
+      Message::create(['type' => 'type1'])
         ->setCreatedTime(time() - 3 * 86400)
         ->setOwnerId($this->account->id())
         ->save();
 
-      Message::create(array('type' => 'type2'))
+      Message::create(['type' => 'type2'])
         ->setCreatedTime(time() - 3 * 86400)
         ->setOwnerId($this->account->id())
         ->save();

@@ -26,14 +26,14 @@ abstract class MessageTypeConfigTranslationBaseForm extends ConfigTranslationFor
     // Get the name of the message type.
     $names = $this->mapper->getConfigNames();
     $name = reset($names);
-    $form['config_names'][$name]['text'] = array(
+    $form['config_names'][$name]['text'] = [
       '#theme' => 'config_translation_manage_form_element',
-      'source' => array(
+      'source' => [
         '#type' => 'item',
         '#title' => $this->t('Text'),
         '#markup' => $this->t('The message text'),
-      ),
-    );
+      ],
+    ];
     $translation = &$form['config_names'][$name]['text']['translation'];
     $configs = $form_state->get('config_translation_mapper')->getConfigData();
     $entity = MessageType::load($configs[$name]['type']);
@@ -41,10 +41,10 @@ abstract class MessageTypeConfigTranslationBaseForm extends ConfigTranslationFor
 
     $config_translation = $this->languageManager->getLanguageConfigOverride($this->language->getId(), $name);
     if (!$text = $config_translation->get('text')) {
-      $text = array();
+      $text = [];
     }
 
-    $multiple = new MessageTypeMultipleTextField($entity, array(get_class($this), 'addMoreAjax'), $langcode);
+    $multiple = new MessageTypeMultipleTextField($entity, [get_class($this), 'addMoreAjax'], $langcode);
     $multiple->textField($translation, $form_state, $text);
     return $form;
   }
@@ -60,6 +60,9 @@ abstract class MessageTypeConfigTranslationBaseForm extends ConfigTranslationFor
     return $form['config_names']['message.type.' . $config['type']]['text']['translation']['text'];
   }
 
+  /**
+   * {@inheritdoc}
+   */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
@@ -72,7 +75,7 @@ abstract class MessageTypeConfigTranslationBaseForm extends ConfigTranslationFor
     usort($elements, 'message_order_text_weight');
 
     // Build the new text.
-    $text = array();
+    $text = [];
 
     foreach ($elements as $element) {
       if (!$element['value']) {

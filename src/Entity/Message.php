@@ -50,44 +50,44 @@ use Drupal\user\UserInterface;
 class Message extends ContentEntityBase implements MessageInterface, EntityOwnerInterface {
 
   /**
-   * @var int
-   *
    * The message ID.
+   *
+   * @var int
    */
   protected $mid;
 
   /**
-   * @var string
-   *
    * The UUID string.
+   *
+   * @var string
    */
   protected $uuid;
 
   /**
-   * @var \Drupal\message\MessageTypeInterface
-   *
    * The message type object.
+   *
+   * @var \Drupal\message\MessageTypeInterface
    */
   protected $type;
 
   /**
-   * @var \Drupal\user\UserInterface
-   *
    * The user object.
+   *
+   * @var \Drupal\user\UserInterface
    */
   protected $uid;
 
   /**
-   * @var int
-   *
    * The time stamp the message was created.
+   *
+   * @var int
    */
   protected $created;
 
   /**
-   * @var array
-   *
    * Holds the arguments of the message instance.
+   *
+   * @var array
    */
   protected $arguments;
 
@@ -172,7 +172,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     $arguments = $this->get('arguments')->getValue();
 
     // @todo: See if there is a easier way to get only the 0 key.
-    return $arguments ? $arguments[0] : array();
+    return $arguments ? $arguments[0] : [];
   }
 
   /**
@@ -211,10 +211,10 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Author'))
       ->setDescription(t('The user that is the message author.'))
-      ->setSettings(array(
+      ->setSettings([
         'target_type' => 'user',
         'default_value' => 0,
-      ))
+      ])
       ->setTranslatable(TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
@@ -233,7 +233,6 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = FALSE) {
-    /** @var $message_type */
     if (!$message_type = $this->getType()) {
       // Message type does not exist any more.
       // We don't throw an exception, to make sure we don't break sites that
@@ -251,7 +250,6 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     if (!empty($token_replace)) {
       // Token should be processed.
       $output = $this->processTokens($output, !empty($token_options['clear']));
-
     }
 
     return $output;
@@ -279,7 +277,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
       if (is_array($value) && !empty($value['callback']) && is_callable($value['callback'])) {
 
         // A replacement via callback function.
-        $value += array('pass message' => FALSE);
+        $value += ['pass message' => FALSE];
 
         if ($value['pass message']) {
           // Pass the message object as-well.
@@ -327,16 +325,16 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    */
   public function save() {
-    $token_options = !empty($this->data['token options']) ? $this->data['token options'] : array();
+    $token_options = !empty($this->data['token options']) ? $this->data['token options'] : [];
 
-    $tokens = array();
+    $tokens = [];
 
     // Handle hard coded arguments.
     foreach ($this->getType()->getText() as $text) {
       preg_match_all('/[@|%|\!]\{([a-z0-9:_\-]+?)\}/i', $text, $matches);
 
       foreach ($matches[1] as $delta => $token) {
-        $output = \Drupal::token()->replace('[' . $token . ']', array('message' => $this), $token_options);
+        $output = \Drupal::token()->replace('[' . $token . ']', ['message' => $this], $token_options);
         if ($output != '[' . $token . ']') {
           // Token was replaced and token sanitizes.
           $argument = $matches[0][$delta];
@@ -355,9 +353,9 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    *
    * @return \Drupal\message\MessageInterface
-   *  A message type object ready to be save.
+   *   A message entity ready to be save.
    */
-  public static function create(array $values = array()) {
+  public static function create(array $values = []) {
     return parent::create($values);
   }
 
@@ -365,6 +363,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    *
    * @return \Drupal\message\MessageInterface
+   *   A requested message entity.
    */
   public static function load($id) {
     return parent::load($id);
@@ -374,6 +373,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    *
    * @return \Drupal\message\MessageInterface[]
+   *   Array of requested message entities.
    */
   public static function loadMultiple(array $ids = NULL) {
     return parent::loadMultiple($ids);
@@ -382,7 +382,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * {@inheritdoc}
    */
-  public static function deleteMultiple($ids) {
+  public static function deleteMultiple(array $ids) {
     \Drupal::entityTypeManager()->getStorage('message')->delete($ids);
   }
 

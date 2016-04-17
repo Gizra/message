@@ -23,29 +23,29 @@ class Message extends WizardPluginBase {
   /**
    * Set default values for the path field options.
    */
-  protected $pathField = array(
+  protected $pathField = [
     'id' => 'mid',
     'table' => 'message',
     'field' => 'mid',
     'exclude' => TRUE,
     'link_to_user' => FALSE,
-    'alter' => array(
+    'alter' => [
       'alter_text' => TRUE,
       'text' => 'message/[mid]',
-    ),
-  );
+    ],
+  ];
 
   /**
    * Set default values for the filters.
    */
-  protected $filters = array(
-    'status' => array(
+  protected $filters = [
+    'status' => [
       'value' => TRUE,
       'table' => 'message',
       'field' => 'status',
       'provider' => 'message',
-    ),
-  );
+    ],
+  ];
 
   /**
    * {@inheritdoc}
@@ -85,7 +85,7 @@ class Message extends WizardPluginBase {
    * {@inheritdoc}
    */
   protected function defaultDisplayFilters($form, $form_state) {
-    $filters = array();
+    $filters = [];
 
     return $filters;
   }

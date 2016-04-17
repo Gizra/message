@@ -18,9 +18,9 @@ use Drupal\user\Entity\User;
 class MessageTextHandlerTest extends MessageTestBase {
 
   /**
-   * @var User
-   *
    * The user object.
+   *
+   * @var User
    */
   protected $account;
 
@@ -37,7 +37,7 @@ class MessageTextHandlerTest extends MessageTestBase {
    * Testing the deletion of messages in cron according to settings.
    */
   public function testTextHandler() {
-    $this->createMessageType('dummy_message', 'Dummy message', '', array('Dummy text message'));
+    $this->createMessageType('dummy_message', 'Dummy message', '', ['Dummy text message']);
     Message::create(['type' => 'dummy_message'])->save();
 
     $this->drupalLogin($this->account);
