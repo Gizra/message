@@ -3,7 +3,6 @@
 namespace Drupal\message;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
