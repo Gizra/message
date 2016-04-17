@@ -7,6 +7,7 @@
 
 namespace Drupal\message\Tests;
 
+use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 use Drupal\message\Entity\MessageType;
 use Drupal\simpletest\WebTestBase;
 

@@ -89,19 +89,22 @@ function message_example_tokens($type, $tokens, array $data = [], array $options
         case 'user-name':
           $replacements[$original] = $message->getOwner()->label();
           break;
+
         case 'user-url':
           if ($message->getOwner()) {
             $replacements[$original] = $message->getOwner()->url();
           }
           break;
+
         case 'node-title':
-            if ($message->bundle() == 'example_create_comment') {
-              $replacements[$original] = $message->field_comment_reference->entity->getCommentedEntity()->label();
-            }
-            else {
-              $replacements[$original] = $message->field_node_reference->get(0)->entity->label();
-            }
+          if ($message->bundle() == 'example_create_comment') {
+            $replacements[$original] = $message->field_comment_reference->entity->getCommentedEntity()->label();
+          }
+          else {
+            $replacements[$original] = $message->field_node_reference->get(0)->entity->label();
+          }
           break;
+
         case 'node-url':
           if ($message->bundle() == 'example_create_comment') {
             $replacements[$original] = $message->field_comment_reference->entity->getCommentedEntity()->url();
@@ -110,6 +113,7 @@ function message_example_tokens($type, $tokens, array $data = [], array $options
             $replacements[$original] = $message->field_node_reference->get(0)->entity->url();
           }
           break;
+
         case 'node-render':
           if ($message->bundle() == 'example_create_comment') {
             $entity = $message->field_comment_reference->entity->getCommentedEntity();
@@ -122,6 +126,7 @@ function message_example_tokens($type, $tokens, array $data = [], array $options
           $message_view = $view_builder->view($entity, 'teaser');
           $replacements[$original] = \Drupal::service('renderer')->renderRoot($message_view);
           break;
+
         case 'comment-url':
           $replacements[$original] = $message->field_comment_reference->entity->id();
           break;

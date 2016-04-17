@@ -9,6 +9,7 @@ namespace Drupal\message;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\message\Entity\Message;
 
 /**
  * Render controller for Messages.
@@ -31,7 +32,7 @@ class MessageViewBuilder extends EntityViewBuilder {
     }
 
     // Load the partials in the correct language.
-    /* @var $entity \Drupal\message\Entity\Message */
+    /* @var \Drupal\message\Entity\Message $entity  */
     if ($langcode) {
       $entity->setLanguage($langcode);
     }

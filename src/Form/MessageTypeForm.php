@@ -31,7 +31,7 @@ class MessageTypeForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    /** @var MessageType $type */
+    /** @var \Drupal\message\Entity\MessageType $type */
     $type = $this->entity;
 
     $form['label'] = [

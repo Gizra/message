@@ -18,9 +18,11 @@ interface MessageInterface extends ContentEntityInterface {
   /**
    * Set the message type.
    *
-   * @param \Drupal\message\MessageTypeInterface $type
+   * @param MessageTypeInterface $type
+   *   Message type.
    *
-   * @return $this
+   * @return \Drupal\message\MessageInterface
+   *   Returns the message object.
    */
   public function setType(MessageTypeInterface $type);
 
@@ -28,6 +30,7 @@ interface MessageInterface extends ContentEntityInterface {
    * Get the type of the message type.
    *
    * @return \Drupal\message\MessageTypeInterface
+   *   Returns the message object.
    */
   public function getType();
 
@@ -45,7 +48,8 @@ interface MessageInterface extends ContentEntityInterface {
    * @param int $timestamp
    *   The Unix timestamp.
    *
-   * @return $this
+   * @return \Drupal\message\MessageInterface
+   *   Returns the message object.
    */
   public function setCreatedTime($timestamp);
 
@@ -53,6 +57,7 @@ interface MessageInterface extends ContentEntityInterface {
    * Return the UUID.
    *
    * @return string
+   *   Return the UUID.
    */
   public function getUUID();
 
@@ -69,6 +74,7 @@ interface MessageInterface extends ContentEntityInterface {
    *
    * @param array $values
    *   Array of arguments.
+   *
    * @code
    *   $values = [
    *     '@name_without_callback' => 'John doe',
@@ -79,7 +85,8 @@ interface MessageInterface extends ContentEntityInterface {
    *   ];
    * @endcode
    *
-   * @return $this
+   * @return \Drupal\message\MessageInterface
+   *   Returns the message object.
    */
   public function setArguments(array $values);
 
@@ -94,7 +101,7 @@ interface MessageInterface extends ContentEntityInterface {
   /**
    * Replace arguments with their placeholders.
    *
-   * @param $langcode
+   * @param string $langcode
    *   The language code.
    * @param NULL|int $delta
    *   The delta of the message to return. If NULL all the message text will be
@@ -111,7 +118,7 @@ interface MessageInterface extends ContentEntityInterface {
    * @param array $ids
    *   The messages IDs to delete.
    */
-  public static function deleteMultiple($ids);
+  public static function deleteMultiple(array $ids);
 
   /**
    * Run a EFQ over messages from a given type.

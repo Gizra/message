@@ -50,44 +50,44 @@ use Drupal\user\UserInterface;
 class Message extends ContentEntityBase implements MessageInterface, EntityOwnerInterface {
 
   /**
-   * @var int
-   *
    * The message ID.
+   *
+   * @var int
    */
   protected $mid;
 
   /**
-   * @var string
-   *
    * The UUID string.
+   *
+   * @var string
    */
   protected $uuid;
 
   /**
-   * @var \Drupal\message\MessageTypeInterface
-   *
    * The message type object.
+   *
+   * @var \Drupal\message\MessageTypeInterface
    */
   protected $type;
 
   /**
-   * @var \Drupal\user\UserInterface
-   *
    * The user object.
+   *
+   * @var \Drupal\user\UserInterface
    */
   protected $uid;
 
   /**
-   * @var int
-   *
    * The time stamp the message was created.
+   *
+   * @var int
    */
   protected $created;
 
   /**
-   * @var array
-   *
    * Holds the arguments of the message instance.
+   *
+   * @var array
    */
   protected $arguments;
 
@@ -233,7 +233,6 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = FALSE) {
-    /** @var $message_type */
     if (!$message_type = $this->getType()) {
       // Message type does not exist any more.
       // We don't throw an exception, to make sure we don't break sites that
@@ -251,7 +250,6 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
     if (!empty($token_replace)) {
       // Token should be processed.
       $output = $this->processTokens($output, !empty($token_options['clear']));
-
     }
 
     return $output;
@@ -355,7 +353,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    *
    * @return \Drupal\message\MessageInterface
-   *  A message type object ready to be save.
+   *   A message entity ready to be save.
    */
   public static function create(array $values = []) {
     return parent::create($values);
@@ -365,6 +363,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    *
    * @return \Drupal\message\MessageInterface
+   *   A requested message entity.
    */
   public static function load($id) {
     return parent::load($id);
@@ -374,6 +373,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
    * {@inheritdoc}
    *
    * @return \Drupal\message\MessageInterface[]
+   *   Array of requested message entities.
    */
   public static function loadMultiple(array $ids = NULL) {
     return parent::loadMultiple($ids);
@@ -382,7 +382,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
   /**
    * {@inheritdoc}
    */
-  public static function deleteMultiple($ids) {
+  public static function deleteMultiple(array $ids) {
     \Drupal::entityTypeManager()->getStorage('message')->delete($ids);
   }
 

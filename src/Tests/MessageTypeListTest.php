@@ -17,9 +17,9 @@ use Drupal\user\Entity\User;
 class MessageTypeListTest extends MessageTestBase {
 
   /**
-   * @var User
-   *
    * The user object.
+   *
+   * @var User
    */
   protected $user;
 

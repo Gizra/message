@@ -8,6 +8,7 @@
 namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityManagerInterface;
+use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Form\ConfirmFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;

@@ -12,16 +12,16 @@ use Drupal\message\Entity\MessageType;
 use Drupal\user\Entity\User;
 
 /**
- * Test message purging upon cron
+ * Test message purging upon cron.
  *
  * @group Message
  */
 class MessageCron extends MessageTestBase {
 
   /**
-   * @var User
-   *
    * The user object.
+   *
+   * @var User
    */
   protected $account;
 

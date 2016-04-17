@@ -3,8 +3,9 @@
 /**
  * @file
  * Hooks provided by the Message module.
- *
  */
+
+use Drupal\message\Entity\Message;
 
 /**
  * @addtogroup hooks
@@ -14,23 +15,23 @@
 /**
  * Act on a message that is being assembled before rendering.
  *
- * @param $message
- *   The message entity.
- * @param $view_mode
- *   The view mode the message is rendered in.
- * @param $langcode
- *   The language code used for rendering.
- *
  * The module may add elements to $message->content prior to rendering. The
  * structure of $message->content is a renderable array as expected by
  * drupal_render().
  *
+ * @param \Drupal\message\Entity\Message $message
+ *   The message entity.
+ * @param string $view_mode
+ *   The view mode the message is rendered in.
+ * @param string $langcode
+ *   The language code used for rendering.
+ *
  * @see hook_entity_prepare_view()
  * @see hook_entity_view()
  */
-function hook_message_view($message, $view_mode, $langcode) {
+function hook_message_view(Message $message, $view_mode, $langcode) {
   $message->content['my_additional_field'] = [
-    '#markup' => $additional_field,
+    '#markup' => 'foo',
     '#weight' => 10,
     '#theme' => 'mymodule_my_additional_field',
   ];
@@ -38,9 +39,6 @@ function hook_message_view($message, $view_mode, $langcode) {
 
 /**
  * Alter the results of entity_view() for messages.
- *
- * @param $build
- *   A renderable array representing the message content.
  *
  * This hook is called after the content has been assembled in a structured
  * array and may be used for doing processing which requires that the complete
@@ -51,9 +49,12 @@ function hook_message_view($message, $view_mode, $langcode) {
  * callback. Alternatively, it could also implement hook_preprocess_message().
  * See drupal_render() and theme() documentation respectively for details.
  *
+ * @param array $build
+ *   A renderable array representing the message content.
+ *
  * @see hook_entity_view_alter()
  */
-function hook_message_view_alter(&$build) {
+function hook_message_view_alter(array &$build) {
   if ($build['#view_mode'] == 'full' && isset($build['an_additional_field'])) {
     // Change its weight.
     $build['an_additional_field']['#weight'] = -10;
@@ -66,14 +67,13 @@ function hook_message_view_alter(&$build) {
 /**
  * Define default message type configurations.
  *
- * @return
+ * @return array
  *   An array of default message types, keyed by machine names.
  *
  * @see hook_default_message_type_alter()
  */
 function hook_default_message_type() {
-  $defaults['main'] = entity_create('message_type', [
-  ]);
+  $defaults['main'] = entity_create('message_type', []);
   return $defaults;
 }
 
@@ -98,26 +98,25 @@ function hook_default_message_type_alter(array &$defaults) {
  * elements to the entity, just as documented for
  * entity_form_submit_build_entity().
  *
- * @param $form
+ * @param array $form
  *   Nested array of form elements that comprise the form.
- * @param $form_state
+ * @param array $form_state
  *   A keyed array containing the current state of the form.
  */
-function hook_form_message_type_form_alter(&$form, &$form_state) {
+function hook_form_message_type_form_alter(array &$form, array &$form_state) {
   // Your alterations.
 }
 
 /**
  * Define default message type category configurations.
  *
- * @return
+ * @return array
  *   An array of default message type categories, keyed by machine names.
  *
  * @see hook_default_message_category_alter()
  */
 function hook_default_message_category() {
-  $defaults['main'] = entity_create('message_category', [
-  ]);
+  $defaults['main'] = entity_create('message_category', []);
   return $defaults;
 }
 

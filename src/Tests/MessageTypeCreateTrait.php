@@ -8,6 +8,7 @@ namespace Drupal\message\Tests;
 
 use Drupal\Core\Language\Language;
 use Drupal\message\Entity\MessageType;
+use Drupal\message\MessageTypeInterface;
 
 /**
  * Trait to assist message type creation for tests.

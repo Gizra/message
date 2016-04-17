@@ -169,7 +169,6 @@ class MessageType extends ConfigEntityBundleBase implements MessageTypeInterface
     return $this;
   }
 
-
   /**
    * {@inheritdoc}
    */
