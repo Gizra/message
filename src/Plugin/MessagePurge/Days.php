@@ -25,7 +25,7 @@ class Days extends MessagePurgeBase {
       '#type' => 'textfield',
       '#title' => t('Purge messages older than'),
       '#description' => t('Maximal message age in days.'),
-      '#default_value' => $this->settingsConfig->get('purge_quota'),
+      '#default_value' => $this->configFactory->get('message.settings')->get('purge_quota'),
     ];
   }
 

@@ -3,7 +3,7 @@
 namespace Drupal\message;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Config\Config;
+use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -33,13 +33,13 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    */
   protected $messageQuery;
 
-
   /**
-   * The settings config.
+   * The config factory.
    *
-   * @var \Drupal\Core\Config\Config
+   * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
-  protected $settingsConfig;
+  protected $configFactory;
+
 
 
   /**
@@ -55,14 +55,14 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    *   The entity type manager.
    * @param \Drupal\Core\Entity\Query\QueryInterface $message_query
    *   The entity query object for message items.
-   * @param \Drupal\Core\Config\Config $settings_config
-   *   The settings config.
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The factory for configuration objects.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query, Config $settings_config) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query, ConfigFactoryInterface $config_factory) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
     $this->messageQuery = $message_query;
-    $this->settingsConfig = $settings_config;
+    $this->configFactory = $config_factory;
   }
 
   /**
@@ -75,7 +75,7 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
       $plugin_definition,
       $container->get('entity_type.manager'),
       $container->get('entity.query')->get('message'),
-      $container->get('config.factory')->get('message.settings')
+      $container->get('config.factory')
     );
   }
 
