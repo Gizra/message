@@ -72,7 +72,7 @@ class MessageSettingsForm extends ConfigFormBase {
    *   The entity manager object.
    */
   public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager) {
-    $this->setConfigFactory($config_factory);
+    parent::__construct($config_factory);
     $this->entityManager = $entity_manager;
   }
 
@@ -133,6 +133,8 @@ class MessageSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+
     $config = $this->config('message.settings');
 
     foreach ($this->defaultKeys() as $key) {
@@ -140,8 +142,6 @@ class MessageSettingsForm extends ConfigFormBase {
     }
 
     $config->save();
-
-    parent::submitForm($form, $form_state);
   }
 
   /**
