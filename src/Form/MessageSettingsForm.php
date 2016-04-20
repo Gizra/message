@@ -135,7 +135,7 @@ class MessageSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $config = $this->config('message.settings');
+    $config = $this->configFactory->getEditable('message.settings');
 
     foreach ($this->defaultKeys() as $key) {
       $config->set($key, $form_state->getValue($key));
