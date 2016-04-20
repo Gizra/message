@@ -106,6 +106,9 @@ class MessageSettingsForm extends ConfigFormBase {
       $element = $plugin->configurationForm($form, $form_state);
       $element['#states'] = $states;
 
+      // @todo: Set the default value.
+      // $element['#default_value'] = $config->get($plugin_id);
+
       $form['purge'][$plugin_id] = $element;
     }
 
