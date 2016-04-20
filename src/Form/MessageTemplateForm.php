@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Contains \Drupal\message\MessageTypeForm.
+ * Contains \Drupal\message\MessageTemplateForm.
  */
 
 namespace Drupal\message\Form;
@@ -10,18 +10,18 @@ namespace Drupal\message\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\message\Entity\MessageType;
-use Drupal\message\FormElement\MessageTypeMultipleTextField;
+use Drupal\message\Entity\MessageTemplate;
+use Drupal\message\FormElement\MessageTemplateMultipleTextField;
 
 /**
  * Form controller for node type forms.
  */
-class MessageTypeForm extends EntityForm {
+class MessageTemplateForm extends EntityForm {
 
   /**
    * The entity being used by this form.
    *
-   * @var \Drupal\message\Entity\MessageType
+   * @var \Drupal\message\Entity\MessageTemplate
    */
   protected $entity;
 
@@ -31,28 +31,28 @@ class MessageTypeForm extends EntityForm {
   public function form(array $form, FormStateInterface $form_state) {
     $form = parent::form($form, $form_state);
 
-    /** @var \Drupal\message\Entity\MessageType $type */
-    $type = $this->entity;
+    /** @var \Drupal\message\Entity\MessageTemplate $template */
+    $template = $this->entity;
 
     $form['label'] = [
       '#title' => t('Label'),
       '#type' => 'textfield',
-      '#default_value' => $type->label(),
-      '#description' => t('The human-readable name of this message type. This text will be displayed as part of the list on the <em>Add message</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
+      '#default_value' => $template->label(),
+      '#description' => t('The human-readable name of this message template. This text will be displayed as part of the list on the <em>Add message</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 30,
     ];
 
-    $form['type'] = [
+    $form['template'] = [
       '#type' => 'machine_name',
-      '#default_value' => $type->id(),
+      '#default_value' => $template->id(),
       '#maxlength' => EntityTypeInterface::BUNDLE_MAX_LENGTH,
-      '#disabled' => $type->isLocked(),
+      '#disabled' => $template->isLocked(),
       '#machine_name' => [
-        'exists' => '\Drupal\message\Entity\MessageType::load',
+        'exists' => '\Drupal\message\Entity\MessageTemplate::load',
         'source' => ['label'],
       ],
-      '#description' => t('A unique machine-readable name for this message type. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %message-add page, in which underscores will be converted into hyphens.', [
+      '#description' => t('A unique machine-readable name for this message template. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %message-add page, in which underscores will be converted into hyphens.', [
         '%message-add' => t('Add message'),
       ]),
     ];
@@ -61,10 +61,10 @@ class MessageTypeForm extends EntityForm {
       '#title' => t('Description'),
       '#type' => 'textfield',
       '#default_value' => $this->entity->getDescription(),
-      '#description' => t('The human-readable description of this message type.'),
+      '#description' => t('The human-readable description of this message template.'),
     ];
 
-    $multiple = new MessageTypeMultipleTextField($this->entity, [get_class($this), 'addMoreAjax']);
+    $multiple = new MessageTemplateMultipleTextField($this->entity, [get_class($this), 'addMoreAjax']);
     $multiple->textField($form, $form_state);
 
     $settings = $this->entity->getSettings();
@@ -90,7 +90,7 @@ class MessageTypeForm extends EntityForm {
     $form['settings']['purge']['override'] = [
       '#title' => t('Override global settings'),
       '#type' => 'checkbox',
-      '#description' => t('Override global purge settings for messages of this type.'),
+      '#description' => t('Override global purge settings for messages of this template.'),
       '#default_value' => !empty($settings['purge']['override']),
     ];
 
@@ -117,7 +117,7 @@ class MessageTypeForm extends EntityForm {
     $form['settings']['purge']['quota'] = [
       '#type' => 'textfield',
       '#title' => t('Messages quota'),
-      '#description' => t('Maximal (approximate) amount of messages of this type.'),
+      '#description' => t('Maximal (approximate) amount of messages of this template.'),
       '#default_value' => !empty($settings['purge']['quota']) ? $settings['purge']['quota'] : '',
       '#states' => $states,
     ];
@@ -125,7 +125,7 @@ class MessageTypeForm extends EntityForm {
     $form['settings']['purge']['days'] = [
       '#type' => 'textfield',
       '#title' => t('Purge messages older than'),
-      '#description' => t('Maximal message age in days, for messages of this type.'),
+      '#description' => t('Maximal message age in days, for messages of this template.'),
       '#default_value' => !empty($settings['purge']['days']) ? $settings['purge']['days'] : '',
       '#states' => $states,
     ];
@@ -145,8 +145,8 @@ class MessageTypeForm extends EntityForm {
    */
   protected function actions(array $form, FormStateInterface $form_state) {
     $actions = parent::actions($form, $form_state);
-    $actions['submit']['#value'] = t('Save message type');
-    $actions['delete']['#value'] = t('Delete message type');
+    $actions['submit']['#value'] = t('Save message template');
+    $actions['delete']['#value'] = t('Delete message template');
     return $actions;
   }
 
@@ -183,11 +183,11 @@ class MessageTypeForm extends EntityForm {
     $this->entity->save();
 
     $params = [
-      '@type' => $form_state->getValue('label'),
+      '@template' => $form_state->getValue('label'),
     ];
 
-    drupal_set_message(t('The message type @type created successfully.', $params));
-    $form_state->setRedirect('message.overview_types');
+    drupal_set_message(t('The message template @template created successfully.', $params));
+    $form_state->setRedirect('message.overview_templates');
     return $this->entity;
   }
 
