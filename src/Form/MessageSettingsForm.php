@@ -109,14 +109,6 @@ class MessageSettingsForm extends ConfigFormBase {
       $form['purge'][$plugin_id] = $element;
     }
 
-    $form['purge']['purge_quota'] = [
-      '#type' => 'textfield',
-      '#title' => t('Messages quota'),
-      '#description' => t('Maximal (approximate) amount of messages.'),
-      '#default_value' => $config->get('purge_quota'),
-      '#states' => $states,
-    ];
-
     $form['delete_on_entity_delete'] = [
       '#title' => t('Auto delete messages referencing the following entities'),
       '#type' => 'select',
