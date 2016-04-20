@@ -18,11 +18,11 @@ message.settings:
     purge_quota:
       type: integer
 
-message.type.*:
+message.template.*:
   type: config_entity
-  label: 'Message type'
+  label: 'Message template'
   mapping:
-    type:
+    template:
       type: string
       label: 'Machine-readable name'
     label:

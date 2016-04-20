@@ -65,35 +65,35 @@ function hook_message_view_alter(array &$build) {
 }
 
 /**
- * Define default message type configurations.
+ * Define default message template configurations.
  *
  * @return array
- *   An array of default message types, keyed by machine names.
+ *   An array of default message templates, keyed by machine names.
  *
- * @see hook_default_message_type_alter()
+ * @see hook_default_message_template_alter()
  */
-function hook_default_message_type() {
-  $defaults['main'] = entity_create('message_type', []);
+function hook_default_message_template() {
+  $defaults['main'] = entity_create('message_template', []);
   return $defaults;
 }
 
 /**
- * Alter default message type configurations.
+ * Alter default message template configurations.
  *
  * @param array $defaults
- *   An array of default message types, keyed by machine names.
+ *   An array of default message templates, keyed by machine names.
  *
- * @see hook_default_message_type()
+ * @see hook_default_message_template()
  */
-function hook_default_message_type_alter(array &$defaults) {
+function hook_default_message_template_alter(array &$defaults) {
   $defaults['main']->name = 'custom name';
 }
 
 /**
- * Alter message type forms.
+ * Alter message template forms.
  *
- * Modules may alter the message type entity form by making use of this hook or
- * the entity bundle specific hook_form_message_type_edit_BUNDLE_form_alter().
+ * Modules may alter the message template entity form by making use of this hook or
+ * the entity bundle specific hook_form_message_template_edit_BUNDLE_form_alter().
  * #entity_builders may be used in order to copy the values of added form
  * elements to the entity, just as documented for
  * entity_form_submit_build_entity().
@@ -103,15 +103,15 @@ function hook_default_message_type_alter(array &$defaults) {
  * @param array $form_state
  *   A keyed array containing the current state of the form.
  */
-function hook_form_message_type_form_alter(array &$form, array &$form_state) {
+function hook_form_message_template_form_alter(array &$form, array &$form_state) {
   // Your alterations.
 }
 
 /**
- * Define default message type category configurations.
+ * Define default message template category configurations.
  *
  * @return array
- *   An array of default message type categories, keyed by machine names.
+ *   An array of default message template categories, keyed by machine names.
  *
  * @see hook_default_message_category_alter()
  */
@@ -121,10 +121,10 @@ function hook_default_message_category() {
 }
 
 /**
- * Alter default message type category configurations.
+ * Alter default message template category configurations.
  *
  * @param array $defaults
- *   An array of default message type categories, keyed by machine names.
+ *   An array of default message template categories, keyed by machine names.
  *
  * @see hook_default_message_category()
  */
