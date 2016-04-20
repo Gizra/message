@@ -6,15 +6,15 @@ use Drupal\Core\Form\FormStateInterface;
 use Drupal\message\MessagePurgeBase;
 
 /**
- * Delete messages older than certain days.
+ * Maximal (approximate) amount of messages.
  *
  * @MessagePurge(
- *  id = "days",
- *  label = @Translation("Days", context = "MessagePurge"),
- *  description = @Translation("Delete messages older than certain days."),
+ *  id = "quota",
+ *  label = @Translation("Quota", context = "MessagePurge"),
+ *  description = @Translation("Maximal (approximate) amount of messages."),
  * )
  */
-class Days extends MessagePurgeBase {
+class Quota extends MessagePurgeBase {
 
 
   /**
@@ -23,8 +23,8 @@ class Days extends MessagePurgeBase {
   public function configurationForm($form, FormStateInterface $form_state) {
     return [
       '#type' => 'textfield',
-      '#title' => t('Messages older than'),
-      '#description' => t('Maximal message age in days.'),
+      '#title' => t('Messages quota'),
+      '#description' => t('Maximal (approximate) amount of messages.'),
       '#default_value' => $this->configFactory->get('message.settings')->get('purge_quota'),
     ];
   }
