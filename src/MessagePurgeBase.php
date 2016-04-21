@@ -13,7 +13,7 @@ use Drupal\message\Entity\Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base implementation for OgDeleteOrphans plugins.
+ * Base implementation for MessagePurge plugins.
  */
 abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterface, ContainerFactoryPluginInterface {
 
