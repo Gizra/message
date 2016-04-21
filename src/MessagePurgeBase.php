@@ -84,8 +84,9 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * {@inheritdoc}
    */
   public function process(array $ids) {
-    $messages = Message::loadMultiple($ids);
-    $this->entityTypeManager->getStorage('message')->delete($messages);
+    $storage = $this->entityTypeManager->getStorage('message');
+    $messages = $storage->loadMultiple($ids);
+    $storage->delete($messages);
   }
 
   /**
