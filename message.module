@@ -177,6 +177,7 @@ function message_entity_info() {
   $items['message_type'] = array(
     'label' => t('Message type'),
     'controller class' => 'EntityAPIControllerExportable',
+    'features controller class' => 'MessageTypeFeaturesController',
     'entity class' => 'MessageType',
     'base table' => 'message_type',
     'fieldable' => TRUE,
