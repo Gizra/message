@@ -13,7 +13,7 @@ use Drupal\message\Entity\Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Base implementation for OgDeleteOrphans plugins.
+ * Base implementation for MessagePurge plugins.
  */
 abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterface, ContainerFactoryPluginInterface {
 
@@ -84,8 +84,9 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * {@inheritdoc}
    */
   public function process(array $ids) {
-    $messages = Message::loadMultiple($ids);
-    $this->entityTypeManager->getStorage('message')->delete($messages);
+    $storage = $this->entityTypeManager->getStorage('message');
+    $messages = $storage->loadMultiple($ids);
+    $storage->delete($messages);
   }
 
   /**

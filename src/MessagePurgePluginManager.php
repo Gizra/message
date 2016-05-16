@@ -12,7 +12,7 @@ use Drupal\Core\Plugin\DefaultPluginManager;
 class MessagePurgePluginManager extends DefaultPluginManager {
 
   /**
-   * Constructs an OgDeleteOrphansPluginManager object.
+   * Constructs an MessagePurgePluginManager object.
    *
    * @param \Traversable $namespaces
    *   An object that implements \Traversable which contains the root paths

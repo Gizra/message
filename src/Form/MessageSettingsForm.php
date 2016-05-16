@@ -38,7 +38,7 @@ class MessageSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['message.message'];
+    return ['message.settings'];
   }
 
   /**
@@ -131,7 +131,7 @@ class MessageSettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
 
-    $config = $this->configFactory->getEditable('message.settings');
+    $config = $this->config('message.settings');
 
     foreach ($this->defaultKeys() as $key) {
       $config->set($key, $form_state->getValue($key));
