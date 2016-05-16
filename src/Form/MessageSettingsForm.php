@@ -104,10 +104,9 @@ class MessageSettingsForm extends ConfigFormBase {
       $plugin = \Drupal::service('plugin.manager.message.purge')->createInstance($plugin_id);
       $element = [];
       $element = $plugin->buildConfigurationForm($element, $form_state);
+
       $element['#states'] = $states;
 
-      // @todo: Set the default value.
-      // $element['#default_value'] = $config->get($plugin_id);
 
       $form['purge'][$plugin_id] = $element;
     }

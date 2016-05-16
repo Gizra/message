@@ -22,7 +22,8 @@ class Days extends MessagePurgeBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['days'] = [
-      '#type' => 'textfield',
+      '#type' => 'number',
+      '#min' => 1,
       '#title' => t('Messages older than'),
       '#description' => t('Maximal message age in days.'),
       '#default_value' => $this->configuration['days'],
@@ -45,7 +46,7 @@ class Days extends MessagePurgeBase {
    */
   public function defaultConfiguration() {
     return array(
-      'days' => 0,
+      'days' => 1,
     );
   }
 
