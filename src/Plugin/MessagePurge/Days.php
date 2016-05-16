@@ -46,7 +46,7 @@ class Days extends MessagePurgeBase {
    */
   public function defaultConfiguration() {
     return array(
-      'days' => 1,
+      'days' => 30,
     );
   }
 
