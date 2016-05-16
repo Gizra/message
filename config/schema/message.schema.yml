@@ -13,6 +13,19 @@ message.settings:
         - type: string
     purge_enable:
       type: boolean
+    purge:
+      type: sequence
+      sequence:
+        type: mapping
+        mapping:
+          id:
+            type: string
+          data:
+            type: message.purge.[%parent.id]
+          weight:
+            type: integer
+          uuid:
+            type: string
 
 message.type.*:
   type: config_entity
