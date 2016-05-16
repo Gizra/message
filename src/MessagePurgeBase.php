@@ -83,6 +83,8 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
     $this->entityTypeManager = $entity_type_manager;
     $this->messageQuery = $message_query;
     $this->configFactory = $config_factory;
+
+    $this->setConfiguration($configuration);
   }
 
   /**
