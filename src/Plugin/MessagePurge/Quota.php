@@ -46,7 +46,7 @@ class Quota extends MessagePurgeBase {
    */
   public function defaultConfiguration() {
     return array(
-      'quota' => 1,
+      'quota' => 1000,
     );
   }
 
