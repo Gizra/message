@@ -20,6 +20,8 @@ message.settings:
         mapping:
           id:
             type: string
+          enabled:
+            type: boolean
           data:
             type: message.purge.[%parent.id]
           weight:
@@ -77,6 +79,8 @@ message.template.*:
                 mapping:
                   id:
                     type: string
+                  enabled:
+                    type: boolean
                   data:
                     type: message.purge.[%parent.id]
                   weight:
