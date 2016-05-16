@@ -25,7 +25,7 @@ class Quota extends MessagePurgeBase {
       '#type' => 'textfield',
       '#title' => t('Messages quota'),
       '#description' => t('Maximal (approximate) amount of messages.'),
-      '#default_value' => $this->configFactory->get('message.settings')->get('purge_settings'),
+      '#default_value' => $this->configuration['quota'],
     ];
 
     return parent::buildConfigurationForm($form, $form_state);

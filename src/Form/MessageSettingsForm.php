@@ -112,7 +112,6 @@ class MessageSettingsForm extends ConfigFormBase {
       $form['purge'][$plugin_id] = $element;
     }
 
-
     $form['delete_on_entity_delete'] = [
       '#title' => t('Auto delete messages referencing the following entities'),
       '#type' => 'select',
