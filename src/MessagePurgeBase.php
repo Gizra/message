@@ -108,8 +108,19 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
   /**
    * {@inheritdoc}
    */
-  public function configurationForm($form, FormStateInterface $form_state) {
-    return [];
+  public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    return $form;
   }
 
+  /**
+   * {@inheritdoc}
+   */
+  public function validateConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
 }
