@@ -13,7 +13,7 @@ message.settings:
         - type: string
     purge_enable:
       type: boolean
-    purge:
+    purge_settings:
       type: sequence
       sequence:
         type: mapping
