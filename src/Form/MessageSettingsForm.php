@@ -47,8 +47,7 @@ class MessageSettingsForm extends ConfigFormBase {
   public function defaultKeys() {
     return [
       'purge_enable',
-      'purge_quota',
-      'purge_days',
+      'purge_settings',
       'delete_on_entity_delete',
     ];
   }
@@ -112,6 +111,7 @@ class MessageSettingsForm extends ConfigFormBase {
 
       $form['purge'][$plugin_id] = $element;
     }
+
 
     $form['delete_on_entity_delete'] = [
       '#title' => t('Auto delete messages referencing the following entities'),

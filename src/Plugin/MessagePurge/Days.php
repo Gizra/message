@@ -28,7 +28,7 @@ class Days extends MessagePurgeBase {
       '#default_value' => $this->configFactory->get('message.settings')->get('purge_quota'),
     ];
 
-    return $form;
+    return parent::buildConfigurationForm($form, $form_state);
   }
 
   /**
@@ -38,6 +38,15 @@ class Days extends MessagePurgeBase {
     parent::submitConfigurationForm($form, $form_state);
 
     $this->configuration['days'] = $form_state->getValue('days');
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array(
+      'days' => 0,
+    );
   }
 
   /**

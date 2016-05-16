@@ -9,7 +9,6 @@ use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\message\Entity\Message;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -18,6 +17,27 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterface, ContainerFactoryPluginInterface {
 
   use StringTranslationTrait;
+
+  /**
+   * The purge plugin ID.
+   *
+   * @var string
+   */
+  protected $uuid;
+
+  /**
+   * The weight of the purge plugin.
+   *
+   * @var int|string
+   */
+  protected $weight = '';
+
+  /**
+   * Determines if a purge plugin is enabled.
+   *
+   * @var bool
+   */
+  protected $enabled = TRUE;
 
   /**
    * The entity type manager.
@@ -109,6 +129,14 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
+    $name = $this->getPluginId();
+    $form['enabled'] = [
+      '#type' => 'checkbox',
+      '#title' => t('Enable'),
+      '#description' => t('Determine if @name purge plugin should be enabled.', ['@name' => $name]),
+      '#weight' => -10,
+    ];
+
     return $form;
   }
 
@@ -122,5 +150,90 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * {@inheritdoc}
    */
   public function submitConfigurationForm(array &$form, FormStateInterface $form_state) {
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function label() {
+    return $this->pluginDefinition['label'];
+  }
+
+  public function getEnabled() {
+    return $this->enabled;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setEnabled($enabled) {
+    $this->enabled = $enabled;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getUuid() {
+    return $this->uuid;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setWeight($weight) {
+    $this->weight = $weight;
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getWeight() {
+    return $this->weight;
+  }
+
+
+  /**
+   * {@inheritdoc}
+   */
+  public function getConfiguration() {
+    return array(
+      'enabled' => $this->getEnabled(),
+      'uuid' => $this->getUuid(),
+      'id' => $this->getPluginId(),
+      'weight' => $this->getWeight(),
+      'data' => $this->configuration,
+    );
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function setConfiguration(array $configuration) {
+    $configuration += array(
+      'enabled' => TRUE,
+      'data' => array(),
+      'uuid' => '',
+      'weight' => '',
+    );
+    $this->configuration = $configuration['data'] + $this->defaultConfiguration();
+    $this->uuid = $configuration['uuid'];
+    $this->weight = $configuration['weight'];
+    return $this;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function defaultConfiguration() {
+    return array();
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function calculateDependencies() {
+    return array();
   }
 }
