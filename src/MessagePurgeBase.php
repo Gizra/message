@@ -129,11 +129,10 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $name = $this->getPluginId();
     $form['enabled'] = [
       '#type' => 'checkbox',
       '#title' => t('Enable'),
-      '#description' => t('Determine if @name purge plugin should be enabled.', ['@name' => $name]),
+      '#description' => t('Determine if @name purge plugin should be enabled.', ['@name' => $this->label()]),
       '#weight' => -10,
     ];
 
