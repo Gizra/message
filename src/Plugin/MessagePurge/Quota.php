@@ -22,7 +22,8 @@ class Quota extends MessagePurgeBase {
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
     $form['quota'] = [
-      '#type' => 'textfield',
+      '#type' => 'number',
+      '#min' => 1,
       '#title' => t('Messages quota'),
       '#description' => t('Maximal (approximate) amount of messages.'),
       '#default_value' => $this->configuration['quota'],
@@ -45,7 +46,7 @@ class Quota extends MessagePurgeBase {
    */
   public function defaultConfiguration() {
     return array(
-      'quota' => 0,
+      'quota' => 1,
     );
   }
 

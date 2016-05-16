@@ -136,6 +136,7 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
       '#title' => t('Enable'),
       '#description' => t('Determine if @name purge plugin should be enabled.', ['@name' => $this->label()]),
       '#weight' => -10,
+      '#default_value' => $this->getEnabled(),
     ];
 
     return $form;
