@@ -29,7 +29,7 @@ before_install:
 
   # Drush.
   - composer global require "youngj/httpserver:dev-master#41dd2b7"
-  - composer global require drush/drush:dev-master
+  - composer global require drush/drush:~8
 
   # Codesniffer.
   - composer global require squizlabs/php_codesniffer:$PHPCS_VERSION
