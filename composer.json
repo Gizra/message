@@ -3,6 +3,6 @@
   "description": "Message",
   "type": "drupal-module",
   "license": "GPL-2.0+",
-  "minimum-stability": "dev",
+  "minimum-stability": "beta",
   "require": {}
 }
