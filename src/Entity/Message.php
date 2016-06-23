@@ -219,7 +219,7 @@ class Message extends ContentEntityBase implements MessageInterface, EntityOwner
       ->setTranslatable(TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Created'))
+      ->setLabel(t('Created on'))
       ->setDescription(t('The time that the message was created.'))
       ->setTranslatable(TRUE);
 
