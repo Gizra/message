@@ -13,7 +13,13 @@ define('MESSAGE_FIELD_MESSAGE_TEXT', 'message_text');
 /**
  * The maximal amount of messages to be purged upon hook_cron()
  */
-define('MESSAGE_PURGE_LIMIT', 100);
+define('MESSAGE_PURGE_LIMIT_CRON', 100);
+
+/**
+ * Drush purge defaults. See message.drush.inc.
+ */
+define('MESSAGE_PURGE_LIMIT_DRUSH_DEFAULT', 10000);
+define('MESSAGE_PURGE_LOOP_DRUSH_DEFAULT', 100);
 
 /**
  * Implements hook_ctools_plugin_type().
@@ -316,7 +322,20 @@ function message_menu() {
  */
 function message_cron() {
   // The maximal amount of messages to purge per cron run.
-  $purge_limit = variable_get('message_delete_cron_limit', MESSAGE_PURGE_LIMIT);
+  $purge_limit = variable_get('message_delete_cron_limit', MESSAGE_PURGE_LIMIT_CRON);
+  message_purge($purge_limit);
+}
+
+/**
+ * Purge a given number of messages based on purge settings set in the admin
+ * interface.
+ *
+ * @param int $purge_limit
+ *   The total number of messages to purge.
+ * @return number
+ *   The total number of messages that were actually purged.
+ */
+function message_purge($purge_limit) {
   // Messages to be deleted.
   $purge_messages = array();
   // Names of non global-purge-settings overriding message types.
@@ -363,9 +382,13 @@ function message_cron() {
   }
 
   // Delete all gathered messages.
+  $purge_count = 0;
   if (!empty($purge_messages)) {
+    $purge_count += count($purge_messages);
     message_delete_multiple(array_keys($purge_messages));
   }
+
+  return $purge_count;
 }
 
 /**
