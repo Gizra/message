@@ -51,6 +51,16 @@ class MessageMetadataController extends EntityDefaultMetadataController {
       'sanitize' => TRUE,
     );
 
+    // Add a property listing all text values.
+    $properties['text_list'] = array(
+      'type' => 'list<text>',
+      'label' => t('Partial message text'),
+      'getter callback' => 'message_property_get_text_list',
+      'description' => t('A list of partial message text values with all replacement arguments applied.'),
+      'computed' => TRUE,
+      'sanitized' => TRUE,
+    );
+
     // Bypass entity_load() as we cannot use it here.
     $message_types = db_select('message_type', 'mt')
       ->fields('mt')
