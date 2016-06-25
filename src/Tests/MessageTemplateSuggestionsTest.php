@@ -6,6 +6,7 @@
  */
 
 namespace Drupal\message\Tests;
+
 use Drupal\message\Entity\Message;
 use Drupal\user\Entity\User;
 
