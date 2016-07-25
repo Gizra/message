@@ -38,7 +38,7 @@ class MessageSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   protected function getEditableConfigNames() {
-    return ['message.message'];
+    return ['message.settings'];
   }
 
   /**
@@ -47,8 +47,7 @@ class MessageSettingsForm extends ConfigFormBase {
   public function defaultKeys() {
     return [
       'purge_enable',
-      'purge_quota',
-      'purge_days',
+      'purge_settings',
       'delete_on_entity_delete',
     ];
   }
@@ -72,7 +71,7 @@ class MessageSettingsForm extends ConfigFormBase {
    *   The entity manager object.
    */
   public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager) {
-    $this->setConfigFactory($config_factory);
+    parent::__construct($config_factory);
     $this->entityManager = $entity_manager;
   }
 
@@ -100,21 +99,17 @@ class MessageSettingsForm extends ConfigFormBase {
       ],
     ];
 
-    $form['purge']['purge_quota'] = [
-      '#type' => 'textfield',
-      '#title' => t('Messages quota'),
-      '#description' => t('Maximal (approximate) amount of messages.'),
-      '#default_value' => $config->get('purge_quota'),
-      '#states' => $states,
-    ];
+    /** @var \Drupal\message\MessagePurgeInterface $plugin */
+    foreach (array_keys(\Drupal::service('plugin.manager.message.purge')->getDefinitions()) as $plugin_id) {
+      $plugin = \Drupal::service('plugin.manager.message.purge')->createInstance($plugin_id);
+      $element = [];
+      $element = $plugin->buildConfigurationForm($element, $form_state);
 
-    $form['purge']['purge_days'] = [
-      '#type' => 'textfield',
-      '#title' => t('Purge messages older than'),
-      '#description' => t('Maximal message age in days.'),
-      '#default_value' => $config->get('purge_quota'),
-      '#states' => $states,
-    ];
+      $element['#states'] = $states;
+
+
+      $form['purge'][$plugin_id] = $element;
+    }
 
     $form['delete_on_entity_delete'] = [
       '#title' => t('Auto delete messages referencing the following entities'),
@@ -132,6 +127,8 @@ class MessageSettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+
     $config = $this->config('message.settings');
 
     foreach ($this->defaultKeys() as $key) {
@@ -139,8 +136,6 @@ class MessageSettingsForm extends ConfigFormBase {
     }
 
     $config->save();
-
-    parent::submitForm($form, $form_state);
   }
 
   /**
