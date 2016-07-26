@@ -4,6 +4,7 @@ namespace Drupal\message\Plugin\MessagePurge;
 
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\message\MessagePurgeBase;
+use Drupal\message\MessageTemplateInterface;
 
 /**
  * Maximal (approximate) amount of messages.
@@ -53,7 +54,12 @@ class Quota extends MessagePurgeBase {
   /**
    * {@inheritdoc}
    */
-  public function fetch() {
+  public function fetch(MessageTemplateInterface $template, $limit) {
+    $query = $this->baseQuery($template);
+    $result = $query
+      ->range($this->configuration['quota'], $limit)
+      ->execute();
+    return $result;
   }
 
 }

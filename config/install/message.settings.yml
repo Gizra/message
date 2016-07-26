@@ -1,5 +1,5 @@
 delete_cron_limit: 100
-purge_enable: true
+purge_methods: {  }
 delete_on_entity_delete:
   comment: comment
   node: node

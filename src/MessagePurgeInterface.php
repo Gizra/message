@@ -11,9 +11,17 @@ use Drupal\Core\Plugin\PluginFormInterface;
 interface MessagePurgeInterface extends ConfigurablePluginInterface, PluginFormInterface {
 
   /**
-   * Fetch the messages that need to be purged.
+   * Fetch the messages that need to be purged for a given template.
+   *
+   * @param \Drupal\message\MessageTemplateInterface $template
+   *   The message template to fetch messages for.
+   * @param int $limit
+   *   Limit the number of fetched messages to this amount.
+   *
+   * @return array
+   *   An array of \Drupal\message\MessageInterface entity IDs.
    */
-  public function fetch();
+  public function fetch(MessageTemplateInterface $template, $limit);
 
   /**
    * Process the purgeable messages.

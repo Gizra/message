@@ -3,7 +3,6 @@
 namespace Drupal\message;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -40,13 +39,6 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
   protected $messageQuery;
 
   /**
-   * The config factory.
-   *
-   * @var \Drupal\Core\Config\ConfigFactoryInterface
-   */
-  protected $configFactory;
-
-  /**
    * Constructs a MessagePurgeBase object.
    *
    * @var array $configuration
@@ -59,14 +51,11 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    *   The entity type manager.
    * @param \Drupal\Core\Entity\Query\QueryInterface $message_query
    *   The entity query object for message items.
-   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
-   *   The factory for configuration objects.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query, ConfigFactoryInterface $config_factory) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
     $this->entityTypeManager = $entity_type_manager;
     $this->messageQuery = $message_query;
-    $this->configFactory = $config_factory;
 
     $this->setConfiguration($configuration);
   }
@@ -80,8 +69,7 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
       $plugin_id,
       $plugin_definition,
       $container->get('entity_type.manager'),
-      $container->get('entity.query')->get('message'),
-      $container->get('config.factory')
+      $container->get('entity.query')->get('message')
     );
   }
 
@@ -98,15 +86,14 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
   /**
    * Get a base query.
    *
-   * @param array $bundles
-   *   Array with the message type that need to be queried.
-   *
-   * @return QueryInterface
-   *   The query object.
+   * @param \Drupal\message\MessageTemplateInterface $template
+   *   The message template for which to fetch messages.
+   * @return \Drupal\Core\Entity\Query\QueryInterface The query object.
+   * The query object.
    */
-  protected function baseQuery(array $bundles) {
+  protected function baseQuery(MessageTemplateInterface $template) {
     return $this->messageQuery
-      ->condition('type', $bundles, 'IN')
+      ->condition('template', $template->id())
       ->sort('created', 'DESC')
       ->sort('mid', 'DESC');
   }
