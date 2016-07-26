@@ -77,7 +77,8 @@ class MessagePurgePluginManager extends DefaultPluginManager {
     ];
     $user_input = $form_state->getUserInput();
     $definitions = $this->getDefinitions();
-    $settings = $entity->get('settings')['purge_methods'];
+    $settings = $entity->get('settings') ?: [];
+    $settings = isset($settings['purge_methods']) ? $settings['purge_methods'] : [];
     $this->sortDefinitions($definitions, $settings);
     foreach ($definitions as $plugin_id => $definition) {
 
