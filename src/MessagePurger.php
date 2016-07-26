@@ -51,8 +51,10 @@ class MessagePurger {
     $purge_limit = $this->globalConfig->get('delete_cron_limit');
 
     // Names of non global-purge-settings overriding message templates.
+    /** @var \Drupal\message\MessageTemplateInterface[] $no_override_templates */
     $no_override_templates = [];
     // Message templates that override global purge settings.
+    /** @var \Drupal\message\MessageTemplateInterface[] $override_templates */
     $override_templates = [];
 
     // Iterate all message templates to distinguish between overriding and non-
@@ -60,18 +62,15 @@ class MessagePurger {
     /** @var \Drupal\message\MessageTemplateInterface[] $message_templates */
     $message_templates = $this->entityTypeManager->getStorage('message_template')->loadMultiple();
     foreach ($message_templates as $message_template) {
-      if ($message_template->getSetting('purge_override')) {
+      if (!$message_template->getSetting('purge_override')) {
         $no_override_templates[] = $message_template;
       }
       else {
-        // For overriding templates, store the template and not its name to later extract
-        // the specific purge settings.
         $override_templates[] = $message_template;
       }
     }
 
-    // Gather purgeable messages of overriding templates.
-    /** @var \Drupal\message\MessageTemplateInterface[] $override_templates */
+    // Purge messages of templates overriding the global settings.
     foreach ($override_templates as $message_template) {
       $settings = $message_template->getSetting('purge_methods');
       if (empty($settings)) {
@@ -81,8 +80,7 @@ class MessagePurger {
       $this->purgeMessagesByTemplate($purge_limit, $message_template, $settings);
     }
 
-    // Gather purgeable messages of non-overriding templates according to global
-    // settings.
+    // Purge messages for templates that are not overriding global settings.
     if (!empty($no_override_templates)) {
       // Only purge if globally enabled.
       if ($this->globalConfig->get('purge_enable')) {
@@ -90,11 +88,6 @@ class MessagePurger {
           $this->purgeMessagesByTemplate($purge_limit, $message_template, $this->globalConfig->get('purge_methods'));
         }
       }
-    }
-
-    // Delete all gathered messages.
-    if (!empty($purge_messages)) {
-      $this->entityTypeManager->getStorage('message')->delete($purge_messages);
     }
   }
 
@@ -118,7 +111,9 @@ class MessagePurger {
 
       /** @var \Drupal\message\MessagePurgeInterface $plugin */
       $plugin = $this->purgeManager->createInstance($plugin_id, $configuration);
-      $message_ids = $plugin->fetch($message_template);
+      $message_ids = $plugin->fetch($message_template, $purge_limit);
+
+      // Decrease the limit by the number of messages found.
       $purge_limit -= count($message_ids);
       $plugin->process($message_ids);
     }

@@ -97,21 +97,21 @@ class MessageCron extends MessageTestBase {
     // Create messages.
     for ($i = 0; $i < 4; $i++) {
       Message::Create(['template' => 'template1'])
-        ->setCreatedTime(time() - 3 * 86400)
+        ->setCreatedTime(REQUEST_TIME - 3 * 86400)
         ->setOwnerId($this->account->id())
         ->save();
     }
 
     for ($i = 0; $i < 3; $i++) {
       Message::Create(['template' => 'template2'])
-        ->setCreatedTime(time() - 3 * 86400)
+        ->setCreatedTime(REQUEST_TIME - 3 * 86400)
         ->setOwnerId($this->account->id())
         ->save();
     }
 
     for ($i = 0; $i < 3; $i++) {
       Message::Create(['template' => 'template3'])
-        ->setCreatedTime(time() - 3 * 86400)
+        ->setCreatedTime(REQUEST_TIME - 3 * 86400)
         ->setOwnerId($this->account->id())
           ->save();
     }
@@ -184,6 +184,7 @@ class MessageCron extends MessageTestBase {
    */
   public function testPurgeGlobalSettings() {
     // @todo Fix this when global settings are using plugins.
+    $this->fail('Implement global settings!');
     return;
 
     // Set global purge settings.
