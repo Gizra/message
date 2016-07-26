@@ -13,6 +13,7 @@ use Drupal\Core\Entity\ContentEntityTypeInterface;
 use Drupal\Core\Entity\EntityManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\message\MessagePurgePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -24,8 +25,17 @@ class MessageSettingsForm extends ConfigFormBase {
    * The entity manager object.
    *
    * @var \Drupal\Core\Entity\EntityManagerInterface
+   *
+   * @todo Use the entity type manager service.
    */
   protected $entityManager;
+
+  /**
+   * The message purge plugin manager.
+   *
+   * @var \Drupal\message\MessagePurgePluginManager
+   */
+  protected $purgeManager;
 
   /**
    * {@inheritdoc}
@@ -58,7 +68,8 @@ class MessageSettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('entity.manager')
+      $container->get('entity.manager'),
+      $container->get('plugin.manager.message.purge')
     );
   }
 
@@ -69,10 +80,13 @@ class MessageSettingsForm extends ConfigFormBase {
    *   The factory for configuration objects.
    * @param \Drupal\Core\Entity\EntityManagerInterface $entity_manager
    *   The entity manager object.
+   * @param \Drupal\message\MessagePurgePluginManager $purge_manager
+   *   The message purge plugin manager service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, EntityManagerInterface $entity_manager, MessagePurgePluginManager $purge_manager) {
     parent::__construct($config_factory);
     $this->entityManager = $entity_manager;
+    $this->purgeManager = $purge_manager;
   }
 
   /**
@@ -99,9 +113,9 @@ class MessageSettingsForm extends ConfigFormBase {
       ],
     ];
 
-    /** @var \Drupal\message\MessagePurgeInterface $plugin */
-    foreach (array_keys(\Drupal::service('plugin.manager.message.purge')->getDefinitions()) as $plugin_id) {
-      $plugin = \Drupal::service('plugin.manager.message.purge')->createInstance($plugin_id);
+    foreach (array_keys($this->purgeManager->getDefinitions()) as $plugin_id) {
+      /** @var \Drupal\message\MessagePurgeInterface $plugin */
+      $plugin = $this->purgeManager->createInstance($plugin_id);
       $element = [];
       $element = $plugin->buildConfigurationForm($element, $form_state);
 

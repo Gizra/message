@@ -11,11 +11,10 @@ use Drupal\message\MessagePurgeBase;
  * @MessagePurge(
  *  id = "quota",
  *  label = @Translation("Quota", context = "MessagePurge"),
- *  description = @Translation("Maximal (approximate) amount of messages."),
+ *  description = @Translation("Maximal (approximate) amount of messages to keep."),
  * )
  */
 class Quota extends MessagePurgeBase {
-
 
   /**
    * {@inheritdoc}
@@ -27,6 +26,7 @@ class Quota extends MessagePurgeBase {
       '#title' => t('Messages quota'),
       '#description' => t('Maximal (approximate) amount of messages.'),
       '#default_value' => $this->configuration['quota'],
+      '#tree' => FALSE,
     ];
 
     return parent::buildConfigurationForm($form, $form_state);
@@ -45,9 +45,9 @@ class Quota extends MessagePurgeBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'quota' => 1000,
-    );
+    ];
   }
 
   /**

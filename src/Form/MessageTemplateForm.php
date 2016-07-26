@@ -10,8 +10,11 @@ namespace Drupal\message\Form;
 use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Url;
 use Drupal\message\Entity\MessageTemplate;
 use Drupal\message\FormElement\MessageTemplateMultipleTextField;
+use Drupal\message\MessagePurgePluginManager;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Form controller for node type forms.
@@ -26,6 +29,32 @@ class MessageTemplateForm extends EntityForm {
   protected $entity;
 
   /**
+   * The purge plugin manager.
+   *
+   * @var \Drupal\message\MessagePurgePluginManager
+   */
+  protected $purgeManager;
+
+  /**
+   * Constructs the message template form.
+   *
+   * @param \Drupal\message\MessagePurgePluginManager $purge_manager
+   *   The message purge plugin manager service.
+   */
+  public function __construct(MessagePurgePluginManager $purge_manager) {
+    $this->purgeManager = $purge_manager;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public static function create(ContainerInterface $container) {
+    return new static(
+      $container->get('plugin.manager.message.purge')
+    );
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function form(array $form, FormStateInterface $form_state) {
@@ -35,10 +64,10 @@ class MessageTemplateForm extends EntityForm {
     $template = $this->entity;
 
     $form['label'] = [
-      '#title' => t('Label'),
+      '#title' => $this->t('Label'),
       '#type' => 'textfield',
       '#default_value' => $template->label(),
-      '#description' => t('The human-readable name of this message template. This text will be displayed as part of the list on the <em>Add message</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
+      '#description' => $this->t('The human-readable name of this message template. This text will be displayed as part of the list on the <em>Add message</em> page. It is recommended that this name begin with a capital letter and contain only letters, numbers, and spaces. This name must be unique.'),
       '#required' => TRUE,
       '#size' => 30,
     ];
@@ -52,16 +81,16 @@ class MessageTemplateForm extends EntityForm {
         'exists' => '\Drupal\message\Entity\MessageTemplate::load',
         'source' => ['label'],
       ],
-      '#description' => t('A unique machine-readable name for this message template. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %message-add page, in which underscores will be converted into hyphens.', [
-        '%message-add' => t('Add message'),
+      '#description' => $this->t('A unique machine-readable name for this message template. It must only contain lowercase letters, numbers, and underscores. This name will be used for constructing the URL of the %message-add page, in which underscores will be converted into hyphens.', [
+        '%message-add' => $this->t('Add message'),
       ]),
     ];
 
     $form['description'] = [
-      '#title' => t('Description'),
+      '#title' => $this->t('Description'),
       '#type' => 'textfield',
       '#default_value' => $this->entity->getDescription(),
-      '#description' => t('The human-readable description of this message template.'),
+      '#description' => $this->t('The human-readable description of this message template.'),
     ];
 
     $multiple = new MessageTemplateMultipleTextField($this->entity, [get_class($this), 'addMoreAjax']);
@@ -76,66 +105,28 @@ class MessageTemplateForm extends EntityForm {
     ];
 
     $form['settings']['token options']['clear'] = [
-      '#title' => t('Clear empty tokens'),
+      '#title' => $this->t('Clear empty tokens'),
       '#type' => 'checkbox',
-      '#description' => t('When this option is selected, empty tokens will be removed from display.'),
+      '#description' => $this->t('When this option is selected, empty tokens will be removed from display.'),
       '#default_value' => isset($settings['token options']['clear']) ? $settings['token options']['clear'] : FALSE,
-    ];
-
-    $form['settings']['purge'] = [
-      '#type' => 'fieldset',
-      '#title' => t('Purge settings'),
-    ];
-
-    $form['settings']['purge']['override'] = [
-      '#title' => t('Override global settings'),
-      '#type' => 'checkbox',
-      '#description' => t('Override global purge settings for messages of this template.'),
-      '#default_value' => !empty($settings['purge']['override']),
-    ];
-
-    $states = [
-      'visible' => [
-        ':input[name="settings[purge][override]"]' => ['checked' => TRUE],
-      ],
-    ];
-
-    $form['settings']['purge']['enabled'] = [
-      '#type' => 'checkbox',
-      '#title' => t('Purge messages'),
-      '#description' => t('When enabled, old messages will be deleted.'),
-      '#states' => $states,
-      '#default_value' => !empty($settings['purge']['enabled']) ? TRUE : FALSE,
-    ];
-
-    $states = [
-      'visible' => [
-        ':input[name="settings[purge][enabled]"]' => ['checked' => TRUE],
-      ],
-    ];
-
-    $form['settings']['purge']['quota'] = [
-      '#type' => 'textfield',
-      '#title' => t('Messages quota'),
-      '#description' => t('Maximal (approximate) amount of messages of this template.'),
-      '#default_value' => !empty($settings['purge']['quota']) ? $settings['purge']['quota'] : '',
-      '#states' => $states,
-    ];
-
-    $form['settings']['purge']['days'] = [
-      '#type' => 'textfield',
-      '#title' => t('Purge messages older than'),
-      '#description' => t('Maximal message age in days, for messages of this template.'),
-      '#default_value' => !empty($settings['purge']['days']) ? $settings['purge']['days'] : '',
-      '#states' => $states,
     ];
 
     $form['settings']['token options']['token replace'] = array(
       '#type' => 'checkbox',
-      '#title' => t('Token replace'),
-      '#description' => t('When this option is selected, token processing will happen.'),
+      '#title' => $this->t('Token replace'),
+      '#description' => $this->t('When this option is selected, token processing will happen.'),
       '#default_value' => !isset($settings['token options']['token replace']) || !empty($settings['token options']['token replace']),
     );
+
+    $form['settings']['purge_override'] = [
+      '#title' => $this->t('Override global purge settings'),
+      '#type' => 'checkbox',
+      '#description' => $this->t('Override <a href=":settings">global purge settings</a> for messages using this template.', [':settings' => Url::fromRoute('message.settings')->toString()]),
+      '#default_value' => $this->entity->getSetting('purge_override'),
+    ];
+
+    // Add the purge method settings form.
+    $this->purgeManager->purgeSettingsForm($form, $form_state);
 
     return $form;
   }
@@ -155,6 +146,30 @@ class MessageTemplateForm extends EntityForm {
    */
   public function validate(array $form, FormStateInterface $form_state) {
     parent::validate($form, $form_state);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function submitForm(array &$form, FormStateInterface $form_state) {
+    parent::submitForm($form, $form_state);
+
+    // Save only the enabled purge methods if overriding the global settings.
+    $purge_plugins = [];
+    $override = $form_state->getValue(['settings', 'purge_override']);
+    if ($override) {
+      foreach ($form_state->getValue(['settings', 'purge_methods']) as $plugin_id => $configuration) {
+        if ($configuration['enabled']) {
+          /** @var \Drupal\message\MessagePurgeInterface $plugin */
+          $plugin = $this->purgeManager->createInstance($plugin_id, $configuration);
+          $plugin->submitConfigurationForm($form, $form_state);
+          $purge_plugins[$plugin_id] = $plugin->getConfiguration();
+        }
+      }
+    }
+    $settings = $this->entity->getSettings();
+    $settings['purge_methods'] = $purge_plugins;
+    $this->entity->setSettings($settings);
   }
 
   /**

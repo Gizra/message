@@ -10,12 +10,10 @@ use Drupal\Core\Plugin\PluginFormInterface;
  */
 interface MessagePurgeInterface extends ConfigurablePluginInterface, PluginFormInterface {
 
-
   /**
    * Fetch the messages that need to be purged.
    */
   public function fetch();
-
 
   /**
    * Process the purgeable messages.
@@ -31,53 +29,37 @@ interface MessagePurgeInterface extends ConfigurablePluginInterface, PluginFormI
   public function process(array $ids);
 
   /**
-   * Returns the image effect label.
+   * Returns the purge method label.
    *
    * @return string
-   *   The image effect label.
+   *   The purge method label.
    */
   public function label();
 
   /**
-   * Returns the unique ID representing the image effect.
+   * Returns the purge method description.
    *
    * @return string
-   *   The image effect ID.
+   *   The purge plugin description.
    */
-  public function getUuid();
+  public function description();
 
   /**
-   * Returns the weight of the image effect.
+   * Returns the weight of the purge plugin.
    *
-   * @return int|string
-   *   Either the integer weight of the image effect, or an empty string.
+   * @return int
+   *   The integer weight of the purge plugin.
    */
   public function getWeight();
 
   /**
-   * Sets the weight for this image effect.
+   * Sets the weight for this purge plugin.
    *
    * @param int $weight
-   *   The weight for this image effect.
+   *   The weight for this purge plugin.
    *
    * @return $this
    */
   public function setWeight($weight);
 
-  /**
-   * Returns if a purge plugin is enabled.
-   *
-   * @return bool
-   */
-  public function getEnabled();
-
-  /**
-   * Sets the weight for this purge plugin.
-   *
-   * @param bool $enabled
-   *   The status of the purge plugin.
-   *
-   * @return $this
-   */
-  public function setEnabled($enabled);
 }

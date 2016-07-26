@@ -19,25 +19,11 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
   use StringTranslationTrait;
 
   /**
-   * The purge plugin ID.
-   *
-   * @var string
-   */
-  protected $uuid;
-
-  /**
    * The weight of the purge plugin.
    *
    * @var int|string
    */
-  protected $weight = '';
-
-  /**
-   * Determines if a purge plugin is enabled.
-   *
-   * @var bool
-   */
-  protected $enabled = TRUE;
+  protected $weight = 0;
 
   /**
    * The entity type manager.
@@ -59,8 +45,6 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * @var \Drupal\Core\Config\ConfigFactoryInterface
    */
   protected $configFactory;
-
-
 
   /**
    * Constructs a MessagePurgeBase object.
@@ -131,14 +115,6 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * {@inheritdoc}
    */
   public function buildConfigurationForm(array $form, FormStateInterface $form_state) {
-    $form['enabled'] = [
-      '#type' => 'checkbox',
-      '#title' => t('Enable'),
-      '#description' => t('Determine if @name purge plugin should be enabled.', ['@name' => $this->label()]),
-      '#weight' => -10,
-      '#default_value' => $this->getEnabled(),
-    ];
-
     return $form;
   }
 
@@ -161,23 +137,11 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
     return $this->pluginDefinition['label'];
   }
 
-  public function getEnabled() {
-    return $this->enabled;
-  }
-
   /**
    * {@inheritdoc}
    */
-  public function setEnabled($enabled) {
-    $this->enabled = $enabled;
-    return $this;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getUuid() {
-    return $this->uuid;
+  public function description() {
+    return $this->pluginDefinition['description'];
   }
 
   /**
@@ -200,27 +164,22 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * {@inheritdoc}
    */
   public function getConfiguration() {
-    return array(
-      'enabled' => $this->getEnabled(),
-      'uuid' => $this->getUuid(),
+    return [
       'id' => $this->getPluginId(),
       'weight' => $this->getWeight(),
       'data' => $this->configuration,
-    );
+    ];
   }
 
   /**
    * {@inheritdoc}
    */
   public function setConfiguration(array $configuration) {
-    $configuration += array(
-      'enabled' => TRUE,
-      'data' => array(),
-      'uuid' => '',
+    $configuration += [
+      'data' => [],
       'weight' => '',
-    );
+    ];
     $this->configuration = $configuration['data'] + $this->defaultConfiguration();
-    $this->uuid = $configuration['uuid'];
     $this->weight = $configuration['weight'];
     return $this;
   }
@@ -229,13 +188,14 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array();
+    return [];
   }
 
   /**
    * {@inheritdoc}
    */
   public function calculateDependencies() {
-    return array();
+    return [];
   }
+
 }

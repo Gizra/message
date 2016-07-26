@@ -11,11 +11,10 @@ use Drupal\message\MessagePurgeBase;
  * @MessagePurge(
  *  id = "days",
  *  label = @Translation("Days", context = "MessagePurge"),
- *  description = @Translation("Delete messages older than certain days."),
+ *  description = @Translation("Delete messages older than a given amount of days."),
  * )
  */
 class Days extends MessagePurgeBase {
-
 
   /**
    * {@inheritdoc}
@@ -27,6 +26,7 @@ class Days extends MessagePurgeBase {
       '#title' => t('Messages older than'),
       '#description' => t('Maximal message age in days.'),
       '#default_value' => $this->configuration['days'],
+      '#tree' => FALSE,
     ];
 
     return parent::buildConfigurationForm($form, $form_state);
@@ -45,9 +45,9 @@ class Days extends MessagePurgeBase {
    * {@inheritdoc}
    */
   public function defaultConfiguration() {
-    return array(
+    return [
       'days' => 30,
-    );
+    ];
   }
 
   /**
