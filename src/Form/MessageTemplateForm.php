@@ -126,7 +126,8 @@ class MessageTemplateForm extends EntityForm {
     ];
 
     // Add the purge method settings form.
-    $this->purgeManager->purgeSettingsForm($form, $form_state);
+    $settings = $this->entity->getSetting('purge_methods', []);
+    $this->purgeManager->purgeSettingsForm($form, $form_state, $settings);
 
     return $form;
   }
@@ -155,20 +156,9 @@ class MessageTemplateForm extends EntityForm {
     parent::submitForm($form, $form_state);
 
     // Save only the enabled purge methods if overriding the global settings.
-    $purge_plugins = [];
     $override = $form_state->getValue(['settings', 'purge_override']);
-    if ($override) {
-      foreach ($form_state->getValue(['settings', 'purge_methods']) as $plugin_id => $configuration) {
-        if ($configuration['enabled']) {
-          /** @var \Drupal\message\MessagePurgeInterface $plugin */
-          $plugin = $this->purgeManager->createInstance($plugin_id, $configuration);
-          $plugin->submitConfigurationForm($form, $form_state);
-          $purge_plugins[$plugin_id] = $plugin->getConfiguration();
-        }
-      }
-    }
     $settings = $this->entity->getSettings();
-    $settings['purge_methods'] = $purge_plugins;
+    $settings['purge_methods'] = $override ? $this->purgeManager->getPurgeConfiguration($form, $form_state) : [];
     $this->entity->setSettings($settings);
   }
 

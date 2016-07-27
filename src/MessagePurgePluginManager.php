@@ -42,28 +42,29 @@ class MessagePurgePluginManager extends DefaultPluginManager {
    *   The form array.
    * @param \Drupal\Core\Form\FormStateInterface $form_state
    *   The form state.
+   * @param array $purge_settings
+   *   The default purge plugin settings to use.
    */
-  public function purgeSettingsForm(array &$form, FormStateInterface $form_state) {
-    /** @var \Drupal\Core\Config\Entity\ConfigEntityInterface $entity */
-    $entity = $form_state->getFormObject()->getEntity();
-
-    // Add message purge plugin settings.
-    $form['settings']['purge_methods'] = [
-      '#type' => 'fieldset',
-      '#title' => $this->t('Purge settings'),
-      '#states' => [
-        'visible' => [
-          ':input[name="settings[purge_override]"]' => ['checked' => TRUE],
-        ],
-      ],
-    ];
+  public function purgeSettingsForm(array &$form, FormStateInterface $form_state, array $purge_settings) {
 
     // Loop through all purge plugins and add to form.
     $form['settings']['purge_methods'] = [
       '#type' => 'table',
+      '#states' => [
+        'visible' => [
+          // Configure visibility for both the template form and the global
+          // settings form.
+          [
+            [':input[name="settings[purge_override]"]' => ['checked' => TRUE]],
+            'or',
+            [':input[name="settings[purge_enable]"]' => ['checked' => TRUE]],
+          ],
+        ],
+      ],
+      '#theme_wrappers' => ['form_element'],
       '#header' => [
-        $this->t('Weight'),
         $this->t('Purge method'),
+        $this->t('Weight'),
         $this->t('Enabled'),
         $this->t('Settings'),
       ],
@@ -77,13 +78,11 @@ class MessagePurgePluginManager extends DefaultPluginManager {
     ];
     $user_input = $form_state->getUserInput();
     $definitions = $this->getDefinitions();
-    $settings = $entity->get('settings') ?: [];
-    $settings = isset($settings['purge_methods']) ? $settings['purge_methods'] : [];
-    $this->sortDefinitions($definitions, $settings);
+    $this->sortDefinitions($definitions, $purge_settings);
     foreach ($definitions as $plugin_id => $definition) {
 
       /** @var \Drupal\message\MessagePurgeInterface $plugin */
-      $plugin = $this->createInstance($plugin_id, isset($settings[$plugin_id]) ? $settings[$plugin_id] : []);
+      $plugin = $this->createInstance($plugin_id, isset($purge_settings[$plugin_id]) ? $purge_settings[$plugin_id] : []);
 
       // Create the table row.
       $form['settings']['purge_methods'][$plugin_id]['#attributes']['class'][] = 'draggable';
@@ -112,7 +111,7 @@ class MessagePurgePluginManager extends DefaultPluginManager {
       $form['settings']['purge_methods'][$plugin_id]['enabled'] = [
         '#type' => 'checkbox',
         '#title' => $plugin->description(),
-        '#default_value' => isset($settings[$plugin_id]),
+        '#default_value' => isset($purge_settings[$plugin_id]),
       ];
 
       // Purge plugin-specific settings.
@@ -121,6 +120,29 @@ class MessagePurgePluginManager extends DefaultPluginManager {
     }
   }
 
+  /**
+   * Gather the purge plugin settings on form submission.
+   *
+   * @param array $form
+   *   The form array.
+   * @param \Drupal\Core\Form\FormStateInterface $form_state
+   *   The form state.
+   *
+   * @return array
+   *   The purge plugin configurations that are enabled, keyed by plugin ID.
+   */
+  public function getPurgeConfiguration(array $form, FormStateInterface $form_state) {
+    $purge_plugins = [];
+    foreach ($form_state->getValue(['settings', 'purge_methods']) as $plugin_id => $configuration) {
+      if ($configuration['enabled']) {
+        /** @var \Drupal\message\MessagePurgeInterface $plugin */
+        $plugin = $this->createInstance($plugin_id, $configuration);
+        $plugin->submitConfigurationForm($form, $form_state);
+        $purge_plugins[$plugin_id] = $plugin->getConfiguration();
+      }
+    }
+    return $purge_plugins;
+  }
 
   /**
    * Sort plugin definitions based on plugin settings.

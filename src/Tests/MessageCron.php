@@ -183,27 +183,24 @@ class MessageCron extends MessageTestBase {
    * Test global purge settings and overriding them.
    */
   public function testPurgeGlobalSettings() {
-    // @todo Fix this when global settings are using plugins.
-    $this->fail('Implement global settings!');
-    return;
-
     // Set global purge settings.
+    $quota = $this->purgeManager->createInstance('quota', ['data' => ['quota' => 1]]);
+    $days = $this->purgeManager->createInstance('days', ['data' => ['days' => 2]]);
+    $methods = [
+      'quota' => $quota->getConfiguration(),
+      'days' => $days->getConfiguration(),
+    ];
     \Drupal::configFactory()->getEditable('message.settings')
       ->set('purge_enable', TRUE)
-      ->set('purge_quota', 1)
-      ->set('purge_days', 2)
+      ->set('purge_methods', $methods)
       ->save();
 
     MessageTemplate::create(['template' => 'template1'])->save();
 
-    // Create an overriding template.
+    // Create an overriding template with no purge methods.
     $data = [
-      'purge' => [
-        'override' => TRUE,
-        'enabled' => FALSE,
-        'quota' => 1,
-        'days' => 1,
-      ],
+      'purge_override' => TRUE,
+      'purge_methods' => [],
     ];
 
     MessageTemplate::create(['template' => 'template2'])
