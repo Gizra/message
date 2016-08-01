@@ -33,6 +33,13 @@ class MessagePurgeOrchestrator {
 
   /**
    * Constructs the purging service.
+   *
+   * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
+   *   The config factory service.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager service.
+   * @param \Drupal\message\MessagePurgePluginManager $purge_manager
+   *   The purge plugin manager.
    */
   public function __construct(ConfigFactoryInterface $config_factory, EntityTypeManagerInterface $entity_type_manager, MessagePurgePluginManager $purge_manager) {
     $this->entityTypeManager = $entity_type_manager;

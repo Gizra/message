@@ -130,7 +130,7 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
    * - 'purge_override': TRUE or FALSE override the global behavior.
    *    "Message settings" will apply. Defaults to FALSE.
    * - 'purge_methods': An array of purge method plugin configuration, keyed by
-   *   the plugin_id. An empty array indicates no purge is enabled (although
+   *   the plugin ID. An empty array indicates no purge is enabled (although
    *   global settings will be used unless 'purge_override' is TRUE).
    *
    * Token settings:

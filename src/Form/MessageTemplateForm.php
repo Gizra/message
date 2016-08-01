@@ -11,7 +11,6 @@ use Drupal\Core\Entity\EntityForm;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Drupal\message\Entity\MessageTemplate;
 use Drupal\message\FormElement\MessageTemplateMultipleTextField;
 use Drupal\message\MessagePurgePluginManager;
 use Symfony\Component\DependencyInjection\ContainerInterface;

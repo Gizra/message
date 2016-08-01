@@ -10,9 +10,9 @@ use Drupal\message\MessageTemplateInterface;
  * Maximal (approximate) amount of messages.
  *
  * @MessagePurge(
- *  id = "quota",
- *  label = @Translation("Quota", context = "MessagePurge"),
- *  description = @Translation("Maximal (approximate) amount of messages to keep."),
+ *   id = "quota",
+ *   label = @Translation("Quota", context = "MessagePurge"),
+ *   description = @Translation("Maximal (approximate) amount of messages to keep."),
  * )
  */
 class Quota extends MessagePurgeBase {

@@ -15,9 +15,9 @@ use Symfony\Component\HttpFoundation\RequestStack;
  * Delete messages older than certain days.
  *
  * @MessagePurge(
- *  id = "days",
- *  label = @Translation("Days", context = "MessagePurge"),
- *  description = @Translation("Delete messages older than a given amount of days."),
+ *   id = "days",
+ *   label = @Translation("Days", context = "MessagePurge"),
+ *   description = @Translation("Delete messages older than a given amount of days."),
  * )
  */
 class Days extends MessagePurgeBase {
