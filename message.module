@@ -108,9 +108,9 @@ function message_entity_delete(EntityInterface $entity) {
  * Fetch all message templates and purge old messages.
  */
 function message_cron() {
-  /** @var \Drupal\message\MessagePurger $message_purger */
-  $message_purger = \Drupal::service('message.purger');
-  $message_purger->purgeAllTemplateMessages();
+  /** @var \Drupal\message\MessagePurgeOrchestrator $purge_orchestrator */
+  $purge_orchestrator = \Drupal::service('message.purge_orchestrator');
+  $purge_orchestrator->purgeAllTemplateMessages();
 }
 
 

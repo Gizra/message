@@ -8,7 +8,7 @@ use Drupal\Core\Entity\EntityTypeManagerInterface;
 /**
  * Purges messages from the system based on global and template configurations.
  */
-class MessagePurger {
+class MessagePurgeOrchestrator {
 
   /**
    * The entity type manager service.
