@@ -126,17 +126,12 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
   /**
    * Serialized array with misc options.
    *
-   * Purge settings (under $message_template->data['purge]). Note that the
-   * purge settings can be added only to the message-template.
-   * - 'enabled': TRUE or FALSE to explicitly enable or disable message
-   *    purging. IF not set, the default purge settings defined in the
-   *    "Message settings" will apply.
-   * - 'quota': Optional; Maximal (approximate) amount of allowed messages
-   *    of the message template. IF not set, the default purge settings defined in
-   *    the "Message settings" will apply.
-   * - 'days': Optional; Maximal message age in days. IF not set, the default
-   *    purge settings defined in the
-   *    "Message settings" will apply.
+   * Purge settings:
+   * - 'purge_override': TRUE or FALSE override the global behavior.
+   *    "Message settings" will apply. Defaults to FALSE.
+   * - 'purge_methods': An array of purge method plugin configuration, keyed by
+   *   the plugin ID. An empty array indicates no purge is enabled (although
+   *   global settings will be used unless 'purge_override' is TRUE).
    *
    * Token settings:
    * - 'token replace': Indicate if message's text should be passed
@@ -148,11 +143,8 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
    * assigned to the message.
    *
    * @var array
-   *
-   * @todo: A better name would be $settings, however we might want to keep this
-   * for easier migration from Drupal 7?
    */
-  public $settings = [];
+  protected $settings = [];
 
   /**
    * {@inheritdoc}

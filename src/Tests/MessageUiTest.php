@@ -46,7 +46,7 @@ class MessageUiTest extends MessageTestBase {
   public function testMessageTranslate() {
     $this->drupalLogin($this->account);
 
-    // Verifying creation of a message.
+    // Verifying creation of a message template.
     $edit = [
       'label' => 'Dummy message',
       'template' => 'dummy_message',
