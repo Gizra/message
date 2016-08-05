@@ -40,10 +40,10 @@ class MessageCreateTest extends MessageTestBase {
     // Login our user to create message.
     $this->drupalLogin($this->user);
 
-    $type = 'dummy_message';
+    $template = 'dummy_message';
     // Create message to be rendered without setting owner.
-    $message_template = $this->createMessageTemplate($type, 'Dummy message', '', ['[message:author:name]']);
-    $message = Message::create(['type' => $message_template->id()]);
+    $message_template = $this->createMessageTemplate($template, 'Dummy message', '', ['[message:author:name]']);
+    $message = Message::create(['template' => $message_template->id()]);
 
     $message->save();
 
