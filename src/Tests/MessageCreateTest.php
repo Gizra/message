@@ -42,8 +42,8 @@ class MessageCreateTest extends MessageTestBase {
 
     $type = 'dummy_message';
     // Create message to be rendered without setting owner.
-    $message_type = $this->createMessageType($type, 'Dummy message', '', ['[message:author:name]']);
-    $message = Message::create(['type' => $message_type->id()]);
+    $message_template = $this->createMessageTemplate($type, 'Dummy message', '', ['[message:author:name]']);
+    $message = Message::create(['type' => $message_template->id()]);
 
     $message->save();
 
