@@ -47,7 +47,7 @@ use Drupal\user\UserInterface;
  *   field_ui_base_route = "entity.message_template.edit_form"
  * )
  */
-class Message extends ContentEntityBase implements MessageInterface, EntityOwnerInterface {
+class Message extends ContentEntityBase implements MessageInterface {
 
   /**
    * The message ID.
