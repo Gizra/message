@@ -1,19 +1,15 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\message\MessageInterface.
- */
-
 namespace Drupal\message;
 
+use Drupal\user\EntityOwnerInterface;
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Language\Language;
 
 /**
  * Provides an interface defining a Message entity.
  */
-interface MessageInterface extends ContentEntityInterface {
+interface MessageInterface extends ContentEntityInterface, EntityOwnerInterface {
 
   /**
    * Set the message template.
