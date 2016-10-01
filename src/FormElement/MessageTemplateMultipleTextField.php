@@ -71,6 +71,7 @@ class MessageTemplateMultipleTextField {
         '#theme' => 'token_tree_link',
         '#token_types' => 'all',
         '#show_restricted' => TRUE,
+        '#theme_wrappers' => ['form_element'],
       ];
     }
 
