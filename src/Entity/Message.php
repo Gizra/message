@@ -13,6 +13,7 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Language\Language;
 use Drupal\Core\Render\Markup;
+use Drupal\message\MessageException;
 use Drupal\message\MessageInterface;
 use Drupal\message\MessageTemplateInterface;
 use Drupal\user\EntityOwnerInterface;
@@ -328,6 +329,11 @@ class Message extends ContentEntityBase implements MessageInterface {
     $token_options = !empty($this->data['token options']) ? $this->data['token options'] : [];
 
     $tokens = [];
+
+    // Require a valid template when saving.
+    if (!$this->getTemplate()) {
+      throw new MessageException('No valid template found.');
+    }
 
     // Handle hard coded arguments.
     foreach ($this->getTemplate()->getText() as $text) {
