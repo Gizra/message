@@ -2,9 +2,11 @@
 
 namespace Drupal\Tests\message\Kernel;
 
+use Drupal\Component\Utility\Unicode;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
 use Drupal\message\Tests\MessageTemplateCreateTrait;
+use Drupal\simpletest\UserCreationTrait;
 
 /**
  * Kernel tests for the Message entity.
@@ -14,11 +16,12 @@ use Drupal\message\Tests\MessageTemplateCreateTrait;
 class MessageTest extends KernelTestBase {
 
   use MessageTemplateCreateTrait;
+  use UserCreationTrait;
 
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['message', 'user'];
+  public static $modules = ['message', 'user', 'system'];
 
   /**
    * {@inheritdoc}
@@ -27,6 +30,7 @@ class MessageTest extends KernelTestBase {
     parent::setUp();
     $this->installEntitySchema('message');
     $this->installEntitySchema('user');
+    $this->installSchema('system', ['sequences']);
   }
 
   /**
@@ -37,6 +41,20 @@ class MessageTest extends KernelTestBase {
   public function testMissingTemplate() {
     $message = Message::create(['template' => 'missing']);
     $message->save();
+  }
+
+  /**
+   * Tests getting the user.
+   */
+  public function testGetOwner() {
+    $template = $this->createMessageTemplate(Unicode::strtolower($this->randomMachineName()), $this->randomString(), $this->randomString(), []);
+    $message = Message::create(['template' => $template->id()]);
+    $account = $this->createUser();
+    $message->setOwner($account);
+    $this->assertEquals($account->id(), $message->getOwnerId());
+
+    $owner = $message->getOwner();
+    $this->assertEquals($account->id(), $owner->id());
   }
 
 }
