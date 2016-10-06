@@ -210,17 +210,18 @@ class Message extends ContentEntityBase implements MessageInterface {
       ->setDescription(t('The message language code.'));
 
     $fields['uid'] = BaseFieldDefinition::create('entity_reference')
-      ->setLabel(t('Author'))
-      ->setDescription(t('The user that is the message author.'))
+      ->setLabel(t('Created by'))
+      ->setDescription(t('The user that created the message.'))
       ->setSettings([
         'target_type' => 'user',
         'default_value' => 0,
       ])
+      ->setDefaultValueCallback('Drupal\message\Entity\Message::getCurrentUserId')
       ->setTranslatable(TRUE);
 
     $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Created'))
-      ->setDescription(t('The time that the node was created.'))
+      ->setLabel(t('Created on'))
+      ->setDescription(t('The time that the message was created.'))
       ->setTranslatable(TRUE);
 
     $fields['arguments'] = BaseFieldDefinition::create('map')
@@ -413,6 +414,18 @@ class Message extends ContentEntityBase implements MessageInterface {
    */
   public function setLanguage($language) {
     $this->language = $language;
+  }
+
+  /**
+   * Default value callback for 'uid' base field definition.
+   *
+   * @see ::baseFieldDefinitions()
+   *
+   * @return array
+   *   An array of default values.
+   */
+  public static function getCurrentUserId() {
+    return array(\Drupal::currentUser()->id());
   }
 
 }
