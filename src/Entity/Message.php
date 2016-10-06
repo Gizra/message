@@ -35,7 +35,8 @@ use Drupal\user\UserInterface;
  *     "id" = "mid",
  *     "bundle" = "template",
  *     "uuid" = "uuid",
- *     "langcode" = "langcode"
+ *     "langcode" = "langcode",
+ *     "uid" = "uid"
  *   },
  *   bundle_keys = {
  *     "bundle" = "template"
