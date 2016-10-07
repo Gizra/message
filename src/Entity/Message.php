@@ -52,41 +52,6 @@ use Drupal\user\UserInterface;
 class Message extends ContentEntityBase implements MessageInterface {
 
   /**
-   * The message ID.
-   *
-   * @var int
-   */
-  protected $mid;
-
-  /**
-   * The UUID string.
-   *
-   * @var string
-   */
-  protected $uuid;
-
-  /**
-   * The message template object.
-   *
-   * @var \Drupal\message\MessageTemplateInterface
-   */
-  protected $template;
-
-  /**
-   * The user object.
-   *
-   * @var \Drupal\user\UserInterface
-   */
-  protected $uid;
-
-  /**
-   * The time stamp the message was created.
-   *
-   * @var int
-   */
-  protected $created;
-
-  /**
    * Holds the arguments of the message instance.
    *
    * @var array
