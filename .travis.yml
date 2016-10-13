@@ -14,9 +14,9 @@ env:
     - MODULE_NAME='message'
     - MODULE_TEST_GROUP='Message'
     - DRUPAL_REPO='git://drupalcode.org/project/drupal.git'
-    - DRUPAL_VERSION='8.0.x'
-    - PHPCS_VERSION='2.0.*@dev'
-    - CODER_VERSION='8.2.0-beta1'
+    - DRUPAL_VERSION='8.2.x'
+    - PHPCS_VERSION='~2.7'
+    - CODER_VERSION='~8.2.0'
 
 before_install:
   # Ensure we have the latest sources.
@@ -49,6 +49,7 @@ install:
   - mkdir /tmp/$MODULE_NAME
   - mv * /tmp/$MODULE_NAME/
   - git clone --branch $DRUPAL_VERSION $DRUPAL_REPO drupal --depth 1
+  - cd drupal && composer install && cd -
   - mv /tmp/$MODULE_NAME drupal/modules/
   - cd drupal
 
