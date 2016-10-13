@@ -3,7 +3,6 @@
 namespace Drupal\Tests\message\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageTemplate;
 
 /**
@@ -143,4 +142,5 @@ class MessageUiTest extends MessageTestBase {
       $this->fail('The next errors were found: ' . implode("", $errors));
     }
   }
+
 }

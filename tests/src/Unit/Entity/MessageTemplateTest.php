@@ -1,13 +1,8 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\message\Unit\Entity\MessageTemplateTest.
- */
 
 namespace Drupal\Tests\message\Unit\Entity;
 
 use Drupal\message\Entity\MessageTemplate;
-use Drupal\message\MessageTemplateInterface;
 use Drupal\Tests\UnitTestCase;
 
 /**
@@ -31,7 +26,7 @@ class MessageTemplateTest extends UnitTestCase {
    */
   public function setUp() {
     parent::setUp();
-    $this->messageTemplate = new \Drupal\message\Entity\MessageTemplate([], 'message_template');
+    $this->messageTemplate = new MessageTemplate([], 'message_template');
   }
 
   /**

@@ -1,16 +1,10 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Tests\message\Kernel\MessageTokenTest.
- */
-
 namespace Drupal\Tests\message\Kernel;
 
 use Drupal\Component\Utility\Html;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
-use Drupal\Tests\message\Kernel\MessageTemplateCreateTrait;
 use Drupal\user\Entity\User;
 
 /**

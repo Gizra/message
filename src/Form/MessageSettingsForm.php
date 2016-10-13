@@ -1,11 +1,5 @@
 <?php
 
-/**
- * @file
- *
- * Contains \Drupal\system\Form\FileSystemForm.
- */
-
 namespace Drupal\message\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;

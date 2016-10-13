@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\Tests\message\Functional\MessageEntityDelete.
- */
-
 namespace Drupal\Tests\message\Functional;
 
 use Drupal\Component\Utility\Unicode;
@@ -39,11 +34,15 @@ class MessageEntityDelete extends MessageTestBase {
   protected $nodeType;
 
   /**
-   * Modules to enable.
-   *
-   * @var array
+   * {@inheritdoc}
    */
-  public static $modules = ['message', 'entity_reference', 'node', 'taxonomy', 'user'];
+  public static $modules = [
+    'message',
+    'entity_reference',
+    'node',
+    'taxonomy',
+    'user',
+  ];
 
   /**
    * {@inheritdoc}
@@ -52,7 +51,8 @@ class MessageEntityDelete extends MessageTestBase {
     parent::setUp();
 
     // Set config.
-    $this->configSet('delete_on_entity_delete', ['node', 'taxonomy_term', 'user']);
+    $entities = ['node', 'taxonomy_term', 'user'];
+    $this->configSet('delete_on_entity_delete', $entities);
 
     // Set config.
     $this->createMessageTemplate('dummy_message', 'Dummy message', 'This is a dummy message text', ['Dummy message template.']);
@@ -225,4 +225,5 @@ class MessageEntityDelete extends MessageTestBase {
     $account->delete();
     $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced user.');
   }
+
 }

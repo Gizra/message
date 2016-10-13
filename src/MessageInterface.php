@@ -55,7 +55,7 @@ interface MessageInterface extends ContentEntityInterface, EntityOwnerInterface 
    * @return string
    *   Return the UUID.
    */
-  public function getUUID();
+  public function getUuid();
 
   /**
    * Retrieve the message arguments.
@@ -99,7 +99,7 @@ interface MessageInterface extends ContentEntityInterface, EntityOwnerInterface 
    *
    * @param string $langcode
    *   The language code.
-   * @param NULL|int $delta
+   * @param null|int $delta
    *   The delta of the message to return. If NULL all the message text will be
    *   returned.
    *

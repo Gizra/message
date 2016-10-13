@@ -1,9 +1,4 @@
 <?php
-/**
- * @file
- *
- * Contains \Drupal\message\Form\MessageTemplateConfigTranslationEditForm.
- */
 
 namespace Drupal\message\Form;
 

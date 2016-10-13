@@ -75,4 +75,5 @@ abstract class MessageTestBase extends BrowserTestBase {
   protected function configSet($config, $value, $storage = 'message.settings') {
     \Drupal::configFactory()->getEditable($storage)->set($config, $value);
   }
+
 }

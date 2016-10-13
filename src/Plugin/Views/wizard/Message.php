@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\node\Plugin\views\wizard\Node.
- */
-
 namespace Drupal\message\Plugin\views\wizard;
 
 use Drupal\views\Plugin\views\wizard\WizardPluginBase;
@@ -22,6 +17,8 @@ class Message extends WizardPluginBase {
 
   /**
    * Set default values for the path field options.
+   *
+   * @var array
    */
   protected $pathField = [
     'id' => 'mid',
@@ -37,6 +34,8 @@ class Message extends WizardPluginBase {
 
   /**
    * Set default values for the filters.
+   *
+   * @var array
    */
   protected $filters = [
     'status' => [
@@ -89,4 +88,5 @@ class Message extends WizardPluginBase {
 
     return $filters;
   }
+
 }

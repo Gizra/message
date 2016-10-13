@@ -1,9 +1,4 @@
 <?php
-/**
- * @file
- *
- * Contains \Drupal\message\Form\MessageTemplateConfigTranslationBaseForm.
- */
 
 namespace Drupal\message\Form;
 
@@ -48,6 +43,7 @@ abstract class MessageTemplateConfigTranslationBaseForm extends ConfigTranslatio
     $multiple->textField($translation, $form_state, $text);
     return $form;
   }
+
   /**
    * Ajax callback for the "Add another item" button.
    *
@@ -90,4 +86,5 @@ abstract class MessageTemplateConfigTranslationBaseForm extends ConfigTranslatio
     $config_translation->set('text', $text);
     $config_translation->save();
   }
+
 }

@@ -1,17 +1,14 @@
 <?php
 
-/**
- * @file
- *
- * Contains Drupal\message\FormElement.
- */
-
 namespace Drupal\message\FormElement;
 
 use Drupal\Core\Field\FieldStorageDefinitionInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\message\Entity\MessageTemplate;
 
+/**
+ * Helper class to construct a multiple text field form.
+ */
 class MessageTemplateMultipleTextField {
 
   /**
@@ -24,7 +21,7 @@ class MessageTemplateMultipleTextField {
   /**
    * The name of the ajax callback.
    *
-   * @var String
+   * @var string
    *  Each form holds the text elements in a different location. When
    *  constructing this class we need to supply the name of the callback.
    *
@@ -142,4 +139,5 @@ class MessageTemplateMultipleTextField {
 
     return $element;
   }
+
 }

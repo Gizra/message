@@ -19,7 +19,7 @@ class MessageThemeTest extends KernelTestBase {
   use UserCreationTrait;
 
   /**
-   * User account
+   * User account.
    *
    * @var \Drupal\user\UserInterface
    */

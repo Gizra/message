@@ -46,7 +46,13 @@ class MessageTemplateSuggestionsTest extends MessageTestBase {
     $variables['elements'] = $build;
     $suggestions = \Drupal::moduleHandler()->invokeAll('theme_suggestions_message', [$variables]);
 
-    $this->assertEqual($suggestions, ['message__full', 'message__' . $template, 'message__' . $template . '__full', 'message__' . $message->id(), 'message__' . $message->id() . '__full'], 'Found expected message suggestions.');
+    $expected = [
+      'message__full',
+      'message__' . $template, 'message__' . $template . '__full',
+      'message__' . $message->id(),
+      'message__' . $message->id() . '__full',
+    ];
+    $this->assertEquals($expected, $suggestions, 'Found expected message suggestions.');
   }
 
 }

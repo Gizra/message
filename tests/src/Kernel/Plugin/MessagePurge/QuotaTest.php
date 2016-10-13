@@ -42,9 +42,9 @@ class QuotaTest extends KernelTestBase {
 
     $this->installEntitySchema('message');
 
-   $this->template = MessageTemplate::create([
-     'template' => 'foo',
-   ]);
+    $this->template = MessageTemplate::create([
+      'template' => 'foo',
+    ]);
     $this->template->save();
   }
 

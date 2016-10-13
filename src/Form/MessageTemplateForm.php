@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\message\MessageTemplateForm.
- */
-
 namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityForm;

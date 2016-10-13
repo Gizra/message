@@ -1,15 +1,9 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\message\MessageViewBuilder.
- */
-
 namespace Drupal\message;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
-use Drupal\message\Entity\Message;
 
 /**
  * Render controller for Messages.
@@ -59,4 +53,5 @@ class MessageViewBuilder extends EntityViewBuilder {
 
     return $build;
   }
+
 }

@@ -78,7 +78,7 @@ function message_tokens($type, $tokens, array $data, array $options, BubbleableM
           break;
 
         case 'uuid':
-          $replacements[$original] = $message->getUUID();
+          $replacements[$original] = $message->getUuid();
           break;
 
         // Default values for the chained tokens handled below.

@@ -92,11 +92,11 @@ function hook_default_message_template_alter(array &$defaults) {
 /**
  * Alter message template forms.
  *
- * Modules may alter the message template entity form by making use of this hook or
- * the entity bundle specific hook_form_message_template_edit_BUNDLE_form_alter().
- * #entity_builders may be used in order to copy the values of added form
- * elements to the entity, just as documented for
- * entity_form_submit_build_entity().
+ * Modules may alter the message template entity form by making use of this hook
+ * or the entity bundle specific
+ * hook_form_message_template_edit_BUNDLE_form_alter(). #entity_builders may be
+ * used in order to copy the values of added form elements to the entity, just
+ * as documented for entity_form_submit_build_entity().
  *
  * @param array $form
  *   Nested array of form elements that comprise the form.

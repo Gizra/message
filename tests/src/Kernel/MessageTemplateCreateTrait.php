@@ -1,8 +1,4 @@
 <?php
-/**
- * @file
- * Contains \Drupal\Tests\message\Kernel\MessageTemplateCreateTrait.
- */
 
 namespace Drupal\Tests\message\Kernel;
 

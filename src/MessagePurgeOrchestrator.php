@@ -101,12 +101,12 @@ class MessagePurgeOrchestrator {
   /**
    * Find and purge messages according to template and purge settings.
    *
-   * @param $purge_limit
+   * @param int $purge_limit
    *   The maximal amount of messages to fetch. Decremented each time messages
    *   are fetched.
    * @param \Drupal\message\MessageTemplateInterface $message_template
    *   The message template for which to retrieve message IDs.
-   * @param $purge_plugins
+   * @param array $purge_plugins
    *   Array of purge plugin configurations, keyed by plugin ID.
    */
   protected function purgeMessagesByTemplate(&$purge_limit, MessageTemplateInterface $message_template, array $purge_plugins) {
