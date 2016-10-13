@@ -2,14 +2,13 @@
 
 /**
  * @file
- * Definition of Drupal\message\Tests\MessageCron.
+ * Definition of Drupal\Tests\message\Functional\MessageCron.
  */
 
-namespace Drupal\message\Tests;
+namespace Drupal\Tests\message\Functional;
 
 use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageTemplate;
-use Drupal\user\Entity\User;
 
 /**
  * Test message purging upon cron.

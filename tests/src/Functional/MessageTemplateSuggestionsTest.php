@@ -1,13 +1,8 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\message\Tests\MessageTemplateSuggestionsTest.
- */
+namespace Drupal\Tests\message\Functional;
 
-namespace Drupal\message\Tests;
 use Drupal\message\Entity\Message;
-use Drupal\user\Entity\User;
 
 /**
  * Tests message template suggestions.
@@ -19,7 +14,7 @@ class MessageTemplateSuggestionsTest extends MessageTestBase {
   /**
    * The user object.
    *
-   * @var User
+   * @var \Drupal\user\UserInterface
    */
   private $user;
 

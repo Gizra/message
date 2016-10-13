@@ -2,12 +2,13 @@
 
 /**
  * @file
- * Contains \Drupal\message\Tests\MessageCreateTest.
+ * Contains \Drupal\Tests\message\Functional\MessageCreateTest.
  */
 
-namespace Drupal\message\Tests;
+namespace Drupal\Tests\message\Functional;
 
 use Drupal\message\Entity\Message;
+use Drupal\Tests\message\Functional\MessageTestBase;
 use Drupal\user\Entity\User;
 
 /**

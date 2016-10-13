@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Definition of Drupal\message\Tests\MessageEntityDelete.
+ * Definition of Drupal\Tests\message\Functional\MessageEntityDelete.
  */
 
-namespace Drupal\message\Tests;
+namespace Drupal\Tests\message\Functional;
 
 use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;

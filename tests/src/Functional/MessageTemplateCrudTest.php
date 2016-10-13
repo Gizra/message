@@ -1,14 +1,9 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\message\Tests\MessageTemplateCrudTest.
- */
-
-namespace Drupal\message\Tests;
+namespace Drupal\Tests\message\Functional;
 
 /**
- * Testing the CRUD functionallity for the Message template entity.
+ * Testing the CRUD functionality for the Message template entity.
  *
  * @group Message
  */

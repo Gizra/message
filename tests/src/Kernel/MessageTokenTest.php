@@ -10,7 +10,7 @@ namespace Drupal\Tests\message\Kernel;
 use Drupal\Component\Utility\Html;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
-use Drupal\message\Tests\MessageTemplateCreateTrait;
+use Drupal\Tests\message\Kernel\MessageTemplateCreateTrait;
 use Drupal\user\Entity\User;
 
 /**
@@ -20,7 +20,7 @@ use Drupal\user\Entity\User;
  */
 class MessageTokenTest extends KernelTestBase {
 
-  use MessageTemplateCreateTrait;
+  use \Drupal\Tests\message\Kernel\MessageTemplateCreateTrait;
 
   /**
    * {@inheritdoc}
