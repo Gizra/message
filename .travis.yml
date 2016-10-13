@@ -1,88 +1,68 @@
 language: php
+sudo: false
 
 php:
-  - 5.5
   - 5.6
   - 7.0
 
-matrix:
-  allow_failures:
-    - php: 7.0
-
 env:
-  global:
-    - MODULE_NAME='message'
-    - MODULE_TEST_GROUP='Message'
-    - DRUPAL_REPO='git://drupalcode.org/project/drupal.git'
-    - DRUPAL_VERSION='8.2.x'
-    - PHPCS_VERSION='~2.7'
-    - CODER_VERSION='~8.2.0'
+  - TEST_SUITE=8.1.x
+  - TEST_SUITE=8.2.x
+  - TEST_SUITE=8.3.x
+  - TEST_SUITE=PHP_CodeSniffer
 
-before_install:
-  # Ensure we have the latest sources.
-  - sudo apt-get -y update
+# Only run the coding standards check once.
+matrix:
+  exclude:
+    - php: 5.6
+      env: TEST_SUITE=PHP_CodeSniffer
 
-  # Composer.
-  - sed -i '1i export PATH="$HOME/.composer/vendor/bin:$PATH"' $HOME/.bashrc
-  - source $HOME/.bashrc
-  # - composer self-update
-
-  # Drush.
-  - composer global require "youngj/httpserver:dev-master#41dd2b7"
-  - composer global require drush/drush:~8
-
-  # Codesniffer.
-  - composer global require squizlabs/php_codesniffer:$PHPCS_VERSION
-
-  # Coder.
-  - composer global require drupal/coder:$CODER_VERSION
-  - ln -s ~/.composer/vendor/drupal/coder/coder_sniffer/Drupal ~/.composer/vendor/squizlabs/php_codesniffer/CodeSniffer/Standards/
-
-  # Ensure the PHP environment is ready.
-  - phpenv rehash
-
-install:
-  # Basic PHP packages.
-  - sudo apt-get install -y --force-yes php5-cgi php5-mysql
-
-  # Move the checked out module into the correct structure.
-  - mkdir /tmp/$MODULE_NAME
-  - mv * /tmp/$MODULE_NAME/
-  - git clone --branch $DRUPAL_VERSION $DRUPAL_REPO drupal --depth 1
-  - cd drupal && composer install && cd -
-  - mv /tmp/$MODULE_NAME drupal/modules/
-  - cd drupal
+mysql:
+  database: drupal
+  username: root
+  encoding: utf8
 
 before_script:
+  # Remove Xdebug as we don't need it and it causes "PHP Fatal error: Maximum
+  # function nesting level of '256' reached."
+  # We also don't care if that file exists or not on PHP 7.
+  - phpenv config-rm xdebug.ini || true
 
-  # This fixes a fail when install Drupal.
-  - echo 'sendmail_path = /bin/true' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+  # Make sure Composer is up to date.
+  - composer self-update
 
-  # Mysql might time out for long tests, increase the wait timeout.
-  - mysql -e 'SET @@GLOBAL.wait_timeout=1200'
+  # Remember the current directory for later use in the Drupal installation.
+  - MODULE_DIR=$(pwd)
 
-  # Install Drupal and enable the required modules (including this one).
-  - mysql -e 'create database drupal;'
-  - cd $TRAVIS_BUILD_DIR/drupal && drush --yes site-install testing --db-url="mysql://root@127.0.0.1/drupal"
-  - cd $TRAVIS_BUILD_DIR/drupal && drush --yes en $MODULE_NAME
-  - cd $TRAVIS_BUILD_DIR/drupal && drush --yes en simpletest
+  # Install Composer dependencies.
+  - composer install
 
-  # Start a web server.
-  - drush runserver 127.0.0.1:8080 &
-  - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
+  # Navigate out of module directory to prevent blown stack by recursive module
+  # lookup.
+  - cd ..
 
-script:
-  # Run code sniffer.
-  - phpcs --report=full --standard=Drupal $TRAVIS_BUILD_DIR/drupal/modules/$MODULE_NAME
+  # Create database.
+  - mysql -e 'create database drupal'
 
-  # Run the tests
-  - php $TRAVIS_BUILD_DIR/drupal/core/scripts/run-tests.sh --verbose --color --php `which php` --url http://127.0.0.1:8080 "$MODULE_TEST_GROUP" | tee /tmp/test.txt; TEST_EXIT=${PIPESTATUS[0]}; echo $TEST_EXIT
-  # Check if we had fails in the run-tests.sh script
-  # Exit with the inverted value, because if there are no fails found, it will
-  # exit with 1 and for us that is a good thing so invert it to 0. Travis has
-  # some issues with the exclamation mark in front so we have to fiddle a bit.
-  # Also make the grep case insensitive and fail on run-tests.sh regular fails
-  # as well on fatal errors.
-  - TEST_OUTPUT=$(! egrep -i "([0-9]+ fails)|(PHP Fatal error)|([0-9]+ exceptions)" /tmp/test.txt > /dev/null)$?; echo $TEST_OUTPUT
-  # Exit the build
-  - if [ $TEST_EXIT -eq 0 ] && [ $TEST_OUTPUT -eq 0 ]; then exit 0; else exit 1; fi
+  # Download Drupal 8 core. Skip this for the coding standards test.
+  - test ${TEST_SUITE} == "PHP_CodeSniffer" || travis_retry git clone --branch $TEST_SUITE --depth 1 https://git.drupal.org/project/drupal.git
+
+  # Remember the Drupal installation path.
+  - DRUPAL_DIR=$(pwd)/drupal
+
+  # Install Composer dependencies for core. Skip this for the coding standards test.
+  - test ${TEST_SUITE} == "PHP_CodeSniffer" || composer install --working-dir=$DRUPAL_DIR
+
+  # Start a web server on port 8888 in the background.
+  - test ${TEST_SUITE} == "PHP_CodeSniffer" || nohup php -S localhost:8888 --docroot $DRUPAL_DIR > /dev/null 2>&1 &
+
+  # Wait until the web server is responding.
+  - test ${TEST_SUITE} == "PHP_CodeSniffer" || until curl -s localhost:8888; do true; done > /dev/null
+
+  # Export web server URL for browser tests.
+  - export SIMPLETEST_BASE_URL=http://localhost:8888
+
+  # Export database variable for kernel tests.
+  - export SIMPLETEST_DB=mysql://root:@127.0.0.1/drupal
+
+script: DRUPAL_DIR=$DRUPAL_DIR MODULE_DIR=$MODULE_DIR $MODULE_DIR/scripts/travis-ci/run-test.sh $TEST_SUITE
