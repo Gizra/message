@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  * Holds hook implementation for the Message example module.
@@ -31,7 +32,7 @@ function message_example_comment_insert(Comment $comment) {
 }
 
 /**
- * Implements hook_user_insert()
+ * Implements hook_user_insert().
  */
 function message_example_user_insert(User $account) {
   Message::create(['template' => 'example_user_register', 'uid' => $account->id()])->save();
@@ -60,11 +61,10 @@ function message_example_comment_update(Comment $comment) {
 }
 
 /**
- * Update the "published" field in the message entity, when it changes in the
- * related entity.
+ * Set message entity published field when it changes in the related entity.
  *
  * @param ContentEntityBase $entity
- *  The entity object.
+ *   The entity object.
  */
 function message_example_update_message_status(ContentEntityBase $entity) {
   if ($entity->isPublished() == $entity->original->isPublished()) {
