@@ -1,11 +1,6 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\message\Tests\MessageCreateTest.
- */
-
-namespace Drupal\message\Tests;
+namespace Drupal\Tests\message\Functional;
 
 use Drupal\message\Entity\Message;
 use Drupal\user\Entity\User;

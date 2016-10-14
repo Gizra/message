@@ -5,7 +5,6 @@ namespace Drupal\Tests\message\Kernel;
 use Drupal\Component\Utility\Unicode;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
-use Drupal\message\Tests\MessageTemplateCreateTrait;
 use Drupal\simpletest\UserCreationTrait;
 
 /**
@@ -15,7 +14,7 @@ use Drupal\simpletest\UserCreationTrait;
  */
 class MessageTest extends KernelTestBase {
 
-  use MessageTemplateCreateTrait;
+  use \Drupal\Tests\message\Kernel\MessageTemplateCreateTrait;
   use UserCreationTrait;
 
   /**

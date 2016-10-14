@@ -1,14 +1,8 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\message\Tests\MessageTextHandlerTest.
- */
-
-namespace Drupal\message\Tests;
+namespace Drupal\Tests\message\Functional;
 
 use Drupal\message\Entity\Message;
-use Drupal\user\Entity\User;
 
 /**
  * Test the views text handler.
@@ -20,7 +14,7 @@ class MessageTextHandlerTest extends MessageTestBase {
   /**
    * The user object.
    *
-   * @var User
+   * @var \Drupal\user\UserInterface
    */
   protected $account;
 

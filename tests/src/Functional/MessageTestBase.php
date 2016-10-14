@@ -1,20 +1,15 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\message\Tests\MessageTestBase.
- */
+namespace Drupal\Tests\message\Functional;
 
-namespace Drupal\message\Tests;
-
-use Drupal\Core\Entity\EntityAccessControlHandlerInterface;
 use Drupal\message\Entity\MessageTemplate;
-use Drupal\simpletest\WebTestBase;
+use Drupal\Tests\message\Kernel\MessageTemplateCreateTrait;
+use Drupal\Tests\BrowserTestBase;
 
 /**
  * Holds set of tools for the message testing.
  */
-abstract class MessageTestBase extends WebTestBase {
+abstract class MessageTestBase extends BrowserTestBase {
 
   use MessageTemplateCreateTrait;
 
@@ -80,4 +75,5 @@ abstract class MessageTestBase extends WebTestBase {
   protected function configSet($config, $value, $storage = 'message.settings') {
     \Drupal::configFactory()->getEditable($storage)->set($config, $value);
   }
+
 }

@@ -1,17 +1,9 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\message\Tests\MessageUiTest.
- */
+namespace Drupal\Tests\message\Functional;
 
-namespace Drupal\message\Tests;
-
-use Drupal\Core\Language\Language;
 use Drupal\language\Entity\ConfigurableLanguage;
-use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageTemplate;
-use Drupal\user\Entity\User;
 
 /**
  * Testing the CRUD functionality for the Message template entity.
@@ -28,7 +20,7 @@ class MessageUiTest extends MessageTestBase {
   /**
    * The user object.
    *
-   * @var User
+   * @var \Drupal\user\UserInterface
    */
   protected $account;
 
@@ -121,27 +113,6 @@ class MessageUiTest extends MessageTestBase {
   }
 
   /**
-   * Test that message render returns message text wrapped in a div.
-   */
-  public function testMessageTextWrapper() {
-    $template = 'dummy_message';
-    // Create message to be rendered.
-    $message_template = $this->createMessageTemplate($template, 'Dummy message', '', ['Text to be wrapped by div.']);
-    $message = Message::create(['template' => $message_template->id()])
-      ->setOwner($this->account);
-
-    $message->save();
-
-    // Simulate theming of the message.
-    $build = \Drupal::entityTypeManager()->getViewBuilder('message')->view($message);
-    $output = \Drupal::service('renderer')->renderRoot($build);
-    $this->setRawContent($output);
-    $xpath = $this->xpath('//div');
-
-    $this->assertTrue($xpath, 'A div has been found wrapping the message text.');
-  }
-
-  /**
    * Verifying the form elements values in easy way.
    *
    * When all the elements are passing a pass message with the text "The
@@ -171,4 +142,5 @@ class MessageUiTest extends MessageTestBase {
       $this->fail('The next errors were found: ' . implode("", $errors));
     }
   }
+
 }

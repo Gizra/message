@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains Drupal\message\Entity\Message.
- */
-
 namespace Drupal\message\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
@@ -16,7 +11,6 @@ use Drupal\Core\Render\Markup;
 use Drupal\message\MessageException;
 use Drupal\message\MessageInterface;
 use Drupal\message\MessageTemplateInterface;
-use Drupal\user\EntityOwnerInterface;
 use Drupal\user\UserInterface;
 
 /**
@@ -128,7 +122,7 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * {@inheritdoc}
    */
-  public function getUUID() {
+  public function getUuid() {
     return $this->get('uuid')->value;
   }
 

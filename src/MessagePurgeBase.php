@@ -41,7 +41,7 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
   /**
    * Constructs a MessagePurgeBase object.
    *
-   * @var array $configuration
+   * @param array $configuration
    *   A configuration array containing information about the plugin instance.
    * @param string $plugin_id
    *   The plugin ID for the plugin instance.
@@ -73,7 +73,6 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
     );
   }
 
-
   /**
    * {@inheritdoc}
    */
@@ -88,8 +87,9 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    *
    * @param \Drupal\message\MessageTemplateInterface $template
    *   The message template for which to fetch messages.
-   * @return \Drupal\Core\Entity\Query\QueryInterface The query object.
-   * The query object.
+   *
+   * @return \Drupal\Core\Entity\Query\QueryInterface
+   *   The query object.
    */
   protected function baseQuery(MessageTemplateInterface $template) {
     return $this->messageQuery
@@ -145,7 +145,6 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
   public function getWeight() {
     return $this->weight;
   }
-
 
   /**
    * {@inheritdoc}

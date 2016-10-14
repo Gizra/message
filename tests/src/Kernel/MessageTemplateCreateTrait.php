@@ -1,14 +1,9 @@
 <?php
-/**
- * @file
- * Contains \Drupal\message\Tests\MessageTemplateCreateTrait.
- */
 
-namespace Drupal\message\Tests;
+namespace Drupal\Tests\message\Kernel;
 
 use Drupal\Core\Language\Language;
 use Drupal\message\Entity\MessageTemplate;
-use Drupal\message\MessageTemplateInterface;
 
 /**
  * Trait to assist message template creation for tests.

@@ -1,14 +1,8 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\node\Plugin\views\field\Link.
- */
-
 namespace Drupal\message\Plugin\views\field;
 
 use Drupal\Component\Render\FormattableMarkup;
-use Drupal\message\Entity\Message;
 use Drupal\views\Plugin\views\field\FieldPluginBase;
 use Drupal\views\ResultRow;
 

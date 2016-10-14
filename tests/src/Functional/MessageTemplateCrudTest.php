@@ -1,14 +1,9 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\message\Tests\MessageTemplateCrudTest.
- */
-
-namespace Drupal\message\Tests;
+namespace Drupal\Tests\message\Functional;
 
 /**
- * Testing the CRUD functionallity for the Message template entity.
+ * Testing the CRUD functionality for the Message template entity.
  *
  * @group Message
  */
@@ -27,7 +22,13 @@ class MessageTemplateCrudTest extends MessageTestBase {
     // Load the message and verify the message template structure.
     $template = $this->loadMessageTemplate('dummy_message');
 
-    foreach (['template' => 'Template', 'label' => 'Label', 'description' => 'Description', 'text' => 'Text'] as $key => $label) {
+    $values = [
+      'template' => 'Template',
+      'label' => 'Label',
+      'description' => 'Description',
+      'text' => 'Text',
+    ];
+    foreach ($values as $key => $label) {
       $param = [
         '@label' => $label,
       ];

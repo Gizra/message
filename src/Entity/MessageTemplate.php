@@ -1,20 +1,12 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\message\Entity\MessageTemplate.
- */
-
 namespace Drupal\message\Entity;
 
-use Drupal\Component\Utility\SafeMarkup;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\Language;
 use Drupal\language\ConfigurableLanguageManagerInterface;
-use Drupal\message\MessageException;
 use Drupal\message\MessageTemplateInterface;
-
 
 /**
  * Defines the Message template entity class.
@@ -90,6 +82,8 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
    * should be prefixed by @, %, ! - similar to way it's done in Drupal
    * core's t() function.
    *
+   * @var array
+   *
    * @code
    *
    * // Assuming out message-text is:
@@ -118,8 +112,6 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
    *
    * Arguments assigned to message-template can be overridden by the ones
    * assigned to the message.
-   *
-   * @var array
    */
   public $arguments = [];
 

@@ -2,7 +2,6 @@
 
 namespace Drupal\message\Plugin\MessagePurge;
 
-use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
@@ -63,7 +62,6 @@ class Days extends MessagePurgeBase {
       $container->get('request_stack')
     );
   }
-
 
   /**
    * {@inheritdoc}

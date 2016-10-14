@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\message\MessageViewsData.
- */
-
 namespace Drupal\message;
 
 use Drupal\views\EntityViewsData;

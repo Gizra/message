@@ -1,13 +1,6 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\message\Tests\MessageTemplateCrudTest.
- */
-
-namespace Drupal\message\Tests;
-
-use Drupal\user\Entity\User;
+namespace Drupal\Tests\message\Functional;
 
 /**
  * Testing the listing functionality for the Message template entity.
@@ -19,7 +12,7 @@ class MessageTemplateListTest extends MessageTestBase {
   /**
    * The user object.
    *
-   * @var User
+   * @var \Drupal\user\UserInterface
    */
   protected $user;
 

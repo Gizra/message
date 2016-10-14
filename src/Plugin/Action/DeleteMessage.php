@@ -1,17 +1,11 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\message\Plugin\Action\DeleteMessage.
- */
-
 namespace Drupal\message\Plugin\Action;
 
 use Drupal\Core\Action\ActionBase;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\Session\AccountInterface;
 use Drupal\user\PrivateTempStoreFactory;
-use Drupal\user\SharedTempStore;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**

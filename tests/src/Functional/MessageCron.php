@@ -1,15 +1,9 @@
 <?php
 
-/**
- * @file
- * Definition of Drupal\message\Tests\MessageCron.
- */
-
-namespace Drupal\message\Tests;
+namespace Drupal\Tests\message\Functional;
 
 use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageTemplate;
-use Drupal\user\Entity\User;
 
 /**
  * Test message purging upon cron.
@@ -113,7 +107,7 @@ class MessageCron extends MessageTestBase {
       Message::Create(['template' => 'template3'])
         ->setCreatedTime(REQUEST_TIME - 3 * 86400)
         ->setOwnerId($this->account->id())
-          ->save();
+        ->save();
     }
 
     // Trigger message's hook_cron().
@@ -127,7 +121,8 @@ class MessageCron extends MessageTestBase {
     $this->assertEqual(Message::queryByTemplate('template2'), [], 'Three messages deleted due to age definition.');
 
     // template3 messages should not have been deleted.
-    $this->assertFalse(array_diff(Message::queryByTemplate('template3'), [8, 9, 10]), 'Messages with disabled purging settings were not deleted.');
+    $remaining = [8, 9, 10];
+    $this->assertFalse(array_diff(Message::queryByTemplate('template3'), $remaining), 'Messages with disabled purging settings were not deleted.');
   }
 
   /**
@@ -172,8 +167,8 @@ class MessageCron extends MessageTestBase {
     message_cron();
 
     // There are 16 messages to be deleted and 10 deletions allowed, so 8
-    // messages of template1 and 2 messages of template2 should be deleted, thus 2
-    // messages of template1 and 8 messages of template2 remain.
+    // messages of template1 and 2 messages of template2 should be deleted, thus
+    // 2 messages of template1 and 8 messages of template2 remain.
     $this->assertEqual(count(Message::queryByTemplate('template1')), 2, t('Two messages of template 1 left.'));
 
     $this->assertEqual(count(Message::queryByTemplate('template2')), 8, t('Eight messages of template 2 left.'));
@@ -225,4 +220,5 @@ class MessageCron extends MessageTestBase {
     $this->assertEqual(count(Message::queryByTemplate('template1')), 0, t('All template1 messages deleted.'));
     $this->assertEqual(count(Message::queryByTemplate('template2')), 2, t('Template2 messages were not deleted due to settings override.'));
   }
+
 }

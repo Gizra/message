@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\message\MessageTemplateListBuilder.
- */
-
 namespace Drupal\message;
 
 use Drupal\Core\Config\Entity\ConfigEntityListBuilder;

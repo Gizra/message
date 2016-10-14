@@ -1,10 +1,5 @@
 <?php
 
-/**
- * @file
- * Contains \Drupal\message\Form\MessageTemplateDeleteConfirm.
- */
-
 namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
@@ -57,4 +52,5 @@ class MessageTemplateDeleteConfirm extends EntityConfirmFormBase {
   public function getCancelUrl() {
     return new Url('message.overview_templates');
   }
+
 }
