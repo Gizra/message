@@ -4,7 +4,6 @@ namespace Drupal\Tests\message\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
-use Drupal\simpletest\AssertContentTrait;
 use Drupal\simpletest\UserCreationTrait;
 
 /**
@@ -14,7 +13,6 @@ use Drupal\simpletest\UserCreationTrait;
  */
 class MessageThemeTest extends KernelTestBase {
 
-  use AssertContentTrait;
   use MessageTemplateCreateTrait;
   use UserCreationTrait;
 

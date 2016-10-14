@@ -7,7 +7,6 @@
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
-use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageTemplate;
 
@@ -15,9 +14,6 @@ use Drupal\message\Entity\MessageTemplate;
  * Implements hook_entity_delete().
  *
  * Handles messages deletion when referenced entities are being deleted.
- *
- * @param \Drupal\Core\Entity\EntityInterface $entity
- *   The entity object for the entity that has been deleted.
  */
 function message_entity_delete(EntityInterface $entity) {
   $type = $entity->getEntityType()->id();
@@ -113,9 +109,8 @@ function message_cron() {
   $purge_orchestrator->purgeAllTemplateMessages();
 }
 
-
 /**
- * usort callback; Order the form elements by their weight.
+ * Usort callback; Order the form elements by their weight.
  */
 function message_order_text_weight($a, $b) {
   if ($a['_weight'] == $b['_weight']) {
@@ -126,7 +121,7 @@ function message_order_text_weight($a, $b) {
 }
 
 /**
- * Implement hook_entity_extra_field_info().
+ * Implements hook_entity_extra_field_info().
  */
 function message_entity_extra_field_info() {
   $extra = [];
@@ -203,8 +198,8 @@ function template_preprocess_message(&$variables) {
   ]);
 
   // The 'page' variable is set to TRUE in two occasions:
-  //   - The view mode is 'full' and we are on the 'message.view' route.
-  //   - The message is in preview and view mode is either 'full' or 'default'.
+  // - The view mode is 'full' and we are on the 'message.view' route.
+  // - The message is in preview and view mode is either 'full' or 'default'.
   $variables['page'] = ($variables['view_mode'] == 'full' || $variables['view_mode'] == 'default');
 
   // Helpful $content variable for templates.
