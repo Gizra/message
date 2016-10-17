@@ -2,6 +2,7 @@
 
 namespace Drupal\message\Form;
 
+use Drupal\Component\Utility\SortArray;
 use Drupal\config_translation\Form\ConfigTranslationFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -18,6 +19,7 @@ abstract class MessageTemplateConfigTranslationBaseForm extends ConfigTranslatio
    */
   public function buildForm(array $form, FormStateInterface $form_state, RouteMatchInterface $route_match = NULL, $plugin_id = NULL, $langcode = NULL) {
     $form = parent::buildForm($form, $form_state, $route_match, $plugin_id, $langcode);
+    return $form;
     // Get the name of the message template.
     $names = $this->mapper->getConfigNames();
     $name = reset($names);
@@ -61,25 +63,20 @@ abstract class MessageTemplateConfigTranslationBaseForm extends ConfigTranslatio
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     parent::submitForm($form, $form_state);
-
+    return;
     // Get the name of the message template.
     $names = $this->mapper->getConfigNames();
     $name = reset($names);
 
     // Sort the elements.
-    $elements = $form_state->getValue('text');
-    usort($elements, 'message_order_text_weight');
-
-    // Build the new text.
-    $text = [];
-
-    foreach ($elements as $element) {
-      if (!$element['value']) {
-        continue;
-      }
-
-      $text[] = $element['value'];
-    }
+    $text = $form_state->getValue('text');
+    usort($text, function ($a, $b) {
+      return SortArray::sortByKeyInt($a, $b, '_weight');
+    });
+    // Do not store weight, as these are now sorted.
+    $text = array_map(function ($a) {
+      unset($a['_weight']); return $a;
+    }, $text);
 
     // Save the new text.
     $config_translation = $this->languageManager->getLanguageConfigOverride($this->language->getId(), $name);

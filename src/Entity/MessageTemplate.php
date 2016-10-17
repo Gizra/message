@@ -35,6 +35,15 @@ use Drupal\message\MessageTemplateInterface;
  *     "add-form" = "/admin/structure/message/template/add",
  *     "edit-form" = "/admin/structure/message/manage/{message_template}",
  *     "delete-form" = "/admin/structure/message/delete/{message_template}"
+ *   },
+ *   config_export = {
+ *     "template",
+ *     "label",
+ *     "langcode",
+ *     "description",
+ *     "text",
+ *     "settings",
+ *     "status"
  *   }
  * )
  */
@@ -76,7 +85,7 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
   protected $text = [];
 
   /**
-   * Array with the arguments and their replacement value, or callacbks.
+   * Array with the arguments and their replacement value, or callbacks.
    *
    * The argument keys will be replaced when rendering the message, and it
    * should be prefixed by @, %, ! - similar to way it's done in Drupal
@@ -253,9 +262,23 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
       $text = $translated_text ?: [];
     }
 
+    // Process text format.
+    foreach ($text as $key => $item) {
+      // Call the renderer directly instead of adding a dependency on the Filter
+      // module's check_markup() function.
+      // @see check_markup()
+      $build = [
+        '#type' => 'processed_text',
+        '#text' => $item['value'],
+        '#format' => $item['format'],
+        '#langcode' => $langcode,
+      ];
+      $text[$key] = \Drupal::service('renderer')->renderPlain($build);
+    }
+
     if ($delta) {
       // Return just the delta if it exists.
-      return !empty($text[$delta]) ?: '';
+      return !empty($text[$delta]) ?: [];
     }
 
     return $text;
@@ -282,7 +305,9 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {
-    $this->text = array_filter($this->text);
+    $this->text = array_filter($this->text, function ($a) {
+      return !empty($a['value']);
+    });
 
     $language_manager = \Drupal::languageManager();
 

@@ -35,6 +35,20 @@ trait MessageTemplateCreateTrait {
         'clear' => FALSE,
       ],
     ];
+
+    // If the $text array is simple text values, transform to text + format.
+    foreach ($text as $key => $detail) {
+      if (!is_array($detail)) {
+        $text[$key] = [
+          'value' => $detail,
+          'format' => 'fallback',
+        ];
+      }
+      elseif (!isset($detail['format'])) {
+        $text[$key]['format'] = 'fallback';
+      }
+    }
+
     $message_template = MessageTemplate::Create([
       'template' => $template,
       'label' => $label,
