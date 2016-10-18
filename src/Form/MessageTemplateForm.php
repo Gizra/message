@@ -178,7 +178,8 @@ class MessageTemplateForm extends EntityForm {
     });
     // Do not store weight, as these are now sorted.
     $text = array_map(function ($a) {
-      unset($a['_weight']); return $a;
+      unset($a['_weight']);
+      return $a;
     }, $text);
     $this->entity->set('text', $text);
 

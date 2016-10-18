@@ -108,7 +108,7 @@ class MessageTemplateMultipleTextField {
    *   element.
    *
    * @return array
-   *   The single form element.
+   *   A single form element.
    */
   protected function singleElement($delta, array $text) {
     $element = [

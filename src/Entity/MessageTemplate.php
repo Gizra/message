@@ -305,8 +305,9 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
    * {@inheritdoc}
    */
   public function preSave(EntityStorageInterface $storage) {
-    $this->text = array_filter($this->text, function ($a) {
-      return !empty($a['value']);
+    $this->text = array_filter($this->text, function ($partial) {
+      // Filter out any partials with an empty `value`.
+      return !empty($partial['value']);
     });
 
     $language_manager = \Drupal::languageManager();
