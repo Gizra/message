@@ -41,11 +41,11 @@ trait MessageTemplateCreateTrait {
       if (!is_array($detail)) {
         $text[$key] = [
           'value' => $detail,
-          'format' => 'fallback',
+          'format' => filter_default_format(),
         ];
       }
       elseif (!isset($detail['format'])) {
-        $text[$key]['format'] = 'fallback';
+        $text[$key]['format'] = 'plain_text';
       }
     }
 

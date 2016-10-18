@@ -19,7 +19,7 @@ class MessageTokenTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['message', 'user', 'system'];
+  public static $modules = ['message', 'user', 'system', 'filter'];
 
   /**
    * The user object.
@@ -36,6 +36,8 @@ class MessageTokenTest extends KernelTestBase {
 
     $this->installEntitySchema('message');
     $this->installEntitySchema('user');
+    $this->installConfig(['filter']);
+
     $this->user = User::create([
       'uid' => mt_rand(5, 10),
       'name' => $this->randomString(),
@@ -53,7 +55,7 @@ class MessageTokenTest extends KernelTestBase {
 
     $message->save();
 
-    $this->assertEquals((string) $message, Html::escape($this->user->label()), 'The message rendered the author name.');
+    $this->assertEquals('<p>' . Html::escape($this->user->label()) . '</p>', (string) $message, 'The message rendered the author name.');
   }
 
   /**
@@ -68,14 +70,14 @@ class MessageTokenTest extends KernelTestBase {
 
     $message->save();
 
-    $this->assertEquals((string) $message, Html::escape($this->user->label()), 'The message rendered the author name and stripped unused tokens.');
+    $this->assertEquals('<p>' . Html::escape($this->user->label()) . ' </p>', (string) $message, 'The message rendered the author name and stripped unused tokens.');
 
     // Clearing disabled.
     $token_options = ['token options' => ['clear' => FALSE]];
     $message_template->setSettings($token_options);
     $message_template->save();
 
-    $this->assertEquals((string) $message, Html::escape($this->user->label() . ' [bogus:token]'), 'The message rendered the author name and did not strip the token.');
+    $this->assertEquals('<p>' . Html::escape($this->user->label() . ' [bogus:token]') . '</p>', (string) $message, 'The message rendered the author name and did not strip the token.');
   }
 
   /**
@@ -89,10 +91,11 @@ class MessageTokenTest extends KernelTestBase {
       'some text @{wrong:token} ' . $random_text,
     ];
 
+    // The plain_text filter replaces line breaks, so those should be here too.
     $replaced_messages = [
-      'some text ' . Html::escape($this->user->label()) . ' ' . $random_text,
-      'some text <em class="placeholder">' . Html::escape($this->user->label()) . '</em> ' . $random_text,
-      'some text @{wrong:token} ' . $random_text,
+      '<p>some text ' . Html::escape($this->user->label() . ' ' . $random_text) . "</p>\n",
+      '<p>some text <em class="placeholder">' . Html::escape($this->user->label()) . '</em> ' . Html::escape($random_text) . "</p>\n",
+      '<p>some text @{wrong:token} ' . Html::escape($random_text) . "</p>\n",
     ];
 
     // Create the message template.

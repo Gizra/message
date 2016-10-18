@@ -151,13 +151,6 @@ function message_entity_extra_field_info() {
 }
 
 /**
- * Implements hook_config_translation_info_alter().
- */
-function message_config_translation_info_alter(&$info) {
-  $info['message_template']['class'] = '\Drupal\message\MessageConfigEntityMapper';
-}
-
-/**
  * Implements hook_theme().
  */
 function message_theme() {
