@@ -71,7 +71,7 @@ class Message extends ContentEntityBase implements MessageInterface {
    * {@inheritdoc}
    */
   public function getTemplate() {
-    return MessageTemplate::load($this->bundle());
+    return $this->template ?: MessageTemplate::load($this->bundle());
   }
 
   /**
