@@ -170,7 +170,7 @@ class MessageTemplateTest extends UnitTestCase {
     $this->assertEquals($expected, $this->messageTemplate->getText());
 
     // Test specific delta.
-    $this->assertEquals($expected[1], $this->messageTemplate->getText(Language::LANGCODE_NOT_SPECIFIED, 1));
+    $this->assertEquals([$expected[1]], $this->messageTemplate->getText(Language::LANGCODE_NOT_SPECIFIED, 1));
 
     // Non-existent delta.
     $this->assertEmpty($this->messageTemplate->getText(Language::LANGCODE_NOT_SPECIFIED, 42));

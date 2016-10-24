@@ -63,7 +63,7 @@ class MessageTokenTest extends KernelTestBase {
    */
   public function testTokenClearing() {
     // Clearing enabled.
-    $token_options = ['token options' => ['clear' => TRUE]];
+    $token_options = ['token options' => ['clear' => TRUE, 'token replace' => TRUE]];
     $message_template = $this->createMessageTemplate('dummy_message', 'Dummy message', '', ['[message:author:name] [bogus:token]'], $token_options);
     $message = Message::create(['template' => $message_template->id()])
       ->setOwnerId($this->user->id());
@@ -73,7 +73,7 @@ class MessageTokenTest extends KernelTestBase {
     $this->assertEquals('<p>' . Html::escape($this->user->label()) . ' </p>', (string) $message, 'The message rendered the author name and stripped unused tokens.');
 
     // Clearing disabled.
-    $token_options = ['token options' => ['clear' => FALSE]];
+    $token_options = ['token options' => ['clear' => FALSE, 'token replace' => TRUE]];
     $message_template->setSettings($token_options);
     $message_template->save();
 
