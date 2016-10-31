@@ -32,6 +32,7 @@ trait MessageTemplateCreateTrait {
   protected function createMessageTemplate($template, $label, $description, array $text, array $settings = [], $langcode = Language::LANGCODE_NOT_SPECIFIED) {
     $settings += [
       'token options' => [
+        'token replace' => TRUE,
         'clear' => FALSE,
       ],
     ];

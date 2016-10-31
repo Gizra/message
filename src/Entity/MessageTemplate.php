@@ -277,8 +277,9 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
     }
 
     if ($delta) {
-      // Return just the delta if it exists.
-      return isset($text[$delta]) ? $text[$delta] : '';
+      // Return just the delta if it exists. Always wrap in an array here to
+      // ensure compatibility with methods calling getText.
+      return isset($text[$delta]) ? [$text[$delta]] : [];
     }
 
     return $text;
