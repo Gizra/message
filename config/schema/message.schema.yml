@@ -44,8 +44,8 @@ message.template.*:
       type: sequence
       label: 'Message Text'
       sequence:
-        type: text_format
-        label: 'Text'
+        - type: text
+          label: 'Text'
     settings:
       type: mapping
       label: 'Settings'
