@@ -28,6 +28,13 @@ abstract class MessageTestBase extends BrowserTestBase {
   protected $accessController;
 
   /**
+   * {@inheritdoc}
+   */
+  public function setUp() {
+    parent::setUp();
+  }
+
+  /**
    * Load a message template easily.
    *
    * @param string $template

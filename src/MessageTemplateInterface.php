@@ -97,8 +97,7 @@ interface MessageTemplateInterface extends ConfigEntityInterface {
    *   will be returned.
    *
    * @return array
-   *   An array of the text field values. These will have been processed for
-   *   their corresponding text formats.
+   *   An array of the text field values.
    */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = NULL);
 

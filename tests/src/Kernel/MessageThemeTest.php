@@ -26,7 +26,7 @@ class MessageThemeTest extends KernelTestBase {
   /**
    * {@inheritdoc}
    */
-  public static $modules = ['message', 'user', 'system', 'filter'];
+  public static $modules = ['message', 'user', 'system'];
 
   /**
    * {@inheritdoc}
@@ -37,7 +37,6 @@ class MessageThemeTest extends KernelTestBase {
     $this->installEntitySchema('message');
     $this->installEntitySchema('user');
     $this->installSchema('system', ['sequences']);
-    $this->installConfig(['filter']);
 
     $this->account = $this->createUser();
   }
