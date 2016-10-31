@@ -100,10 +100,6 @@ function message_tokens($type, $tokens, array $data, array $options, BubbleableM
     if ($created_tokens = $token_service->findWithPrefix($tokens, 'created')) {
       $replacements += $token_service->generate('date', $created_tokens, ['date' => $message->getCreatedTime()], $options, $bubbleable_metadata);
     }
-
-    if ($changed_tokens = $token_service->findWithPrefix($tokens, 'changed')) {
-      $replacements += $token_service->generate('date', $changed_tokens, ['date' => $message->getChangedTime()], $options, $bubbleable_metadata);
-    }
   }
 
   return $replacements;
