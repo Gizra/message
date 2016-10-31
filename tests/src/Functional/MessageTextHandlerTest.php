@@ -21,6 +21,11 @@ class MessageTextHandlerTest extends MessageTestBase {
   /**
    * {@inheritdoc}
    */
+  public static $modules = ['filter_test'];
+
+  /**
+   * {@inheritdoc}
+   */
   public function setUp() {
     parent::setUp();
 
@@ -31,7 +36,10 @@ class MessageTextHandlerTest extends MessageTestBase {
    * Testing the deletion of messages in cron according to settings.
    */
   public function testTextHandler() {
-    $this->createMessageTemplate('dummy_message', 'Dummy message', '', ['Dummy text message']);
+    $text = [
+      ['value' => 'Dummy text message', 'format' => 'filtered_html'],
+    ];
+    $this->createMessageTemplate('dummy_message', 'Dummy message', '', $text);
     Message::create(['template' => 'dummy_message'])->save();
 
     $this->drupalLogin($this->account);

@@ -86,54 +86,44 @@ class MessageTemplateMultipleTextField {
     // Building the multiple form element; Adding first the the form existing
     // text.
     $start_key = 0;
-    if (!$message_text = $text) {
-      $message_text = $this->entity->getText($this->langcode) ? $this->entity->getText($this->langcode) : [];
+    foreach ($this->entity->get('text') as $item) {
+      $form['text'][$start_key] = $this->singleElement($start_key, $item);
+      $start_key++;
     }
 
-    if ($message_text) {
-      foreach ($message_text as $text) {
-        $form['text'][$start_key] = $this->singleElement($start_key, $start_key, $text);
-        $start_key++;
-      }
-    }
-
-    // Set the current elements number.
-    if (!$form_state->get('elements')) {
-      $form_state->set('elements', $start_key);
-    }
-
-    // Get the trigger element and check if this the add another item button.
+    // Increase number of elements if requested, or none exist.
     $trigger_element = $form_state->getTriggeringElement();
-
-    if (!empty($trigger_element['#add_more'])) {
-      // Increase the number of elements.
-      $elements = $form_state->get('elements') + 1;
-      $form_state->set('elements', $elements);
-    }
-
-    // Create partials from the last $start_key to the elements number.
-    for ($i = $start_key; $i <= $form_state->get('elements'); $i++) {
-      $form['text'][] = $this->singleElement($i, $start_key, '');
+    if (!empty($trigger_element['#add_more']) || !$start_key) {
+      $form['text'][] = $this->singleElement($start_key + 1, ['value' => '']);
     }
   }
 
   /**
    * Return a single text area element.
+   *
+   * @param int $delta
+   *   Delta for the element.
+   * @param array $text
+   *   Array containing 'value' and optionally 'format' for a text_format
+   *   element.
+   *
+   * @return array
+   *   A single form element.
    */
-  private function singleElement($max_delta, $delta, $text = '') {
+  protected function singleElement($delta, array $text) {
     $element = [
       '#type' => 'text_format',
-      '#base_type' => 'textarea',
-      '#default_value' => $text,
+      '#format' => isset($text['format']) ? $text['format'] : filter_default_format(),
+      '#default_value' => $text['value'],
       '#rows' => 1,
     ];
 
     $element['_weight'] = [
       '#type' => 'weight',
-      '#title' => t('Weight for row @number', ['@number' => $max_delta + 1]),
+      '#title' => t('Weight for row @number', ['@number' => $delta + 1]),
       '#title_display' => 'invisible',
       // Note: this 'delta' is the FAPI #type 'weight' element's property.
-      '#delta' => $max_delta,
+      '#delta' => $delta,
       '#default_value' => $delta,
     ];
 
