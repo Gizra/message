@@ -901,13 +901,15 @@ function message_create($type, $values = array(), $account = NULL) {
 /**
  * Message load.
  *
- * @param $mid
+ * @param int $mid
  *   The message ID.
+ * @param bool $reset
+ *   Whether to reset the internal (static) cache for the message.
  * @return Message
  *   A message object.
  */
-function message_load($mid) {
-  $result = entity_load('message', array($mid));
+function message_load($mid, $reset = FALSE) {
+  $result = entity_load('message', array($mid), array(), $reset);
   return $result ? reset($result) : FALSE;
 }
 
@@ -916,8 +918,8 @@ function message_load($mid) {
  *
  * @see entity_load().
  */
-function message_load_multiple($mids, $conditions = array()) {
-  return entity_load('message', $mids, $conditions);
+function message_load_multiple($mids, $conditions = array(), $reset = FALSE) {
+  return entity_load('message', $mids, $conditions, $reset);
 }
 
 /**
