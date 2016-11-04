@@ -1,6 +1,7 @@
 name = Message
 description = "A general message logging utility."
 core = 7.x
+configure = admin/structure/messages
 package = Message
 
 dependencies[] = entity
