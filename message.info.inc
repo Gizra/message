@@ -48,7 +48,7 @@ class MessageMetadataController extends EntityDefaultMetadataController {
       'getter callback' => 'message_property_get_text',
       'description' => t('The message text with all replacement arguments applied.'),
       // The tokens are already sanitized if needed.
-      'sanitize' => TRUE,
+      'sanitized' => TRUE,
     );
 
     // Bypass entity_load() as we cannot use it here.
