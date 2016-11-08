@@ -42,7 +42,7 @@ message.messages:
 message.main_settings:
   path: '/admin/config/message'
   defaults:
-    _content: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
+    _controller: '\Drupal\system\Controller\SystemController::systemAdminMenuBlockPage'
     _title: 'Message'
   requirements:
     _permission: 'administer message templates'
