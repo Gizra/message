@@ -172,7 +172,7 @@ function message_theme() {
  *   - message: The message object.
  *   - view_mode: View mode; e.g., 'full', 'teaser', etc.
  */
-function template_preprocess_message(&$variables) {
+function template_preprocess_message(array &$variables) {
   $variables['view_mode'] = $variables['elements']['#view_mode'];
 
   // Provide a distinct $teaser boolean.
