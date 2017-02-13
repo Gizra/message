@@ -4,6 +4,7 @@ namespace Drupal\message;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
+use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Render controller for Messages.
@@ -51,7 +52,7 @@ class MessageViewBuilder extends EntityViewBuilder {
       }
     }
 
-    $build['#markup'] = $extra;
+    $build['#markup'] = new FormattableMarkup($extra, []);
 
     return $build;
   }
