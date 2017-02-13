@@ -4,6 +4,7 @@ namespace Drupal\Tests\message\Functional;
 
 use Drupal\language\Entity\ConfigurableLanguage;
 use Drupal\message\Entity\MessageTemplate;
+use Drupal\message\Entity\Message;
 
 /**
  * Testing the CRUD functionality for the Message template entity.
@@ -105,22 +106,30 @@ class MessageUiTest extends MessageTestBase {
     ];
     $this->verifyFormElements($elements);
 
-    // Load the message via code in hebrew and english and verify the text.
-    $template = 'dummy_message';
-    /* @var $message MessageTemplate */
-    $message = MessageTemplate::load($template);
-    if (empty($message)) {
-      $this->fail('MessageTemplate "' . $template . '" not found.');
-    }
-    else {
-      $this->assertEquals(['<p>This is a dummy message with translated text to Hebrew</p>'], $message->getText('he'), 'The text in hebrew pulled correctly.');
-      $this->assertEquals(['<p>This is a dummy message with some edited dummy text</p>'], $message->getText(), 'The text in english pulled correctly.');
-    }
+    // Load the message template via code in hebrew and english and verify the
+    // text.
+    /* @var $template MessageTemplate */
+    $template = MessageTemplate::load('dummy_message');
+    $this->assertEquals(['<p>This is a dummy message with translated text to Hebrew</p>'], $template->getText('he'), 'The text in hebrew pulled correctly.');
+    $this->assertEquals(['<p>This is a dummy message with some edited dummy text</p>'], $template->getText(), 'The text in english pulled correctly.');
+
+    // Create a message using that same template and test that multilingual text
+    // still works.
+    /* @var $template Message */
+    $message = Message::create([
+      'template' => 'dummy_message',
+    ]);
+    $this->assertEquals(['<p>This is a dummy message with translated text to Hebrew</p>'], $message->getText('he'), 'The text in hebrew pulled correctly.');
+    $this->assertEquals(['<p>This is a dummy message with some edited dummy text</p>'], $message->getText(), 'The text in english pulled correctly.');
+
+    // Test changing the message language with setLanguage().
+    $message->setLanguage('he');
+    $this->assertEquals(['<p>This is a dummy message with translated text to Hebrew</p>'], $message->getText(), 'The text in hebrew pulled correctly.');
 
     // Delete message via the UI.
-    $this->drupalPostForm('admin/structure/message/delete/' . $template, [], 'Delete');
+    $this->drupalPostForm('admin/structure/message/delete/dummy_message', [], 'Delete');
     $this->assertText(t('There is no Message template yet.'));
-    $this->assertFalse(MessageTemplate::load($template), 'The message deleted via the UI successfully.');
+    $this->assertFalse(MessageTemplate::load('dummy_message'), 'The message deleted via the UI successfully.');
   }
 
   /**
