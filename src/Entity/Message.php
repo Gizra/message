@@ -194,12 +194,15 @@ class Message extends ContentEntityBase implements MessageInterface {
   /**
    * {@inheritdoc}
    */
-  public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = NULL) {
+  public function getText($langcode = NULL, $delta = NULL) {
     if (!$message_template = $this->getTemplate()) {
       // Message template does not exist any more.
       // We don't throw an exception, to make sure we don't break sites that
       // removed the message template, so we silently ignore.
       return [];
+    }
+    if (!$langcode) {
+      $langcode = $this->language;
     }
 
     $message_arguments = $this->getArguments();
