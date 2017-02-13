@@ -254,12 +254,14 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
         $langcode = $language_manager->getDefaultLanguage()->getId();
       }
 
-      $config_translation = $language_manager->getLanguageConfigOverride($langcode, 'message.template.' . $this->id());
-      $translated_text = $config_translation->get('text');
+      if ($this->langcode !== $langcode) {
+        $config_translation = $language_manager->getLanguageConfigOverride($langcode, 'message.template.' . $this->id());
+        $translated_text = $config_translation->get('text');
 
-      // If there was no translated text, we return nothing instead of falling
-      // back to the default language.
-      $text = $translated_text ?: [];
+        // If there was no translated text, we return nothing instead of falling
+        // back to the default language.
+        $text = $translated_text ?: [];
+      }
     }
 
     // Process text format.
