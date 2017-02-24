@@ -4,7 +4,6 @@ namespace Drupal\message;
 
 use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Entity\EntityViewBuilder;
-use Drupal\Component\Render\FormattableMarkup;
 
 /**
  * Render controller for Messages.
@@ -33,8 +32,6 @@ class MessageViewBuilder extends EntityViewBuilder {
     }
     $partials = $entity->getText();
 
-    $extra = '';
-
     // Get the partials the user selected for the current view mode.
     $extra_fields = entity_get_display('message', $entity->bundle(), $view_mode);
     foreach ($extra_fields->getComponents() as $field_name => $settings) {
@@ -42,7 +39,7 @@ class MessageViewBuilder extends EntityViewBuilder {
       if (strpos($field_name, 'partial_') === 0) {
         list(, $delta) = explode('_', $field_name);
         if (isset($partials[$delta])) {
-          $extra .= $partials[$delta];
+          $build[$field_name]['#markup'] = $partials[$delta];
         }
       }
       else {
@@ -51,8 +48,6 @@ class MessageViewBuilder extends EntityViewBuilder {
         $build += $display->build($entity);
       }
     }
-
-    $build['#markup'] = new FormattableMarkup($extra, []);
 
     return $build;
   }
