@@ -22,14 +22,14 @@ class MessageEntityDelete extends MessageTestBase {
   /**
    * Taxonomy vocabulary.
    *
-   * @var Vocabulary
+   * @var \Drupal\taxonomy\Entity\Vocabulary
    */
   protected $vocabulary;
 
   /**
    * The Node Type.
    *
-   * @var NodeType
+   * @var \Drupal\node\Entity\NodeType
    */
   protected $nodeType;
 

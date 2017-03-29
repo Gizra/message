@@ -89,5 +89,3 @@ definition.
   "Override global settings" checkbox will make the global settings ignore the
   current message template and will allow to set purging definitions for the current
   template.
-
-

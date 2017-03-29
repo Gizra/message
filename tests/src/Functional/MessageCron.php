@@ -51,7 +51,7 @@ class MessageCron extends MessageTestBase {
       ],
     ];
 
-    /** @var MessageTemplate $message_template */
+    /** @var \Drupal\message\Entity\MessageTemplate $message_template */
     $message_template = MessageTemplate::create(['template' => 'template1']);
     $message_template
       ->setSettings($settings)

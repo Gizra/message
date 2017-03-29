@@ -387,7 +387,7 @@ class Message extends ContentEntityBase implements MessageInterface {
    *   An array of default values.
    */
   public static function getCurrentUserId() {
-    return array(\Drupal::currentUser()->id());
+    return [\Drupal::currentUser()->id()];
   }
 
 }

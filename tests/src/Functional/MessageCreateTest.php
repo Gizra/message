@@ -15,7 +15,7 @@ class MessageCreateTest extends MessageTestBase {
   /**
    * The user object.
    *
-   * @var User
+   * @var \Drupal\user\Entity\User
    */
   private $user;
 

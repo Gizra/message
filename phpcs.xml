@@ -4,6 +4,7 @@
   <rule ref="phpcs-ruleset.xml.dist"/>
   <arg name="extensions" value="php,inc,module,install,info,test,profile,theme,css,js"/>
   <arg name="report" value="full"/>
+  <arg name="severity" value="error"/>
   <arg value="p"/>
   <file>.</file>
   <exclude-pattern>./vendor</exclude-pattern>

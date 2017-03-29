@@ -126,7 +126,7 @@ function message_order_text_weight($a, $b) {
 function message_entity_extra_field_info() {
   $extra = [];
 
-  /** @var MessageTemplate[] $bundles */
+  /** @var \Drupal\message\Entity\MessageTemplate[] $bundles */
   $bundles = MessageTemplate::loadMultiple();
   foreach ($bundles as $bundle) {
 

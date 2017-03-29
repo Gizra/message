@@ -63,7 +63,7 @@ function message_example_comment_update(Comment $comment) {
 /**
  * Set message entity published field when it changes in the related entity.
  *
- * @param ContentEntityBase $entity
+ * @param \Drupal\Core\Entity\ContentEntityBase $entity
  *   The entity object.
  */
 function message_example_update_message_status(ContentEntityBase $entity) {
