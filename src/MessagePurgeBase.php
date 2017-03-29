@@ -163,7 +163,7 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
   public function setConfiguration(array $configuration) {
     $configuration += [
       'data' => [],
-      'weight' => '',
+      'weight' => 0,
     ];
     $this->configuration = $configuration['data'] + $this->defaultConfiguration();
     $this->weight = $configuration['weight'];
