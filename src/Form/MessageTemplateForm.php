@@ -106,12 +106,12 @@ class MessageTemplateForm extends EntityForm {
       '#default_value' => isset($settings['token options']['clear']) ? $settings['token options']['clear'] : FALSE,
     ];
 
-    $form['settings']['token options']['token replace'] = array(
+    $form['settings']['token options']['token replace'] = [
       '#type' => 'checkbox',
       '#title' => $this->t('Token replace'),
       '#description' => $this->t('When this option is selected, token processing will happen.'),
       '#default_value' => !isset($settings['token options']['token replace']) || !empty($settings['token options']['token replace']),
-    );
+    ];
 
     $form['settings']['purge_override'] = [
       '#title' => $this->t('Override global purge settings'),

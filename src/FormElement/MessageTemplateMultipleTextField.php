@@ -32,7 +32,7 @@ class MessageTemplateMultipleTextField {
   /**
    * Constructing the element.
    *
-   * @param MessageTemplate $entity
+   * @param \Drupal\message\Entity\MessageTemplate $entity
    *   A message template.
    * @param string $callback
    *   The name of the ajax callback.

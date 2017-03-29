@@ -24,7 +24,7 @@ class MessageTokenTest extends KernelTestBase {
   /**
    * The user object.
    *
-   * @var User
+   * @var \Drupal\user\Entity\User
    */
   protected $user;
 
