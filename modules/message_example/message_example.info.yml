@@ -6,3 +6,5 @@ package: Message
 dependencies:
  - message
  - token
+ - node
+ - comment
