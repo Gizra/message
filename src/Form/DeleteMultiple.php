@@ -103,7 +103,7 @@ class DeleteMultiple extends ConfirmFormBase {
           '@id' => $message->id(),
           '@template' => $message->getTemplate()->label(),
         ];
-        return t('Delete message ID @id fo template @template', $params);
+        return t('Delete message ID @id for template @template', $params);
       }, $this->messages),
     ];
     $form = parent::buildForm($form, $form_state);
@@ -120,7 +120,7 @@ class DeleteMultiple extends ConfirmFormBase {
       $this->storage->delete($this->messages);
       $this->tempStoreFactory->get('message_multiple_delete_confirm')->delete(\Drupal::currentUser()->id());
       $count = count($this->messages);
-      $this->logger('message')->notice('Deleted @count posts.', ['@count' => $count]);
+      $this->logger('message')->notice('Deleted @count messages.', ['@count' => $count]);
       drupal_set_message(\Drupal::translation()->formatPlural($count, 'Deleted 1 message.', 'Deleted @count messages.'));
     }
     $form_state->setRedirect('message.messages');
