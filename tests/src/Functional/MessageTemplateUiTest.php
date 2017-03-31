@@ -11,7 +11,7 @@ use Drupal\message\Entity\Message;
  *
  * @group Message
  */
-class MessageUiTest extends MessageTestBase {
+class MessageTemplateUiTest extends MessageTestBase {
 
   /**
    * {@inheritdoc}
@@ -43,12 +43,12 @@ class MessageUiTest extends MessageTestBase {
   }
 
   /**
-   * Test the translation interface for message.
+   * Test the translation interface for message templates.
    */
-  public function testMessageTranslate() {
+  public function testMessageTemplateTranslate() {
     $this->drupalLogin($this->account);
 
-    // Verifying creation of a message template.
+    // Test the creation of a message template.
     $edit = [
       'label' => 'Dummy message',
       'template' => 'dummy_message',
@@ -58,7 +58,7 @@ class MessageUiTest extends MessageTestBase {
       'text[0][format]' => 'filtered_html',
     ];
     $this->drupalPostForm('admin/structure/message/template/add', $edit, t('Save message template'));
-    $this->assertText('The message template Dummy message created successfully.', 'The message created successfully');
+    $this->assertText('The message template Dummy message created successfully.', 'The message template was created successfully');
     $this->drupalGet('admin/structure/message/manage/dummy_message');
 
     $elements = [
@@ -68,7 +68,7 @@ class MessageUiTest extends MessageTestBase {
     ];
     $this->verifyFormElements($elements);
 
-    // Verifying editing message.
+    // Test the editing of a message template.
     $edit = [
       'label' => 'Edited dummy message',
       'description' => 'This is a dummy text after editing',
@@ -122,7 +122,7 @@ class MessageUiTest extends MessageTestBase {
     $this->assertEquals(['<p>This is a dummy message with translated text to Hebrew</p>'], $message->getText('he'), 'The text in hebrew pulled correctly.');
     $this->assertEquals(['<p>This is a dummy message with some edited dummy text</p>'], $message->getText(), 'The text in english pulled correctly.');
 
-    // Test changing the message language with setLanguage().
+    // Test changing the language of the message template with setLanguage().
     $message->setLanguage('he');
     $this->assertEquals(['<p>This is a dummy message with translated text to Hebrew</p>'], $message->getText(), 'The text in hebrew pulled correctly.');
 
