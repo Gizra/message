@@ -7,7 +7,7 @@ dependencies:
     - system
     - user
 _core:
-  default_config_hash: GKrcfaIe9qBlUC4cSTPci6aze8glF3EohYpBrN0chic
+  default_config_hash: 2Up5NUvwF4aBVoO6eFTPeBXtnpUw_yiexv9I5u6ZD-g
 id: message
 label: Message
 module: views
@@ -199,8 +199,8 @@ display:
           alter:
             alter_text: false
             text: ''
-            make_link: false
-            path: ''
+            make_link: true
+            path: '/admin/content/messages/{{ mid }}'
             absolute: false
             external: false
             replace_spaces: false
