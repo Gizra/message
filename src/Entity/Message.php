@@ -39,6 +39,9 @@ use Drupal\user\UserInterface;
  *     "view_builder" = "Drupal\message\MessageViewBuilder",
  *     "list_builder" = "Drupal\message\MessageListBuilder",
  *     "views_data" = "Drupal\message\MessageViewsData",
+ *     "form" = {
+ *       "default" = "Drupal\Core\Entity\ContentEntityForm",
+ *     },
  *   },
  *   field_ui_base_route = "entity.message_template.edit_form"
  * )
