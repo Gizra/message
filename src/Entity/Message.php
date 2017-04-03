@@ -25,7 +25,6 @@ use Drupal\user\UserInterface;
  *   data_table = "message_field_data",
  *   translatable = TRUE,
  *   bundle_entity_type = "message_template",
- *   field_ui_base_route = "entity.message_template.edit_form",
  *   entity_keys = {
  *     "id" = "mid",
  *     "bundle" = "template",
@@ -42,20 +41,8 @@ use Drupal\user\UserInterface;
  *     "views_data" = "Drupal\message\MessageViewsData",
  *     "form" = {
  *       "default" = "Drupal\Core\Entity\ContentEntityForm",
- *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm",
- *       "edit" = "Drupal\Core\Entity\ContentEntityForm"
- *     },
- *     "access" = "Drupal\Core\Entity\EntityAccessControlHandler",
- *     "route_provider" = {
- *       "html" = "Drupal\Core\Entity\Routing\DefaultHtmlRouteProvider",
  *     },
  *   },
- *   links = {
- *     "canonical" = "/admin/content/messages/{message}",
- *     "edit-form" = "/admin/content/messages/{message}/edit",
- *     "delete-form" = "/admin/content/messages/{message}/delete"
- *   },
- *   admin_permission = "administer messages",
  *   field_ui_base_route = "entity.message_template.edit_form"
  * )
  */
