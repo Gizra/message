@@ -586,6 +586,45 @@ class MessageCron extends DrupalWebTestCase {
   }
 
   /**
+   * Test purging one message type when there's messages more than the cron
+   * allows.
+   */
+  function testPurgeRequestTypeLimit() {
+    // Set maximal amount of messages to delete.
+    variable_set('message_delete_cron_limit', 10);
+
+    $web_user = $this->drupalCreateUser();
+
+    // Create a purgeable message type with max quota 2 and max days 0.
+    $values = array(
+      'data' => array(
+        'purge' => array(
+          'override' => TRUE,
+          'enabled' => TRUE,
+          'quota' => 2,
+          'days' => 0,
+        ),
+      ),
+    );
+    $message_type = message_type_create('big_type', $values);
+    $message_type->save();
+
+    // Create more messages than may be deleted in one request.
+    for ($i = 0; $i < 20; $i++) {
+      $message = message_create('big_type', array(), $web_user);
+      $message->save();
+    }
+
+    // Trigger message's hook_cron().
+    message_cron();
+
+    // There are 20 messages to be deleted and 10 deletions allowed, so 10
+    // messages of big_type should be deleted.
+    $messages = message_load_multiple(FALSE, array('type' => 'big_type'));
+    $this->assertEqual(count($messages), 10, t('@count messages of big type left.', array('@count' => count($messages))));
+  }
+
+  /**
    * Test global purge settings and overriding them.
    */
   function testPurgeGlobalSettings() {
