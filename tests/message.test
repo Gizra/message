@@ -586,7 +586,7 @@ class MessageCron extends DrupalWebTestCase {
   }
 
   /**
-   * Test purging one message type when there's messages more than the cron
+   * Test purging one message type when there're messages more than the cron
    * allows.
    */
   function testPurgeRequestTypeLimit() {
