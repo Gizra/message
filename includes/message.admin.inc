@@ -167,7 +167,7 @@ function message_admin_text_copy($form, $form_state) {
  */
 function message_admin_text_copy_submit($form, $form_state) {
   $batch = array(
-    'title' => t('Copying messages texts betweem languages'),
+    'title' => t('Copying messages texts between languages'),
     'operations' => array(
       array(
         'message_admin_text_copy_batch',
