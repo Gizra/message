@@ -886,7 +886,7 @@ function message_type_delete($message) {
  */
 function message_create($type, $values = array(), $account = NULL) {
   global $language;
-  if (empty($account)) {
+  if (empty($account) && empty($values['uid'])) {
     global $user;
     $account = clone $user;
   }
