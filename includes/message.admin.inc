@@ -199,7 +199,9 @@ function message_admin_text_copy_validate($form, $form_state) {
  * Generates the message type editing form.
  */
 function message_type_form($form, &$form_state, $message_type, $op = 'edit') {
-  if ($op == 'clone') {
+  // Use isset($form_state['original_message_type']) because this function is called
+  // again by AJAX callbacks.
+  if ($op == 'clone' && !isset($form_state['original_message_type'])) {
     $message_type->description .= ' (cloned)';
     // Save the original message type into form state so that the submit
     // handler can clone its field instances.
