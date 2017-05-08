@@ -16,13 +16,11 @@ class MessageViewBuilder extends EntityViewBuilder {
   public function view(EntityInterface $entity, $view_mode = 'full', $langcode = NULL) {
     $build = parent::view($entity, $view_mode, $langcode);
 
-    if (!$langcode) {
-      $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-    }
-    else {
-      if (\Drupal::moduleHandler()->moduleExists('config_translation') && !isset($partials[$langcode])) {
-        $langcode = \Drupal::languageManager()->getCurrentLanguage()->getId();
-      }
+    // If language has not been set, and if message has translation for current
+    // language used by user, send message with current language.
+    $current_language = \Drupal::languageManager()->getCurrentLanguage()->getId();
+    if (!$langcode && $entity->getText($current_language)) {
+      $langcode = $current_language;
     }
 
     // Load the partials in the correct language.
