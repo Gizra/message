@@ -595,7 +595,7 @@ function _message_delete_messages($field_names, $entity_id, $last_mid = 0, $rang
  */
 function message_get_purgeable_by_type(&$purge_limit, $message_type_name, $purge_settings) {
   if ($purge_limit <= 0) {
-    return;
+    return array();
   }
 
   // Messages to be deleted.
