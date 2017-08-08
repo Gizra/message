@@ -37,13 +37,12 @@ function message_entity_delete(EntityInterface $entity) {
   // Keyed by message ID, pointing to array of the relevant field names.
   $check_mids = [];
 
-  $fields_ids = \Drupal::entityQuery('field_storage_config')->execute();
-  /** @var FieldStorageConfig[] $fields */
-  $fields = entity_load_multiple('field_storage_config', array_keys($fields_ids));
+  /** @var \Drupal\Core\Field\FieldStorageDefinitionInterface[] $fields */
+  $fields = \Drupal::entityTypeManager()->getStorage('field_storage_config')->loadMultiple();
 
   // Search for fields in which messages referenced the deleted entity.
   foreach ($fields as $field) {
-    if ($field->get('entity_type') != 'message') {
+    if ($field->getTargetEntityTypeId() != 'message') {
       // This field isn't used in any message.
       continue;
     }
@@ -51,6 +50,11 @@ function message_entity_delete(EntityInterface $entity) {
     // Only delete messages due to referenced entity or referenced taxonomy term
     // deletion.
     if ($field->getType() != 'entity_reference') {
+      continue;
+    }
+
+    // Only delete references if the referenced entity is the correct type.
+    if ($field->getSetting('target_type') != $entity->getEntityTypeId()) {
       continue;
     }
 
