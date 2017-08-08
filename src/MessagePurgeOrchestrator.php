@@ -54,8 +54,6 @@ class MessagePurgeOrchestrator {
    * configuration, otherwise global settings will be used.
    */
   public function purgeAllTemplateMessages() {
-    // The maximal amount of messages to purge per cron run.
-    $purge_limit = $this->globalConfig->get('delete_cron_limit');
 
     // Names of non global-purge-settings overriding message templates.
     /** @var \Drupal\message\MessageTemplateInterface[] $no_override_templates */
@@ -84,7 +82,7 @@ class MessagePurgeOrchestrator {
         // Ignore messages that have no enabled purge methods.
         continue;
       }
-      $this->purgeMessagesByTemplate($purge_limit, $message_template, $settings);
+      $this->purgeMessagesByTemplate($message_template, $settings);
     }
 
     // Purge messages for templates that are not overriding global settings.
@@ -92,7 +90,7 @@ class MessagePurgeOrchestrator {
       // Only purge if globally enabled.
       if ($this->globalConfig->get('purge_enable')) {
         foreach ($no_override_templates as $message_template) {
-          $this->purgeMessagesByTemplate($purge_limit, $message_template, $this->globalConfig->get('purge_methods'));
+          $this->purgeMessagesByTemplate($message_template, $this->globalConfig->get('purge_methods'));
         }
       }
     }
@@ -101,27 +99,17 @@ class MessagePurgeOrchestrator {
   /**
    * Find and purge messages according to template and purge settings.
    *
-   * @param int $purge_limit
-   *   The maximal amount of messages to fetch. Decremented each time messages
-   *   are fetched.
    * @param \Drupal\message\MessageTemplateInterface $message_template
    *   The message template for which to retrieve message IDs.
    * @param array $purge_plugins
    *   Array of purge plugin configurations, keyed by plugin ID.
    */
-  protected function purgeMessagesByTemplate(&$purge_limit, MessageTemplateInterface $message_template, array $purge_plugins) {
+  protected function purgeMessagesByTemplate(MessageTemplateInterface $message_template, array $purge_plugins) {
     foreach ($purge_plugins as $plugin_id => $configuration) {
-      // Return early if limit has been hit.
-      if ($purge_limit <= 0) {
-        return;
-      }
 
       /** @var \Drupal\message\MessagePurgeInterface $plugin */
       $plugin = $this->purgeManager->createInstance($plugin_id, $configuration);
-      $message_ids = $plugin->fetch($message_template, $purge_limit);
-
-      // Decrease the limit by the number of messages found.
-      $purge_limit -= count($message_ids);
+      $message_ids = $plugin->fetch($message_template);
       $plugin->process($message_ids);
     }
   }

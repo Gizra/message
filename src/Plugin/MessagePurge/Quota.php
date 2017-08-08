@@ -54,10 +54,10 @@ class Quota extends MessagePurgeBase {
   /**
    * {@inheritdoc}
    */
-  public function fetch(MessageTemplateInterface $template, $limit) {
+  public function fetch(MessageTemplateInterface $template) {
     $query = $this->baseQuery($template);
     $result = $query
-      ->range($this->configuration['quota'], $limit)
+      ->range($this->configuration['quota'])
       ->execute();
     return $result;
   }

@@ -20,13 +20,11 @@ interface MessagePurgeInterface extends ConfigurablePluginInterface, PluginFormI
    *
    * @param \Drupal\message\MessageTemplateInterface $template
    *   The message template to fetch messages for.
-   * @param int $limit
-   *   Limit the number of fetched messages to this amount.
    *
    * @return array
    *   An array of \Drupal\message\MessageInterface entity IDs.
    */
-  public function fetch(MessageTemplateInterface $template, $limit);
+  public function fetch(MessageTemplateInterface $template);
 
   /**
    * Process the purgeable messages.

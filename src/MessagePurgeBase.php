@@ -3,10 +3,10 @@
 namespace Drupal\message;
 
 use Drupal\Component\Plugin\PluginBase;
-use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\Queue\QueueInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
@@ -25,18 +25,18 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
   protected $weight = 0;
 
   /**
-   * The entity type manager.
-   *
-   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
-   */
-  protected $entityTypeManager;
-
-  /**
    * The entity query object for Message items.
    *
    * @var \Drupal\Core\Entity\Query\QueryInterface
    */
   protected $messageQuery;
+
+  /**
+   * The message deletion queue.
+   *
+   * @var \Drupal\Core\Queue\QueueInterface
+   */
+  protected $queue;
 
   /**
    * Constructs a MessagePurgeBase object.
@@ -47,15 +47,15 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    *   The plugin ID for the plugin instance.
    * @param mixed $plugin_definition
    *   The plugin implementation definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager.
    * @param \Drupal\Core\Entity\Query\QueryInterface $message_query
    *   The entity query object for message items.
+   * @param \Drupal\Core\Queue\QueueInterface $queue
+   *   The message deletion queue.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query) {
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryInterface $message_query, QueueInterface $queue) {
     parent::__construct($configuration, $plugin_id, $plugin_definition);
-    $this->entityTypeManager = $entity_type_manager;
     $this->messageQuery = $message_query;
+    $this->queue = $queue;
 
     $this->setConfiguration($configuration);
   }
@@ -68,8 +68,8 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager'),
-      $container->get('entity.query')->get('message')
+      $container->get('entity.query')->get('message'),
+      $container->get('queue')->get('message_delete')
     );
   }
 
@@ -77,9 +77,7 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * {@inheritdoc}
    */
   public function process(array $ids) {
-    $storage = $this->entityTypeManager->getStorage('message');
-    $messages = $storage->loadMultiple($ids);
-    $storage->delete($messages);
+    $this->queue->createItem($ids);
   }
 
   /**
