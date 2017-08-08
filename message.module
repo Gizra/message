@@ -9,8 +9,7 @@ use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Render\Element;
 use Drupal\message\Entity\Message;
 use Drupal\message\Entity\MessageTemplate;
-
-const MESSAGE_DELETE_SIZE = 100;
+use Drupal\message\MessagePurgeInterface;
 
 /**
  * Implements hook_entity_delete().
@@ -66,7 +65,7 @@ function message_entity_delete(EntityInterface $entity) {
     }
 
     if ($field->getCardinality() == 1) {
-      $deletable_mids += $results;
+      $deletable_mids = array_merge($deletable_mids, $results);
     }
     else {
       foreach ($results as $id) {
@@ -89,7 +88,7 @@ function message_entity_delete(EntityInterface $entity) {
       if (!in_array($id, $deletable_mids)) {
         $queue_set[$id] = $field_names;
       }
-      if ($queue_set && ($count % MESSAGE_DELETE_SIZE == 0 || $count == $num_mids)) {
+      if ($queue_set && ($count % MessagePurgeInterface::MESSAGE_DELETE_SIZE == 0 || $count == $num_mids)) {
         \Drupal::queue('message_check_delete')->createItem($queue_set);
         $queue_set = [];
       }
@@ -98,9 +97,9 @@ function message_entity_delete(EntityInterface $entity) {
   }
 
   if ($deletable_mids) {
-    $num_items = ceil(count($deletable_mids) / MESSAGE_DELETE_SIZE);
+    $num_items = ceil(count($deletable_mids) / MessagePurgeInterface::MESSAGE_DELETE_SIZE);
     for ($i = 0; $i < $num_items; $i++) {
-      $queue_set = array_slice($deletable_mids, $i * MESSAGE_DELETE_SIZE, MESSAGE_DELETE_SIZE);
+      $queue_set = array_slice($deletable_mids, $i * MessagePurgeInterface::MESSAGE_DELETE_SIZE, MessagePurgeInterface::MESSAGE_DELETE_SIZE);
       \Drupal::queue('message_delete')->createItem($queue_set);
     }
   }

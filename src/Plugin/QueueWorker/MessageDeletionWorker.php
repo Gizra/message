@@ -8,7 +8,11 @@ use Drupal\Core\Queue\QueueWorkerBase;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
- * Delete messages.
+ * Deletes a set of messages.
+ *
+ * No more than MessagePurgeInterface::MESSAGE_DELETE_SIZE messages should be
+ * given to a single queue item to ensure that the worker can complete the task
+ * within PHP operating constraints.
  *
  * @QueueWorker(
  *   id = "message_delete",

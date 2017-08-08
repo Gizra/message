@@ -174,6 +174,8 @@ class MessageEntityDelete extends MessageTestBase {
     $delete_queue = $this->container->get('queue')->get('message_delete');
     /** @var \Drupal\Core\Queue\QueueInterface $check_delete_queue */
     $check_delete_queue = $this->container->get('queue')->get('message_check_delete');
+    /** @var \Drupal\Core\CronInterface $cron */
+    $cron = $this->container->get('cron');
 
     // Testing nodes reference.
     $message = Message::create(['template' => 'dummy_message']);
@@ -181,9 +183,11 @@ class MessageEntityDelete extends MessageTestBase {
     $message->save();
 
     Node::load(1)->delete();
-    $this->assertEquals(1, $check_delete_queue->numberOfItems(), 'Message queued to be checked after deleting one of two referenced nodes.');
+    $cron->run();
+    $this->assertTrue(Message::load($message->id()), 'Message exists after deleting one of two referenced nodes.');
     Node::load(2)->delete();
-    $this->assertEquals(2, $check_delete_queue->numberOfItems(), 'Message queued to be checked after deleting all referenced nodes.');
+    $cron->run();
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting all referenced nodes.');
 
     // Test terms references.
     $message = Message::create(['template' => 'dummy_message']);
@@ -191,18 +195,21 @@ class MessageEntityDelete extends MessageTestBase {
     $message->save();
 
     Term::load(1)->delete();
-    $this->assertEquals(3, $check_delete_queue->numberOfItems(), 'Message queued to be checked after deleting one of two referenced terms.');
+    $cron->run();
+    $this->assertTrue(Message::load($message->id()), 'Message exists after deleting one of two referenced terms.');
     Term::load(2)->delete();
-    $this->assertEquals(4, $check_delete_queue->numberOfItems(), 'Message queued to be checked after deleting all referenced terms.');
+    $cron->run();
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting all referenced terms.');
 
-    // Test term reference.
+    // Test term references.
     $term = Term::load(3);
     $message = Message::create(['template' => 'dummy_message']);
     $message->set('field_term_reference', $term);
     $message->save();
 
     $term->delete();
-    $this->assertEquals(1, $delete_queue->numberOfItems(), 'Message queued for deletion after deleting single referenced term.');
+    $cron->run();
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced term.');
 
     // Test node reference.
     $message = Message::create(['template' => 'dummy_message']);
@@ -210,7 +217,8 @@ class MessageEntityDelete extends MessageTestBase {
     $message->save();
 
     Node::load(3)->delete();
-    $this->assertEquals(2, $delete_queue->numberOfItems(), 'Message queued for deletion after deleting single referenced node.');
+    $cron->run();
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced node.');
 
     // Testing when a message referenced to terms and term.
     $message = Message::create(['template' => 'dummy_message']);
@@ -218,9 +226,9 @@ class MessageEntityDelete extends MessageTestBase {
     $message->set('field_term_reference', 4);
     $message->save();
     Term::load(4)->delete();
+    $cron->run();
 
-    $this->assertEquals(3, $delete_queue->numberOfItems(), 'Message queued for deletion after deleting single referenced term while another the message still references other term in another field.');
-    $this->assertEquals(4, $check_delete_queue->numberOfItems(), 'Message not queued to be checked after deleting single referenced term while another the message still references other term in another field.');
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced term while another the message still references other term in another field.');
 
     // Test user reference.
     $account = $this->drupalCreateUser();
@@ -229,7 +237,8 @@ class MessageEntityDelete extends MessageTestBase {
     $message->save();
 
     $account->delete();
-    $this->assertEquals(4, $delete_queue->numberOfItems(), 'Message queued for deletion after deleting single referenced user.');
+    $cron->run();
+    $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced user.');
   }
 
 }
