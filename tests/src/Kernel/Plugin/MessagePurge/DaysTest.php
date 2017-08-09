@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\message\KernelTest\Plugin\MessagePurge;
+namespace Drupal\Tests\message\Kernel\Plugin\MessagePurge;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
@@ -63,7 +63,7 @@ class DaysTest extends KernelTestBase {
     $this->createPlugin($configuration);
 
     // No IDs should return if there are no messages.
-    $this->assertEquals([], $this->plugin->fetch($this->template, 10));
+    $this->assertEquals([], $this->plugin->fetch($this->template));
 
     // Add some message using this template.
     /** @var \Drupal\message\MessageInterface[] $messages */
@@ -76,17 +76,13 @@ class DaysTest extends KernelTestBase {
 
     // None should be returned as they are all newer than 2 days.
     $this->createPlugin($configuration);
-    $this->assertEquals([], $this->plugin->fetch($this->template, 10));
+    $this->assertEquals([], $this->plugin->fetch($this->template));
 
     // Set message 3 to be 3 days old.
     $messages[3]->set('created', REQUEST_TIME - 86400 * 3);
     $messages[3]->save();
     $this->createPlugin($configuration);
-    $this->assertEquals([3 => 3], $this->plugin->fetch($this->template, 10));
-
-    // Verify that limit parameter is respected.
-    $this->createPlugin($configuration);
-    $this->assertEquals([], $this->plugin->fetch($this->template, 0));
+    $this->assertEquals([3 => 3], $this->plugin->fetch($this->template));
   }
 
   /**
@@ -113,12 +109,13 @@ class DaysTest extends KernelTestBase {
       ],
     ];
     $this->createPlugin($configuration);
-    $this->assertEquals(5, count($this->plugin->fetch($this->template, 10)));
+    $this->assertEquals(5, count($this->plugin->fetch($this->template)));
 
     $this->plugin->process(array_keys($messages));
+    $this->container->get('cron')->run();
 
     $this->createPlugin($configuration);
-    $this->assertEquals([], $this->plugin->fetch($this->template, 10));
+    $this->assertEquals([], $this->plugin->fetch($this->template));
   }
 
   /**

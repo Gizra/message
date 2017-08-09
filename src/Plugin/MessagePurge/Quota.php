@@ -57,7 +57,9 @@ class Quota extends MessagePurgeBase {
   public function fetch(MessageTemplateInterface $template) {
     $query = $this->baseQuery($template);
     $result = $query
-      ->range($this->configuration['quota'])
+      // We need some kind of limit in order to get any results, but we really
+      // want all of them, so use an arbitrarily large number.
+      ->range($this->configuration['quota'], 1000000)
       ->execute();
     return $result;
   }
