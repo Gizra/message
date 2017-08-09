@@ -27,6 +27,13 @@ class MessageCron extends MessageTestBase {
   protected $purgeManager;
 
   /**
+   * The cron service.
+   *
+   * @var \Drupal\Core\CronInterface
+   */
+  protected $cron;
+
+  /**
    * {@inheritdoc}
    */
   public function setUp() {
@@ -34,6 +41,7 @@ class MessageCron extends MessageTestBase {
 
     $this->purgeManager = $this->container->get('plugin.manager.message.purge');
     $this->account = $this->drupalCreateUser();
+    $this->cron = $this->container->get('cron');
   }
 
   /**
@@ -110,8 +118,8 @@ class MessageCron extends MessageTestBase {
         ->save();
     }
 
-    // Trigger message's hook_cron().
-    message_cron();
+    // Trigger message's hook_cron() as well as the queue processing.
+    $this->cron->run();
 
     // Four template1 messages were created. The first two should have been
     // deleted.
@@ -123,55 +131,6 @@ class MessageCron extends MessageTestBase {
     // template3 messages should not have been deleted.
     $remaining = [8, 9, 10];
     $this->assertFalse(array_diff(Message::queryByTemplate('template3'), $remaining), 'Messages with disabled purging settings were not deleted.');
-  }
-
-  /**
-   * Testing the purge request limit.
-   */
-  public function testPurgeRequestLimit() {
-    // Set maximal amount of messages to delete.
-    \Drupal::configFactory()->getEditable('message.settings')
-      ->set('delete_cron_limit', 10)
-      ->save();
-
-    // Create a purgeable message template with max quota 2 and max days 0.
-    $quota = $this->purgeManager->createInstance('quota', ['data' => ['quota' => 2]]);
-    $days = $this->purgeManager->createInstance('days', ['data' => ['days' => 0]]);
-    $data = [
-      'purge_override' => TRUE,
-      'purge_methods' => [
-        'quota' => $quota->getConfiguration(),
-        'days' => $days->getConfiguration(),
-      ],
-    ];
-
-    MessageTemplate::create(['template' => 'template1'])
-      ->setSettings($data)
-      ->save();
-
-    MessageTemplate::create(['template' => 'template2'])
-      ->setSettings($data)
-      ->save();
-
-    // Create more messages than may be deleted in one request.
-    for ($i = 0; $i < 10; $i++) {
-      Message::Create(['template' => 'template1'])
-        ->setOwnerId($this->account->id())
-        ->save();
-      Message::Create(['template' => 'template2'])
-        ->setOwnerId($this->account->id())
-        ->save();
-    }
-
-    // Trigger message's hook_cron().
-    message_cron();
-
-    // There are 16 messages to be deleted and 10 deletions allowed, so 8
-    // messages of template1 and 2 messages of template2 should be deleted, thus
-    // 2 messages of template1 and 8 messages of template2 remain.
-    $this->assertEqual(count(Message::queryByTemplate('template1')), 2, t('Two messages of template 1 left.'));
-
-    $this->assertEqual(count(Message::queryByTemplate('template2')), 8, t('Eight messages of template 2 left.'));
   }
 
   /**
@@ -214,8 +173,8 @@ class MessageCron extends MessageTestBase {
         ->save();
     }
 
-    // Trigger message's hook_cron().
-    message_cron();
+    // Trigger message's hook_cron() as well as the queue processing.
+    $this->cron->run();
 
     $this->assertEqual(count(Message::queryByTemplate('template1')), 0, t('All template1 messages deleted.'));
     $this->assertEqual(count(Message::queryByTemplate('template2')), 2, t('Template2 messages were not deleted due to settings override.'));

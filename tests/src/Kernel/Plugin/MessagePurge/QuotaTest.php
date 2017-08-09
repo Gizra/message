@@ -1,6 +1,6 @@
 <?php
 
-namespace Drupal\Tests\message\KernelTest\Plugin\MessagePurge;
+namespace Drupal\Tests\message\Kernel\Plugin\MessagePurge;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
@@ -63,29 +63,22 @@ class QuotaTest extends KernelTestBase {
     $this->createPlugin($configuration);
 
     // No IDs should return if there are no messages.
-    $this->assertEquals([], $this->plugin->fetch($this->template, 10));
+    $this->assertEquals([], $this->plugin->fetch($this->template));
 
     // Add some message using this template.
-    /** @var \Drupal\message\MessageInterface[] $messages */
-    $messages = [];
     foreach (range(1, 5) as $i) {
       $message = Message::create(['template' => $this->template->id()]);
       $message->save();
-      $messages[$i] = $message;
     }
 
     // None should be returned as there are less than 10.
     $this->createPlugin($configuration);
-    $this->assertEquals([], $this->plugin->fetch($this->template, 10));
+    $this->assertEquals([], $this->plugin->fetch($this->template));
 
     // Set quota to 3.
     $configuration['data']['quota'] = 3;
     $this->createPlugin($configuration);
-    $this->assertEquals([2 => 2, 1 => 1], $this->plugin->fetch($this->template, 10));
-
-    // Verify that limit parameter is respected.
-    $this->createPlugin($configuration);
-    $this->assertEquals([], $this->plugin->fetch($this->template, 0));
+    $this->assertEquals([1 => 1, 2 => 2], $this->plugin->fetch($this->template));
   }
 
   /**

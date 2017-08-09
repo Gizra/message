@@ -5,6 +5,7 @@ namespace Drupal\message\Plugin\MessagePurge;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
 use Drupal\Core\Entity\Query\QueryInterface;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Queue\QueueInterface;
 use Drupal\message\MessagePurgeBase;
 use Drupal\message\MessageTemplateInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -37,15 +38,15 @@ class Days extends MessagePurgeBase {
    *   The plugin ID.
    * @param mixed $plugin_definition
    *   The plugin definition.
-   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
-   *   The entity type manager service.
    * @param \Drupal\Core\Entity\Query\QueryInterface $message_query
    *   The entity query service.
+   * @param \Drupal\Core\Queue\QueueInterface $queue
+   *   The message deletion queue.
    * @param \Symfony\Component\HttpFoundation\RequestStack $request_stack
    *   The request stack used to determine the current time.
    */
-  public function __construct(array $configuration, $plugin_id, $plugin_definition, EntityTypeManagerInterface $entity_type_manager, QueryInterface $message_query, RequestStack $request_stack) {
-    parent::__construct($configuration, $plugin_id, $plugin_definition, $entity_type_manager, $message_query);
+  public function __construct(array $configuration, $plugin_id, $plugin_definition, QueryInterface $message_query, QueueInterface $queue, RequestStack $request_stack) {
+    parent::__construct($configuration, $plugin_id, $plugin_definition, $message_query, $queue);
     $this->requestStack = $request_stack;
   }
 
@@ -57,8 +58,8 @@ class Days extends MessagePurgeBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity_type.manager'),
       $container->get('entity.query')->get('message'),
+      $container->get('queue')->get('message_delete'),
       $container->get('request_stack')
     );
   }
@@ -100,12 +101,11 @@ class Days extends MessagePurgeBase {
   /**
    * {@inheritdoc}
    */
-  public function fetch(MessageTemplateInterface $template, $purge_limit) {
+  public function fetch(MessageTemplateInterface $template) {
     $query = $this->baseQuery($template);
     // Find messages older than the current time minus the maximum age.
     $earlier_than = $this->requestStack->getCurrentRequest()->server->get('REQUEST_TIME') - ($this->configuration['days'] * 86400);
     $result = $query->condition('created', $earlier_than, '<')
-      ->range(0, $purge_limit)
       ->execute();
     return $result;
   }
