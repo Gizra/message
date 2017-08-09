@@ -11,6 +11,11 @@ use Drupal\Core\Plugin\PluginFormInterface;
 interface MessagePurgeInterface extends ConfigurablePluginInterface, PluginFormInterface {
 
   /**
+   * The maximum number of messages that a queue worker should delete at once.
+   */
+  const MESSAGE_DELETE_SIZE = 100;
+
+  /**
    * Fetch the messages that need to be purged for a given template.
    *
    * @param \Drupal\message\MessageTemplateInterface $template
