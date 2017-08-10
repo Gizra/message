@@ -77,7 +77,7 @@ class MessageEntityDelete extends MessageTestBase {
 
     $this->nodeType = $this->drupalCreateContentType();
 
-    for ($i = 0; $i <= 5; $i++) {
+    for ($i = 0; $i <= 6; $i++) {
       entity_create('node', [
         'type' => $this->nodeType->id(),
         'title' => 'Node ' . $i,
@@ -239,6 +239,19 @@ class MessageEntityDelete extends MessageTestBase {
     $account->delete();
     $cron->run();
     $this->assertFalse(Message::load($message->id()), 'Message deleted after deleting single referenced user.');
+
+    // Test that only messages with a reference to the correct TYPE of entity
+    // get deleted.
+    $message_one = Message::create(['template' => 'dummy_message']);
+    $message_one->set('field_node_reference', 5);
+    $message_one->save();
+    $message_two = Message::create(['template' => 'dummy_message']);
+    $message_two->set('field_term_reference', 5);
+    $message_two->save();
+    Node::load(5)->delete();
+    $cron->run();
+    $this->assertFalse(Message::load($message_one->id()), 'Message with node deleted after deleting referenced node.');
+    $this->assertTrue(Message::load($message_two->id()), 'Message with term remains after deleting a node with the same ID.');
   }
 
 }
