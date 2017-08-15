@@ -77,7 +77,11 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
    * {@inheritdoc}
    */
   public function process(array $ids) {
-    $this->queue->createItem($ids);
+    if (!empty($ids)) {
+      foreach (array_chunk($ids, MessagePurgeInterface::MESSAGE_DELETE_SIZE) as $queue_set) {
+        $this->queue->createItem($queue_set);
+      }
+    }
   }
 
   /**
