@@ -107,11 +107,13 @@ class MessageTemplateUiTest extends MessageTestBase {
     $this->verifyFormElements($elements);
 
     // Load the message template via code in hebrew and english and verify the
-    // text.
+    // text. Also verify that when no translation, nothing gets returned.
     /* @var $template MessageTemplate */
     $template = MessageTemplate::load('dummy_message');
     $this->assertEquals(['<p>This is a dummy message with translated text to Hebrew</p>'], $template->getText('he'), 'The text in hebrew pulled correctly.');
     $this->assertEquals(['<p>This is a dummy message with some edited dummy text</p>'], $template->getText(), 'The text in english pulled correctly.');
+    $this->assertEquals([], $template->getText('fi'), 'Nonexistent translation pulled empty.');
+
 
     // Create a message using that same template and test that multilingual text
     // still works.
@@ -119,12 +121,24 @@ class MessageTemplateUiTest extends MessageTestBase {
     $message = Message::create([
       'template' => 'dummy_message',
     ]);
+    /** @var \Drupal\message\MessageViewBuilder $builder */
+    $builder = \Drupal::service('entity_type.manager')->getViewBuilder('message');
     $this->assertEquals(['<p>This is a dummy message with translated text to Hebrew</p>'], $message->getText('he'), 'The text in hebrew pulled correctly.');
     $this->assertEquals(['<p>This is a dummy message with some edited dummy text</p>'], $message->getText(), 'The text in english pulled correctly.');
+    $build = $builder->view($message);
+    $this->assertEquals(['#markup' => '<p>This is a dummy message with some edited dummy text</p>'], $build['partial_0'], 'The text in english built correctly.');
 
     // Test changing the language of the message template with setLanguage().
     $message->setLanguage('he');
     $this->assertEquals(['<p>This is a dummy message with translated text to Hebrew</p>'], $message->getText(), 'The text in hebrew pulled correctly.');
+    $build = $builder->view($message);
+    $this->assertEquals(['#markup' => '<p>This is a dummy message with translated text to Hebrew</p>'], $build['partial_0'], 'The text in hebrew built correctly.');
+
+    // Test again with nonexistent translation.
+    $message->setLanguage('fi');
+    $this->assertEquals([], $message->getText(), 'Nonexistent translation pulled empty.');
+    $build = $builder->view($message);
+    $this->assertArrayNotHasKey('partial_0', $build, 'Nonexistent translation built empty.');
 
     // Delete message via the UI.
     $this->drupalPostForm('admin/structure/message/delete/dummy_message', [], 'Delete');
