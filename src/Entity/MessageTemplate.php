@@ -243,6 +243,13 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
   /**
    * {@inheritdoc}
    */
+  public function getRawText() {
+    return $this->text;
+  }
+  
+  /**
+   * {@inheritdoc}
+   */
   public function getText($langcode = Language::LANGCODE_NOT_SPECIFIED, $delta = NULL) {
     $text = $this->text;
 
