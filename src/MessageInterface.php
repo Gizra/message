@@ -95,6 +95,14 @@ interface MessageInterface extends ContentEntityInterface, EntityOwnerInterface 
   public function setLanguage($language);
 
   /**
+   * Return the text.
+   *
+   * @return array
+   *   The message text.
+   */
+  public function getRawText();
+  
+  /**
    * Replace arguments with their placeholders.
    *
    * @param string $langcode
