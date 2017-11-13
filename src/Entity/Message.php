@@ -133,10 +133,8 @@ class Message extends ContentEntityBase implements MessageInterface {
    * {@inheritdoc}
    */
   public function getArguments() {
-    $arguments = $this->get('arguments')->getValue();
-
-    // @todo: See if there is a easier way to get only the 0 key.
-    return $arguments ? $arguments[0] : [];
+    $arguments = $this->get('arguments')->first();
+    return $arguments ? $arguments->getValue() : [];
   }
 
   /**
