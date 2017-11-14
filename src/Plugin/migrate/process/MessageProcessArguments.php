@@ -23,12 +23,8 @@ class MessageProcessArguments extends ProcessPluginBase {
     
     $arguments = [];
     foreach ($value as $key => $value) {
-      if ($key[0] == '!') {
-        $arguments[substr_replace($key, '@', 0, 1)] = $value;
-      }
-      else {
-        $arguments[$key] = $value;
-      }
+      $key = $key[0] == '!' ? substr_replace($key, '@', 0, 1) : $key;
+      $arguments[$key] = $value;
     }
 
     return $arguments;
