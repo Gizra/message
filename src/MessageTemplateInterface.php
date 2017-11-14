@@ -87,6 +87,14 @@ interface MessageTemplateInterface extends ConfigEntityInterface {
   public function getUuid();
 
   /**
+   * Return text.
+   *
+   * @return array
+   *   The message text.
+   */
+  public function getRaWText();
+
+  /**
    * Retrieves the configured message text in a certain language.
    *
    * @param string $langcode
