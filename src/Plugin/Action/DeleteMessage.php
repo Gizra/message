@@ -86,7 +86,7 @@ class DeleteMessage extends ActionBase implements ContainerFactoryPluginInterfac
    * {@inheritdoc}
    */
   public function access($object, AccountInterface $account = NULL, $return_as_object = FALSE) {
-    return $account->hasPermission('adminster messages');
+    return $account->hasPermission('administer messages');
   }
 
 }
