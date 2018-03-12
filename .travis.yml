@@ -7,14 +7,16 @@ php:
   - 7.1
 
 env:
-  - TEST_SUITE=8.4.x
   - TEST_SUITE=8.5.x
+  - TEST_SUITE=8.6.x
   - TEST_SUITE=PHP_CodeSniffer
 
 # Only run the coding standards check once.
 matrix:
   exclude:
     - php: 5.6
+      env: TEST_SUITE=PHP_CodeSniffer
+    - php: 7.0
       env: TEST_SUITE=PHP_CodeSniffer
 
 mysql:
