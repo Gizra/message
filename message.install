@@ -12,3 +12,18 @@ function message_uninstall() {
   // Delete all message settings variables.
   \Drupal::configFactory()->getEditable('message.settings')->delete();
 }
+
+/**
+ * Fixes the typo in 'adminster messages' permission.
+ */
+function message_update_8100() {
+  $entityTypeManager = \Drupal::service('entity_type.manager');
+  $roles = $entityTypeManager->getStorage('user_role')->loadMultiple();
+  foreach ($roles as $role) {
+    if ($role->hasPermission('adminster messages')) {
+      $role->revokePermission('adminster messages');
+      $role->grantPermission('administer messages');
+      $role->save();
+    }
+  }
+}
