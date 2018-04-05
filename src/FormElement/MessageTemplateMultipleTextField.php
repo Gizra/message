@@ -54,7 +54,7 @@ class MessageTemplateMultipleTextField {
       '#type' => 'container',
       '#tree' => TRUE,
       '#theme' => 'field_multiple_value_form',
-      '#caridnality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
+      '#cardinality' => FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED,
       '#cardinality_multiple' => TRUE,
       '#field_name' => 'message_text',
       '#title' => t('Message text'),
