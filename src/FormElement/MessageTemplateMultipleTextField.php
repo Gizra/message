@@ -61,6 +61,7 @@ class MessageTemplateMultipleTextField {
       '#description' => t('Please enter the message text.'),
       '#prefix' => '<div id="message-text">',
       '#suffix' => '</div>',
+      '#field_parents' => [],
     ];
 
     if (\Drupal::moduleHandler()->moduleExists('token')) {
