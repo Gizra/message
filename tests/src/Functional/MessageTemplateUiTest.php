@@ -128,7 +128,7 @@ class MessageTemplateUiTest extends MessageTestBase {
 
     // Delete message via the UI.
     $this->drupalPostForm('admin/structure/message/delete/dummy_message', [], 'Delete');
-    $this->assertText(t('There is no Message template yet.'));
+    $this->assertText(t('There are no message templates yet.'));
     $this->assertFalse(MessageTemplate::load('dummy_message'), 'The message deleted via the UI successfully.');
   }
 

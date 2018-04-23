@@ -2,6 +2,7 @@
 
 namespace Drupal\message\Entity;
 
+use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Config\Entity\ConfigEntityBundleBase;
 use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Language\Language;
@@ -14,6 +15,12 @@ use Drupal\message\MessageTemplateInterface;
  * @ConfigEntityType(
  *   id = "message_template",
  *   label = @Translation("Message template"),
+ *   label_plural = @Translation("message templates"),
+ *   label_singular = @Translation("message template"),
+ *   label_count = @PluralTranslation(
+ *     singular="@count message template",
+ *     plural="@count message templates"
+ *   ),
  *   config_prefix = "template",
  *   bundle_of = "message",
  *   entity_keys = {

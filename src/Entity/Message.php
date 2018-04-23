@@ -3,6 +3,8 @@
 namespace Drupal\message\Entity;
 
 use Drupal\Component\Render\FormattableMarkup;
+use Drupal\Core\Annotation\PluralTranslation;
+use Drupal\Core\Annotation\Translation;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
@@ -19,6 +21,12 @@ use Drupal\user\UserInterface;
  * @ContentEntityType(
  *   id = "message",
  *   label = @Translation("Message"),
+ *   label_singular = @Translation("message"),
+ *   label_plural = @Translation("messages"),
+ *   label_count = @PluralTranslation(
+ *     singular="@count message",
+ *     plural="@count messages"
+ *   ),
  *   bundle_label = @Translation("Message template"),
  *   module = "message",
  *   base_table = "message",
