@@ -13,6 +13,20 @@
 class message_handler_field_message_render extends views_handler_field {
 
   /**
+   * {@inheritdoc}
+   */
+  public function construct() {
+    parent::construct();
+
+    // Add fields necessary to reconstruct Message entities
+    $this->additional_fields['mid']       = array('field' => 'mid');
+    $this->additional_fields['type']      = array('field' => 'type');
+    $this->additional_fields['arguments'] = array('field' => 'arguments');
+    $this->additional_fields['uid']       = array('field' => 'uid');
+    $this->additional_fields['timestamp'] = array('field' => 'timestamp');
+  }
+
+  /**
    * Set default field name to render.
    */
   function option_definition() {
@@ -71,14 +85,21 @@ class message_handler_field_message_render extends views_handler_field {
   }
 
   function render($values) {
-    $field_alias = $this->field_alias;
-    if (!empty($values->{$field_alias}) && $message = message_load($values->{$field_alias})) {
-      $options = array(
-        'field name' => $this->options['field_name'],
-        'partials' => $this->options['partials'],
-        'partial delta' => $this->options['partials_delta'],
-      );
-      return $message->getText(NULL, $options);
-    }
+    // reconstruct Message entity
+    $message_values = array(
+      'arguments' => unserialize($this->get_value($values, 'arguments')),
+      'timestamp' => $this->get_value($values, 'timestamp'),
+      'uid' => $this->get_value($values, 'uid'),
+    );
+
+    $message = message_create($this->get_value($values, 'type'), $message_values, $message_values['uid']);
+
+    $options = array(
+      'field name' => $this->options['field_name'],
+      'partials' => $this->options['partials'],
+      'partial delta' => $this->options['partials_delta'],
+    );
+
+    return $message->getText(NULL, $options);
   }
 }
