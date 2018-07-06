@@ -4,6 +4,12 @@
   "type": "drupal-module",
   "license": "GPL-2.0+",
   "minimum-stability": "dev",
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://packages.drupal.org/8"
+    }
+  ],
   "require": {},
   "require-dev": {
     "drupal/coder": "^2.0"
