@@ -172,6 +172,11 @@ class Message extends Entity {
     if (!empty($arguments)) {
       $args = array();
       foreach ($arguments as $key => $value) {
+        if (strpos($output, $key) === FALSE) {
+          // The replacement key is not in the output, so save computation.
+          continue;
+        }
+
         if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
           // A replacement via callback function.
           $value += array('pass message' => FALSE);
