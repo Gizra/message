@@ -12,6 +12,9 @@
  */
 class message_handler_field_message_render extends views_handler_field {
 
+  // Message entities
+  var $messages = array();
+
   /**
    * Set default field name to render.
    */
@@ -70,14 +73,32 @@ class message_handler_field_message_render extends views_handler_field {
     parent::options_form($form, $form_state);
   }
 
+  function pre_render(&$values) {
+    $mids = array();
+    $field_alias = $this->field_alias;
+
+    foreach ($values as $value) {
+      if (!empty($value->{$field_alias})) {
+        $mids[] = $value->{$field_alias};
+      }
+    }
+
+    if (!empty($mids)) {
+      $this->messages = message_load_multiple($mids);
+    }
+  }
+
   function render($values) {
     $field_alias = $this->field_alias;
-    if (!empty($values->{$field_alias}) && $message = message_load($values->{$field_alias})) {
+    
+    if (!empty($values->{$field_alias}) && isset($this->messages[$values->{$field_alias}])) {
+      $message = $this->messages[$values->{$field_alias}];
       $options = array(
         'field name' => $this->options['field_name'],
         'partials' => $this->options['partials'],
         'partial delta' => $this->options['partials_delta'],
       );
+
       return $message->getText(NULL, $options);
     }
   }
