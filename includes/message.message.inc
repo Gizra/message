@@ -172,32 +172,35 @@ class Message extends Entity {
     if (!empty($arguments)) {
       $args = array();
       foreach ($arguments as $key => $value) {
-        if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
-          // A replacement via callback function.
-          $value += array('pass message' => FALSE);
-          if ($value['pass message']) {
-            // Pass the message object as-well.
-            $value['callback arguments'][] = $this;
+        // Don't bother processing for keys not present in the output
+        if (strpos($output, $key) !== FALSE) {
+          if (is_array($value) && !empty($value['callback']) && function_exists($value['callback'])) {
+            // A replacement via callback function.
+            $value += array('pass message' => FALSE);
+            if ($value['pass message']) {
+              // Pass the message object as-well.
+              $value['callback arguments'][] = $this;
+            }
+
+            $value = call_user_func_array($value['callback'], $value['callback arguments']);
           }
 
-          $value = call_user_func_array($value['callback'], $value['callback arguments']);
-        }
+          switch ($key[0]) {
+            case '@':
+              // Escaped only.
+              $args[$key] = check_plain($value);
+              break;
 
-        switch ($key[0]) {
-          case '@':
-            // Escaped only.
-            $args[$key] = check_plain($value);
-            break;
+            case '%':
+            default:
+              // Escaped and placeholder.
+              $args[$key] = drupal_placeholder($value);
+              break;
 
-          case '%':
-          default:
-            // Escaped and placeholder.
-            $args[$key] = drupal_placeholder($value);
-            break;
-
-          case '!':
-            // Pass-through.
-            $args[$key] = $value;
+            case '!':
+              // Pass-through.
+              $args[$key] = $value;
+          }
         }
       }
       $output = strtr($output, $args);
