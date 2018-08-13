@@ -16,3 +16,9 @@ message.settings:
   description: 'Message settings.'
   parent: 'message.main_settings'
   route_name: message.settings
+
+message.admin_content:
+  title: 'Messages'
+  description: 'Display all messages.'
+  parent: 'system.admin_content'
+  route_name: message.messages
