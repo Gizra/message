@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\message\Kernel;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
 use Drupal\message\Entity\MessageTemplate;
 
@@ -37,7 +36,7 @@ trait MessageTemplateCreateTrait {
         'clear' => FALSE,
       ],
     ];
-    $template = $template ?: Unicode::strtolower($this->randomMachineName());
+    $template = $template ?: mb_strtolower($this->randomMachineName());
     $label = $label ?: $this->randomString();
     $description = $description ?: $this->randomString();
     $text = $text ?: [$this->randomString()];

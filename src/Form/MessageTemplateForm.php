@@ -189,7 +189,7 @@ class MessageTemplateForm extends EntityForm {
       '@template' => $form_state->getValue('label'),
     ];
 
-    drupal_set_message(t('The message template @template created successfully.', $params));
+    $this->messenger()->addMessage($this->t('The message template @template created successfully.', $params));
     $form_state->setRedirect('message.overview_templates');
     return $this->entity;
   }

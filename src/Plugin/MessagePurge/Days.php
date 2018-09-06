@@ -58,7 +58,7 @@ class Days extends MessagePurgeBase {
       $configuration,
       $plugin_id,
       $plugin_definition,
-      $container->get('entity.query')->get('message'),
+      $container->get('entity_type.manager')->getStorage('message')->getQuery(),
       $container->get('queue')->get('message_delete'),
       $container->get('request_stack')
     );

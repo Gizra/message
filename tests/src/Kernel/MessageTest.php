@@ -2,7 +2,6 @@
 
 namespace Drupal\Tests\message\Kernel;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
@@ -50,7 +49,7 @@ class MessageTest extends KernelTestBase {
     $this->installEntitySchema('user');
     $this->installSchema('system', ['sequences']);
     $this->entityTypeManager = $this->container->get('entity_type.manager');
-    $this->messageTemplate = $this->createMessageTemplate(Unicode::strtolower($this->randomMachineName()), $this->randomString(), $this->randomString(), []);
+    $this->messageTemplate = $this->createMessageTemplate(mb_strtolower($this->randomMachineName()), $this->randomString(), $this->randomString(), []);
   }
 
   /**

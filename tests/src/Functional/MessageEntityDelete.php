@@ -2,15 +2,12 @@
 
 namespace Drupal\Tests\message\Functional;
 
-use Drupal\Component\Utility\Unicode;
 use Drupal\Core\Language\Language;
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
-use Drupal\node\Entity\NodeType;
 use Drupal\taxonomy\Entity\Term;
-use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Test the Message delete on entity delete functionality.
@@ -61,7 +58,7 @@ class MessageEntityDelete extends MessageTestBase {
     $this->vocabulary = entity_create('taxonomy_vocabulary', [
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
-      'vid' => Unicode::strtolower($this->randomMachineName()),
+      'vid' => mb_strtolower($this->randomMachineName()),
       'langcode' => Language::LANGCODE_NOT_SPECIFIED,
       'weight' => mt_rand(0, 10),
     ]);
@@ -78,12 +75,12 @@ class MessageEntityDelete extends MessageTestBase {
     $this->nodeType = $this->drupalCreateContentType();
 
     for ($i = 0; $i <= 6; $i++) {
-      entity_create('node', [
+      $this->container->get('entity_type.manager')->getStorage('node')->create([
         'type' => $this->nodeType->id(),
         'title' => 'Node ' . $i,
       ])->save();
 
-      entity_create('taxonomy_term', [
+      $this->container->get('entity_type.manager')->getStorage('taxonomy_term')->create([
         'vid' => $this->vocabulary->id(),
         'name' => 'term ' . $i,
       ])->save();
