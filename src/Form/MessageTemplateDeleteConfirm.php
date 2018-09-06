@@ -3,41 +3,13 @@
 namespace Drupal\message\Form;
 
 use Drupal\Core\Entity\EntityConfirmFormBase;
-use Drupal\Core\Entity\Query\QueryFactory;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Provides a form for message template deletion.
  */
 class MessageTemplateDeleteConfirm extends EntityConfirmFormBase {
-
-  /**
-   * The query factory to create entity queries.
-   *
-   * @var \Drupal\Core\Entity\Query\QueryFactory
-   */
-  protected $queryFactory;
-
-  /**
-   * Constructs a new MessageTemplateDeleteConfirm object.
-   *
-   * @param \Drupal\Core\Entity\Query\QueryFactory $query_factory
-   *   The entity query object.
-   */
-  public function __construct(QueryFactory $query_factory) {
-    $this->queryFactory = $query_factory;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public static function create(ContainerInterface $container) {
-    return new static(
-      $container->get('entity.query')
-    );
-  }
 
   /**
    * {@inheritdoc}
@@ -58,7 +30,7 @@ class MessageTemplateDeleteConfirm extends EntityConfirmFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     // Check if any messages are using this template.
-    $number_messages = $this->queryFactory->get('message')
+    $number_messages = $this->entityTypeManager->getStorage('message')->getQuery()
       ->condition('template', $this->entity->id())
       ->count()
       ->execute();
@@ -77,7 +49,7 @@ class MessageTemplateDeleteConfirm extends EntityConfirmFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $this->entity->delete();
     $t_args = ['%name' => $this->entity->label()];
-    drupal_set_message(t('The message template %name has been deleted.', $t_args));
+    $this->messenger()->addMessage($this->t('The message template %name has been deleted.', $t_args));
     $this->logger('content')->notice('Deleted message template %name', $t_args);
     $form_state->setRedirectUrl($this->getCancelUrl());
   }
