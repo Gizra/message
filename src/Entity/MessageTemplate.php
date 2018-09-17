@@ -278,7 +278,7 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
       // @see check_markup()
       $build = [
         '#type' => 'processed_text',
-        '#text' => $item['value'],
+        '#text' => isset($item['value']) ? $item['value'] : '',
         '#format' => $item['format'],
         '#langcode' => $langcode,
       ];
