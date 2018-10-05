@@ -324,7 +324,7 @@ class Message extends ContentEntityBase implements MessageInterface {
     $arguments = $this->getArguments();
     $this->setArguments(array_merge($tokens, $arguments));
 
-    parent::save();
+    return parent::save();
   }
 
   /**
