@@ -197,10 +197,6 @@ function template_preprocess_message(array &$variables) {
   $variables['author_name'] = drupal_render($variables['elements']['uid']);
   unset($variables['elements']['uid']);
 
-  $variables['url'] = $message->url('canonical', [
-    'language' => $message->language(),
-  ]);
-
   // The 'page' variable is set to TRUE in two occasions:
   // - The view mode is 'full' and we are on the 'message.view' route.
   // - The message is in preview and view mode is either 'full' or 'default'.
