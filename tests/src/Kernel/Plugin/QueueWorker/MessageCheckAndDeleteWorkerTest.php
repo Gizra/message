@@ -4,11 +4,10 @@ namespace Drupal\Tests\message\Kernel\Plugin\QueueWorker;
 
 use Drupal\field\Entity\FieldConfig;
 use Drupal\field\Entity\FieldStorageConfig;
-use Drupal\KernelTests\Core\Entity\EntityKernelTestBase;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
-use Drupal\simpletest\ContentTypeCreationTrait;
+use Drupal\Tests\node\Traits\ContentTypeCreationTrait;
 use Drupal\Tests\message\Kernel\MessageTemplateCreateTrait;
 
 /**

@@ -4,7 +4,7 @@ namespace Drupal\Tests\message\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
-use Drupal\simpletest\UserCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Test theming of messages.

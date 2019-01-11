@@ -6,7 +6,7 @@ use Drupal\Core\Language\Language;
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\message\Entity\Message;
 use Drupal\message\MessageInterface;
-use Drupal\simpletest\UserCreationTrait;
+use Drupal\Tests\user\Traits\UserCreationTrait;
 
 /**
  * Kernel tests for the Message entity.
@@ -132,7 +132,7 @@ class MessageTest extends KernelTestBase {
     $message->save();
     $text = $message->getText();
     $this->assertEquals(1, count($text));
-    $this->assertEquals('<p>foo  and ' . $account->getUsername() . "</p>\n", $text[0]);
+    $this->assertEquals('<p>foo  and ' . $account->getAccountName() . "</p>\n", $text[0]);
 
     // Disable token processing.
     $this->messageTemplate->setSettings([
