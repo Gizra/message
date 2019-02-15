@@ -292,7 +292,7 @@ class MessageTemplate extends ConfigEntityBundleBase implements MessageTemplateI
       $text[$key] = \Drupal::service('renderer')->renderPlain($build);
     }
 
-    if ($delta) {
+    if (isset($delta)) {
       // Return just the delta if it exists. Always wrap in an array here to
       // ensure compatibility with methods calling getText.
       return isset($text[$delta]) ? [$text[$delta]] : [];
