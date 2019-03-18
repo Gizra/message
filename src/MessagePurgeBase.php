@@ -172,18 +172,4 @@ abstract class MessagePurgeBase extends PluginBase implements MessagePurgeInterf
     return $this;
   }
 
-  /**
-   * {@inheritdoc}
-   */
-  public function defaultConfiguration() {
-    return [];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function calculateDependencies() {
-    return [];
-  }
-
 }

@@ -2,13 +2,13 @@
 
 namespace Drupal\message;
 
-use Drupal\Component\Plugin\ConfigurablePluginInterface;
+use Drupal\Component\Plugin\ConfigurableInterface;
 use Drupal\Core\Plugin\PluginFormInterface;
 
 /**
  * Interface for MessagePurge plugins.
  */
-interface MessagePurgeInterface extends ConfigurablePluginInterface, PluginFormInterface {
+interface MessagePurgeInterface extends ConfigurableInterface, PluginFormInterface {
 
   /**
    * The maximum number of messages that a queue worker should delete at once.
