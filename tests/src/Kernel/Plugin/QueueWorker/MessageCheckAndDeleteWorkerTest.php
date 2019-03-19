@@ -40,14 +40,14 @@ class MessageCheckAndDeleteWorkerTest extends KernelTestBase {
   public function setUp() {
     parent::setUp();
 
-    $this->installConfig(['filter', 'node']);
-
     $this->installEntitySchema('user');
     $this->installEntitySchema('node');
     $this->installEntitySchema('message');
 
     $this->installSchema('system', ['sequences']);
     $this->installSchema('node', ['node_access']);
+
+    $this->installConfig(['filter', 'node']);
   }
 
   /**
