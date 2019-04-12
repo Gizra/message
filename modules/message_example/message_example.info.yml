@@ -4,7 +4,7 @@ description: "Example message for working with the message module."
 core: 8.x
 package: Message
 dependencies:
- - message
- - token
- - node
- - comment
+ - message:message
+ - token:token
+ - drupal:node
+ - drupal:comment

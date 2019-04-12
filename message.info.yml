@@ -5,4 +5,4 @@ core: 8.x
 package: Message
 configure: message.main_settings
 dependencies:
-  - text
+  - drupal:text
