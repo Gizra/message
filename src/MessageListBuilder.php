@@ -90,7 +90,7 @@ class MessageListBuilder extends EntityListBuilder {
       'changed' => $this->dateService->format($entity->getCreatedTime(), 'short'),
       'text' => $entity->getText(),
       'template' => $entity->getTemplate()->label(),
-      'author' => $entity->getOwner()->label(),
+      'author' => (!empty($entity->getOwner())) ? $entity->getOwner()->label() : $this->t('Anonymous'),
     ];
   }
 
