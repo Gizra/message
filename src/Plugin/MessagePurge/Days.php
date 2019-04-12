@@ -71,8 +71,8 @@ class Days extends MessagePurgeBase {
     $form['days'] = [
       '#type' => 'number',
       '#min' => 1,
-      '#title' => t('Messages older than'),
-      '#description' => t('Maximal message age in days.'),
+      '#title' => $this->t('Messages older than'),
+      '#description' => $this->t('Maximal message age in days.'),
       '#default_value' => $this->configuration['days'],
       '#tree' => FALSE,
     ];

@@ -24,8 +24,8 @@ class Quota extends MessagePurgeBase {
     $form['quota'] = [
       '#type' => 'number',
       '#min' => 1,
-      '#title' => t('Messages quota'),
-      '#description' => t('Maximal (approximate) amount of messages.'),
+      '#title' => $this->t('Messages quota'),
+      '#description' => $this->t('Maximal (approximate) amount of messages.'),
       '#default_value' => $this->configuration['quota'],
       '#tree' => FALSE,
     ];
