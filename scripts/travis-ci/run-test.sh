@@ -6,7 +6,7 @@
 case "$1" in
     PHP_CodeSniffer)
         cd $MODULE_DIR
-        composer install
+        composer require --dev drupal/coder:^8.3
         ./vendor/bin/phpcs
         exit $?
         ;;
