@@ -8,6 +8,7 @@ use Drupal\field\Entity\FieldStorageConfig;
 use Drupal\message\Entity\Message;
 use Drupal\node\Entity\Node;
 use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
 
 /**
  * Test the Message delete on entity delete functionality.
@@ -55,7 +56,7 @@ class MessageEntityDelete extends MessageTestBase {
     $this->createMessageTemplate('dummy_message', 'Dummy message', 'This is a dummy message text', ['Dummy message template.']);
 
     // Create a vocabulary.
-    $this->vocabulary = entity_create('taxonomy_vocabulary', [
+    $this->vocabulary = Vocabulary::create([
       'name' => $this->randomMachineName(),
       'description' => $this->randomMachineName(),
       'vid' => mb_strtolower($this->randomMachineName()),

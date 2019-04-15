@@ -89,7 +89,7 @@ function message_example_tokens($type, $tokens, array $data = [], array $options
 
         case 'user-url':
           if ($message->getOwner()) {
-            $replacements[$original] = $message->getOwner()->url();
+            $replacements[$original] = $message->getOwner()->toUrl()->toString();
           }
           break;
 

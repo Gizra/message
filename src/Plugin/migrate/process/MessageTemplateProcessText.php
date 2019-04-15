@@ -20,7 +20,7 @@ class MessageTemplateProcessText extends ProcessPluginBase {
    */
   public function transform($value, MigrateExecutableInterface $migrate_executable, Row $row, $destination_property) {
     $source = $row->getSource();
-    $message_tpl = \Drupal::entityManager()->getStorage('message_template')->load($row->getSource()['name']);
+    $message_tpl = \Drupal::entityTypeManager()->getStorage('message_template')->load($row->getSource()['name']);
 
     $texts = [];
     if (!empty($message_tpl)) {

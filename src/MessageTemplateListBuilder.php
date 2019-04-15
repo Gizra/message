@@ -30,7 +30,7 @@ class MessageTemplateListBuilder extends ConfigEntityListBuilder {
    */
   public function buildRow(EntityInterface $entity) {
     $row['title'] = [
-      'data' => $this->getLabel($entity),
+      'data' => $entity->label(),
       'class' => ['menu-label'],
     ];
     $row['description'] = Xss::filterAdmin($entity->getDescription());
