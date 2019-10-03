@@ -28,18 +28,18 @@ Tokens
   by the token system as well under [message:field_node_ref].
   (For instance: [message:field_node_ref:title]).
   This relies on "Entity token" module that ships with Entity API.
-  Enabling "Token" module is also recommened, as it provides more tokens
+  Enabling "Token" module is also recommended, as it provides more tokens
   and shows a token browser in the message template creation page.
 
 * "Single use" tokens
-  The single-use tokens are similiar to the dynamic tokens, excepet they're
+  The single-use tokens are similar to the dynamic tokens, except they're
   being replaced by their content as the message is created; Meaning this
   content will not get updated if it's reference gets changed.
   E.g. "@{message:user:name}" - Will be replaced by the message author's name
   (When creating the message).
   You can use this for example when you know the user's name is not going
   to change, so there is no reason for re-checking all the time the user
-  name -- hardcoding it makes more sense.
+  name -- hard coding it makes more sense.
 
 * Custom message arguments (Custom callbacks)
   When creating a message, it's possible to store custom arguments that will be
@@ -59,7 +59,7 @@ Tokens
 
 Partials
 ========
-The message body has multiple cardinallity, allowing to separate html markup
+The message body has multiple cardinality, allowing to separate html markup
 from the actual message content, and also, allowing to only render a selected
 part of the message.
 The partials are reflected in the "Manage display" page of every message template,
@@ -76,7 +76,7 @@ admin/structure/messages/manage/[YOUR-MESSAGE-TEMPLATE]/display
 
 Auto-purging
 ============
-Message supports deleteion on Cron of messages according to quota and age
+Message supports deletion on Cron of messages according to quota and age
 definition.
 
 * Global purging definition
