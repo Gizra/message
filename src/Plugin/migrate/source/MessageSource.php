@@ -14,7 +14,8 @@ use Drupal\message\Entity\Message;
  * Drupal 7 message source from database.
  *
  * @MigrateSource(
- *   id = "d7_message_source"
+ *   id = "d7_message_source",
+ *   source_module = "message"
  * )
  */
 class MessageSource extends DrupalSqlBase {

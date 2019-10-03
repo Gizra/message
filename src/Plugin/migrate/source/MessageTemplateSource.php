@@ -13,7 +13,8 @@ use Drupal\migrate\Row;
  * Drupal 7 message types source from database.
  *
  * @MigrateSource(
- *   id = "d7_message_template_source"
+ *   id = "d7_message_template_source",
+ *   source_module = "message"
  * )
  */
 class MessageTemplateSource extends DrupalSqlBase {
