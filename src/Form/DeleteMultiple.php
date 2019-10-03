@@ -108,6 +108,7 @@ class DeleteMultiple extends ConfirmFormBase {
     $form = parent::buildForm($form, $form_state);
 
     $form['actions']['cancel']['#href'] = $this->getCancelRoute();
+    $form['actions']['submit']['#submit'] = ['::submitForm'];
     return $form;
   }
 
