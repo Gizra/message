@@ -138,11 +138,32 @@ class Message extends ContentEntityBase implements MessageInterface {
   }
 
   /**
+   * Fix Incomplete Object PHP error caused by SA-CORE-2019-003 security release which
+   * uses unserialize($values, ['allowed_classes' => FALSE]); and thus turns the unserialized
+   * object into a "__PHP_Incomplete_Class" object.
+   * @param $object
+   * @return mixed
+   */
+  private function fixIncompleteObject($object) {
+    if(is_object($object) && get_class($object) === "__PHP_Incomplete_Class") {
+      return ($object = unserialize(serialize($object)));
+    }
+    return $object;
+  }
+
+  /**
    * {@inheritdoc}
    */
   public function getArguments() {
     $arguments = $this->get('arguments')->first();
-    return $arguments ? $arguments->getValue() : [];
+    if ($arguments){
+      $arguments = $arguments->getValue();
+      foreach ($arguments as &$option) {
+        $option = $this->fixIncompleteObject($option);
+      }
+      return $arguments;
+    }
+    return [];
   }
 
   /**
