@@ -121,6 +121,7 @@ class MessageDevelGenerate extends DevelGenerateBase implements ContainerFactory
       '#type' => 'tableselect',
       '#header' => $header,
       '#options' => $options,
+      '#required' => TRUE,
     ];
 
     $form['num'] = [
